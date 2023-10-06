@@ -24,9 +24,9 @@ const computeThisStopFontSize = (stopName) => {
 
 const computeNextStopFontSize = (stopName) => {
     const zhCharLength = stopName.match(pattern)?.length ?? 0
+    // console.log(zhCharLength)
     if (zhCharLength > 0) {
-        if (zhCharLength >= 14)
-            return { "fontSize": "26px", "overflow": "hidden" }
+        if (zhCharLength >= 14) return { "fontSize": "26px", "overflow": "hidden" }
         else if (zhCharLength.length >= 10) { return { "fontSize": "32px" } }
     }
     else if (stopName.length >= 40)
@@ -46,14 +46,14 @@ export const DPIPSecScreen = ({ stops, currentStopIndex }) => {
                 <div className='dpip_screen_this_stop_row'>
                     <div
                         className='this_stop_detail_zh'
-                        style={computeThisStopFontSize(stops[currentStopIndex].name_zh)}
+                        style={computeThisStopFontSize(stops[currentStopIndex].zh)}
                     >
-                        {stops[currentStopIndex].name_zh}
+                        {stops[currentStopIndex].zh}
                     </div>
                     <div
                         className='this_stop_detail_en'
-                        style={computeThisStopFontSize(stops[currentStopIndex].name_en)}>
-                        {stops[currentStopIndex].name_en}
+                        style={computeThisStopFontSize(stops[currentStopIndex].en)}>
+                        {stops[currentStopIndex].en}
                     </div>
                 </div>
 
@@ -64,12 +64,12 @@ export const DPIPSecScreen = ({ stops, currentStopIndex }) => {
                         <div className={`dpip_screen_next_stop_row_${index + 1}`} >
                             <div
                                 className='next_stop_detail_zh'
-                                style={computeNextStopFontSize(stop?.name_zh)}>
-                                {stop.name_zh}
+                                style={computeNextStopFontSize(stop?.zh)}>
+                                {stop.zh}
                             </div>
                             <div className='next_stop_detail_en'
-                                style={computeNextStopFontSize(stop?.name_en)}>
-                                {stop.name_en}
+                                style={computeNextStopFontSize(stop?.en)}>
+                                {stop.en}
                             </div>
                         </div>
                     )

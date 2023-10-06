@@ -7,21 +7,15 @@
   display: flex;
 }
 
-.dpip_screen_group{
+.dpip_monitors_group{
   display: flex;
-  gap: 2%;
+  flex-direction: row;
+  justify-content: space-evenly;
+
+  /* gap: 5%; */
 }
 
-.dpip_secondary_monitor_bg {
-  position: relative;
-  left: 2%;
-  top: 30px;
-  width: 500px;
-  height: 280px;
-  background-image: url("../public/dpip_secondary_screen.svg");
-  background-repeat: no-repeat;
-}
-
+/* Screen common CSS */
 .dpip_monitor_screen {
   position: absolute;
   left: -16px;
@@ -31,14 +25,127 @@
   border: 12px solid #000000;
   border-radius: 10px;
   z-index: -1;
+  box-shadow: 5px 5px 8px 3px #515151;
 }
 
 .dpip_monitor_container {
   position: absolute;
   width: 506px;
   height: 288px;
-  border: 4px solid #494449;
+  border: 4px solid #111111;
   z-index: -1;
+}
+
+/* Main Screen CSS */
+.dpip_main_monitor_bg {
+  position: relative;
+  left: 2%;
+  top: 30px;
+  width: 500px;
+  height: 280px;
+  background-image: url("../public/dpip_main_screen.svg");
+  background-repeat: no-repeat;
+}
+
+.dpip_main_route_info {
+  position: relative;
+  color: #FFFFFF;
+  left: 30%;
+}
+
+.dpip_route_display {
+  position: absolute;
+  left: 11%;
+  top: -1px;
+  font-size: 28px;
+  letter-spacing: -1.5px;
+}
+
+.dpip_main_dest_info {
+  position: absolute;
+  left: 31%;
+  width: 35%;
+  height: 40px;
+}
+
+.dpip_main_dest_info_zh {
+  position: absolute;
+  font-size: 18px;
+  letter-spacing: -1px;
+}
+
+.dpip_main_dest_info_en {
+  position: absolute;
+  top: 55%;
+  font-size: 12px;
+  letter-spacing: -1px;
+}
+
+.dpip_main_stop_detail_info {
+  position: relative;
+  height: 33%;
+  top: 22.5%;
+}
+
+.dpip_main_this_stop_name {
+  position: absolute;
+  text-align: center;
+  letter-spacing: -.5px;
+  font-weight: 400;
+  width: 33%;
+}
+
+.dpip_main_stop_name_zh {
+}
+
+.dpip_main_stop_name_en {
+  font-size: 8px;
+}
+
+.dpip_main_next_stop_name {
+  position: absolute;
+  text-align: center;
+  letter-spacing: -.5px;
+  font-weight: 400;
+  width: 33%;
+  left: 33%;
+}
+
+.dpip_main_next_next_stop_name {
+  position: absolute;
+  text-align: center;
+  letter-spacing: -.5px;
+  font-weight: 400;
+  width: 28%;
+  left: 70%;
+}
+
+
+.dpip_main_this_stop_big_name {
+  position: relative;
+  top: 32%;
+  font-size: 48px;
+  text-align: center;
+}
+
+.dpip_main_driver_info {
+  position: relative;
+  top: 33%;
+  text-align: center;
+  font-size: 8px;
+  font-weight: 200;
+  color: #FFFFFF;
+}
+
+/* Secondary Screen CSS */
+.dpip_secondary_monitor_bg {
+  position: relative;
+  left: 2%;
+  top: 30px;
+  width: 500px;
+  height: 280px;
+  background-image: url("../public/dpip_secondary_screen.svg");
+  background-repeat: no-repeat;
 }
 
 .dpip_screen_this_stop_row {
