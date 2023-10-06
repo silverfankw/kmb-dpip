@@ -1,0 +1,101 @@
+#root {
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.button_handler_group {
+  display: flex;
+  /* justify-content: space-between; */
+}
+
+.dpip_screen_group{
+  display: flex;
+  gap: 2%;
+}
+
+.dpip_monitor {
+  flex: 0 0 40%;
+  border: 10px solid #000000;
+  border-radius: 10px;
+  background-color: #FFFFFF;
+}
+
+.dpip_screen {
+  border: 4px solid #303030;
+}
+
+.dpip_secondary_rows {
+  display: flex;
+  border: .5px solid #808080;
+  gap: 1%;
+}
+
+.dpip_secondary_indicator_column {
+  flex: 0 0 10%;
+  background-color: #FF0000;
+  text-align: center;
+}
+
+
+.indicator_group{
+  display: inline-block;
+  margin-top: 25%;
+}
+
+.this_stop_indicator {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 36px;
+  width: 36px;
+  background-color: #FFFFFF;
+  border-radius: 50%;
+}
+
+.this_stop_indicator_inner {
+  height: 28px;
+  width: 28px;
+  background-color: #FFFF00;
+  border: 2px solid red;
+  border-radius: 50%;
+}
+
+.next_stop_indicator {
+  margin: 0 auto;
+  position: relative;
+  top: 50%;
+  -webkit-transform: translateY(-50%);
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%);
+  height: 20px;
+  width: 20px;
+  background-color: #FFFFFF;
+  border-radius: 50%;
+}
+
+.dpip_secondary_stops_detail {
+  display: flex;
+  flex-direction: column;
+  user-select: none;
+  min-height: 75px;
+}
+
+.stop_detail_zh {
+  font-size: 52px;
+  letter-spacing: -2px;
+}
+
+.stop_detail_en {
+  font-size: 24px;
+  letter-spacing: -1px;
+}
+
+.next_stop_detail_zh {
+  font-size: 36px;
+  letter-spacing: -2px;
+}
+
+.next_stop_detail_en {
+  font-size: 20px;
+  letter-spacing: -1px;
+}
