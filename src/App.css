@@ -1,50 +1,57 @@
 #root {
-  margin: 0 auto;
+  /* margin: 0 auto; */
   padding: 2rem;
+  width: 100%;
 }
 
-.button_handler_group {
+.query_section {
   display: flex;
+  gap: 1%;
 }
 
-.dpip_monitors_group{
-  display: flex;
-  flex-direction: row;
-  justify-content: space-evenly;
+.route_input {
+  flex: 0 1 10%;
+}
 
-  /* gap: 5%; */
+.button_handler_section {
+  width: 25%;
+  margin: 1em 0;
+}
+
+
+.dpip_monitors_section {
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
 }
 
 /* Screen common CSS */
 .dpip_monitor_screen {
-  position: absolute;
-  left: -16px;
-  top: -16px;
-  width: 527px;
-  height: 310px;
-  border: 12px solid #000000;
-  border-radius: 10px;
-  z-index: -1;
-  box-shadow: 5px 5px 8px 3px #515151;
+  position: relative;
+  width: 50em;
+  height: 30em;
+  border: 1.25em solid #000000;
+  border-radius: 2em;
+  box-shadow: .5em 1em 2em .75em #535551;
+  min-width: 50em;
 }
 
 .dpip_monitor_container {
   position: absolute;
-  width: 506px;
-  height: 288px;
-  border: 4px solid #111111;
+  width: 100%;
+  height: 100%;
+  border: .5em solid #333331;
   z-index: -1;
 }
 
 /* Main Screen CSS */
 .dpip_main_monitor_bg {
-  position: relative;
-  left: 2%;
-  top: 30px;
-  width: 500px;
-  height: 280px;
-  background-image: url("../public/dpip_main_screen.svg");
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-image: url("../dpip_main_screen.svg");
   background-repeat: no-repeat;
+  background-size: cover;
 }
 
 .dpip_main_route_info {
@@ -55,57 +62,59 @@
 
 .dpip_route_display {
   position: absolute;
-  left: 11%;
-  top: -1px;
-  font-size: 28px;
-  letter-spacing: -1.5px;
+  color: #FFFFFF;
+  left: 20%;
+  font-size: 42px;
+  letter-spacing: -.0675em;
 }
 
 .dpip_main_dest_info {
-  position: absolute;
-  left: 31%;
+  position: relative;
+  left: 32%;
   width: 35%;
   height: 40px;
 }
 
 .dpip_main_dest_info_zh {
   position: absolute;
-  font-size: 18px;
+  top: 3%;
+  font-size: 24px;
   letter-spacing: -1px;
 }
 
 .dpip_main_dest_info_en {
   position: absolute;
-  top: 55%;
-  font-size: 12px;
-  letter-spacing: -1px;
+  top: 85%;
+  font-size: 16px;
+  /* letter-spacing: -1px; */
 }
 
 .dpip_main_stop_detail_info {
   position: relative;
   height: 33%;
-  top: 22.5%;
+  top: 17.5%;
 }
 
 .dpip_main_this_stop_name {
   position: absolute;
   text-align: center;
-  letter-spacing: -.5px;
+  letter-spacing: -.03125em;
   font-weight: 400;
   width: 33%;
 }
 
 .dpip_main_stop_name_zh {
+  font-size: 1.25em;
 }
 
 .dpip_main_stop_name_en {
-  font-size: 8px;
+  font-size: .75em;
 }
 
 .dpip_main_next_stop_name {
   position: absolute;
   text-align: center;
-  letter-spacing: -.5px;
+  letter-spacing: -.03125em;
   font-weight: 400;
   width: 33%;
   left: 33%;
@@ -114,7 +123,7 @@
 .dpip_main_next_next_stop_name {
   position: absolute;
   text-align: center;
-  letter-spacing: -.5px;
+  letter-spacing: -.03125em;
   font-weight: 400;
   width: 28%;
   left: 70%;
@@ -122,79 +131,83 @@
 
 
 .dpip_main_this_stop_big_name {
-  position: relative;
-  top: 32%;
-  font-size: 48px;
+  position: absolute;
+  top: 66%;
+  margin: 0 auto;
+  left: 0;
+  right: 0;
+  font-size: 4.5em;
   text-align: center;
 }
 
 .dpip_main_driver_info {
-  position: relative;
-  top: 33%;
+  position: absolute;
+  top: 92.5%;
+  margin: 0 auto;
+  left: 0;
+  right: 0;
   text-align: center;
-  font-size: 8px;
-  font-weight: 200;
+  font-size: 1em;
+  font-weight: 400;
   color: #FFFFFF;
 }
 
 /* Secondary Screen CSS */
 .dpip_secondary_monitor_bg {
-  position: relative;
-  left: 2%;
-  top: 30px;
-  width: 500px;
-  height: 280px;
-  background-image: url("../public/dpip_secondary_screen.svg");
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-image: url("../dpip_secondary_screen.svg");
   background-repeat: no-repeat;
+  background-size: cover;
 }
 
 .dpip_screen_this_stop_row {
-  position: absolute;
+  position: relative;
   width: 80%;
-  height: 45%;
+  height: 44%;
   left: 11%;
 }
 
 .this_stop_detail_zh {
   position: absolute;
-  font-size: 52px;
+  font-size: 72px;
   letter-spacing: -2px;
 }
 
 .this_stop_detail_en {
   position: absolute;
   top: 60%;
-  font-size: 24px;
-  letter-spacing: -1px;
-  overflow: hidden;
+  font-size: 36px;
+  letter-spacing: -1.5px;
 }
 
 .dpip_screen_next_stop_row_1 {
-  position: absolute;
+  position: relative;
+  top: 1%;
   width: 80%;
-  top: 44%;
-  height: 20%;
+  height: 26%;
   left: 11%;
 }
 
 .dpip_screen_next_stop_row_2 {
   position: relative;
+  top: 3%;
   width: 80%;
-  top: 72%;
-  height: 20%;
+  height: 26%;
   left: 11%;
 }
 
 .next_stop_detail_zh {
   position: absolute;
-  font-size: 36px;
+  font-size: 52px;
   letter-spacing: -2px;
 }
 
 .next_stop_detail_en {
   position: absolute;
-  top: 90%;
-  font-size: 18px;
+  font-size: 24px;
   letter-spacing: -1px;
+  top: 66%;
   overflow: hidden;
 }

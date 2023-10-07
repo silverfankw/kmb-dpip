@@ -1,139 +1,171 @@
 import { useEffect, useState } from 'react'
+import { useSearchParams } from "react-router-dom";
+
+
 import './App.css'
 import { Button } from './component/Button'
+import { Input } from './component/Input'
+import { Selector } from './component/Selector';
 import { DPIPSecScreen } from './DpipSecScreen'
 import { DPIPMainScreen } from './DpipMainScreen'
 
 function App() {
 
+	const [stops, setStops] = useState([])
+
+	const [searchParams, setSearchParams] = useSearchParams({ route: "" });
 	const [currentStopIndex, setCurrentStopIndex] = useState(0)
 
 	const route = {
-		"route": "35A",
+		"route": "289R",
 		"dest": {
-			"en": "KWAI CHUNG (ON YAM ESTATE)",
-			"zh": "葵涌(安蔭邨)"
+			"en": "SHATIN CENTRAL",
+			"zh": "沙田巿中心"
 		},
 		"stops": [
 			{
-				"zh": "尖沙咀東總站",
-				"en": "TSIM SHA TSUI EAST BUS TERMINUS"
+				"zh": "黃石碼頭總站",
+				"en": "WONG SHEK PIER BUS TERMINUS"
 			},
 			{
-				"zh": "香港科學館",
-				"en": "HONG KONG SCIENCE MUSEUM"
+				"zh": "高塘下洋",
+				"en": "KO TONG HA YEUNG"
 			},
 			{
-				"zh": "尖沙咀麼地道",
-				"en": "MODY ROAD TSIM SHA TSUI"
+				"zh": "高塘",
+				"en": "KO TONG"
 			},
 			{
-				"zh": "尖東站",
-				"en": "EAST TSIM SHA TSUI STATION"
+				"zh": "土瓜坪",
+				"en": "TO KWA PIN"
 			},
 			{
-				"zh": "尖沙咀轉車站 - 中間道 (N2)",
-				"en": "TSIM SHA TSUI BBI - MIDDLE ROAD (N2)"
+				"zh": "北潭凹",
+				"en": "PAK TAM AU"
 			},
 			{
-				"zh": "金巴利道 (N11)",
-				"en": "KIMBERLEY ROAD (N11)"
+				"zh": "北潭凹管理站",
+				"en": "PAK TAM AU MANAGEMENT CENTRE"
 			},
 			{
-				"zh": "油麻地寶靈街 (N20)",
-				"en": "BOWRING STREET YAU MA TEI (N20)"
+				"zh": "麥理浩夫人度假村",
+				"en": "LADY MACLEHOSE HOLIDAY VILLAGE"
 			},
 			{
-				"zh": "九龍中央郵政局 (N30)",
-				"en": "KOWLOON CENTRAL POST OFFICE (N30)"
+				"zh": "鯽魚湖",
+				"en": "TSAK YUE WU"
 			},
 			{
-				"zh": "旺角登打士街 (N51)",
-				"en": "DUNDAS STREET MONG KOK (N51)"
+				"zh": "上窰",
+				"en": "SHEUNG YIU"
 			},
 			{
-				"zh": "旺角奶路臣街 (N61)",
-				"en": "NELSON STREET MONG KOK (N61)"
+				"zh": "北潭涌",
+				"en": "PAK TAM CHUNG"
 			},
 			{
-				"zh": "旺角弼街 (N72)",
-				"en": "BUTE STREET MONG KOK (N72)"
+				"zh": "黃麖地",
+				"en": "WONG KENG TEI"
 			},
 			{
-				"zh": "太子站 (N76)",
-				"en": "PRINCE EDWARD STATION (N76)"
+				"zh": "斬竹灣",
+				"en": "TSAM CHUK WAN"
 			},
 			{
-				"zh": "深水埗楓樹街",
-				"en": "MAPLE STREET SHAM SHUI PO"
+				"zh": "西貢戶外訓練營",
+				"en": "SAI KUNG OUTDOOR TRAINING CAMP"
 			},
 			{
-				"zh": "深水埗北河街",
-				"en": "PEI HO STREET SHAM SHUI PO"
+				"zh": "大網仔新村",
+				"en": "TAI MONG TSAI SAN TSUEN"
 			},
 			{
-				"zh": "麗閣邨",
-				"en": "LAI KOK ESTATE"
+				"zh": "大網仔",
+				"en": "TAI MONG TSAI"
 			},
 			{
-				"zh": "貿易廣場",
-				"en": "TRADE SQUARE"
+				"zh": "亞公灣",
+				"en": "AH KUNG WAN"
 			},
 			{
-				"zh": "荔枝角站",
-				"en": "LAI CHI KOK STATION"
+				"zh": "鳳秀路",
+				"en": "FUNG SAU ROAD"
 			},
 			{
-				"zh": "饒宗頤文化館",
-				"en": "JAO TSUNG-I ACADEMY"
+				"zh": "早禾坑",
+				"en": "TSO WO HANG"
 			},
 			{
-				"zh": "鐘山台",
-				"en": "CHUNG SHAN TERRACE"
+				"zh": "大網仔路黃竹灣",
+				"en": "TAI MONG TSAI ROAD WONG CHUK WAN"
 			},
 			{
-				"zh": "華員邨",
-				"en": "WAH YUEN CHUEN"
+				"zh": "西沙路黃竹灣",
+				"en": "SAI SHA ROAD WONG CHUK WAN"
 			},
 			{
-				"zh": "葵涌業成街",
-				"en": "YIP SHING STREET KWAI CHUNG"
+				"zh": "澳頭",
+				"en": "O TAU"
 			},
 			{
-				"zh": "葵涌打磚坪街",
-				"en": "TA CHUEN PING STREET KWAI CHUNG"
+				"zh": "澳頭新村",
+				"en": "O TAU NEW VILLAGE"
 			},
 			{
-				"zh": "石籬(大隴街)總站",
-				"en": "SHEK LEI (TAI LOONG STREET) BUS TERMINUS"
+				"zh": "水浪窩",
+				"en": "SHUI LONG WO"
 			},
 			{
-				"zh": "石籬邨石佳樓",
-				"en": "SHEK KAI HOUSE SHEK LEI ESTATE"
+				"zh": "企嶺下老圍",
+				"en": "KEI LING HA LO WAI"
 			},
 			{
-				"zh": "石籬天主教小學",
-				"en": "SHEK LEI CATHOLIC PRIMARY SCHOOL"
+				"zh": "企嶺下新圍",
+				"en": "KEI LING HA SAN WAI"
 			},
 			{
-				"zh": "石排街石歡樓",
-				"en": "SHEK FOON HOUSE SHEK PAI STREET"
+				"zh": "西徑",
+				"en": "SAI KENG"
 			},
 			{
-				"zh": "北葵涌街市",
-				"en": "NORTH KWAI CHUNG MARKET"
+				"zh": "瓦窰頭",
+				"en": "NGA YIU TAU"
 			},
 			{
-				"zh": "石蔭東邨",
-				"en": "SHEK YAM EAST ESTATE"
+				"zh": "田寮",
+				"en": "TIN LIU"
 			},
 			{
-				"zh": "安蔭邨豐蔭樓",
-				"en": "FUNG YAM HOUSE ON YAM ESTATE"
+				"zh": "輋下",
+				"en": "CHE HA"
 			},
 			{
-				"zh": "安蔭巴士總站",
-				"en": "ON YAM BUS TERMINUS"
+				"zh": "西澳",
+				"en": "SAI O"
+			},
+			{
+				"zh": "樟木頭帝琴灣",
+				"en": "SYMPHONY BAY"
+			},
+			{
+				"zh": "石門轉車站-新界鄉議局大樓 (S5)",
+				"en": "SHEK MUN BBI - HEUNG YEE KUK BUILDING (S5)"
+			},
+			{
+				"zh": "沙田第一城",
+				"en": "CITY ONE SHATIN"
+			},
+			{
+				"zh": "富豪花園",
+				"en": "BELAIR GARDEN"
+			},
+			{
+				"zh": "麗豪酒店",
+				"en": "REGAL RIVERSIDE HOTEL"
+			},
+			{
+				"zh": "沙田市中心總站",
+				"en": "SHATIN CENTRAL BUS TERMINUS"
 			},
 			{
 				"zh": "",
@@ -146,20 +178,79 @@ function App() {
 		]
 	}
 
+	const inputRoute = searchParams.get("route")
+
+	const getRouteList = () => JSON.parse(localStorage.getItem("routeList"))
+
+	useEffect(() => {
+		const fetchKMBData = async () => {
+			const response = await fetch("https://data.etabus.gov.hk/v1/transport/kmb/route/").then(
+				resp => resp.json()).then(json => json.data)
+			localStorage.setItem("routeList", JSON.stringify(response))
+		}
+
+		if (!getRouteList())
+			fetchKMBData().catch(console.error())
+	}, [])
+
 	const lastStopIndex = route.stops.length - 1 ?? 0
 	const isPrevStopAvailable = currentStopIndex - 1 >= 0
 	const isNextStopAvailable = currentStopIndex + 3 <= lastStopIndex
 
+	const searchRoute = route => setSearchParams({ route: route.toUpperCase() })
+
+	const renderRouteOptions = () => {
+		return inputRoute ? getRouteList().filter(
+			route => route.route == inputRoute
+		).map(
+			(route, index) => {
+				return (
+					<option
+						key={`route-option-${index}`}
+						data-key={`${route}-${route.dest_tc}`}
+						value={`${route.route}/${route.bound == "I" ? "inbound" : "outbound"}/${route.service_type}`}>
+						{`${route.route}  ${route.orig_tc} 往 ${route.dest_tc} `}</option>)
+			}) : <option value="沒有選項" disabled>沒有選項</option>
+	}
+
+	const selectRoute = async routeInfo => {
+		const stopIDs = await fetch(`https://data.etabus.gov.hk/v1/transport/kmb/route-stop/${routeInfo}`).then(
+			resp => resp.json()).then(json => json.data).then(data => data.map(stops => stops.stop))
+
+		const routeAllStops = await Promise.all(
+			stopIDs.map(stopID => fetch(`https://data.etabus.gov.hk/v1/transport/kmb/stop/${stopID}`).then(
+				resp => resp.json()
+			).then(json => json.data).then(data => { return { en: data.name_en, zh: data.name_tc } }))
+		)
+		// console.log(routeAllStops)
+		setStops(routeAllStops)
+	}
+
 	return (
 		<>
-			<div className='button_handler_group'>
-				<Button style={`${!isNextStopAvailable && `opacity-50 cursor-not-allowed`} bg-green-600`}
+
+			{/* Query section for route input and selection */}
+			<div className='query_section'>
+				<Input
+					className="route_input"
+					value={searchParams.get("route")}
+					placeholder="請先輸入路線編號"
+					maxLength={4}
+					onChange={searchRoute}
+					submitAction={searchRoute}
+				/>
+				<Selector onChange={selectRoute} optionRenderLogic={renderRouteOptions} />
+			</div>
+
+			{/* Button groups to control DPIP */}
+			<div className='button_handler_section'>
+				<Button style={`${!isNextStopAvailable && `opacity-40 cursor-not-allowed`} bg-green-600`}
 					onClick={() => {
 						if (isNextStopAvailable) setCurrentStopIndex(prev => prev + 1)
 					}}
 					text="Next Stop" />
 				<Button
-					style={`${!isPrevStopAvailable && `opacity-50 cursor-not-allowed`} bg-red-700`}
+					style={`${!isPrevStopAvailable && `opacity-40 cursor-not-allowed`} bg-red-700`}
 					onClick={() => {
 						if (isPrevStopAvailable) setCurrentStopIndex(prev => prev - 1)
 					}}
@@ -171,18 +262,19 @@ function App() {
 				/>
 			</div>
 
-
 			{/* DPIP main screen with full details */}
-			<div className='dpip_monitors_group'>
-				<DPIPMainScreen
+			<div className='dpip_monitors_section'>
+				{/* <DPIPMainScreen
 					detail={route}
 					currentStopIndex={currentStopIndex}
-				/>
+				/> */}
 
 				<DPIPSecScreen
-					stops={route.stops}
+					stops={stops}
 					currentStopIndex={currentStopIndex} />
 			</div>
+
+
 
 		</>
 	)
