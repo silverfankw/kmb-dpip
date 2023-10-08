@@ -1,7 +1,7 @@
 export const Selector = ({ onChange, optionRenderLogic }) => {
     return (
         <select
-            defaultValue="＜— 左邊輸入路線 然後此選單會出現選項"
+            // defaultValue="＜— 左邊輸入路線 然後此選單會出現選項"
             onChange={e => { onChange(e.target.value) }}
             className="
         bg-gray-50 border border-gray-300 

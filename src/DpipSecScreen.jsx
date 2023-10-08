@@ -24,7 +24,6 @@ const computeThisStopFontSize = (stopName) => {
 
 const computeNextStopFontSize = (stopName) => {
     const zhCharLength = stopName?.match(pattern)?.length ?? 0
-    // console.log(zhCharLength)
     if (zhCharLength > 0) {
         if (zhCharLength >= 14) return { "fontSize": "26px", "overflow": "hidden" }
         else if (zhCharLength.length >= 10) { return { "fontSize": "32px" } }
@@ -38,39 +37,42 @@ const computeNextStopFontSize = (stopName) => {
 export const DPIPSecScreen = ({ stops, currentStopIndex }) => {
     return (
         <>
-            <div className='dpip_monitor_screen'>
-                <div className='dpip_monitor_container'>
-                    <div className="dpip_secondary_monitor_bg"></div>
-                    <div className='dpip_screen_this_stop_row'>
-                        <div
-                            className='this_stop_detail_zh'
-                            style={computeThisStopFontSize(stops[currentStopIndex]?.zh)}
-                        >
-                            {stops[currentStopIndex]?.zh}
-                        </div>
-                        <div
-                            className='this_stop_detail_en'
-                            style={computeThisStopFontSize(stops[currentStopIndex]?.en)}>
-                            {stops[currentStopIndex]?.en}
-                        </div>
-                    </div>
-                    {stops.slice(currentStopIndex + 1, currentStopIndex + 3).map((stop, index) => {
-                        return (
-                            <div className={`dpip_screen_next_stop_row_${index + 1}`} >
+            <div className="fill-content-div">
+                <div className='dpip_monitor_screen'>
+                    <div className='dpip_monitor_container'>
+                        <div className="dpip_secondary_monitor_bg">
+                            <div className='dpip_screen_this_stop_row'>
                                 <div
-                                    key={`next_stop_detail_zh_${currentStopIndex + 1}`}
-                                    className='next_stop_detail_zh'
-                                    style={computeNextStopFontSize(stop?.zh)}>
-                                    {stop.zh}
+                                    className='this_stop_detail_zh'
+                                    style={computeThisStopFontSize(stops?.[currentStopIndex]?.zh)}
+                                >
+                                    {stops?.[currentStopIndex]?.zh}
                                 </div>
-                                <div className='next_stop_detail_en'
-                                    key={`next_stop_detail_zh_${currentStopIndex + 2}`}
-                                    style={computeNextStopFontSize(stop?.en)}>
-                                    {stop.en}
+                                <div
+                                    className='this_stop_detail_en'
+                                    style={computeThisStopFontSize(stops?.[currentStopIndex]?.en)}>
+                                    {stops?.[currentStopIndex]?.en}
                                 </div>
                             </div>
-                        )
-                    })}
+                            {stops?.slice(currentStopIndex + 1, currentStopIndex + 3)?.map((stop, index) => {
+                                return (
+                                    <div className={`dpip_screen_next_stop_row_${index + 1}`} >
+                                        <div
+                                            key={`next_stop_detail_zh_${currentStopIndex + 1}`}
+                                            className='next_stop_detail_zh'
+                                            style={computeNextStopFontSize(stop?.zh)}>
+                                            {stop.zh}
+                                        </div>
+                                        <div className='next_stop_detail_en'
+                                            key={`next_stop_detail_zh_${currentStopIndex + 2}`}
+                                            style={computeNextStopFontSize(stop?.en)}>
+                                            {stop.en}
+                                        </div>
+                                    </div>
+                                )
+                            })}
+                        </div>
+                    </div>
                 </div>
             </div>
         </>

@@ -1,7 +1,6 @@
 #root {
   /* margin: 0 auto; */
   padding: 2rem;
-  width: 100%;
 }
 
 .query_section {
@@ -10,7 +9,7 @@
 }
 
 .route_input {
-  flex: 0 1 10%;
+  flex: 0 1 20%;
 }
 
 .button_handler_section {
@@ -21,8 +20,9 @@
 
 .dpip_monitors_section {
   display: flex;
-  justify-content: space-around;
+  justify-content: center;
   flex-wrap: wrap;
+  gap: 1%;
 }
 
 /* Screen common CSS */
@@ -31,9 +31,8 @@
   width: 50em;
   height: 30em;
   border: 1.25em solid #000000;
-  border-radius: 2em;
+  border-radius: 1.5em;
   box-shadow: .5em 1em 2em .75em #535551;
-  min-width: 50em;
 }
 
 .dpip_monitor_container {
@@ -63,30 +62,31 @@
 .dpip_route_display {
   position: absolute;
   color: #FFFFFF;
+  top: -.125em;
   left: 20%;
-  font-size: 42px;
-  letter-spacing: -.0675em;
+  font-size: 3em;
+  letter-spacing: -.06125em;
 }
 
 .dpip_main_dest_info {
   position: relative;
-  left: 32%;
+  left: 16em;
   width: 35%;
-  height: 40px;
+  height: 2.6125em;
 }
 
 .dpip_main_dest_info_zh {
   position: absolute;
   top: 3%;
-  font-size: 24px;
-  letter-spacing: -1px;
+  font-size: 1.75em;
+  /* letter-spacing: -1px; */
 }
 
 .dpip_main_dest_info_en {
   position: absolute;
-  top: 85%;
-  font-size: 16px;
-  /* letter-spacing: -1px; */
+  top: 3em;
+  font-size: .85em;
+  letter-spacing: -.03125em;
 }
 
 .dpip_main_stop_detail_info {
@@ -171,14 +171,14 @@
 
 .this_stop_detail_zh {
   position: absolute;
-  font-size: 72px;
-  letter-spacing: -2px;
+  font-size: 4.5em;
+  /* letter-spacing: -2px; */
 }
 
 .this_stop_detail_en {
   position: absolute;
   top: 60%;
-  font-size: 36px;
+  font-size: 2em;
   letter-spacing: -1.5px;
 }
 
@@ -200,14 +200,40 @@
 
 .next_stop_detail_zh {
   position: absolute;
-  font-size: 52px;
+  font-size: 3.25em;
   letter-spacing: -2px;
 }
 
 .next_stop_detail_en {
   position: absolute;
-  font-size: 24px;
+  font-size: 1.5em;
   letter-spacing: -1px;
   top: 66%;
   overflow: hidden;
 }
+
+
+@media screen and (max-width: 1440px) {
+  .dpip_monitors_section {
+    font-size: 20px;
+  }
+}
+
+@media screen and (max-width: 1280px) {
+  .dpip_monitors_section {
+    font-size: 16px;
+  }
+}
+
+@media screen and (max-width: 1024px) {
+  .dpip_monitors_section {
+    font-size: 12px;
+  }
+}
+
+@media screen and (max-width: 767px) {
+  .dpip_monitors_section {
+    font-size: 10px;
+  }
+}
+
