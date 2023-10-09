@@ -3,22 +3,21 @@
   padding: 2rem;
 }
 
-.query_section {
+.query-section {
   display: flex;
   gap: 1%;
 }
 
-.route_input {
+.route-input {
   flex: 0 1 20%;
 }
 
-.button_handler_section {
-  width: 25%;
+.button-handler-section {
   margin: 1em 0;
 }
 
 
-.dpip_monitors_section {
+.dpip-monitors-section {
   display: flex;
   justify-content: center;
   flex-wrap: wrap;
@@ -26,7 +25,7 @@
 }
 
 /* Screen common CSS */
-.dpip_monitor_screen {
+.dpip-monitor-screen {
   position: relative;
   width: 50em;
   height: 30em;
@@ -35,7 +34,7 @@
   box-shadow: .5em 1em 2em .75em #535551;
 }
 
-.dpip_monitor_container {
+.dpip-monitor-container {
   position: absolute;
   width: 100%;
   height: 100%;
@@ -44,22 +43,22 @@
 }
 
 /* Main Screen CSS */
-.dpip_main_monitor_bg {
+.dpip-main-monitor-bg {
   position: absolute;
   width: 100%;
   height: 100%;
-  background-image: url("../dpip_main_screen.svg");
+  background-image: url("../dpip-main-screen.svg");
   background-repeat: no-repeat;
   background-size: cover;
 }
 
-.dpip_main_route_info {
+.dpip-main-route-info {
   position: relative;
   color: #FFFFFF;
   left: 30%;
 }
 
-.dpip_route_display {
+.dpip-route-display {
   position: absolute;
   color: #FFFFFF;
   top: -.125em;
@@ -68,34 +67,33 @@
   letter-spacing: -.06125em;
 }
 
-.dpip_main_dest_info {
+.dpip-main-dest-info {
   position: relative;
   left: 16em;
   width: 35%;
   height: 2.6125em;
 }
 
-.dpip_main_dest_info_zh {
+.dpip-main-dest-info-zh {
   position: absolute;
   top: 3%;
   font-size: 1.75em;
-  /* letter-spacing: -1px; */
 }
 
-.dpip_main_dest_info_en {
+.dpip-main-dest-info-en {
   position: absolute;
   top: 3em;
   font-size: .85em;
   letter-spacing: -.03125em;
 }
 
-.dpip_main_stop_detail_info {
+.dpip-main-stop-detail-info {
   position: relative;
   height: 33%;
   top: 17.5%;
 }
 
-.dpip_main_this_stop_name {
+.dpip-main-this-stop-name {
   position: absolute;
   text-align: center;
   letter-spacing: -.03125em;
@@ -103,15 +101,15 @@
   width: 33%;
 }
 
-.dpip_main_stop_name_zh {
+.dpip-main-stop-name-zh {
   font-size: 1.25em;
 }
 
-.dpip_main_stop_name_en {
+.dpip-main-stop-name-en {
   font-size: .75em;
 }
 
-.dpip_main_next_stop_name {
+.dpip-main-next-stop-name {
   position: absolute;
   text-align: center;
   letter-spacing: -.03125em;
@@ -120,7 +118,7 @@
   left: 33%;
 }
 
-.dpip_main_next_next_stop_name {
+.dpip-main-next-next-stop-name {
   position: absolute;
   text-align: center;
   letter-spacing: -.03125em;
@@ -130,7 +128,7 @@
 }
 
 
-.dpip_main_this_stop_big_name {
+.dpip-main-this-stop-big-name {
   position: absolute;
   top: 66%;
   margin: 0 auto;
@@ -140,7 +138,7 @@
   text-align: center;
 }
 
-.dpip_main_driver_info {
+.dpip-main-driver-info {
   position: absolute;
   top: 92.5%;
   margin: 0 auto;
@@ -153,36 +151,46 @@
 }
 
 /* Secondary Screen CSS */
-.dpip_secondary_monitor_bg {
+.dpip-secondary-monitor-bg {
   position: absolute;
   width: 100%;
   height: 100%;
-  background-image: url("../dpip_secondary_screen.svg");
+  background-image: url("../dpip-secondary-screen.svg");
   background-repeat: no-repeat;
   background-size: cover;
 }
 
-.dpip_screen_this_stop_row {
+.dpip-screen-this-stop-row {
   position: relative;
-  width: 80%;
+  width: 87.5%;
   height: 44%;
   left: 11%;
 }
 
-.this_stop_detail_zh {
+.this-stop-detail-zh-container {
   position: absolute;
-  font-size: 4.5em;
-  /* letter-spacing: -2px; */
+  width: 100%;
+  letter-spacing: -0.0625em; 
+  white-space: nowrap; 
 }
 
-.this_stop_detail_en {
+.this-stop-detail-zh {
+  font-size: 4.5em;
+}
+
+.this-stop-detail-en-container {
   position: absolute;
   top: 60%;
-  font-size: 2em;
-  letter-spacing: -1.5px;
+  width: 100%;
+  letter-spacing: -0.125em;
+  white-space: nowrap;
 }
 
-.dpip_screen_next_stop_row_1 {
+.this-stop-detail-en {
+  font-size: 2em;
+}
+
+.dpip-screen-next-stop-row-1 {
   position: relative;
   top: 1%;
   width: 80%;
@@ -190,7 +198,7 @@
   left: 11%;
 }
 
-.dpip_screen_next_stop_row_2 {
+.dpip-screen-next-stop-row-2 {
   position: relative;
   top: 3%;
   width: 80%;
@@ -198,13 +206,13 @@
   left: 11%;
 }
 
-.next_stop_detail_zh {
+.next-stop-detail-zh {
   position: absolute;
   font-size: 3.25em;
   letter-spacing: -2px;
 }
 
-.next_stop_detail_en {
+.next-stop-detail-en {
   position: absolute;
   font-size: 1.5em;
   letter-spacing: -1px;
@@ -214,25 +222,25 @@
 
 
 @media screen and (max-width: 1440px) {
-  .dpip_monitors_section {
+  .dpip-monitors-section {
     font-size: 20px;
   }
 }
 
 @media screen and (max-width: 1280px) {
-  .dpip_monitors_section {
+  .dpip-monitors-section {
     font-size: 16px;
   }
 }
 
 @media screen and (max-width: 1024px) {
-  .dpip_monitors_section {
+  .dpip-monitors-section {
     font-size: 12px;
   }
 }
 
 @media screen and (max-width: 767px) {
-  .dpip_monitors_section {
+  .dpip-monitors-section {
     font-size: 10px;
   }
 }
