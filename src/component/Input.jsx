@@ -12,6 +12,7 @@ export const Input = ({
 
     return (
         <div>
+            {placeholder ? <label className="text-xs text-gray-500">{placeholder}</label> : ""}
             <input
                 style={style}
                 ref={inputRef}
@@ -25,7 +26,7 @@ export const Input = ({
         focus:ring-3 focus:ring-inset 
         focus:ring-zinc-400 
         ${className} `}
-                placeholder={placeholder}
+                // placeholder={placeholder}
                 onChange={e => onChange(e.target.value)}
                 onKeyUp={e => handleSearch(e)}
             />

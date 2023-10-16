@@ -6,4 +6,7 @@ import tailwindcss from 'tailwindcss';
 export default defineConfig({
   base: "/kmb-dpip/",
   plugins: [react(), tailwindcss()],
+  server: {
+    open: true
+  }
 })

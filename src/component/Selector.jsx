@@ -1,6 +1,10 @@
-export const Selector = ({ onChange, optionRenderLogic }) => {
+import { forwardRef } from "react"
+
+export const Selector = forwardRef(({ onChange, value, optionRenderLogic }, ref) => {
     return (
         <select
+            ref={ref}
+            value={value}
             // defaultValue="＜— 左邊輸入路線 然後此選單會出現選項"
             onChange={e => { onChange(e.target.value) }}
             className="
@@ -12,7 +16,7 @@ export const Selector = ({ onChange, optionRenderLogic }) => {
             {optionRenderLogic && optionRenderLogic()}
         </select>
     )
-}
+})
 
 // focus:ring-blue-500 focus:border-blue-500 block
 //         w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400
