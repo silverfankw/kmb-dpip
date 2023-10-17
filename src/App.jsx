@@ -6,7 +6,6 @@ import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import CachedIcon from '@mui/icons-material/Cached';
 
-import { components } from 'react-select';
 import AsyncSelect from 'react-select/async';
 
 import './App.css'
@@ -103,17 +102,17 @@ function App() {
 	}
 
 	return (
-		<div className="@container">
+		<div>
 
 			{/* Query section for route input and selection */}
-			<section className='@xs:text-xs @sm:text-sm @md:text-md query-section'>
+			<section className='query-section'>
 				<AsyncSelect
 					// components={{ Input: props => <components.Input {...props} maxLength={4} /> }}
 					autoCapitalize="characters"
 					autoFocus
 					cacheOptions
 					placeholder="Please enter KMB route"
-					noOptionsMessage={() => "Route not exist."}
+					noOptionsMessage={() => "No result."}
 					loadOptions={searchRoute}
 					onChange={selectRoute}
 				/>

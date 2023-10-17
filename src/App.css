@@ -55,6 +55,7 @@
   color: #FFFFFF;
   left: 30%;
   height: 15%;
+  width: 95%;
 }
 
 .dpip-route-display {
@@ -66,17 +67,27 @@
   letter-spacing: -.06125em;
 }
 
+.dpip-main-route-arrow{
+  width: 8.5%;
+  position: relative;
+  left: 11.25rem;
+  top: .5rem;
+}
+
 .dpip-main-dest-info {
   position: relative;
-  left: 16em;
-  width: 35%;
-  height: 2.6125em;
+  left: 15.25rem;
+  /* width: 35%; */
+  height: 4em;
+  top: -3.25rem;
 }
+
 
 .dpip-main-dest-info-zh {
   position: absolute;
   top: 3%;
   font-size: 1.75em;
+  width: 80%;
 }
 
 .dpip-main-dest-info-en {
@@ -105,58 +116,10 @@
   overflow: hidden;
 }
 
-@media screen and (max-width: 1440px) {
-  .dpip-main-stop-name-zh{
-    font-size: 1.25rem;
-  }
-}
-
-@media screen and (max-width: 1280px) {
-  .dpip-main-stop-name-zh{
-    font-size: 1.25rem;
-  }
-}
-
-@media screen and (max-width: 1024px) {
-  .dpip-main-stop-name-zh{
-    font-size: 1rem;
-  }
-}
-
-@media screen and (max-width: 767px) {
-  .dpip-main-stop-name-zh{
-    font-size: 0.5rem;
-  }
-}
-
 .dpip-main-stop-name-en {
   font-size: .75rem;
   overflow: hidden;
   white-space: nowrap;
-}
-
-@media screen and (max-width: 1440px) {
-  .dpip-main-stop-name-en{
-    font-size: .75rem;
-  }
-}
-
-@media screen and (max-width: 1280px) {
-  .dpip-main-stop-name-en{
-    font-size: .5rem;
-  }
-}
-
-@media screen and (max-width: 1024px) {
-  .dpip-main-stop-name-en{
-    font-size: 0.125rem;
-  }
-}
-
-@media screen and (max-width: 767px) {
-  .dpip-main-stop-name-en{
-    font-size: 0.125rem;
-  }
 }
 
 .dpip-main-next-stop-name {
@@ -183,46 +146,14 @@
 
 .dpip-main-this-stop-big-name-container{
   position: relative;
-  top: 0.5%;
   height: 27.5%;
   margin: 0 auto;
   left: 0;
   right: 0;
-  font-size: 4.5rem;
+  /* font-size: 4.5rem; */
   text-align: center;
   overflow: hidden;
 }
-
-
-@media screen and (max-width: 1440px) {
-  .dpip-main-this-stop-big-name{
-    font-size: 4.5rem;
-  }
-}
-
-@media screen and (max-width: 1280px) {
-  .dpip-main-this-stop-big-name{
-    font-size: 4rem;
-  }
-}
-
-@media screen and (max-width: 1024px) {
-  .dpip-main-this-stop-big-name{
-    font-size: 3.75rem;
-  }
-}
-
-@media screen and (max-width: 767px) {
-  .dpip-main-this-stop-big-name{
-    font-size: 3.5rem;
-  }
-}
-
-@media screen and (max-width: 480px) {
-  .dpip-main-this-stop-big-name{
-    font-size: 8px;
-  }
-} 
 
 .dpip-main-driver-section {
   position: absolute;
@@ -268,7 +199,7 @@
   position: absolute;
   top: 60%;
   width: 100%;
-  letter-spacing: -0.125rem;
+  letter-spacing: -0.0625rem;
   white-space: nowrap;
 }
 
@@ -308,26 +239,139 @@
   overflow: hidden;
 }
 
+/* Media Query */
+
+@media screen and (max-width: 1920px) {
+  .dpip-main-route-section{
+    left: 30%;
+  }
+
+  .dpip-main-route-arrow{
+  }
+
+  .dpip-main-dest-info{ 
+  }
+
+  .dpip-main-dest-info-zh{
+    /* font-size: 1.5rem; */
+  }
+
+  .dpip-main-this-stop-big-name{
+    font-size: 5rem;
+  }
+}
 
 @media screen and (max-width: 1440px) {
+  .dpip-main-route-arrow{
+    left: 14rem;
+    top: 0.625rem;
+  }
+  .dpip-main-route-section{
+    left: 30%;
+  }
+  .dpip-main-dest-info{
+    left: 19rem;
+    top: -4rem;
+  }
+  .dpip-main-dest-info-zh{
+    font-size: 2.25rem;
+  }
+  .dpip-main-stop-name-zh{
+    font-size: 1.25rem;
+  }
+  .dpip-main-stop-name-en{
+    font-size: .75rem;
+  }
+  .dpip-main-this-stop-big-name{
+    font-size: 6rem;
+  }
   .dpip-monitor-screen{
     font-size: 20px;
   }
 }
 
 @media screen and (max-width: 1280px) {
+  .dpip-main-route-section{
+    left: 30%;
+  }
+  .dpip-main-route-arrow{
+    left: 11.5rem;
+    top: 0.5rem;
+  }
+  .dpip-main-dest-info{
+    left: 15.5rem;
+    top: -3.25rem;
+  }
+  .dpip-main-dest-info-zh{
+    font-size: 1.75rem;
+  }
+  .dpip-main-stop-name-zh{
+    font-size: 1.25rem;
+  }
+  .dpip-main-stop-name-en{
+    font-size: .75rem;
+  }
+  .dpip-main-this-stop-big-name{
+    font-size: 4.5rem;
+  }
   .dpip-monitor-screen{
     font-size: 16px;
   }
 }
 
 @media screen and (max-width: 1024px) {
+  .dpip-main-route-section{
+    left: 30%;
+  }
+  .dpip-main-route-arrow{
+    left: 8.25rem;
+    top: .375rem;
+  }
+  .dpip-main-dest-info{
+    left: 11.25rem;
+    top: -2.375rem;
+  }
+  .dpip-main-dest-info-zh{
+    font-size: 1.25rem;
+  }
+  .dpip-main-stop-name-zh{
+    font-size: 1rem;
+  }
+  .dpip-main-stop-name-en{
+    font-size: .625rem;
+  }
+  .dpip-main-this-stop-big-name{
+    font-size: 3.75rem;
+  }
   .dpip-monitor-screen{
     font-size: 12px;
   }
 }
 
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 767px) {
+  .dpip-main-route-section{
+    left: 30%;
+  }
+  .dpip-main-route-arrow{
+    left: 7rem;
+    top: .35rem;
+  }
+  .dpip-main-dest-info{
+    left: 9.5rem;
+    top: -2rem;
+  }
+  .dpip-main-dest-info-zh{
+    font-size: 1rem;
+  }
+  .dpip-main-stop-name-zh{
+    font-size: 0.75rem;
+  }
+  .dpip-main-stop-name-en{
+    font-size: .5rem;
+  }
+  .dpip-main-this-stop-big-name{
+    font-size: 3rem;
+  }
   .dpip-monitor-screen{
     font-size: 10px;
   }
@@ -337,6 +381,7 @@
   .dpip-monitor-screen{
     font-size: 8px;
   }
-}
-
-
+  .dpip-main-this-stop-big-name{
+    font-size: 3.5rem;
+  }
+} 

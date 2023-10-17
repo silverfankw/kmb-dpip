@@ -1,5 +1,6 @@
 import './App.css'
 import { useState, useCallback, useEffect } from "react"
+import Arrow from "../public/arrow.svg?react"
 
 {/* DPIP main screen with full details */ }
 export const DPIPMainScreen = ({ detail, currentStopIndex }) => {
@@ -78,6 +79,9 @@ export const DPIPMainScreen = ({ detail, currentStopIndex }) => {
                                 adjustRouteFontSize(detail?.route)}
                                 className='dpip-route-display'>
                                 {detail?.route}
+                            </div>
+                            <div className="dpip-main-route-arrow">
+                                <Arrow />
                             </div>
                             <div className='dpip-main-dest-info'>
                                 <div className="dpip-main-dest-info-zh">
