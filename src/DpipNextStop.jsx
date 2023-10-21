@@ -1,4 +1,4 @@
-import { useRef, useState, useEffect, useCallback } from "react"
+import { useRef, useState, useEffect, useCallback, useLayoutEffect } from "react"
 
 
 export const DpipNextStop = ({ rowIndex, stopZh, stopEn, currentStopIndex }) => {
@@ -16,20 +16,30 @@ export const DpipNextStop = ({ rowIndex, stopZh, stopEn, currentStopIndex }) => 
         return () => window.removeEventListener('resize', handleWindowSizeChange)
     }, [])
 
-    const nameContainerRef = useCallback(node => {
-        if (node != null)
-            setNameContainerWidth(node.getBoundingClientRect().width)
-    }, [])
+    // const nameContainerRef = useCallback(node => {
+    //     if (node != null)
+    //         setNameContainerWidth(node.getBoundingClientRect().width)
+    // }, [])
 
-    const stopNameZhRef = useCallback(node => {
-        if (node != null)
-            setZhTextWidth(node.getBoundingClientRect().width)
-    }, [stopZh])
+    // const stopNameZhRef = useCallback(node => {
+    //     if (node != null)
+    //         setZhTextWidth(node.getBoundingClientRect().width)
+    // }, [stopZh])
 
-    const stopNameEnRef = useCallback(node => {
-        if (node != null)
-            setEnTextWidth(node.getBoundingClientRect().width)
-    }, [stopEn])
+    // const stopNameEnRef = useCallback(node => {
+    //     if (node != null)
+    //         setEnTextWidth(node.getBoundingClientRect().width)
+    // }, [stopEn])
+
+    const stopNameZhRef = useRef(null)
+    const stopNameEnRef = useRef(null)
+
+
+    useLayoutEffect(() => {
+        setNameContainerWidth(stopNameZhRef.current.parentElement.offsetWidth)
+        setZhTextWidth(stopNameZhRef.current.offsetWidth)
+        setEnTextWidth(stopNameEnRef.current.offsetWidth)
+    }, [stopZh, stopEn])
 
     const computeStopNameWidth = (type) => {
         const currentTextWidth = type == "zh" ? zhTextWidth : enTextWidth
@@ -58,7 +68,9 @@ export const DpipNextStop = ({ rowIndex, stopZh, stopEn, currentStopIndex }) => 
 
 
     return (
-        <div ref={nameContainerRef} className={`dpip-screen-next-stop-row-${rowIndex + 1}`} >
+        <div
+            // ref={nameContainerRef} 
+            className={`dpip-screen-next-stop-row-${rowIndex + 1}`} >
             <div
                 ref={stopNameZhRef}
                 key={`next-stop-detail-zh-${currentStopIndex + 1}`}

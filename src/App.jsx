@@ -96,13 +96,42 @@ function App() {
 		})
 	}
 
+	const toPrevStop = () => { if (isPrevStopAvailable) setCurrentStopIndex(prev => prev - 1) }
+
+	const toNextStop = () => { if (isNextStopAvailable) setCurrentStopIndex(prev => prev + 1) }
+
 	const changeBound = () => {
-		const { route, bound, service_type } = selection
-		selectRoute({ value: JSON.stringify({ route, bound: bound == "inbound" ? "outbound" : "inbound", service_type }) })
+		if ((selection != null || routeHasTwoBound) || selection?.service_type == 1) {
+			const { route, bound, service_type } = selection
+			selectRoute({ value: JSON.stringify({ route, bound: bound == "inbound" ? "outbound" : "inbound", service_type }) })
+		}
+	}
+	const handleKeyboardControl = (key) => {
+		// Do nothing if no route selected
+		if (selection == null)
+			return
+
+		// Check if key pressed is left or right and move stop
+		switch (key) {
+			case "ArrowLeft":
+				toPrevStop()
+				break
+			case "ArrowRight":
+				toNextStop()
+				break
+			case "Home":
+				setCurrentStopIndex(0)
+				break
+			case "End":
+				changeBound()
+				break
+			default:
+				return
+		}
 	}
 
 	return (
-		<div>
+		<div style={{ outline: "none" }} tabIndex={1} onKeyDown={(e) => handleKeyboardControl(e.key)}>
 
 			{/* Query section for route input and selection */}
 			<section className='query-section'>
@@ -111,7 +140,7 @@ function App() {
 					autoCapitalize="characters"
 					autoFocus
 					cacheOptions
-					placeholder="Please enter KMB route"
+					placeholder="請輸入九巴路線編號 &nbsp; Please enter KMB route"
 					noOptionsMessage={() => "No result."}
 					loadOptions={searchRoute}
 					onChange={selectRoute}
@@ -121,26 +150,22 @@ function App() {
 			{/* Button groups to control DPIP */}
 			<section className='button-handler-section'>
 				<Button
-					color="success"
-					variant="contained"
-					startIcon={<ArrowForwardIcon />}
-					onClick={() => {
-						if (isNextStopAvailable) setCurrentStopIndex(prev => prev + 1)
-					}}
-					disabled={!isNextStopAvailable}
-				>
-					下一站 Next Stop
-				</Button>
-				<Button
 					color="error"
 					variant="contained"
 					startIcon={<ArrowBackIcon />}
-					onClick={() => {
-						if (isPrevStopAvailable) setCurrentStopIndex(prev => prev - 1)
-					}}
+					onClick={() => toPrevStop()}
 					disabled={!isPrevStopAvailable}
 				>
 					前一站 Prev. Stop
+				</Button>
+				<Button
+					color="success"
+					variant="contained"
+					startIcon={<ArrowForwardIcon />}
+					onClick={() => toNextStop()}
+					disabled={!isNextStopAvailable}
+				>
+					下一站 Next Stop
 				</Button>
 				<Button
 					variant="contained"
@@ -148,7 +173,7 @@ function App() {
 					onClick={() => setCurrentStopIndex(0)}
 					disabled={isEmptyObject(routeDetail)}
 				>
-					重新開始 Restart
+					由起點站重新開始 Restart from first stop
 				</Button>
 				<Button
 					color="secondary"
@@ -159,37 +184,6 @@ function App() {
 				>
 					切換方向 Switch bound
 				</Button>
-				{/* <Button style={`${!isNextStopAvailable && `opacity-30 cursor-not-allowed`} 
-				from-green-500 via-green-600 to-green-700 focus:ring-green-300
-				`}
-					onClick={() => {
-						if (isNextStopAvailable) setCurrentStopIndex(prev => prev + 1)
-					}}
-					text="下一站 Next stop" />
-				<Button
-					style={`${!isPrevStopAvailable && `opacity-30 cursor-not-allowed`} 
-					from-red-500 via-red-600 to-red-700 focus:ring-red-300`}
-					onClick={() => {
-						if (isPrevStopAvailable) setCurrentStopIndex(prev => prev - 1)
-					}}
-					text="前一站 Previous Stop" />
-				<Button
-					style={`${isEmptyObject(routeDetail) && `opacity-30 cursor-not-allowed`}
-					from-cyan-500 via-cyan-600 to-cyan-700 focus:ring-cyan-300`
-					}
-					onClick={() => setCurrentStopIndex(0)}
-					text="重新開始 Restart"
-				/>
-				<Button
-					style={`${(selection == null || !routeHasTwoBound) && `opacity-30 cursor-not-allowed`}
-					from-purple-500 via-purple-600 to-purple-700 focus:ring-purple-300`
-					}
-					onClick={() => {
-						if ((selection != null && routeHasTwoBound))
-							changeBound()
-					}}
-					text="切換至另一方向站位 Switch bound"
-				/> */}
 			</section>
 
 			{/* DPIP main screen with full details */}
