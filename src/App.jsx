@@ -5,6 +5,7 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import CachedIcon from '@mui/icons-material/Cached';
+import NotificationsIcon from '@mui/icons-material/Notifications';
 
 import AsyncSelect from 'react-select/async';
 
@@ -19,6 +20,7 @@ function App() {
 	const [routeDetail, setRouteDetail] = useState({})
 	const [currentStopIndex, setCurrentStopIndex] = useState(0)
 	const [routeHasTwoBound, setRouteHasTwoBound] = useState(false)
+	const [mainDpipBg, setMainDpipBg] = useState(0)
 
 	const getRouteList = () => JSON.parse(localStorage.getItem("routeList"))
 
@@ -44,7 +46,7 @@ function App() {
 		// Input to uppercase to prevent result loss
 		const upperCaseRoute = route.toUpperCase()
 		return new Promise((resolve) => {
-			setTimeout(() => { resolve(routeOptions(upperCaseRoute)) }, 100)
+			setTimeout(() => { resolve(routeOptions(upperCaseRoute)) }, 50)
 		})
 	}
 
@@ -156,7 +158,7 @@ function App() {
 					onClick={() => toPrevStop()}
 					disabled={!isPrevStopAvailable}
 				>
-					前一站 Prev. Stop
+					前一站
 				</Button>
 				<Button
 					color="success"
@@ -165,7 +167,15 @@ function App() {
 					onClick={() => toNextStop()}
 					disabled={!isNextStopAvailable}
 				>
-					下一站 Next Stop
+					下一站
+				</Button>
+				<Button
+					color="error"
+					variant="contained"
+					startIcon={<NotificationsIcon />}
+					onClick={() => setMainDpipBg(prev => prev === 0 ? 1 : 0)}
+				>
+					{mainDpipBg == 0 ? `按鐘` : `解除鐘`}
 				</Button>
 				<Button
 					variant="contained"
@@ -173,7 +183,7 @@ function App() {
 					onClick={() => setCurrentStopIndex(0)}
 					disabled={isEmptyObject(routeDetail)}
 				>
-					由起點站重新開始 Restart from first stop
+					由起點站重新開始
 				</Button>
 				<Button
 					color="secondary"
@@ -182,7 +192,7 @@ function App() {
 					onClick={() => changeBound()}
 					disabled={(selection == null || !routeHasTwoBound) || selection?.service_type != 1}
 				>
-					切換方向 Switch bound
+					切換方向
 				</Button>
 			</section>
 
@@ -191,6 +201,7 @@ function App() {
 				<DPIPMainScreen
 					detail={routeDetail}
 					currentStopIndex={currentStopIndex}
+					currentBg={mainDpipBg}
 				/>
 				<DPIPSecScreen
 					stops={routeDetail.stops}

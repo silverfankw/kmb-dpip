@@ -4,13 +4,15 @@ import Arrow from "../src/arrow.svg?react"
 import { debounce } from '../util/util'
 
 {/* DPIP main screen with full details */ }
-export const DPIPMainScreen = ({ detail, currentStopIndex }) => {
+export const DPIPMainScreen = ({ detail, currentStopIndex, currentBg }) => {
 
     const [windowWidth, setWindowWidth] = useState(window.innerWidth)
     const [stopNameContainerWidth, setStopNameContainerWidth] = useState(0)
     const [stopNameWidth, setStopNameWidth] = useState(0)
     const [destNameContainerWidth, setDestNameContainerWidth] = useState(0)
     const [destNameWidth, setDestNameWidth] = useState(0)
+
+    const bgList = ["url(../dpip-main-screen.svg)", "url(../dpip-main-screen-stop.svg)"]
 
     const handleWindowSizeChange = () => setWindowWidth(window.innerWidth)
 
@@ -94,7 +96,7 @@ export const DPIPMainScreen = ({ detail, currentStopIndex }) => {
         <>
             <div className='dpip-monitor-screen'>
                 <div className='dpip-monitor-container'>
-                    <div className="dpip-main-monitor-bg">
+                    <div style={{ backgroundImage: bgList[currentBg] }} className="dpip-main-monitor-bg">
 
                         {/* Route and destination info */}
                         <section className="dpip-main-route-section">
