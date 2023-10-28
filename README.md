@@ -5,12 +5,11 @@ Project Demo: https://silverfankw.github.io/kmb-dpip/
 
 This project aims to simulate KMB Dynamic Passenger Information Panel (DPIP), displaying route destination and bus stops name.
 
-This project is developed by React + Vite with TailwindCSS and Material UI.
+This project is developed by React + Vite & Material UI.
 
-# Future possible update
 
-1. KMB Route Selection (No more hardcode route data since this is just developed)
-2. Resolve text overflow issue
+
+
 
 # React + Vite
 
