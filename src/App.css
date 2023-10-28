@@ -1,5 +1,4 @@
 #root {
-  /* margin: 0 auto; */
   padding: 2rem;
 }
 
@@ -10,16 +9,16 @@
 
 .button-handler-section {
   display: flex;
-  gap: 1%;
+  gap: 1vw;
   margin: 1em 0;
 }
 
 
 .dpip-monitors-section {
   display: flex;
-  justify-content: center;
+  /* justify-content: center; */
   flex-wrap: wrap;
-  gap: 1%;
+  gap: 1vw;
 }
 
 /* Screen common CSS */
@@ -27,6 +26,15 @@
   position: relative;
   width: 50em;
   height: 30em;
+  border: 1.25em solid #000000;
+  border-radius: 1.5em;
+  box-shadow: .5em 1em 2em .75em #535551;
+}
+
+.dpip-monitor-screen-extra-wide {
+  position: relative;
+  width: 100em;
+  height: 25em;
   border: 1.25em solid #000000;
   border-radius: 1.5em;
   box-shadow: .5em 1em 2em .75em #535551;
@@ -48,6 +56,7 @@
   background-image: url("../dpip-main-screen.svg");
   background-repeat: no-repeat;
   background-size: cover;
+  background-color: white;
 }
 
 .dpip-main-route-section {
@@ -64,7 +73,7 @@
   top: -.125em;
   left: 2em;
   font-size: 3em;
-  letter-spacing: -.06125em;
+  letter-spacing: -0.0375em;
 }
 
 .dpip-main-route-arrow{
@@ -156,6 +165,23 @@
   overflow: hidden;
 }
 
+.dpip-main-this-stop-big-name-zh{
+  font-size: 6rem;
+  position: absolute;
+  top: 50%;
+  /* width: 90%; */
+  transform: translateX(-50%) translateY(-50%);
+  white-space: nowrap;
+}
+
+.dpip-main-this-stop-big-name-en{
+  font-size: 1rem;
+  position: absolute;
+  top: 50%;
+  width: 90%;
+  transform: translateX(-50%) translateY(-50%);
+}
+
 .dpip-main-driver-section {
   position: absolute;
   top: 93%;
@@ -176,6 +202,7 @@
   background-image: url("../dpip-secondary-screen.svg");
   background-repeat: no-repeat;
   background-size: cover;
+  background-color: white;
 }
 
 .dpip-screen-this-stop-row {

@@ -61,7 +61,6 @@ export const DpipNextStop = ({ rowIndex, stopZh, stopEn, currentStopIndex }) => 
 
             return {
                 fontSize: `${newFontSize}px`,
-                whiteSpace: "normal",
             }
         }
     }

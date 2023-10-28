@@ -8,6 +8,7 @@ import CachedIcon from '@mui/icons-material/Cached';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 
 import AsyncSelect from 'react-select/async';
+import { components } from "react-select"
 
 import './App.css'
 import { isEmptyObject } from "../util/util"
@@ -46,7 +47,7 @@ function App() {
 		// Input to uppercase to prevent result loss
 		const upperCaseRoute = route.toUpperCase()
 		return new Promise((resolve) => {
-			setTimeout(() => { resolve(routeOptions(upperCaseRoute)) }, 50)
+			setTimeout(() => { resolve(routeOptions(upperCaseRoute)) }, 300)
 		})
 	}
 
@@ -206,10 +207,8 @@ function App() {
 				<DPIPSecScreen
 					stops={routeDetail.stops}
 					currentStopIndex={currentStopIndex} />
+
 			</section>
-
-
-
 		</div >
 	)
 }

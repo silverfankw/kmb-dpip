@@ -34,6 +34,7 @@ export const DpipThisStop = ({ stopZh, stopEn }) => {
     const computeStopNameWidth = (type) => {
         const currentTextWidth = type == "zh" ? zhTextWidth : enTextWidth
 
+        // console.log(`${type} ${zhTextWidth} ${nameContainerWidth}`)
         // When stops name longer than container, adjust name font size with one line display
         if (currentTextWidth > nameContainerWidth) {
             const emRatio = type == "zh" ? 4.5 : 2

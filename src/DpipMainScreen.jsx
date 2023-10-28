@@ -72,6 +72,8 @@ export const DPIPMainScreen = ({ detail, currentStopIndex, currentBg }) => {
     }
 
     const adjustStopFontSize = () => {
+        console.log(`container: ${stopNameContainerWidth}, text: ${stopNameZhWidth}`)
+
         // When stops name longer than container, adjust name font size with one line display
         if (stopNameWidth > stopNameContainerWidth) {
             const emRatio = 4.5
@@ -83,7 +85,7 @@ export const DPIPMainScreen = ({ detail, currentStopIndex, currentBg }) => {
                             windowWidth <= 1280 ? 16 : 16
             const newFontSize = currentFontSize * emRatio / overflowRatio
 
-            console.log(`container: ${stopNameContainerWidth}, text: ${stopNameWidth}, ratio: ${overflowRatio}, Change to ${newFontSize} px`)
+            // console.log(`container: ${stopNameContainerWidth}, text: ${stopNameZhWidth}, ratio: ${overflowRatio}, Change to ${newFontSize} px`)
 
             return {
                 fontSize: `${newFontSize}px`,
