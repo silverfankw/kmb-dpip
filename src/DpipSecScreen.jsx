@@ -16,7 +16,7 @@ export const DPIPSecScreen = ({ stops, currentStopIndex }) => {
 
                         {stops?.slice(currentStopIndex + 1, currentStopIndex + 3)?.map((stop, index) => {
                             return (
-                                <DpipNextStop rowIndex={index} stopZh={stop?.zh} stopEn={stop?.en} currentStopIndex={currentStopIndex} />
+                                <DpipNextStop key={`${stop.en}_${index}`} rowIndex={index} stopZh={stop?.zh} stopEn={stop?.en} currentStopIndex={currentStopIndex} />
                             )
                         })}
                     </div>

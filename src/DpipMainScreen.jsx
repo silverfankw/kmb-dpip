@@ -6,30 +6,74 @@ import { debounce } from '../util/util'
 {/* DPIP main screen with full details */ }
 export const DPIPMainScreen = ({ detail, currentStopIndex, currentBg }) => {
 
+    const stopNameZh = detail?.stops?.[currentStopIndex]?.zh
+    const stopNameEn = detail?.stops?.[currentStopIndex]?.en
+
     const [windowWidth, setWindowWidth] = useState(window.innerWidth)
     const [stopNameContainerWidth, setStopNameContainerWidth] = useState(0)
-    const [stopNameWidth, setStopNameWidth] = useState(0)
+    const [stopNameZhWidth, setStopNameZhWidth] = useState(0)
+    const [stopNameEnWidth, setStopNameEnWidth] = useState(0)
     const [destNameContainerWidth, setDestNameContainerWidth] = useState(0)
     const [destNameWidth, setDestNameWidth] = useState(0)
+    const [bigStopContent, setBigStopContent] = useState(stopNameZh)
 
-    const bgList = ["url(../dpip-main-screen.svg)", "url(../dpip-main-screen-stop.svg)"]
+    const bgList = ["url(./dpip-main-screen.svg)", "url(./dpip-main-screen-stop.svg)"]
 
     const handleWindowSizeChange = () => setWindowWidth(window.innerWidth)
 
     useEffect(() => {
+        // Listen to window resize
         window.addEventListener('resize', handleWindowSizeChange)
         return () => window.removeEventListener('resize', handleWindowSizeChange)
     }, [])
 
-    const destNameRef = useRef(null)
-    const stopNameRef = useRef(null)
+    useEffect(() => {
+        setBigStopContent(stopNameZh)
+        // Switch the content after 3 seconds
+        const interval = setInterval(() => {
+            setBigStopContent(prevContent =>
+                prevContent === detail?.stops?.[currentStopIndex]?.zh ?
+                    detail?.stops?.[currentStopIndex]?.en :
+                    detail?.stops?.[currentStopIndex]?.zh)
+        }, 4000)
+        return () => { clearInterval(interval) }
+    }, [detail, currentStopIndex])
 
-    useLayoutEffect(() => {
-        setDestNameWidth(destNameRef.current.clientWidth)
-        setDestNameContainerWidth(destNameRef.current.parentElement.offsetWidth)
-        setStopNameWidth(stopNameRef.current.offsetWidth)
-        setStopNameContainerWidth(stopNameRef.current.parentElement.offsetWidth)
+
+    const destNameContainerRef = useCallback(node => {
+        if (node != null)
+            setDestNameContainerWidth(node.getBoundingClientRect().width)
+    }, [])
+
+    const destNameRef = useCallback(node => {
+        if (node != null) {
+            // This is to remove adjusted font size style
+            node.removeAttribute("style")
+            setDestNameWidth(node.getBoundingClientRect().width)
+        }
     }, [detail])
+
+    const stopNameContainerRef = useCallback(node => {
+        if (node != null)
+            setStopNameContainerWidth(node.getBoundingClientRect().width)
+    }, [])
+
+    const stopNameZhRef = useCallback(node => {
+        if (node != null) {
+            // This is to remove adjusted font size style
+            node.removeAttribute("style")
+            setStopNameZhWidth(node.getBoundingClientRect().width)
+        }
+    }, [detail, currentStopIndex])
+
+    const stopNameEnRef = useCallback(node => {
+        if (node != null) {
+            // This is to remove adjusted font size style
+            node.removeAttribute("style")
+            setStopNameEnWidth(node.getBoundingClientRect().width)
+        }
+    }, [detail, currentStopIndex])
+
 
     const nextStopIndex = currentStopIndex + 1
     const nextNextStopIndex = nextStopIndex + 1
@@ -51,7 +95,7 @@ export const DPIPMainScreen = ({ detail, currentStopIndex, currentBg }) => {
     }
 
     const adjustDestFontSize = () => {
-        console.log(`${destNameWidth} in adjust function`)
+        // console.log(`${destNameWidth} in adjust function`)
         if (destNameWidth > destNameContainerWidth) {
             const emRatio = 1.75
             const overflowRatio = destNameWidth / destNameContainerWidth
@@ -62,7 +106,7 @@ export const DPIPMainScreen = ({ detail, currentStopIndex, currentBg }) => {
                             windowWidth <= 1280 ? 16 : 16
             const newFontSize = currentFontSize * emRatio / overflowRatio
 
-            console.log(`* container: ${destNameContainerWidth}, text: ${destNameWidth}, ratio: ${overflowRatio}, Change to ${newFontSize} px`)
+            // console.log(`* container: ${destNameContainerWidth}, text: ${destNameWidth}, ratio: ${overflowRatio}, Change to ${newFontSize} px`)
 
             return {
                 fontSize: `${newFontSize}px`,
@@ -75,9 +119,9 @@ export const DPIPMainScreen = ({ detail, currentStopIndex, currentBg }) => {
         console.log(`container: ${stopNameContainerWidth}, text: ${stopNameZhWidth}`)
 
         // When stops name longer than container, adjust name font size with one line display
-        if (stopNameWidth > stopNameContainerWidth) {
+        if (stopNameZhWidth > stopNameContainerWidth) {
             const emRatio = 4.5
-            const overflowRatio = stopNameWidth / stopNameContainerWidth
+            const overflowRatio = stopNameZhWidth / stopNameContainerWidth
             const currentFontSize =
                 windowWidth <= 540 ? 8 :
                     windowWidth <= 767 ? 10 :
@@ -89,7 +133,6 @@ export const DPIPMainScreen = ({ detail, currentStopIndex, currentBg }) => {
 
             return {
                 fontSize: `${newFontSize}px`,
-                // whiteSpace: "normal",
             }
         }
     }
@@ -110,7 +153,7 @@ export const DPIPMainScreen = ({ detail, currentStopIndex, currentBg }) => {
                                 <Arrow />
                             </div>
                             <div
-                                // ref={destNameContainerRef} 
+                                ref={destNameContainerRef}
                                 className='dpip-main-dest-info'>
                                 <div
                                     ref={destNameRef}
@@ -141,15 +184,23 @@ export const DPIPMainScreen = ({ detail, currentStopIndex, currentBg }) => {
                         </section>
 
                         <section
-                            // ref={stopNameContainerRef}
+                            ref={stopNameContainerRef}
                             className="dpip-main-this-stop-big-name-container">
-                            <span
-                                ref={stopNameRef}
-                                style={adjustStopFontSize()}
-                                className="dpip-main-this-stop-big-name"
-                            >
-                                {detail?.stops?.[currentStopIndex]?.zh}
-                            </span>
+                            {bigStopContent === stopNameZh ?
+                                <span
+                                    ref={stopNameZhRef}
+                                    style={adjustStopFontSize()}
+                                    className="dpip-main-this-stop-big-name-zh"
+                                >
+                                    {bigStopContent}
+                                </span> :
+                                <span
+                                    ref={stopNameEnRef}
+                                    // style={adjustStopFontSize()}
+                                    className="dpip-main-this-stop-big-name-en"
+                                >
+                                    {bigStopContent}
+                                </span>}
                         </section>
 
                         {/* Driver info */}

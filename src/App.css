@@ -11,6 +11,7 @@
   display: flex;
   gap: 1vw;
   margin: 1em 0;
+  min-width: 600px;
 }
 
 
@@ -185,6 +186,7 @@
 .dpip-main-driver-section {
   position: absolute;
   top: 93%;
+  height: 7%;
   margin: 0 auto;
   left: 0;
   right: 0;
@@ -284,8 +286,11 @@
     /* font-size: 1.5rem; */
   }
 
-  .dpip-main-this-stop-big-name{
+  .dpip-main-this-stop-big-name-zh{
     font-size: 5rem;
+  }
+  .dpip-main-this-stop-big-name-en{
+    font-size: 2.5rem;
   }
 }
 
@@ -310,8 +315,11 @@
   .dpip-main-stop-name-en{
     font-size: .75rem;
   }
-  .dpip-main-this-stop-big-name{
+  .dpip-main-this-stop-big-name-zh{
     font-size: 6rem;
+  }
+  .dpip-main-this-stop-big-name-en{
+    font-size: 2.5rem;
   }
   .dpip-monitor-screen{
     font-size: 20px;
@@ -339,8 +347,11 @@
   .dpip-main-stop-name-en{
     font-size: .75rem;
   }
-  .dpip-main-this-stop-big-name{
+  .dpip-main-this-stop-big-name-zh{
     font-size: 4.5rem;
+  }
+  .dpip-main-this-stop-big-name-en{
+    font-size: 2rem;
   }
   .dpip-monitor-screen{
     font-size: 16px;
@@ -368,8 +379,11 @@
   .dpip-main-stop-name-en{
     font-size: .625rem;
   }
-  .dpip-main-this-stop-big-name{
+  .dpip-main-this-stop-big-name-zh{
     font-size: 3.75rem;
+  }
+  .dpip-main-this-stop-big-name-en{
+    font-size: 1.75rem;
   }
   .dpip-monitor-screen{
     font-size: 12px;
@@ -397,8 +411,11 @@
   .dpip-main-stop-name-en{
     font-size: .5rem;
   }
-  .dpip-main-this-stop-big-name{
+  .dpip-main-this-stop-big-name-zh{
     font-size: 3rem;
+  }
+  .dpip-main-this-stop-big-name-en{
+    font-size: 1.5rem;
   }
   .dpip-monitor-screen{
     font-size: 10px;
@@ -409,7 +426,10 @@
   .dpip-monitor-screen{
     font-size: 8px;
   }
-  .dpip-main-this-stop-big-name{
+  .dpip-main-this-stop-big-name-zh{
     font-size: 3.5rem;
+  }
+  .dpip-main-this-stop-big-name-en{
+    font-size: 1.25rem;
   }
 } 

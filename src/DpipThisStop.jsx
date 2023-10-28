@@ -1,4 +1,4 @@
-import { useRef, useState, useEffect, useCallback } from "react"
+import { useRef, useState, useEffect, useCallback, useLayoutEffect } from "react"
 
 export const DpipThisStop = ({ stopZh, stopEn }) => {
 
@@ -22,13 +22,19 @@ export const DpipThisStop = ({ stopZh, stopEn }) => {
     }, [])
 
     const stopNameZhRef = useCallback(node => {
-        if (node != null)
+        if (node != null) {
+            // This is to remove adjusted font size style
+            node.removeAttribute("style")
             setZhTextWidth(node.getBoundingClientRect().width)
+        }
     }, [stopZh])
 
     const stopNameEnRef = useCallback(node => {
-        if (node != null)
+        if (node != null) {
+            // This is to remove adjusted font size style
+            node.removeAttribute("style")
             setEnTextWidth(node.getBoundingClientRect().width)
+        }
     }, [stopEn])
 
     const computeStopNameWidth = (type) => {
@@ -37,6 +43,7 @@ export const DpipThisStop = ({ stopZh, stopEn }) => {
         // console.log(`${type} ${zhTextWidth} ${nameContainerWidth}`)
         // When stops name longer than container, adjust name font size with one line display
         if (currentTextWidth > nameContainerWidth) {
+
             const emRatio = type == "zh" ? 4.5 : 2
             const overflowRatio = currentTextWidth / nameContainerWidth
             const currentFontSize =
@@ -49,10 +56,8 @@ export const DpipThisStop = ({ stopZh, stopEn }) => {
             // if (type == "zh") {
             //     console.log(`Window: ${windowWidth} container: ${nameContainerWidth}, text: ${currentTextWidth}, ratio: ${overflowRatio}, Change to ${newFontSize} px`)
             // }
-
             return {
                 fontSize: `${newFontSize}px`,
-                whiteSpace: "normal",
             }
         }
     }
