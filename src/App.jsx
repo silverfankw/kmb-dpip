@@ -47,7 +47,7 @@ function App() {
 		// Input to uppercase to prevent result loss
 		const upperCaseRoute = route.toUpperCase()
 		return new Promise((resolve) => {
-			setTimeout(() => { resolve(routeOptions(upperCaseRoute)) }, 300)
+			setTimeout(() => { resolve(routeOptions(upperCaseRoute)) }, 100)
 		})
 	}
 
