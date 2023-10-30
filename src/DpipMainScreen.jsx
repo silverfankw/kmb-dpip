@@ -116,7 +116,7 @@ export const DPIPMainScreen = ({ detail, currentStopIndex, currentBg }) => {
     }
 
     const adjustStopFontSize = () => {
-        console.log(`container: ${stopNameContainerWidth}, text: ${stopNameZhWidth}`)
+        // console.log(`container: ${stopNameContainerWidth}, text: ${stopNameZhWidth}`)
 
         // When stops name longer than container, adjust name font size with one line display
         if (stopNameZhWidth > stopNameContainerWidth) {

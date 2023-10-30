@@ -159,7 +159,7 @@ function App() {
 					onClick={() => toPrevStop()}
 					disabled={!isPrevStopAvailable}
 				>
-					前一站
+					上一站
 				</Button>
 				<Button
 					color="success"
@@ -184,7 +184,7 @@ function App() {
 					onClick={() => setCurrentStopIndex(0)}
 					disabled={isEmptyObject(routeDetail)}
 				>
-					由起點站重新開始
+					從首站開始
 				</Button>
 				<Button
 					color="secondary"

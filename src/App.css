@@ -11,7 +11,8 @@
   display: flex;
   gap: 1vw;
   margin: 1em 0;
-  min-width: 600px;
+  min-width: 500px;
+  flex-wrap: wrap;
 }
 
 
