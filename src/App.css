@@ -426,8 +426,25 @@
   .dpip-monitor-screen{
     font-size: 8px;
   }
+  .dpip-main-route-arrow{
+    left: 5.75rem;
+    top: .25rem;
+  }
+  .dpip-main-dest-info{
+    left: 7.75rem;
+    top: -1.625rem;
+  }
+  .dpip-main-dest-info-zh{
+    font-size: .75rem;
+  }
+  .dpip-main-stop-name-zh{
+    font-size: 0.75rem;
+  }
+  .dpip-main-stop-name-en{
+    font-size: 0.5rem;
+  }
   .dpip-main-this-stop-big-name-zh{
-    font-size: 3.5rem;
+    font-size: 2.5rem;
   }
   .dpip-main-this-stop-big-name-en{
     font-size: 1.25rem;
