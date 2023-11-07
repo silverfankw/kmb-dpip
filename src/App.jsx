@@ -73,7 +73,9 @@ function App() {
 							{
 								route: route.route,
 								bound: route.bound == "I" ? "inbound" : "outbound",
-								service_type: route.service_type
+								service_type: route.service_type,
+								dest_tc: route.dest_tc,
+								dest_en: route.dest_en,
 							}
 						)
 				}
@@ -84,7 +86,7 @@ function App() {
 		const routeInfo = JSON.parse(value)
 		setCurrentStopIndex(0)
 		setSelection(routeInfo)
-		const { route, bound, service_type } = routeInfo
+		const { route, bound, service_type, dest_tc, dest_en } = routeInfo
 
 		const stopIDs = await fetch(`https://data.etabus.gov.hk/v1/transport/kmb/route-stop/${route}/${bound}/${service_type}`).then(
 			resp => resp.json()).then(json => json.data).then(data => data.map(stops => stops.stop))
@@ -95,7 +97,7 @@ function App() {
 			).then(json => json.data).then(data => { return { en: data.name_en, zh: data.name_tc } }))
 		)
 		setRouteDetail(routeDetail => {
-			return { ...routeDetail, route, stops: routeAllStops }
+			return { ...routeDetail, route, stops: routeAllStops, dest_en, dest_tc }
 		})
 	}
 
