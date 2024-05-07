@@ -107,8 +107,14 @@ function App() {
 
 	const changeBound = () => {
 		if ((selection != null || routeHasTwoBound) || selection?.service_type == 1) {
-			const { route, bound, service_type } = selection
-			selectRoute({ value: JSON.stringify({ route, bound: bound == "inbound" ? "outbound" : "inbound", service_type }) })
+			const { bound } = selection
+			selectRoute({
+				value: JSON.stringify(
+					{
+						...selection,
+						bound: bound == "inbound" ? "outbound" : "inbound",
+					})
+			})
 		}
 	}
 	const handleKeyboardControl = (key) => {

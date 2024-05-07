@@ -159,12 +159,12 @@ export const DPIPMainScreen = ({ detail, currentStopIndex, currentBg }) => {
                                     ref={destNameRef}
                                     style={adjustDestFontSize()}
                                     className="dpip-main-dest-info-zh">
-                                    {/* {detail?.stops?.[lastStopIndex].zh} */}
-                                    {detail?.dest_tc}
+                                    {detail?.stops?.[lastStopIndex].zh}
+                                    {/* {detail?.dest_tc} */}
                                 </div>
                                 <div className="dpip-main-dest-info-en">
-                                    {/* {detail?.stops?.[lastStopIndex].en} */}
-                                    {detail?.dest_en}
+                                    {detail?.stops?.[lastStopIndex].en}
+                                    {/* {detail?.dest_en} */}
                                 </div>
                             </div>
                         </section>
