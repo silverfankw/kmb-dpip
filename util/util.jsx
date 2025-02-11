@@ -12,4 +12,5 @@ const debounce = (func, delay = 250) => {
         }, delay);
     }
 }
+
 export { isEmptyObject, debounce }

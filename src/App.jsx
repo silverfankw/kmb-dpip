@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from 'react'
+import { useEffect, useState } from 'react'
 
 import Button from '@mui/material/Button';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
@@ -7,8 +7,8 @@ import RefreshIcon from '@mui/icons-material/Refresh';
 import CachedIcon from '@mui/icons-material/Cached';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 
+import { createFilter } from 'react-select';
 import AsyncSelect from 'react-select/async';
-import { components } from "react-select"
 
 import './App.css'
 import { isEmptyObject } from "../util/util"
@@ -41,33 +41,30 @@ function App() {
 	const isNextStopAvailable = currentStopIndex + 3 <= lastStopIndex + 2
 
 	const searchRoute = route => {
-		// Clear previous selection
-		setSelection(null)
-
 		// Input to uppercase to prevent result loss
 		const upperCaseRoute = route.toUpperCase()
 		return new Promise((resolve) => {
-			setTimeout(() => { resolve(routeOptions(upperCaseRoute)) }, 100)
+			setTimeout(() => { resolve(routeOptions(upperCaseRoute)) }, 200)
 		})
 	}
 
-	const checkBound = filteredRoute => {
-		const boundCheck = filteredRoute.some(route => route.bound == "I") && filteredRoute.some(route => route.bound == "O")
+	// const debounceSearch = debounce(searchRoute, 300)
+
+
+	const checkRoundTripBound = (inputRoute) => {
+		const boundCheck =
+			getRouteList().some(route => route.bound == "I" && route.route == inputRoute) &&
+			getRouteList().some(route => route.bound == "O" && route.route == inputRoute)
 		setRouteHasTwoBound(boundCheck)
 	}
 
 	// Render options for async select
-	const routeOptions = (inputRoute) => {
-		if (!inputRoute) return
-
-		const filteredRoute = getRouteList().filter(route => route.route == inputRoute)
-		checkBound(filteredRoute)
-
+	const routeOptions = () => {
 		// Render route options array for async select
-		return filteredRoute.map(
-			(route, index) => {
+		return getRouteList().map(
+			(route) => {
 				return {
-					label: `${route.route} ｜ ${route.orig_tc} 往 ${route.dest_tc}${route.service_type != 1 ? "｜*特別班次" : ""}`,
+					label: `${route.route} ｜ ${route.orig_tc} 往 ${route.dest_tc} ｜${route.service_type != 1 ? "＊特別班" : ""}`,
 					value:
 						JSON.stringify(
 							{
@@ -82,11 +79,13 @@ function App() {
 			})
 	}
 
-	const selectRoute = async ({ label, value }) => {
+	const selectRoute = async ({ value }) => {
 		const routeInfo = JSON.parse(value)
 		setCurrentStopIndex(0)
 		setSelection(routeInfo)
+
 		const { route, bound, service_type, dest_tc, dest_en } = routeInfo
+		checkRoundTripBound(route)
 
 		const stopIDs = await fetch(`https://data.etabus.gov.hk/v1/transport/kmb/route-stop/${route}/${bound}/${service_type}`).then(
 			resp => resp.json()).then(json => json.data).then(data => data.map(stops => stops.stop))
@@ -142,24 +141,26 @@ function App() {
 	}
 
 	return (
-		<div style={{ outline: "none" }} tabIndex={1} onKeyDown={(e) => handleKeyboardControl(e.key)}>
+		<div className="outline-none p-[2rem]" tabIndex={1} onKeyDown={(e) => handleKeyboardControl(e.key)}>
 
 			{/* Query section for route input and selection */}
-			<section className='query-section'>
+			<section className='w-3/4 md:w-2/3 lg:w-1/2 xl:w-2/5 2xl:w-1/3'>
 				<AsyncSelect
-					// components={{ Input: props => <components.Input {...props} maxLength={4} /> }}
 					autoCapitalize="characters"
 					autoFocus
+					isClearable
 					cacheOptions
-					placeholder="請輸入九巴路線編號 &nbsp; Please enter KMB route"
-					noOptionsMessage={() => "No result."}
+					defaultOptions={false}
+					placeholder="請輸入九巴路線編號 &nbsp; Please enter KMB route."
+					filterOption={createFilter({ matchFrom: "start" })}
 					loadOptions={searchRoute}
 					onChange={selectRoute}
+
 				/>
 			</section>
 
 			{/* Button groups to control DPIP */}
-			<section className='button-handler-section'>
+			<section className='flex flex-wrap gap-[1vw] my-[1em] mx-0'>
 				<Button
 					color="error"
 					variant="contained"
@@ -190,7 +191,7 @@ function App() {
 					variant="contained"
 					startIcon={<RefreshIcon />}
 					onClick={() => setCurrentStopIndex(0)}
-					disabled={isEmptyObject(routeDetail)}
+					disabled={isEmptyObject(routeDetail) || currentStopIndex == 0}
 				>
 					從首站開始
 				</Button>
@@ -206,7 +207,7 @@ function App() {
 			</section>
 
 			{/* DPIP main screen with full details */}
-			<section className='dpip-monitors-section'>
+			<section className='flex flex-wrap gap-[1vw]'>
 				<DPIPMainScreen
 					detail={routeDetail}
 					currentStopIndex={currentStopIndex}
@@ -217,6 +218,61 @@ function App() {
 					currentStopIndex={currentStopIndex} />
 
 			</section>
+
+			{/* Keyboard shortcut guideline */}
+			<section className="rounded-xl my-5 relative overflow-x-auto">
+				<table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+					<thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+						<tr>
+							<th scope="col" className="px-6 py-3">
+								Keyboard Shortcut
+							</th>
+							<th scope="col" className="py-3">
+								Usage
+							</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr className="bg-white border-b dark:bg-gray-900 dark:border-gray-700">
+							<th scope="row" className="inline-flex items-center px-6 py-4 font-medium text-gray-500 dark:text-gray-400 whitespace-nowrap">
+								<kbd className="rtl:rotate-180 inline-flex items-center me-1  px-2 py-1.5 text-gray-800 bg-gray-100 border border-gray-200 rounded-lg dark:bg-gray-600 dark:text-gray-100 dark:border-gray-500">
+									<svg className="w-2.5 h-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 10 16">
+										<path d="M8.766.566A2 2 0 0 0 6.586 1L1 6.586a2 2 0 0 0 0 2.828L6.586 15A2 2 0 0 0 10 13.586V2.414A2 2 0 0 0 8.766.566Z" />
+									</svg>
+									<span className="sr-only">Arrow key left</span>
+								</kbd>
+								<kbd className="rtl:rotate-180 inline-flex items-center px-2 py-1.5 text-gray-800 bg-gray-100 border border-gray-200 rounded-lg dark:bg-gray-600 dark:text-gray-100 dark:border-gray-500">
+									<svg className="w-2.5 h-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 10 16">
+										<path d="M3.414 1A2 2 0 0 0 0 2.414v11.172A2 2 0 0 0 3.414 15L9 9.414a2 2 0 0 0 0-2.828L3.414 1Z" />
+									</svg>
+									<span className="sr-only">Arrow key right</span>
+								</kbd>
+							</th>
+							<td className="py-4">
+								Proceed to previous / next bus stop.
+							</td>
+						</tr>
+						<tr className="bg-white border-b dark:bg-gray-900 dark:border-gray-700">
+							<th scope="row" className="px-6 py-4 font-medium text-gray-500 whitespace-nowrap dark:text-gray-400">
+								<kbd className="px-2 py-1.5 text-xs font-semibold text-gray-800 bg-gray-100 border border-gray-200 rounded-lg dark:bg-gray-600 dark:text-gray-100 dark:border-gray-500">Home</kbd>
+							</th>
+							<td className="py-4">
+								Navigate to the first bus stop.
+							</td>
+						</tr>
+						<tr className="bg-white dark:bg-gray-900 dark:border-gray-700">
+							<th scope="row" className="px-6 py-4 font-medium text-gray-500 whitespace-nowrap dark:text-gray-400">
+								<kbd className="px-2 py-1.5 text-xs font-semibold text-gray-800 bg-gray-100 border border-gray-200 rounded-lg dark:bg-gray-600 dark:text-gray-100 dark:border-gray-500">End</kbd>
+							</th>
+							<td className="py-4">
+								Switch bound if the selected bus route has return journey.
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</section>
+
+
 		</div >
 	)
 }
