@@ -8,14 +8,14 @@
   box-shadow: .5em 1em 2em .75em #535551;
 }
 
-.dpip-monitor-screen-extra-wide {
+/* .dpip-monitor-screen-extra-wide {
   position: relative;
   width: 100em;
   height: 25em;
   border: 1.25em solid #000000;
   border-radius: 1.5em;
   box-shadow: .5em 1em 2em .75em #535551;
-}
+} */
 
 .dpip-monitor-container {
   position: absolute;

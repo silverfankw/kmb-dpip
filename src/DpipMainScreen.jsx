@@ -1,7 +1,7 @@
 import './App.css'
 import { useRef, useState, useCallback, useEffect, useLayoutEffect } from "react"
 import Arrow from "../src/arrow.svg?react"
-import { debounce } from '../util/util'
+import { DpipFullStopScreen } from './DpipFullStopScreen'
 
 {/* DPIP main screen with full details */ }
 export const DPIPMainScreen = ({ detail, currentStopIndex, currentBg }) => {
@@ -140,6 +140,7 @@ export const DPIPMainScreen = ({ detail, currentStopIndex, currentBg }) => {
     return (
         <>
             <div className='dpip-monitor-screen'>
+                {/* relative w-[50em] h-[30em] border-[1.25em] rounded-[1.5em] border-solid border-black shadow-[.5em_1em_2em_.75em_rgba(83,85,81,1)] */}
                 <div className='dpip-monitor-container'>
                     <div style={{ backgroundImage: bgList[currentBg] }} className="dpip-main-monitor-bg">
 
@@ -171,7 +172,8 @@ export const DPIPMainScreen = ({ detail, currentStopIndex, currentBg }) => {
 
                         {/* Next 3 stops info */}
                         <section className="dpip-main-stop-detail-section">
-                            <div className='dpip-main-this-stop-name'>
+                            <DpipFullStopScreen />
+                            {/* <div className='dpip-main-this-stop-name'>
                                 <div className='dpip-main-stop-name-zh'>{detail?.stops?.[currentStopIndex]?.zh}</div>
                                 <div className='dpip-main-stop-name-en'>{detail?.stops?.[currentStopIndex]?.en}</div>
                             </div>
@@ -182,7 +184,7 @@ export const DPIPMainScreen = ({ detail, currentStopIndex, currentBg }) => {
                             <div className='dpip-main-next-next-stop-name'>
                                 <div className='dpip-main-stop-name-zh'>{detail?.stops?.[nextNextStopIndex]?.zh}</div>
                                 <div className='dpip-main-stop-name-en'>{detail?.stops?.[nextNextStopIndex]?.en}</div>
-                            </div>
+                            </div> */}
                         </section>
 
                         <section
