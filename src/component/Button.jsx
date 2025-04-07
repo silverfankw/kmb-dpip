@@ -3,8 +3,8 @@ import PropTypes from 'prop-types'
 export const Button = ({ style, text, disabled, onClick }) => {
     return (
         <button className={`font-medium rounded-lg text-sm text-center text-white 
-            bg-gradient-to-r hover:bg-gradient-to-br 
-            focus:ring-2 focus:outline-none
+            bg-linear-to-r hover:bg-linear-to-br 
+            focus:ring-2 focus:outline-hidden
          px-5 py-2.5 mr-2 mb-2
         ${style}`}
             onClick={() => onClick()}

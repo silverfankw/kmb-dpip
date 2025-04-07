@@ -147,7 +147,7 @@ function App() {
 
 	return (
 		<routeContext.Provider value={{ routeDetail, currentStopIndex }}>
-			<div className="focus:outline-none p-[2rem] flex flex-col gap-2" tabIndex={1}
+			<div className="focus:outline-hidden p-[2rem] flex flex-col gap-2" tabIndex={1}
 				onKeyDown={(e) => handleKeyboardControl(e.key)}>
 
 				{/* Query section for route input and selection */}
