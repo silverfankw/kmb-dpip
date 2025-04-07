@@ -1,7 +1,7 @@
 import { useRef, useState, useEffect, useCallback, useLayoutEffect } from "react"
 
 
-export const DpipNextStop = ({ rowIndex, stopZh, stopEn, currentStopIndex }) => {
+export const DpipNextStop = ({ stopZh, stopEn }) => {
 
     const [windowWidth, setWindowWidth] = useState(window.innerWidth)
     const [nameContainerWidth, setNameContainerWidth] = useState(0)
@@ -31,58 +31,33 @@ export const DpipNextStop = ({ rowIndex, stopZh, stopEn, currentStopIndex }) => 
     //         setEnTextWidth(node.getBoundingClientRect().width)
     // }, [stopEn])
 
-    const stopNameZhRef = useRef(null)
-    const stopNameEnRef = useRef(null)
+    // const stopNameZhRef = useRef(null)
+    // const stopNameEnRef = useRef(null)
 
 
-    useLayoutEffect(() => {
-        setNameContainerWidth(stopNameZhRef.current.parentElement.offsetWidth)
-        setZhTextWidth(stopNameZhRef.current.offsetWidth)
-        setEnTextWidth(stopNameEnRef.current.offsetWidth)
-    }, [stopZh, stopEn])
-
-    const computeStopNameWidth = (type) => {
-        const currentTextWidth = type == "zh" ? zhTextWidth : enTextWidth
-
-        // When stops name longer than container, adjust name font size with one line display
-        if (currentTextWidth > nameContainerWidth) {
-            const emRatio = type == "zh" ? 3.25 : 1.5
-            const overflowRatio = currentTextWidth / nameContainerWidth
-            const currentFontSize =
-                windowWidth <= 540 ? 8 :
-                    windowWidth <= 767 ? 10 :
-                        windowWidth <= 1024 ? 12 :
-                            windowWidth <= 1280 ? 16 : 16
-            const newFontSize = currentFontSize * emRatio / overflowRatio
-
-            // if (type == "zh") {
-            //     console.log(`Window: ${windowWidth} container: ${nameContainerWidth}, text: ${currentTextWidth}, ratio: ${overflowRatio}, Change to ${newFontSize} px`)
-            // }
-
-            return {
-                fontSize: `${newFontSize}px`,
-            }
-        }
-    }
+    // useLayoutEffect(() => {
+    //     setNameContainerWidth(stopNameZhRef.current.parentElement.offsetWidth)
+    //     setZhTextWidth(stopNameZhRef.current.offsetWidth)
+    //     setEnTextWidth(stopNameEnRef.current.offsetWidth)
+    // }, [stopZh, stopEn])
 
 
     return (
-        <div
-            // ref={nameContainerRef} 
-            className={`dpip-screen-next-stop-row-${rowIndex + 1}`} >
-            <div
-                ref={stopNameZhRef}
-                key={`next-stop-detail-zh-${currentStopIndex + 1}`}
-                className='next-stop-detail-zh'
-                style={computeStopNameWidth("zh")}>
-                {stopZh}
+        <>
+            <div className="col-start-1 col-end-5 bg-[#eee8eba3]"></div>
+            <div className={`flex flex-col items-center justify-center bg-[#FF0000]`}>
+                <div className='inline-block rounded-[50%] bg-white w-[40px] h-[40px]'></div>
             </div>
-            <div ref={stopNameEnRef}
-                key={`next-stop-detail-en-${currentStopIndex + 1}`}
-                className='next-stop-detail-en'
-                style={computeStopNameWidth("en")}>
-                {stopEn}
+            <div className={`relative flex flex-col bg-white`}>
+                <div className="dpip-screen-next-stop-row">
+                    <div className='next-stop-detail-zh'>
+                        {stopZh ?? ""}
+                    </div>
+                    <div className='next-stop-detail-en'>
+                        {stopEn ?? ""}
+                    </div>
+                </div>
             </div>
-        </div>
+        </>
     )
 }

@@ -15,14 +15,20 @@ import { routeContext } from './context/Provider';
 import { isEmptyObject } from "../util/util"
 import { DPIPSecScreen } from './DpipSecScreen'
 import { DPIPMainScreen } from './DpipMainScreen'
-import { DpipFullStopScreen } from './DpipFullStopScreen';
+import { Input } from './component/Input';
 
 function App() {
 	const [selection, setSelection] = useState(null)
 	const [routeDetail, setRouteDetail] = useState({})
 	const [currentStopIndex, setCurrentStopIndex] = useState(0)
 	const [routeHasTwoBound, setRouteHasTwoBound] = useState(false)
-	const [mainDpipBg, setMainDpipBg] = useState(0)
+	const [userPreference, setUserPreference] = useState(
+		{
+			containerStyle: "basic",
+			stopPressed: false,
+			driverInfo: { nameZh: "九巴仔", nameEn: "KMB Boy", staffNo: "1933" }
+		}
+	)
 
 	const getRouteList = () => JSON.parse(localStorage.getItem("routeList"))
 
@@ -114,6 +120,7 @@ function App() {
 			})
 		}
 	}
+
 	const handleKeyboardControl = (key) => {
 		// Do nothing if no route selected
 		if (selection == null)
@@ -140,7 +147,8 @@ function App() {
 
 	return (
 		<routeContext.Provider value={{ routeDetail, currentStopIndex }}>
-			<div className="focus:outline-none p-[2rem]" tabIndex={1} onKeyDown={(e) => handleKeyboardControl(e.key)}>
+			<div className="focus:outline-none p-[2rem] flex flex-col gap-2" tabIndex={1}
+				onKeyDown={(e) => handleKeyboardControl(e.key)}>
 
 				{/* Query section for route input and selection */}
 				<section className='w-3/4 md:w-2/3 lg:w-1/2 xl:w-2/5 2xl:w-1/3'>
@@ -154,7 +162,6 @@ function App() {
 						filterOption={createFilter({ matchFrom: "start" })}
 						loadOptions={searchRoute}
 						onChange={selectRoute}
-
 					/>
 				</section>
 
@@ -182,9 +189,9 @@ function App() {
 						color="error"
 						variant="contained"
 						startIcon={<NotificationsIcon />}
-						onClick={() => setMainDpipBg(prev => prev === 0 ? 1 : 0)}
+						onClick={() => setUserPreference(prev => { return { ...prev, stopPressed: !prev.stopPressed } })}
 					>
-						{mainDpipBg == 0 ? `按鐘` : `解除鐘`}
+						{userPreference.stopPressed ? `解除鐘` : `按鐘`}
 					</Button>
 					<Button
 						variant="contained"
@@ -203,19 +210,62 @@ function App() {
 					>
 						切換方向
 					</Button>
+
 				</section>
 
 				{/* DPIP main screen with full details */}
-				<section className='flex flex-wrap gap-[1vw]'>
+				<section className="py-4 flex flex-wrap gap-[2vw]"
+				// className='flex flex-wrap gap-[1vw]' flex flex-wrap gap-[1vw]
+				>
 					<DPIPMainScreen
 						detail={routeDetail}
 						currentStopIndex={currentStopIndex}
-						currentBg={mainDpipBg}
+						userPreference={userPreference}
 					/>
+
 					<DPIPSecScreen
 						stops={routeDetail.stops}
-						currentStopIndex={currentStopIndex} />
+						currentStopIndex={currentStopIndex}
+						userPreference={userPreference}
+					/>
 
+				</section>
+
+				{/* Customizeable driver info with input group */}
+				<section className="flex gap-3">
+					<Input placeholder="車長中文姓氏"
+						maxLength={2}
+						defaultValue={userPreference.driverInfo.nameZh}
+						onChange={v => {
+							if (v == "") v = "九巴仔"
+							setUserPreference({
+								...userPreference,
+								driverInfo: { ...userPreference.driverInfo, nameZh: v }
+							})
+						}} />
+
+					<Input placeholder="車長英文姓氏"
+						maxLength={10}
+						defaultValue={userPreference.driverInfo.nameEn}
+						onChange={v => {
+							if (v == "") v = "KMB Boy"
+							setUserPreference({
+								...userPreference,
+								driverInfo: { ...userPreference.driverInfo, nameEn: v }
+							})
+						}} />
+
+					<Input placeholder="職員編號"
+						minLength={1}
+						maxLength={6}
+						defaultValue={userPreference.driverInfo.staffNo}
+						onChange={v => {
+							if (v == "") v = "1933"
+							setUserPreference({
+								...userPreference,
+								driverInfo: { ...userPreference.driverInfo, staffNo: v }
+							})
+						}} />
 				</section>
 
 				{/* Keyboard shortcut guideline */}

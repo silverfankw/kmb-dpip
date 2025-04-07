@@ -1,193 +1,14 @@
 /* Screen common CSS */
-.dpip-monitor-screen {
-  position: relative;
-  width: 50em;
-  height: 30em;
-  border: 1.25em solid #000000;
-  border-radius: 1.5em;
-  box-shadow: .5em 1em 2em .75em #535551;
-}
-
-/* .dpip-monitor-screen-extra-wide {
-  position: relative;
-  width: 100em;
-  height: 25em;
-  border: 1.25em solid #000000;
-  border-radius: 1.5em;
-  box-shadow: .5em 1em 2em .75em #535551;
-} */
-
-.dpip-monitor-container {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  border: .5em solid #333331;
-  z-index: -1;
-}
 
 /* Main Screen CSS */
-.dpip-main-monitor-bg {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  background-image: url("../dpip-main-screen.svg");
-  background-repeat: no-repeat;
-  background-size: cover;
-  background-color: white;
-}
-
-.dpip-main-route-section {
-  position: relative;
-  color: #FFFFFF;
-  left: 30%;
-  height: 15%;
-  width: 70%;
-}
-
-.dpip-route-display {
-  position: absolute;
-  color: #FFFFFF;
-  top: -.125em;
-  left: 2em;
-  font-size: 3em;
-  letter-spacing: -0.0375em;
-}
-
-.dpip-main-route-arrow{
-  width: 12%;
-  position: relative;
-  left: 11.25rem;
-  top: .5rem;
-}
-
-.dpip-main-dest-info {
-  position: relative;
-  left: 15.25rem;
-  width: 50%;
-  height: 4em;
-  top: -3.25rem;
-}
-
-
-.dpip-main-dest-info-zh {
-  position: absolute;
-  top: 3%;
-  font-size: 1.75em;
-  /* width: 80%; */
-  overflow: hidden;
-  white-space: nowrap;
-}
-
-.dpip-main-dest-info-en {
-  position: absolute;
-  top: 3em;
-  font-size: .85em;
-  letter-spacing: -.03125em;
-}
-
-.dpip-main-stop-detail-section {
-  position: relative;
-  height: 50%;
-}
-
-.dpip-main-this-stop-name {
-  position: absolute;
-  text-align: center;
-  letter-spacing: -.03125em;
-  font-weight: 400;
-  top: 25%;
-  width: 33%;
-}
-
-.dpip-main-stop-name-zh {
-  font-size: 1.25rem;
-  overflow: hidden;
-}
-
-.dpip-main-stop-name-en {
-  font-size: .75rem;
-  overflow: hidden;
-  white-space: nowrap;
-}
-
-.dpip-main-next-stop-name {
-  position: absolute;
-  text-align: center;
-  letter-spacing: -.03125rem;
-  font-weight: 400;
-  width: 33%;
-  left: 33%;
-  top: 25%;
-}
-
-
-.dpip-main-next-next-stop-name {
-  position: absolute;
-  text-align: center;
-  letter-spacing: -.03125rem;
-  font-weight: 400;
-  width: 29.5%;
-  left: 70%;
-  top: 25%;
-}
-
-.dpip-main-this-stop-big-name-container{
-  position: relative;
-  height: 27.5%;
-  margin: 0 auto;
-  left: 0;
-  right: 0;
-  /* font-size: 4.5rem; */
-  text-align: center;
-  overflow: hidden;
-}
-
-.dpip-main-this-stop-big-name-zh{
-  font-size: 6rem;
-  position: absolute;
-  top: 50%;
-  /* width: 90%; */
-  transform: translateX(-50%) translateY(-50%);
-  white-space: nowrap;
-}
-
-.dpip-main-this-stop-big-name-en{
-  font-size: 1rem;
-  position: absolute;
-  top: 50%;
-  width: 90%;
-  transform: translateX(-50%) translateY(-50%);
-}
-
-.dpip-main-driver-section {
-  position: absolute;
-  top: 93%;
-  height: 7%;
-  margin: 0 auto;
-  left: 0;
-  right: 0;
-  text-align: center;
-  font-size: 1em;
-  font-weight: 400;
-  color: #FFFFFF;
-}
 
 /* Secondary Screen CSS */
-.dpip-secondary-monitor-bg {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  background-image: url("../dpip-secondary-screen.svg");
-  background-repeat: no-repeat;
-  background-size: cover;
-  background-color: white;
-}
 
 .dpip-screen-this-stop-row {
   position: relative;
-  width: 87.5%;
-  height: 44%;
-  left: 11%;
+  width: 95%;
+  height: 75%;
+  left: 2%;
 }
 
 .this-stop-detail-zh-container {
@@ -197,13 +18,14 @@
   white-space: nowrap; 
 }
 
+
 .this-stop-detail-zh {
-  font-size: 4.5em;
+  font-size: 4.25cqw;
 }
 
 .this-stop-detail-en-container {
   position: absolute;
-  top: 60%;
+  top: 80%;
   width: 100%;
   letter-spacing: -0.0625rem;
   white-space: nowrap;
@@ -213,21 +35,12 @@
   font-size: 2em;
 }
 
-.dpip-screen-next-stop-row-1 {
+.dpip-screen-next-stop-row {
   position: relative;
   top: 1%;
   width: 87.5%;
-  height: 26%;
-  left: 11%;
-  white-space: nowrap;
-}
-
-.dpip-screen-next-stop-row-2 {
-  position: relative;
-  top: 3%;
-  width: 87.5%;
-  height: 26%;
-  left: 11%;
+  height: 90%;
+  left: 2%;
   white-space: nowrap;
 }
 
@@ -248,181 +61,25 @@
 /* Media Query */
 
 @media screen and (max-width: 1920px) {
-  .dpip-main-route-section{
-    left: 30%;
-  }
 
-  .dpip-main-route-arrow{
-  }
-
-  .dpip-main-dest-info{ 
-  }
-
-  .dpip-main-dest-info-zh{
-    /* font-size: 1.5rem; */
-  }
-
-  .dpip-main-this-stop-big-name-zh{
-    font-size: 5rem;
-  }
-  .dpip-main-this-stop-big-name-en{
-    font-size: 2.5rem;
-  }
 }
 
 @media screen and (max-width: 1440px) {
-  .dpip-main-route-arrow{
-    left: 14rem;
-    top: 0.625rem;
-  }
-  .dpip-main-route-section{
-    left: 30%;
-  }
-  .dpip-main-dest-info{
-    left: 19rem;
-    top: -4rem;
-  }
-  .dpip-main-dest-info-zh{
-    font-size: 2.25rem;
-  }
-  .dpip-main-stop-name-zh{
-    font-size: 1.25rem;
-  }
-  .dpip-main-stop-name-en{
-    font-size: .75rem;
-  }
-  .dpip-main-this-stop-big-name-zh{
-    font-size: 6rem;
-  }
-  .dpip-main-this-stop-big-name-en{
-    font-size: 2.5rem;
-  }
-  .dpip-monitor-screen{
-    font-size: 20px;
-  }
+ 
 }
 
 @media screen and (max-width: 1280px) {
-  .dpip-main-route-section{
-    left: 30%;
-  }
-  .dpip-main-route-arrow{
-    left: 11.5rem;
-    top: 0.5rem;
-  }
-  .dpip-main-dest-info{
-    left: 15.5rem;
-    top: -3.25rem;
-  }
-  .dpip-main-dest-info-zh{
-    font-size: 1.75rem;
-  }
-  .dpip-main-stop-name-zh{
-    font-size: 1.25rem;
-  }
-  .dpip-main-stop-name-en{
-    font-size: .75rem;
-  }
-  .dpip-main-this-stop-big-name-zh{
-    font-size: 4.5rem;
-  }
-  .dpip-main-this-stop-big-name-en{
-    font-size: 2rem;
-  }
-  .dpip-monitor-screen{
-    font-size: 16px;
-  }
+ 
 }
 
 @media screen and (max-width: 1024px) {
-  .dpip-main-route-section{
-    left: 30%;
-  }
-  .dpip-main-route-arrow{
-    left: 8.25rem;
-    top: .375rem;
-  }
-  .dpip-main-dest-info{
-    left: 11.25rem;
-    top: -2.375rem;
-  }
-  .dpip-main-dest-info-zh{
-    font-size: 1.25rem;
-  }
-  .dpip-main-stop-name-zh{
-    font-size: 1rem;
-  }
-  .dpip-main-stop-name-en{
-    font-size: .625rem;
-  }
-  .dpip-main-this-stop-big-name-zh{
-    font-size: 3.75rem;
-  }
-  .dpip-main-this-stop-big-name-en{
-    font-size: 1.75rem;
-  }
-  .dpip-monitor-screen{
-    font-size: 12px;
-  }
+ 
 }
 
 @media screen and (max-width: 767px) {
-  .dpip-main-route-section{
-    left: 30%;
-  }
-  .dpip-main-route-arrow{
-    left: 7rem;
-    top: .35rem;
-  }
-  .dpip-main-dest-info{
-    left: 9.5rem;
-    top: -2rem;
-  }
-  .dpip-main-dest-info-zh{
-    font-size: 1rem;
-  }
-  .dpip-main-stop-name-zh{
-    font-size: 0.75rem;
-  }
-  .dpip-main-stop-name-en{
-    font-size: .5rem;
-  }
-  .dpip-main-this-stop-big-name-zh{
-    font-size: 3rem;
-  }
-  .dpip-main-this-stop-big-name-en{
-    font-size: 1.5rem;
-  }
-  .dpip-monitor-screen{
-    font-size: 10px;
-  }
+  
 }
 
 @media screen and (max-width: 480px) {
-  .dpip-monitor-screen{
-    font-size: 8px;
-  }
-  .dpip-main-route-arrow{
-    left: 5.75rem;
-    top: .25rem;
-  }
-  .dpip-main-dest-info{
-    left: 7.75rem;
-    top: -1.625rem;
-  }
-  .dpip-main-dest-info-zh{
-    font-size: .75rem;
-  }
-  .dpip-main-stop-name-zh{
-    font-size: 0.75rem;
-  }
-  .dpip-main-stop-name-en{
-    font-size: 0.5rem;
-  }
-  .dpip-main-this-stop-big-name-zh{
-    font-size: 2.5rem;
-  }
-  .dpip-main-this-stop-big-name-en{
-    font-size: 1.25rem;
-  }
+
 } 

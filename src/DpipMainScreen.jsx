@@ -1,37 +1,28 @@
 import './App.css'
-import { useRef, useState, useCallback, useEffect, useLayoutEffect } from "react"
-import Arrow from "../src/arrow.svg?react"
-import { DpipFullStopScreen } from './DpipFullStopScreen'
+import { useRef, useState, useEffect, useCallback } from "react"
+import { Arrow } from './component/Arrow'
 
 {/* DPIP main screen with full details */ }
-export const DPIPMainScreen = ({ detail, currentStopIndex, currentBg }) => {
+export const DPIPMainScreen = ({ detail, currentStopIndex, userPreference }) => {
 
+    const containerStyle = {
+        basic: "border-[.5em] border-solid border-[#0e0e0fbf] rounded-xl outline outline-[1rem] outline-black",
+        new: "border-solid border-black "
+    }
+
+    const nextStopIndex = currentStopIndex + 1
+    const nextNextStopIndex = nextStopIndex + 1
+    const lastStopIndex = detail?.stops?.length - 1
     const stopNameZh = detail?.stops?.[currentStopIndex]?.zh
     const stopNameEn = detail?.stops?.[currentStopIndex]?.en
 
-    const [windowWidth, setWindowWidth] = useState(window.innerWidth)
-    const [stopNameContainerWidth, setStopNameContainerWidth] = useState(0)
-    const [stopNameZhWidth, setStopNameZhWidth] = useState(0)
-    const [stopNameEnWidth, setStopNameEnWidth] = useState(0)
-    const [destNameContainerWidth, setDestNameContainerWidth] = useState(0)
-    const [destNameWidth, setDestNameWidth] = useState(0)
-    const [bigStopContent, setBigStopContent] = useState(stopNameZh)
-
-    const bgList = ["url(./dpip-main-screen.svg)", "url(./dpip-main-screen-stop.svg)"]
-
-    const handleWindowSizeChange = () => setWindowWidth(window.innerWidth)
+    const [nextStopName, setNextStopName] = useState(stopNameZh)
 
     useEffect(() => {
-        // Listen to window resize
-        window.addEventListener('resize', handleWindowSizeChange)
-        return () => window.removeEventListener('resize', handleWindowSizeChange)
-    }, [])
-
-    useEffect(() => {
-        setBigStopContent(stopNameZh)
+        setNextStopName(stopNameZh)
         // Switch the content after 3 seconds
         const interval = setInterval(() => {
-            setBigStopContent(prevContent =>
+            setNextStopName(prevContent =>
                 prevContent === detail?.stops?.[currentStopIndex]?.zh ?
                     detail?.stops?.[currentStopIndex]?.en :
                     detail?.stops?.[currentStopIndex]?.zh)
@@ -39,183 +30,87 @@ export const DPIPMainScreen = ({ detail, currentStopIndex, currentBg }) => {
         return () => { clearInterval(interval) }
     }, [detail, currentStopIndex])
 
-
-    const destNameContainerRef = useCallback(node => {
-        if (node != null)
-            setDestNameContainerWidth(node.getBoundingClientRect().width)
-    }, [])
-
-    const destNameRef = useCallback(node => {
-        if (node != null) {
-            // This is to remove adjusted font size style
-            node.removeAttribute("style")
-            setDestNameWidth(node.getBoundingClientRect().width)
-        }
-    }, [detail])
-
-    const stopNameContainerRef = useCallback(node => {
-        if (node != null)
-            setStopNameContainerWidth(node.getBoundingClientRect().width)
-    }, [])
-
-    const stopNameZhRef = useCallback(node => {
-        if (node != null) {
-            // This is to remove adjusted font size style
-            node.removeAttribute("style")
-            setStopNameZhWidth(node.getBoundingClientRect().width)
-        }
-    }, [detail, currentStopIndex])
-
-    const stopNameEnRef = useCallback(node => {
-        if (node != null) {
-            // This is to remove adjusted font size style
-            node.removeAttribute("style")
-            setStopNameEnWidth(node.getBoundingClientRect().width)
-        }
-    }, [detail, currentStopIndex])
-
-
-    const nextStopIndex = currentStopIndex + 1
-    const nextNextStopIndex = nextStopIndex + 1
-    const lastStopIndex = detail?.stops?.length - 1
-
-    const adjustRouteFontSize = route => {
-        switch (route?.length) {
-            case 1:
-                return { "left": "2.25em" }
-            case 2:
-                return { "left": "2em" }
-            case 3:
-                return { "left": "1.65em" }
-            case 4:
-                return { "left": "1.4125em" }
-            default:
-                return { "left": "1.85em" }
-        }
-    }
-
-    const adjustDestFontSize = () => {
-        // console.log(`${destNameWidth} in adjust function`)
-        if (destNameWidth > destNameContainerWidth) {
-            const emRatio = 1.75
-            const overflowRatio = destNameWidth / destNameContainerWidth
-            const currentFontSize =
-                windowWidth <= 540 ? 8 :
-                    windowWidth <= 767 ? 10 :
-                        windowWidth <= 1024 ? 12 :
-                            windowWidth <= 1280 ? 16 : 16
-            const newFontSize = currentFontSize * emRatio / overflowRatio
-
-            // console.log(`* container: ${destNameContainerWidth}, text: ${destNameWidth}, ratio: ${overflowRatio}, Change to ${newFontSize} px`)
-
-            return {
-                fontSize: `${newFontSize}px`,
-                // whiteSpace: "normal",
-            }
-        }
-    }
-
-    const adjustStopFontSize = () => {
-        // console.log(`container: ${stopNameContainerWidth}, text: ${stopNameZhWidth}`)
-
-        // When stops name longer than container, adjust name font size with one line display
-        if (stopNameZhWidth > stopNameContainerWidth) {
-            const emRatio = 4.5
-            const overflowRatio = stopNameZhWidth / stopNameContainerWidth
-            const currentFontSize =
-                windowWidth <= 540 ? 8 :
-                    windowWidth <= 767 ? 10 :
-                        windowWidth <= 1024 ? 12 :
-                            windowWidth <= 1280 ? 16 : 16
-            const newFontSize = currentFontSize * emRatio / overflowRatio
-
-            // console.log(`container: ${stopNameContainerWidth}, text: ${stopNameZhWidth}, ratio: ${overflowRatio}, Change to ${newFontSize} px`)
-
-            return {
-                fontSize: `${newFontSize}px`,
-            }
-        }
-    }
-
     return (
         <>
-            <div className='dpip-monitor-screen'>
-                {/* relative w-[50em] h-[30em] border-[1.25em] rounded-[1.5em] border-solid border-black shadow-[.5em_1em_2em_.75em_rgba(83,85,81,1)] */}
-                <div className='dpip-monitor-container'>
-                    <div style={{ backgroundImage: bgList[currentBg] }} className="dpip-main-monitor-bg">
+            {/* --- Screen Monitor Grid Layout --- */}
+            <div className={`grid grid-rows-[0.6fr_2fr_0.05fr_1.25fr_0.25fr]
+             2xl:w-[50%]
+             sm:max-w-full md:max-w-full lg:max-w-full xl:max-w-full
+            h-[30rem] 
+                ${containerStyle[userPreference.containerStyle]}`}>
 
-                        {/* Route and destination info */}
-                        <section className="dpip-main-route-section">
-                            <div style={adjustRouteFontSize(detail?.route)}
-                                className='dpip-route-display'>
-                                {detail?.route}
-                            </div>
-                            <div className="dpip-main-route-arrow">
-                                <Arrow />
-                            </div>
-                            <div
-                                ref={destNameContainerRef}
-                                className='dpip-main-dest-info'>
-                                <div
-                                    ref={destNameRef}
-                                    style={adjustDestFontSize()}
-                                    className="dpip-main-dest-info-zh">
-                                    {detail?.stops?.[lastStopIndex].zh}
-                                    {/* {detail?.dest_tc} */}
-                                </div>
-                                <div className="dpip-main-dest-info-en">
-                                    {detail?.stops?.[lastStopIndex].en}
-                                    {/* {detail?.dest_en} */}
-                                </div>
-                            </div>
-                        </section>
+                {/* --- Next stop Indicator --- */}
+                <div className={`col-start-1 col-end-3 flex flex-col text-center 
+                    ${userPreference.stopPressed ? `bg-[#FF0000] text-white` : `bg-[#FFFF00] text-black`}`}>
+                    <div className={`font-[800] text-[1.875rem] `}>
+                        下一站{userPreference.stopPressed && `停於`}</div>
+                    <div className={`font-[500] text-[1rem]`}>
+                        Next {userPreference.stopPressed ? `Stopping at` : `Stop`}</div>
+                </div>
 
-                        {/* Next 3 stops info */}
-                        <section className="dpip-main-stop-detail-section">
-                            <DpipFullStopScreen />
-                            {/* <div className='dpip-main-this-stop-name'>
-                                <div className='dpip-main-stop-name-zh'>{detail?.stops?.[currentStopIndex]?.zh}</div>
-                                <div className='dpip-main-stop-name-en'>{detail?.stops?.[currentStopIndex]?.en}</div>
-                            </div>
-                            <div className='dpip-main-next-stop-name'>
-                                <div className='dpip-main-stop-name-zh'>{detail?.stops?.[nextStopIndex]?.zh}</div>
-                                <div className='dpip-main-stop-name-en'>{detail?.stops?.[nextStopIndex]?.en}</div>
-                            </div>
-                            <div className='dpip-main-next-next-stop-name'>
-                                <div className='dpip-main-stop-name-zh'>{detail?.stops?.[nextNextStopIndex]?.zh}</div>
-                                <div className='dpip-main-stop-name-en'>{detail?.stops?.[nextNextStopIndex]?.en}</div>
-                            </div> */}
-                        </section>
-
-                        <section
-                            ref={stopNameContainerRef}
-                            className="dpip-main-this-stop-big-name-container">
-                            {bigStopContent === stopNameZh ?
-                                <span
-                                    ref={stopNameZhRef}
-                                    style={adjustStopFontSize()}
-                                    className="dpip-main-this-stop-big-name-zh"
-                                >
-                                    {bigStopContent}
-                                </span> :
-                                <span
-                                    ref={stopNameEnRef}
-                                    // style={adjustStopFontSize()}
-                                    className="dpip-main-this-stop-big-name-en"
-                                >
-                                    {bigStopContent}
-                                </span>}
-                        </section>
-
-                        {/* Driver info */}
-                        <section className="dpip-main-driver-section">
-                            九巴仔正為您服務 &nbsp; KMB Boy is serving you
-                            &nbsp;&nbsp; 員工編號 &nbsp;Emp. No: 1933
-                        </section>
+                {/* --- Route Number & Destination --- */}
+                <div className="col-start-3 col-end-5 flex items-center bg-black text-white">
+                    <div className='text-center flex flex-col item-center basis-[4rem]'>
+                        <div className="font-semibold text-[1.625rem] tracking-tighter">路線</div>
+                        <div className="text-md tracking-tighter">Route</div>
+                    </div>
+                    <div className="font-medium text-[3rem] text-center tracking-tighter basis-[6rem]">
+                        {detail.route}</div>
+                    <div className='basis-[4rem] pl-1.5'>
+                        <Arrow direction='right' size="l" stroke="m" style={"ml-[-.25rem]"} />
+                        <Arrow direction='right' size="l" stroke="m" style={"ml-[-.625rem]"} />
+                        <Arrow direction='right' size="l" stroke="m" style={"ml-[-.625rem]"} />
+                    </div>
+                    <div className='@container/terminus flex flex-col pl-3 '>
+                        <div className='@sm/terminus:text-sm font-[500] text-3xl whitespace-nowrap'>{detail?.stops?.[lastStopIndex].zh}</div>
+                        <div className="font-[500] text-sm whitespace-nowrap">{detail?.stops?.[lastStopIndex].en}</div>
                     </div>
                 </div>
-            </div>
-        </>
 
+                {/* --- This stop & 2 next stop & stop indicator line --- */}
+                <div className="col-start-1 col-end-5 bg-white">
+                    <div className='relative top-[30%] font-[400] text-center tracking-tighter'>
+                        <div className='@container/firststop absolute w-1/3 overflow-hidden'>
+                            <div className='
+                            @xs/firststop:text-[1cqw]
+                            @md/firststop:text-[1.5cqw]
+                            @xl/firststop:text-[1.75cqw] @lg/firststop:text-red-700
+                            @4xl/firststop:text-[2cqw] '>
+                                {detail?.stops?.[currentStopIndex]?.zh}
+                            </div>
+                            <div className='text-[0.75rem]'>{detail?.stops?.[currentStopIndex]?.en}</div>
+                        </div>
+                        <div className='absolute left-[33%] w-1/3 overflow-hidden'>
+                            <div className='text-[1.75cqw]'>{detail?.stops?.[nextStopIndex]?.zh}</div>
+                            <div className='text-[0.75rem]'>{detail?.stops?.[nextStopIndex]?.en}</div>
+                        </div>
+                        <div className='absolute left-[66%] w-1/3 overflow-hidden'>
+                            <div className='text-[1.75cqw]'>{detail?.stops?.[nextNextStopIndex]?.zh}</div>
+                            <div className='text-[0.75em]'>{detail?.stops?.[nextNextStopIndex]?.en}</div>
+                        </div>
+                    </div>
+                    <div className='relative top-[73%] flex justify-around w-[95%] h-2 bg-red-600'>
+                        <div className='relative w-2 h-2 outline-white outline-double rounded-[50%] bg-yellow-300'></div>
+                        <div className='left-[1rem] relative w-2 h-2 border-solid rounded-[50%] bg-white'></div>
+                        <div className='left-[2rem] relative w-2 h-2 border-solid rounded-[50%] bg-white'></div>
+                    </div>
+                </div>
+
+                {/* --- Horizontal divider line --- */}
+                <div className="col-start-1 col-end-5 bg-black"></div>
+
+                {/* --- Big next stop name --- */}
+                <div className="@container col-start-1 col-end-5 bg-white flex justify-center items-center">
+                    <span className='text-[9cqw] whitespace-nowrap overflow-hidden'>{stopNameZh}</span>
+                </div>
+
+                {/* --- Driver Info --- */}
+                <div className={`col-start-1 col-end-5 text-white p-1 text-[1rem] font-extralight text-center ${userPreference.stopPressed ? `bg-[#FF0000]` : `bg-black`}`}>
+                    {userPreference?.driverInfo?.nameZh}車長正為您服務 &nbsp; Bus Captain {userPreference?.driverInfo?.nameEn} is serving you
+                    &nbsp;&nbsp; 員工編號 &nbsp;Emp. No: {userPreference?.driverInfo?.staffNo}
+                </div>
+            </div >
+        </>
     )
 }
+
