@@ -38,11 +38,17 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   -webkit-text-size-adjust: 100%;
-}
+
+  /* background: #434343;
+  background: linear-gradient(
+    to right,
+    #434343,#000A00
+  ); */
+  background: rgb(26,26,28);
+  background: radial-gradient(circle, rgba(26,26,28,0.8786108193277311) 0%, rgba(15,17,16,0.6909357492997199) 31%, rgba(4,4,4,0.7553615196078431) 74%, rgba(5,10,19,0.8730085784313726) 100%);}
 
 body {
   margin: 0;
   min-width: 480px;
-  background: rgb(163,163,166);
-  background: radial-gradient(circle, rgba(163,163,166,1) 0%, rgba(0,29,63,1) 100%);
 }
+

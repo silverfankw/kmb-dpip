@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Button from '@mui/material/Button';
+import { Popover } from '@base-ui-components/react/popover';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import RefreshIcon from '@mui/icons-material/Refresh';
@@ -17,6 +18,7 @@ import { routeContext } from './context/Provider';
 import { isEmptyObject } from "../util/util"
 import { DPIPSecScreen } from './DpipSecScreen'
 import { DPIPMainScreen } from './DpipMainScreen'
+import { IconButton } from '@mui/material';
 
 function App() {
 	const [selection, setSelection] = useState(null)
@@ -169,14 +171,15 @@ function App() {
 
 					{/* Query section for route input and selection */}
 					<section className="flex gap-3">
-						<Button
+						<IconButton
+							disabled={true}
+							// disabled={false}
 							color="ochre"
-							variant="contained"
-							startIcon={<KeyboardHideIcon />}
-							onClick={() => { }}
-							disabled={true}>
-							虛擬鍵盤
-						</Button>
+							onClick={e => { }}>
+							<KeyboardHideIcon />
+						</IconButton>
+
+
 						<div className='w-full md:w-2/3 lg:w-2/3 xl:w-2/5 2xl:w-2/5'>
 							<AsyncSelect
 								autoCapitalize="characters"
@@ -226,7 +229,7 @@ function App() {
 							onClick={() => setCurrentStopIndex(0)}
 							disabled={isEmptyObject(routeDetail) || currentStopIndex == 0}
 						>
-							由頭開始
+							重新開始
 						</Button>
 						<Button
 							color="secondary"
@@ -235,7 +238,7 @@ function App() {
 							onClick={() => changeBound()}
 							disabled={(selection == null || !routeHasTwoBound) || selection?.service_type != 1}
 						>
-							切換方向
+							切換路線方向
 						</Button>
 					</section>
 
