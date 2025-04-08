@@ -1,85 +1,22 @@
-/* Screen common CSS */
+@import "tailwindcss"
 
-/* Main Screen CSS */
-
-/* Secondary Screen CSS */
-
-.dpip-screen-this-stop-row {
-  position: relative;
-  width: 95%;
-  height: 75%;
-  left: 2%;
+@theme {
+  --breakpoint-xs: 30rem;
+  --container-10xs: 2rem; // 32px
+  --container-9xs: 4rem;  // 64px
+  --container-8xs: 6rem;  // 96px
+  --container-7xs: 8rem;  // 128px
+  --container-6xs: 10rem; // 160px
+  --container-5xs: 12rem; // 192px  // 224px
+  --container-4xs: 14rem; 
 }
 
-.this-stop-detail-zh-container {
-  position: absolute;
-  width: 100%;
-  letter-spacing: -0.0625rem; 
-  white-space: nowrap; 
+.noselect {
+  -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+     -khtml-user-select: none; /* Konqueror HTML */
+       -moz-user-select: none; /* Old versions of Firefox */
+        -ms-user-select: none; /* Internet Explorer/Edge */
+            user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome, Edge, Opera and Firefox */
 }
-
-
-.this-stop-detail-zh {
-  font-size: 4.25cqw;
-}
-
-.this-stop-detail-en-container {
-  position: absolute;
-  top: 80%;
-  width: 100%;
-  letter-spacing: -0.0625rem;
-  white-space: nowrap;
-}
-
-.this-stop-detail-en {
-  font-size: 2em;
-}
-
-.dpip-screen-next-stop-row {
-  position: relative;
-  top: 1%;
-  width: 87.5%;
-  height: 90%;
-  left: 2%;
-  white-space: nowrap;
-}
-
-.next-stop-detail-zh {
-  position: absolute;
-  font-size: 3.25em;
-  letter-spacing: -0.0375em;
-}
-
-.next-stop-detail-en {
-  position: absolute;
-  font-size: 1.5em;
-  letter-spacing: -0.0375em;
-  top: 66%;
-  overflow: hidden;
-}
-
-/* Media Query */
-
-@media screen and (max-width: 1920px) {
-
-}
-
-@media screen and (max-width: 1440px) {
- 
-}
-
-@media screen and (max-width: 1280px) {
- 
-}
-
-@media screen and (max-width: 1024px) {
- 
-}
-
-@media screen and (max-width: 767px) {
-  
-}
-
-@media screen and (max-width: 480px) {
-
-} 

@@ -1,11 +1,13 @@
 import { useEffect, useState } from 'react'
 
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Button from '@mui/material/Button';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import CachedIcon from '@mui/icons-material/Cached';
 import NotificationsIcon from '@mui/icons-material/Notifications';
+import KeyboardHideIcon from '@mui/icons-material/KeyboardHide';
 
 import { createFilter } from 'react-select';
 import AsyncSelect from 'react-select/async';
@@ -15,7 +17,6 @@ import { routeContext } from './context/Provider';
 import { isEmptyObject } from "../util/util"
 import { DPIPSecScreen } from './DpipSecScreen'
 import { DPIPMainScreen } from './DpipMainScreen'
-import { Input } from './component/Input';
 
 function App() {
 	const [selection, setSelection] = useState(null)
@@ -29,6 +30,21 @@ function App() {
 			driverInfo: { nameZh: "九巴仔", nameEn: "KMB Boy", staffNo: "1933" }
 		}
 	)
+	const containerStyle = {
+		basic: "max-sm:border-[.25em] max-sm:outline-[.75rem] border-[.5em] border-solid border-[#0e0e0fbf] rounded-xl outline outline-[1rem] outline-black",
+		new: "border-solid border-black "
+	}
+
+	const theme = createTheme({
+		palette: {
+			ochre: {
+				main: '#E3D026',
+				light: '#E9DB5D',
+				dark: '#A29415',
+				contrastText: '#242105',
+			},
+		},
+	});
 
 	const getRouteList = () => JSON.parse(localStorage.getItem("routeList"))
 
@@ -146,94 +162,105 @@ function App() {
 	}
 
 	return (
-		<routeContext.Provider value={{ routeDetail, currentStopIndex }}>
-			<div className="focus:outline-hidden p-[2rem] flex flex-col gap-2" tabIndex={1}
-				onKeyDown={(e) => handleKeyboardControl(e.key)}>
+		<ThemeProvider theme={theme}>
+			<routeContext.Provider value={{ routeDetail, currentStopIndex }}>
+				<div className="focus:outline-hidden p-[2rem] flex flex-col gap-2" tabIndex={1}
+					onKeyDown={(e) => handleKeyboardControl(e.key)}>
 
-				{/* Query section for route input and selection */}
-				<section className='w-3/4 md:w-2/3 lg:w-1/2 xl:w-2/5 2xl:w-1/3'>
-					<AsyncSelect
-						autoCapitalize="characters"
-						autoFocus
-						isClearable
-						cacheOptions
-						defaultOptions={false}
-						placeholder="請輸入九巴路線編號 &nbsp; Please enter KMB route."
-						filterOption={createFilter({ matchFrom: "start" })}
-						loadOptions={searchRoute}
-						onChange={selectRoute}
-					/>
-				</section>
+					{/* Query section for route input and selection */}
+					<section className="flex gap-3">
+						<Button
+							color="ochre"
+							variant="contained"
+							startIcon={<KeyboardHideIcon />}
+							onClick={() => { }}
+							disabled={true}>
+							虛擬鍵盤
+						</Button>
+						<div className='w-full md:w-2/3 lg:w-2/3 xl:w-2/5 2xl:w-2/5'>
+							<AsyncSelect
+								autoCapitalize="characters"
+								autoFocus
+								isClearable
+								cacheOptions
+								defaultOptions={false}
+								placeholder="請輸入九巴路線編號 &nbsp; Please enter KMB route."
+								filterOption={createFilter({ matchFrom: "start" })}
+								loadOptions={searchRoute}
+								onChange={selectRoute}
+							/>
+						</div>
+					</section>
 
-				{/* Button groups to control DPIP */}
-				<section className='flex flex-wrap gap-[1vw] my-[1em] mx-0'>
-					<Button
-						color="error"
-						variant="contained"
-						startIcon={<ArrowBackIcon />}
-						onClick={() => toPrevStop()}
-						disabled={!isPrevStopAvailable}
-					>
-						上一站
-					</Button>
-					<Button
-						color="success"
-						variant="contained"
-						startIcon={<ArrowForwardIcon />}
-						onClick={() => toNextStop()}
-						disabled={!isNextStopAvailable}
-					>
-						下一站
-					</Button>
-					<Button
-						color="error"
-						variant="contained"
-						startIcon={<NotificationsIcon />}
-						onClick={() => setUserPreference(prev => { return { ...prev, stopPressed: !prev.stopPressed } })}
-					>
-						{userPreference.stopPressed ? `解除鐘` : `按鐘`}
-					</Button>
-					<Button
-						variant="contained"
-						startIcon={<RefreshIcon />}
-						onClick={() => setCurrentStopIndex(0)}
-						disabled={isEmptyObject(routeDetail) || currentStopIndex == 0}
-					>
-						從首站開始
-					</Button>
-					<Button
-						color="secondary"
-						variant="contained"
-						startIcon={<CachedIcon />}
-						onClick={() => changeBound()}
-						disabled={(selection == null || !routeHasTwoBound) || selection?.service_type != 1}
-					>
-						切換方向
-					</Button>
+					{/* Button groups to control DPIP */}
+					<section className='flex flex-wrap gap-[1vw] my-[1em] mx-0'>
+						<Button
+							color="error"
+							variant="contained"
+							startIcon={<ArrowBackIcon />}
+							onClick={() => toPrevStop()}
+							disabled={!isPrevStopAvailable}
+						>
+							上站
+						</Button>
+						<Button
+							color="success"
+							variant="contained"
+							startIcon={<ArrowForwardIcon />}
+							onClick={() => toNextStop()}
+							disabled={!isNextStopAvailable}
+						>
+							下站
+						</Button>
+						<Button
+							color="error"
+							variant="contained"
+							startIcon={<NotificationsIcon />}
+							onClick={() => setUserPreference(prev => { return { ...prev, stopPressed: !prev.stopPressed } })}
+						>
+							{userPreference.stopPressed ? `解除鐘` : `按鐘`}
+						</Button>
+						<Button
+							variant="contained"
+							startIcon={<RefreshIcon />}
+							onClick={() => setCurrentStopIndex(0)}
+							disabled={isEmptyObject(routeDetail) || currentStopIndex == 0}
+						>
+							由頭開始
+						</Button>
+						<Button
+							color="secondary"
+							variant="contained"
+							startIcon={<CachedIcon />}
+							onClick={() => changeBound()}
+							disabled={(selection == null || !routeHasTwoBound) || selection?.service_type != 1}
+						>
+							切換方向
+						</Button>
+					</section>
 
-				</section>
+					{/* DPIP main screen with full details */}
+					<section className="py-4 flex flex-wrap gap-[3vw] noselect">
+						<DPIPMainScreen
+							detail={routeDetail}
+							currentStopIndex={currentStopIndex}
+							userPreference={userPreference}
+							containerStyle={containerStyle}
+						/>
 
-				{/* DPIP main screen with full details */}
-				<section className="py-4 flex flex-wrap gap-[2vw]"
-				// className='flex flex-wrap gap-[1vw]' flex flex-wrap gap-[1vw]
-				>
-					<DPIPMainScreen
-						detail={routeDetail}
-						currentStopIndex={currentStopIndex}
-						userPreference={userPreference}
-					/>
+						<DPIPSecScreen
+							stops={routeDetail.stops}
+							currentStopIndex={currentStopIndex}
+							userPreference={userPreference}
+							containerStyle={containerStyle}
+						/>
 
-					<DPIPSecScreen
-						stops={routeDetail.stops}
-						currentStopIndex={currentStopIndex}
-						userPreference={userPreference}
-					/>
+					</section>
 
-				</section>
-
-				{/* Customizeable driver info with input group */}
-				<section className="flex gap-3">
-					<Input placeholder="車長中文姓氏"
+					{/* Customizeable driver info with input group */}
+					{/* <section className="flex gap-3">
+					<Input
+						placeholder="車長中文姓氏"
 						maxLength={2}
 						defaultValue={userPreference.driverInfo.nameZh}
 						onChange={v => {
@@ -244,7 +271,9 @@ function App() {
 							})
 						}} />
 
-					<Input placeholder="車長英文姓氏"
+					<Input
+						style={"capitalize"}
+						placeholder="車長英文姓氏"
 						maxLength={10}
 						defaultValue={userPreference.driverInfo.nameEn}
 						onChange={v => {
@@ -266,10 +295,10 @@ function App() {
 								driverInfo: { ...userPreference.driverInfo, staffNo: v }
 							})
 						}} />
-				</section>
+				</section> */}
 
-				{/* Keyboard shortcut guideline */}
-				<section className="rounded-xl my-5 relative overflow-x-auto">
+					{/* Keyboard shortcut guideline */}
+					{/* <section className="rounded-xl my-5 relative overflow-x-auto">
 					<table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
 						<thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
 							<tr>
@@ -319,11 +348,12 @@ function App() {
 							</tr>
 						</tbody>
 					</table>
-				</section>
+				</section> */}
 
 
-			</div >
-		</routeContext.Provider>
+				</div >
+			</routeContext.Provider>
+		</ThemeProvider >
 	)
 }
 

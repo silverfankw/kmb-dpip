@@ -1,4 +1,4 @@
-import { useRef, useState, useEffect, useCallback, useLayoutEffect } from "react"
+import { useState, useEffect } from "react"
 
 export const DpipThisStop = ({ stopZh, stopEn }) => {
 
@@ -12,75 +12,61 @@ export const DpipThisStop = ({ stopZh, stopEn }) => {
     }, [])
 
     const [windowWidth, setWindowWidth] = useState(window.innerWidth)
-    const [nameContainerWidth, setNameContainerWidth] = useState(0)
-    const [zhTextWidth, setZhTextWidth] = useState(0)
-    const [enTextWidth, setEnTextWidth] = useState(0)
 
-    const nameContainerRef = useCallback(node => {
-        if (node != null)
-            setNameContainerWidth(node.getBoundingClientRect().width)
-    }, [])
+    const zhFontEmRatio = windowWidth < 540 ? 2.25 :
+        windowWidth < 640 ? 2.375 :
+            windowWidth < 768 ? 3 :
+                windowWidth < 1024 ? 3.5 : 3.75
 
-    const stopNameZhRef = useCallback(node => {
-        if (node != null) {
-            // This is to remove adjusted font size style
-            node.removeAttribute("style")
-            setZhTextWidth(node.getBoundingClientRect().width)
-        }
-    }, [stopZh])
+    const enFontEmRatio = windowWidth < 640 ? 1 :
+        windowWidth < 768 ? 1.25 :
+            windowWidth < 1024 ? 1.375 : 1.5
 
-    const stopNameEnRef = useCallback(node => {
-        if (node != null) {
-            // This is to remove adjusted font size style
-            node.removeAttribute("style")
-            setEnTextWidth(node.getBoundingClientRect().width)
-        }
-    }, [stopEn])
 
     const computeStopNameWidth = (type) => {
-        const currentTextWidth = type == "zh" ? zhTextWidth : enTextWidth
 
-        // console.log(`${type} ${zhTextWidth} ${nameContainerWidth}`)
-        // When stops name longer than container, adjust name font size with one line display
-        if (currentTextWidth > nameContainerWidth) {
+        const stopNameFullLen = type == "zh" ? stopZh?.length : stopEn?.length ?? 0
+        // console.log(stopNameFullLen)
 
-            const emRatio = type == "zh" ? 4.5 : 2
-            const overflowRatio = currentTextWidth / nameContainerWidth
-            const currentFontSize =
-                windowWidth <= 540 ? 8 :
-                    windowWidth <= 767 ? 10 :
-                        windowWidth <= 1024 ? 12 :
-                            windowWidth <= 1280 ? 16 : 16
-            const newFontSize = currentFontSize * emRatio / overflowRatio
+        // Terminate function if no stop name is ready
+        if (stopNameFullLen == 0) { return }
 
-            // if (type == "zh") {
-            //     console.log(`Window: ${windowWidth} container: ${nameContainerWidth}, text: ${currentTextWidth}, ratio: ${overflowRatio}, Change to ${newFontSize} px`)
-            // }
-            return {
-                fontSize: `${newFontSize}px`,
-            }
+        // If stop name chinese length too long, scale down the font size
+        if (type == "zh" && stopNameFullLen >= 12) {
+            if (stopNameFullLen >= 14)
+                return { fontSize: `${zhFontEmRatio * 0.75}rem` }
+            else
+                return { fontSize: `${zhFontEmRatio * 0.85}rem` }
+        }
+
+        // If stop name english length too long, scale down the font size
+        if (type == "en" && stopNameFullLen >= 35) {
+            if (stopNameFullLen >= 45)
+                return { fontSize: `${enFontEmRatio * 0.95}rem` }
+            else
+                return { fontSize: `${enFontEmRatio * 0.95}rem` }
         }
     }
 
 
     return (
-        <div className='dpip-screen-this-stop-row'>
-            <div
-                ref={nameContainerRef}
-                className={"this-stop-detail-zh-container"}>
-                <span
-                    ref={stopNameZhRef}
-                    className={"this-stop-detail-zh"}
+        <div className='font-[500] relative width-[95%] h-[75%] left-[1.5%] tracking-[-0.0625rem]'>
+
+            <div>
+                <span className="max-xs:text-[2.5rem] 
+                        xs:max-md:text-[3.25rem] md:max-lg:text-[4rem]
+                        lg:max-xl:text-[4.5rem] text-[4.5rem]"
                     style={computeStopNameWidth("zh")}
                 >
                     {stopZh}
                 </span>
             </div>
-            <div
-                className='this-stop-detail-en-container'>
+
+            <div className="absolute top-[80%] whitespace-nowrap">
                 <span
-                    ref={stopNameEnRef}
-                    className={"this-stop-detail-en"}
+                    className="max-xs:text-[1.25rem] 
+                        xs:max-md:text-[1.5rem] md:max-lg:text-[1.75rem]
+                        lg:max-xl:text-[2rem] text-[2rem] "
                     style={computeStopNameWidth("en")}
                 >
                     {stopEn}

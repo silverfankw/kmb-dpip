@@ -20,12 +20,12 @@ export const Input = ({
                 value={value}
                 minLength={minLength}
                 maxLength={maxLength}
-                className={`block text-xs w-full rounded-md border border-gray-300 
+                className={`block text-xs text-white w-full rounded-md border border-gray-300 
         py-3 pl-3 pr-10 
         text-black ring-1 ring-inset ring-neutral-400 
         placeholder:text-gray-400 placeholder:text-xs
         focus:ring-3 focus:ring-inset 
-        focus:ring-zinc-400 
+        focus:ring-zinc-400
         ${style} `}
                 onChange={e => onChange(e.target.value)}
             // onKeyUp={e => handleSearch(e)}
@@ -36,9 +36,6 @@ export const Input = ({
                 <></>}
         </div>)
 }
-
-// dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400
-// dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500
 
 Input.propTypes = {
     validInput: PropTypes.bool,

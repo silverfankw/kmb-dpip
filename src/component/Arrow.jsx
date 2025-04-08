@@ -10,19 +10,19 @@ export const Arrow = ({ direction = "right", stroke = "m", size = "m", style = "
     }
 
     const sizeVariants = {
-        s: "p-[3px]",
-        sm: "p-[4px]",
-        m: "p-[6px]",
-        l: "p-[10px]",
-        xl: "p-[15px]"
+        s: "p-[1cqw]",
+        sm: "p-[1.25cqw]",
+        m: "p-[1.5cqw]",
+        l: "p-[1.625cqw]",
+        xl: "p-[1.75cqw]"
     }
 
     const strokeVariants = {
-        s: "border-r-[3px] border-b-[3px]",
-        sm: "border-r-[4px] border-b-[4px]",
-        m: "border-r-[6px] border-b-[6px]",
-        l: "border-r-[10px] border-b-[10px]",
-        xl: "border-r-[15px] border-b-[15px]"
+        s: "border-r-[0.5cqw] border-b-[0.5cqw]",
+        sm: "border-r-[0.75cqw] border-b-[0.75cqw]",
+        m: "border-r-[1cqw] border-b-[1cqw]",
+        l: "border-r-[1.25cqw] border-b-[1.25cqw]",
+        xl: "border-r-[1.5cqw] border-b-[1.5cqw]"
     }
 
     return (
