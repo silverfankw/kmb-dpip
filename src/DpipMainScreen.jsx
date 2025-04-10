@@ -12,6 +12,14 @@ export const DPIPMainScreen = ({ detail, currentStopIndex, userPreference, conta
     const stopNameEn = detail?.stops?.[currentStopIndex]?.en
 
     const [currentBigStopNameLanguage, setCurrentBigStopNameLanguage] = useState("zh")
+    const [windowWidth, setWindowWidth] = useState(window.innerWidth)
+
+    const handleWindowSizeChange = () => setWindowWidth(window.innerWidth)
+
+    useEffect(() => {
+        window.addEventListener('resize', handleWindowSizeChange)
+        return () => window.removeEventListener('resize', handleWindowSizeChange)
+    }, [])
 
     useEffect(() => {
         // Switch the content after 4 seconds
@@ -21,6 +29,27 @@ export const DPIPMainScreen = ({ detail, currentStopIndex, userPreference, conta
         }, 4000)
         return () => { clearInterval(interval) }
     }, [detail, currentStopIndex])
+
+    const zhFontEmRatio = windowWidth < 540 ? 2.25 :
+        windowWidth < 640 ? 2.375 :
+            windowWidth < 768 ? 3 :
+                windowWidth < 1024 ? 3.5 : 3.75
+
+    const computeStopNameWidth = () => {
+
+        const stopNameFullLen = stopNameZh?.length ?? 0
+
+        // Terminate function if no stop name is ready
+        if (stopNameFullLen == 0) { return }
+
+        // If stop name chinese length too long, scale down the font size
+        if (stopNameFullLen >= 13) {
+            if (stopNameFullLen >= 14)
+                return { fontSize: `${zhFontEmRatio * 0.75}rem` }
+            else
+                return { fontSize: `${zhFontEmRatio * 0.85}rem` }
+        }
+    }
 
     return (
         <>
@@ -47,7 +76,8 @@ export const DPIPMainScreen = ({ detail, currentStopIndex, userPreference, conta
                         text-[4cqw] tracking-tighter">路線</div>
                         <div className="max-sm:text-[3cqw] text-[2.75cqw] tracking-tighter">Route</div>
                     </div>
-                    <div className="font-[500] max-sm:text-[8cqw] text-[7cqw] text-center tracking-tighter 
+                    <div className="font-[500] max-sm:text-[8cqw] text-[7cqw] 
+                    text-center tracking-tight 
                     basis-[7rem] max-md:basis-[4.5rem]">
                         {detail.route}</div>
                     <div className='flex justify-center basis-[4.5rem] 
@@ -113,12 +143,12 @@ export const DPIPMainScreen = ({ detail, currentStopIndex, userPreference, conta
                 <div className="@container col-start-1 col-end-5 bg-white flex justify-center items-center">
                     {
                         currentBigStopNameLanguage == "zh" ?
-                            <span className='font-[500] max-sm:text-[8.5cqw] max-md:text-[10cqw] text-[10cqw] 
+                            <span style={computeStopNameWidth("zh")} className='font-[500] max-sm:text-[8.5cqw] max-md:text-[10cqw] text-[10cqw] 
                     whitespace-nowrap overflow-hidden'>
                                 {stopNameZh}
                             </span>
                             :
-                            <span className='text-center font-[500] max-sm:text-[4cqw] max-md:text-[5cqw] text-[5cqw]'>
+                            <span style={computeStopNameWidth("en")} className='text-center font-[500] max-sm:text-[4cqw] max-md:text-[5cqw] text-[5cqw]'>
                                 {stopNameEn}
                             </span>
                     }
