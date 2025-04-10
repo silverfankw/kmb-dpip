@@ -71,14 +71,14 @@ export const DPIPMainScreen = ({ detail, currentStopIndex, userPreference, conta
                 {/* --- Route Number & Destination --- */}
                 <div className="@container col-start-2 col-end-5 flex items-center bg-black text-white">
                     <div className='text-center flex flex-col item-center 
-                    basis-[5rem] max-lg:basis-[3.5rem]'>
+                    basis-[4rem] max-md:basis-[3.5rem]'>
                         <div className="font-[500] max-sm:text-[4cqw] 
                         text-[4cqw] tracking-tighter">路線</div>
                         <div className="max-sm:text-[3cqw] text-[2.75cqw] tracking-tighter">Route</div>
                     </div>
                     <div className="font-[500] max-sm:text-[8cqw] text-[7cqw] 
                     text-center tracking-tight 
-                    basis-[7rem] max-md:basis-[4.5rem]">
+                    basis-[7rem] max-md:basis-[5.5rem]">
                         {detail.route}</div>
                     <div className='flex justify-center basis-[4.5rem] 
                     max-sm:basis-[2.5rem] max-lg:basis-[3.5rem]'>
