@@ -1,24 +1,26 @@
 import { useEffect, useState } from 'react'
+import { createFilter } from 'react-select';
+import AsyncSelect from 'react-select/async';
 
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Button from '@mui/material/Button';
-import { Popover } from '@base-ui-components/react/popover';
+import { IconButton } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import CachedIcon from '@mui/icons-material/Cached';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import KeyboardHideIcon from '@mui/icons-material/KeyboardHide';
-
-import { createFilter } from 'react-select';
-import AsyncSelect from 'react-select/async';
+import BadgeIcon from '@mui/icons-material/Badge';
+import { Popover } from '@base-ui-components/react/popover';
 
 import './App.css'
 import { routeContext } from './context/Provider';
 import { isEmptyObject } from "../util/util"
 import { DPIPSecScreen } from './DpipSecScreen'
 import { DPIPMainScreen } from './DpipMainScreen'
-import { IconButton } from '@mui/material';
+import { BellButton } from './component/BellButton';
+import { Input } from "./component/Input"
 
 function App() {
 	const [selection, setSelection] = useState(null)
@@ -29,7 +31,10 @@ function App() {
 		{
 			containerStyle: "basic",
 			stopPressed: false,
-			driverInfo: { nameZh: "九巴仔", nameEn: "KMB Boy", staffNo: "1933" }
+			driverInfo: { nameZh: "九巴仔", nameEn: "KMB Boy", staffNo: "1933" },
+			customizeDriverInfo: false,
+			mindDoorNotice: false,
+			handrailNotice: false,
 		}
 	)
 	const containerStyle = {
@@ -195,8 +200,10 @@ function App() {
 						</div>
 					</section>
 
+					{/* <BellButton onClick={() => setUserPreference(prev => { return { ...prev, stopPressed: !prev.stopPressed } })} /> */}
+
 					{/* Button groups to control DPIP */}
-					<section className='flex flex-wrap gap-[1vw] my-[1em] mx-0'>
+					<section className='flex flex-wrap max-sm:gap-[2vw] gap-[1vw] my-[1em] mx-0'>
 						<Button
 							color="error"
 							variant="contained"
@@ -240,10 +247,62 @@ function App() {
 						>
 							切換路線方向
 						</Button>
+						<Button
+							color="ochre"
+							variant="contained"
+							startIcon={<BadgeIcon />}
+							onClick={() => { setUserPreference(prev => { return { ...prev, customizeDriverInfo: !prev.customizeDriverInfo } }) }}
+						>
+							自定義車長資料
+						</Button>
+
 					</section>
 
+					{/* Customizeable driver info with input group */}
+					{userPreference.customizeDriverInfo ?
+						<section className="flex gap-3 mb-[1em]">
+							<Input
+								placeholder="車長中文姓氏"
+								maxLength={2}
+								defaultValue={userPreference.driverInfo.nameZh}
+								onChange={v => {
+									if (v == "") v = "九巴仔"
+									setUserPreference({
+										...userPreference,
+										driverInfo: { ...userPreference.driverInfo, nameZh: v }
+									})
+								}} />
+							<Input
+								style={"capitalize"}
+								placeholder="車長英文姓氏"
+								maxLength={10}
+								defaultValue={userPreference.driverInfo.nameEn}
+								onChange={v => {
+									if (v == "") v = "KMB Boy"
+									setUserPreference({
+										...userPreference,
+										driverInfo: { ...userPreference.driverInfo, nameEn: v }
+									})
+								}} />
+
+							<Input placeholder="職員編號"
+								type="number"
+								minLength={1}
+								maxLength={6}
+								defaultValue={userPreference.driverInfo.staffNo}
+								onInput={e => e.target.value = e.target.value.slice(0, 6)}
+								onChange={v => {
+									if (v == "") v = "1933"
+									setUserPreference({
+										...userPreference,
+										driverInfo: { ...userPreference.driverInfo, staffNo: v }
+									})
+								}} />
+						</section> : <></>}
+
 					{/* DPIP main screen with full details */}
-					<section className="py-4 flex flex-wrap gap-[3vw] noselect">
+					<section className="py-4 flex flex-wrap 
+					max-md:gap-[6vw] gap-[3vw] noselect">
 						<DPIPMainScreen
 							detail={routeDetail}
 							currentStopIndex={currentStopIndex}
@@ -259,100 +318,6 @@ function App() {
 						/>
 
 					</section>
-
-					{/* Customizeable driver info with input group */}
-					{/* <section className="flex gap-3">
-					<Input
-						placeholder="車長中文姓氏"
-						maxLength={2}
-						defaultValue={userPreference.driverInfo.nameZh}
-						onChange={v => {
-							if (v == "") v = "九巴仔"
-							setUserPreference({
-								...userPreference,
-								driverInfo: { ...userPreference.driverInfo, nameZh: v }
-							})
-						}} />
-
-					<Input
-						style={"capitalize"}
-						placeholder="車長英文姓氏"
-						maxLength={10}
-						defaultValue={userPreference.driverInfo.nameEn}
-						onChange={v => {
-							if (v == "") v = "KMB Boy"
-							setUserPreference({
-								...userPreference,
-								driverInfo: { ...userPreference.driverInfo, nameEn: v }
-							})
-						}} />
-
-					<Input placeholder="職員編號"
-						minLength={1}
-						maxLength={6}
-						defaultValue={userPreference.driverInfo.staffNo}
-						onChange={v => {
-							if (v == "") v = "1933"
-							setUserPreference({
-								...userPreference,
-								driverInfo: { ...userPreference.driverInfo, staffNo: v }
-							})
-						}} />
-				</section> */}
-
-					{/* Keyboard shortcut guideline */}
-					{/* <section className="rounded-xl my-5 relative overflow-x-auto">
-					<table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-						<thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-							<tr>
-								<th scope="col" className="px-6 py-3">
-									Keyboard Shortcut
-								</th>
-								<th scope="col" className="py-3">
-									Usage
-								</th>
-							</tr>
-						</thead>
-						<tbody>
-							<tr className="bg-white border-b dark:bg-gray-900 dark:border-gray-700">
-								<th scope="row" className="inline-flex items-center px-6 py-4 font-medium text-gray-500 dark:text-gray-400 whitespace-nowrap">
-									<kbd className="rtl:rotate-180 inline-flex items-center me-1  px-2 py-1.5 text-gray-800 bg-gray-100 border border-gray-200 rounded-lg dark:bg-gray-600 dark:text-gray-100 dark:border-gray-500">
-										<svg className="w-2.5 h-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 10 16">
-											<path d="M8.766.566A2 2 0 0 0 6.586 1L1 6.586a2 2 0 0 0 0 2.828L6.586 15A2 2 0 0 0 10 13.586V2.414A2 2 0 0 0 8.766.566Z" />
-										</svg>
-										<span className="sr-only">Arrow key left</span>
-									</kbd>
-									<kbd className="rtl:rotate-180 inline-flex items-center px-2 py-1.5 text-gray-800 bg-gray-100 border border-gray-200 rounded-lg dark:bg-gray-600 dark:text-gray-100 dark:border-gray-500">
-										<svg className="w-2.5 h-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 10 16">
-											<path d="M3.414 1A2 2 0 0 0 0 2.414v11.172A2 2 0 0 0 3.414 15L9 9.414a2 2 0 0 0 0-2.828L3.414 1Z" />
-										</svg>
-										<span className="sr-only">Arrow key right</span>
-									</kbd>
-								</th>
-								<td className="py-4">
-									Proceed to previous / next bus stop.
-								</td>
-							</tr>
-							<tr className="bg-white border-b dark:bg-gray-900 dark:border-gray-700">
-								<th scope="row" className="px-6 py-4 font-medium text-gray-500 whitespace-nowrap dark:text-gray-400">
-									<kbd className="px-2 py-1.5 text-xs font-semibold text-gray-800 bg-gray-100 border border-gray-200 rounded-lg dark:bg-gray-600 dark:text-gray-100 dark:border-gray-500">Home</kbd>
-								</th>
-								<td className="py-4">
-									Navigate to the first bus stop.
-								</td>
-							</tr>
-							<tr className="bg-white dark:bg-gray-900 dark:border-gray-700">
-								<th scope="row" className="px-6 py-4 font-medium text-gray-500 whitespace-nowrap dark:text-gray-400">
-									<kbd className="px-2 py-1.5 text-xs font-semibold text-gray-800 bg-gray-100 border border-gray-200 rounded-lg dark:bg-gray-600 dark:text-gray-100 dark:border-gray-500">End</kbd>
-								</th>
-								<td className="py-4">
-									Switch bound if the selected bus route has return journey.
-								</td>
-							</tr>
-						</tbody>
-					</table>
-				</section> */}
-
 
 				</div >
 			</routeContext.Provider>

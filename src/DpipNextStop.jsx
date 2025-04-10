@@ -43,8 +43,11 @@ export const DpipNextStop = ({ stopZh, stopEn }) => {
         }
 
         // If stop name english length too long, scale down the font size
-        if (type == "en" && stopNameFullLen >= 50) {
-            return { fontSize: `${enFontEmRatio * 0.8}rem` }
+        if (type == "en" && stopNameFullLen >= 45) {
+            if (stopNameFullLen >= 50)
+                return { fontSize: `${enFontEmRatio * 0.75}rem` }
+            else
+                return { fontSize: `${enFontEmRatio * 0.8}rem` }
         }
     }
 

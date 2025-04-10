@@ -11,15 +11,13 @@ export const DPIPMainScreen = ({ detail, currentStopIndex, userPreference, conta
     const stopNameZh = detail?.stops?.[currentStopIndex]?.zh
     const stopNameEn = detail?.stops?.[currentStopIndex]?.en
 
-    const [nextStopName, setNextStopName] = useState(stopNameZh)
+    const [currentBigStopNameLanguage, setCurrentBigStopNameLanguage] = useState("zh")
 
     useEffect(() => {
-        setNextStopName(stopNameZh)
-        // Switch the content after 3 seconds
+        // Switch the content after 4 seconds
         const interval = setInterval(() => {
-            setNextStopName(prevContent =>
-                prevContent === stopNameZh ?
-                    stopNameEn : stopNameZh)
+            setCurrentBigStopNameLanguage(
+                prevLang => prevLang == "zh" ? "en" : "zh")
         }, 4000)
         return () => { clearInterval(interval) }
     }, [detail, currentStopIndex])
@@ -28,7 +26,8 @@ export const DPIPMainScreen = ({ detail, currentStopIndex, userPreference, conta
         <>
             {/* --- Screen Monitor Grid Layout --- */}
             <div className={`grid grid-rows-[0.5fr_1.85fr_0.0375fr_1fr_0.125fr]
-            w-[50rem] h-[30rem] max-sm:h-[20rem] max-md:h-[25rem]
+            w-[50rem] h-[30rem] max-w-[480px]:h-[18rem] xs:max-sm:h-[20rem] 
+            max-sm:h-[22.5rem] max-md:h-[25rem]
                 ${containerStyle[userPreference.containerStyle]}`}>
 
                 {/* --- Next stop Indicator --- */}
@@ -112,11 +111,17 @@ export const DPIPMainScreen = ({ detail, currentStopIndex, userPreference, conta
 
                 {/* --- Big next stop name --- */}
                 <div className="@container col-start-1 col-end-5 bg-white flex justify-center items-center">
-                    <span className='font-[500] max-sm:text-[8.5cqw] max-md:text-[10cqw] text-[10cqw] 
+                    {
+                        currentBigStopNameLanguage == "zh" ?
+                            <span className='font-[500] max-sm:text-[8.5cqw] max-md:text-[10cqw] text-[10cqw] 
                     whitespace-nowrap overflow-hidden'>
-                        {/* {stopNameZh} */}
-                        {nextStopName}
-                    </span>
+                                {stopNameZh}
+                            </span>
+                            :
+                            <span className='text-center font-[500] max-sm:text-[4cqw] max-md:text-[5cqw] text-[5cqw]'>
+                                {stopNameEn}
+                            </span>
+                    }
                 </div>
 
                 {/* --- Driver Info --- */}

@@ -2,9 +2,9 @@ import PropTypes from 'prop-types'
 import { ErrorInputMessage } from './ErrorInputMessage';
 
 export const Input = ({
-    validInput, invalidMessage = "",
+    type = "text", pattern, validInput, invalidMessage = "",
     value, style, placeholder, defaultValue,
-    minLength, maxLength, onChange, submitAction }) => {
+    minLength, maxLength, onChange, onInput, submitAction }) => {
 
     // const inputRef = useRef()
 
@@ -16,18 +16,17 @@ export const Input = ({
             <input
                 // ref={inputRef}
                 defaultValue={defaultValue}
-                type="text"
+                type={type}
                 value={value}
+                pattern={pattern}
                 minLength={minLength}
                 maxLength={maxLength}
-                className={`block text-xs text-white w-full rounded-md border border-gray-300 
-        py-3 pl-3 pr-10 
-        text-black ring-1 ring-inset ring-neutral-400 
+                className={`block bg-white text-black text-xs w-full 
+                    rounded-lg border border-gray-500 py-3 pl-3 pr-10 
         placeholder:text-gray-400 placeholder:text-xs
-        focus:ring-3 focus:ring-inset 
-        focus:ring-zinc-400
         ${style} `}
                 onChange={e => onChange(e.target.value)}
+                onInput={onInput ? (e) => onInput(e) : ""}
             // onKeyUp={e => handleSearch(e)}
             />
 
@@ -38,6 +37,7 @@ export const Input = ({
 }
 
 Input.propTypes = {
+    type: PropTypes.string,
     validInput: PropTypes.bool,
     invalidMessage: PropTypes.string,
     value: PropTypes.bool,

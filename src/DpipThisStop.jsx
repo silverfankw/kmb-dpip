@@ -53,7 +53,7 @@ export const DpipThisStop = ({ stopZh, stopEn }) => {
         <div className='font-[500] relative width-[95%] h-[75%] left-[1.5%] tracking-[-0.0625rem]'>
 
             <div>
-                <span className="max-xs:text-[2.5rem] 
+                <span className="max-xs:text-[3rem] 
                         xs:max-md:text-[3.25rem] md:max-lg:text-[4rem]
                         lg:max-xl:text-[4.5rem] text-[4.5rem]"
                     style={computeStopNameWidth("zh")}
@@ -64,7 +64,7 @@ export const DpipThisStop = ({ stopZh, stopEn }) => {
 
             <div className="absolute top-[80%] whitespace-nowrap">
                 <span
-                    className="max-xs:text-[1.25rem] 
+                    className="max-xs:text-[1.375rem] 
                         xs:max-md:text-[1.5rem] md:max-lg:text-[1.75rem]
                         lg:max-xl:text-[2rem] text-[2rem] "
                     style={computeStopNameWidth("en")}
