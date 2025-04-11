@@ -290,7 +290,7 @@ function App() {
 								minLength={1}
 								maxLength={6}
 								defaultValue={userPreference.driverInfo.staffNo}
-								onInput={e => e.target.value = e.target.value.slice(0, 6)}
+								onInput={e => e.target.value = Math.abs(e.target.value.slice(0, 6))}
 								onChange={v => {
 									if (v == "") v = "1933"
 									setUserPreference({

@@ -34,17 +34,17 @@ export const DpipThisStop = ({ stopZh, stopEn }) => {
         // If stop name chinese length too long, scale down the font size
         if (type == "zh" && stopNameFullLen >= 12) {
             if (stopNameFullLen >= 14)
-                return { fontSize: `${zhFontEmRatio * 0.75}rem` }
+                return { fontSize: `${zhFontEmRatio * 0.75}rem`, top: "1rem" }
             else
-                return { fontSize: `${zhFontEmRatio * 0.85}rem` }
+                return { fontSize: `${zhFontEmRatio * 0.85}rem`, top: "1rem" }
         }
 
         // If stop name english length too long, scale down the font size
-        if (type == "en" && stopNameFullLen >= 35) {
-            if (stopNameFullLen >= 45)
-                return { fontSize: `${enFontEmRatio * 0.95}rem` }
+        if (type == "en" && stopNameFullLen >= 34) {
+            if (stopNameFullLen >= 44)
+                return { fontSize: `${enFontEmRatio * 1.05}rem` }
             else
-                return { fontSize: `${enFontEmRatio * 0.95}rem` }
+                return { fontSize: `${enFontEmRatio * 1.1}rem` }
         }
     }
 
@@ -53,13 +53,13 @@ export const DpipThisStop = ({ stopZh, stopEn }) => {
         <div className='font-[500] relative width-[95%] h-[75%] left-[1.5%] tracking-[-0.0625rem]'>
 
             <div>
-                <span className="max-xs:text-[3rem] 
+                <div className="relative max-xs:text-[3rem] 
                         xs:max-md:text-[3.25rem] md:max-lg:text-[4rem]
                         lg:max-xl:text-[4.5rem] text-[4.5rem]"
                     style={computeStopNameWidth("zh")}
                 >
                     {stopZh}
-                </span>
+                </div>
             </div>
 
             <div className="absolute top-[80%] whitespace-nowrap">

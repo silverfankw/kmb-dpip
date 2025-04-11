@@ -37,7 +37,7 @@ export const DpipNextStop = ({ stopZh, stopEn }) => {
         // If stop name chinese length too long, scale down the font size
         if (type == "zh" && stopNameFullLen >= 13) {
             if (stopNameFullLen >= 14)
-                return { fontSize: `${zhFontEmRatio * 0.75}rem` }
+                return { fontSize: `${zhFontEmRatio * 0.75}rem`, top: ".25rem" }
             else
                 return { fontSize: `${zhFontEmRatio * 0.85}rem` }
         }
@@ -68,14 +68,14 @@ export const DpipNextStop = ({ stopZh, stopEn }) => {
                 {/* Stop name content */}
                 <div className="font-[500] relative flex flex-col left-[1.5%] h-[90%] whitespace-nowrap">
 
-                    <span
-                        className="max-xs:text-[2.25rem] 
+                    <div
+                        className="relative max-xs:text-[2.25rem] 
                         xs:max-sm:text-[2.375rem] sm:max-md:text-[3rem] md:max-lg:text-[3.5rem]
                         lg:max-xl:text-[3.75rem] text-[3.75rem]"
                         style={computeStopNameWidth("zh")}
                     >
                         {stopZh ?? ""}
-                    </span>
+                    </div>
 
                     <span
                         className="absolute top-[75%] max-xs:text-[1rem] 
