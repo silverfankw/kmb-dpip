@@ -13,6 +13,11 @@ export const DpipThisStop = ({ stopZh, stopEn }) => {
 
     const [windowWidth, setWindowWidth] = useState(window.innerWidth)
 
+    const charFilterRegex = new RegExp(
+        '[A-Za-z0-9_\]+|' +                             // ASCII letters (no accents)
+        '[\u4E00-\u9FFF\uF900-\uFAFF\u3400-\u4DBF]',   // Single CJK ideographs
+        'g')
+
     const zhFontEmRatio = windowWidth < 540 ? 2.25 :
         windowWidth < 640 ? 2.375 :
             windowWidth < 768 ? 3 :
@@ -26,13 +31,14 @@ export const DpipThisStop = ({ stopZh, stopEn }) => {
     const computeStopNameWidth = (type) => {
 
         const stopNameFullLen = type == "zh" ? stopZh?.length : stopEn?.length ?? 0
-        // console.log(stopNameFullLen)
+        const textOnlyLen = stopZh?.match(charFilterRegex).length ?? 0 // > 9 will overflow
+        // console.log(stopNameFullLen, textOnlyLen)
 
         // Terminate function if no stop name is ready
         if (stopNameFullLen == 0) { return }
 
         // If stop name chinese length too long, scale down the font size
-        if (type == "zh" && stopNameFullLen >= 12) {
+        if (type == "zh" && (stopNameFullLen >= 12 || textOnlyLen >= 10)) {
             if (stopNameFullLen >= 14)
                 return { fontSize: `${zhFontEmRatio * 0.75}rem`, top: "1rem" }
             else

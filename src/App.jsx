@@ -38,7 +38,7 @@ function App() {
 		}
 	)
 	const containerStyle = {
-		basic: "max-sm:border-[.25em] max-sm:outline-[.75rem] border-[.5em] border-solid border-[#0e0e0fbf] rounded-xl outline outline-[1rem] outline-black",
+		basic: "shadow-[0.25rem_1.75rem_0.75rem_rgba(0,0,0,0.5)] max-sm:border-[.25em] max-sm:outline-[.75rem] border-[.5em] border-solid border-[#0e0e0fbf] rounded-xl outline outline-[1rem] outline-black",
 		new: "border-solid border-black "
 	}
 
@@ -170,7 +170,7 @@ function App() {
 
 	return (
 		<ThemeProvider theme={theme}>
-			<routeContext.Provider value={{ routeDetail, currentStopIndex }}>
+			<routeContext.Provider value={{ routeDetail, currentStopIndex, lastStopIndex }}>
 				<div className="focus:outline-hidden p-[2rem] flex flex-col gap-2" tabIndex={1}
 					onKeyDown={(e) => handleKeyboardControl(e.key)}>
 
