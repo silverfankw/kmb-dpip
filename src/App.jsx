@@ -1,10 +1,17 @@
+import './App.css'
+
 import { useEffect, useState } from 'react'
 import { createFilter } from 'react-select';
 import AsyncSelect from 'react-select/async';
 
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Button from '@mui/material/Button';
+import Switch from '@mui/material/Switch';
+import Typography from '@mui/material/Typography';
+import Tooltip from '@mui/material/Tooltip';
+import FormControlLabel from '@mui/material/FormControlLabel';
 import { IconButton } from '@mui/material';
+
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import RefreshIcon from '@mui/icons-material/Refresh';
@@ -12,14 +19,15 @@ import CachedIcon from '@mui/icons-material/Cached';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import KeyboardHideIcon from '@mui/icons-material/KeyboardHide';
 import BadgeIcon from '@mui/icons-material/Badge';
+import FeedbackIcon from '@mui/icons-material/Feedback';
+import DoorSlidingIcon from '@mui/icons-material/DoorSliding';
 import { Popover } from '@base-ui-components/react/popover';
 
-import './App.css'
 import { routeContext } from './context/Provider';
 import { isEmptyObject } from "../util/util"
 import { DPIPSecScreen } from './DpipSecScreen'
 import { DPIPMainScreen } from './DpipMainScreen'
-import { BellButton } from './component/BellButton';
+// import { BellButton } from './component/BellButton';
 import { Input } from "./component/Input"
 
 function App() {
@@ -50,6 +58,24 @@ function App() {
 				dark: '#A29415',
 				contrastText: '#242105',
 			},
+			gold: {
+				main: "#996515",
+				light: '#B17A02',
+				dark: '#B17A02',
+				contrastText: '#B17A02',
+			},
+			navy: {
+				main: "#12296C",
+			},
+			darkred: {
+				main: "#8B0000",
+				light: '#8B0000',
+				dark: '#8B0000',
+				contrastText: '#8B0000',
+			},
+			snowwhite: {
+				main: "#FFFFFF",
+			}
 		},
 	});
 
@@ -202,51 +228,162 @@ function App() {
 
 					{/* <BellButton onClick={() => setUserPreference(prev => { return { ...prev, stopPressed: !prev.stopPressed } })} /> */}
 
+					{/* Switch groups to control DPIP */}
+					<section className='flex flex-wrap max-sm:gap-[2vw] gap-[1vw] my-[0.5em]'>
+
+						{/* Stop Bell toggle */}
+						<FormControlLabel
+							sx={{
+								width: "max-content",
+								bgcolor: "error.main",
+								borderRadius: 1,
+								paddingRight: "10px", // Expand box to fit content
+								marginLeft: "0px", // Reset the default left overflow
+								boxShadow: "0px 2px 4px -1px rgba(0,0,0,0.2),0px 4px 5px 0px rgba(0,0,0,0.14),0px 1px 10px 0px rgba(0,0,0,0.12)",
+								"&:hover": { bgcolor: "error.dark" }
+							}}
+							control={
+								<Switch
+									checked={userPreference.stopPressed}
+									color="darkred"
+									onChange={() => setUserPreference(prev => {
+										return { ...prev, stopPressed: !prev.stopPressed }
+									})}
+									name="stop pressed" />
+							}
+							label={
+								<>
+									<NotificationsIcon color="snowwhite" />
+									<Typography variant="button" className="noselect" color="white">
+										{userPreference.stopPressed ? `  解除鐘` : ` 按鐘`}
+									</Typography>
+								</>}
+						/>
+
+						{/* Hold Handrail Notice toggle */}
+						<FormControlLabel
+							sx={{
+								width: "max-content",
+								bgcolor: "ochre.main",
+								borderRadius: 1,
+								paddingRight: "10px",
+								boxShadow: "0px 2px 4px -1px rgba(0,0,0,0.2),0px 4px 5px 0px rgba(0,0,0,0.14),0px 1px 10px 0px rgba(0,0,0,0.12)",
+								"&:hover": { bgcolor: "ochre.dark" }
+							}}
+							control={
+								<Switch
+									checked={userPreference.handrailNotice}
+									color="gold"
+									onChange={() => setUserPreference(prev => {
+										return {
+											...prev,
+											handrailNotice: !prev.handrailNotice,
+											mindDoorNotice: prev.mindDoorNotice && false
+										}
+									})} name="handrail notice" />
+							}
+							label={
+								<>
+									<FeedbackIcon />
+									<Typography className="noselect" variant="button">
+										「緊握扶手」提示
+									</Typography>
+								</>}
+						/>
+
+						{/* Mind Door Notice toggle */}
+						<FormControlLabel
+							sx={
+								theme => ({
+									width: "max-content",
+									bgcolor: "ochre.main",
+									borderRadius: 1,
+									paddingRight: "10px",
+									boxShadow: "0px 2px 4px -1px rgba(0,0,0,0.2),0px 4px 5px 0px rgba(0,0,0,0.14),0px 1px 10px 0px rgba(0,0,0,0.12)",
+									"&:hover": { bgcolor: "ochre.dark" },
+									marginLeft: { // fix responsive layout flex-wrap causing margin left overflow
+										[theme.breakpoints.down('md')]: { marginLeft: "0px" },
+									}
+								})}
+							control={
+								<Switch
+									checked={userPreference.mindDoorNotice}
+									color="gold"
+									onChange={() => setUserPreference(prev => {
+										return {
+											...prev,
+											handrailNotice: prev.handrailNotice && false,
+											mindDoorNotice: !prev.mindDoorNotice
+										}
+									})} name="mind door notice" />
+							}
+							label={
+								<>
+									<DoorSlidingIcon />
+									<Typography className="noselect" variant="button">
+										「車門正在關上」提示
+									</Typography>
+								</>}
+						/>
+					</section>
+
 					{/* Button groups to control DPIP */}
-					<section className='flex flex-wrap max-sm:gap-[2vw] gap-[1vw] my-[1em] mx-0'>
-						<Button
-							color="error"
-							variant="contained"
-							startIcon={<ArrowBackIcon />}
-							onClick={() => toPrevStop()}
-							disabled={!isPrevStopAvailable}
-						>
-							上站
-						</Button>
-						<Button
-							color="success"
-							variant="contained"
-							startIcon={<ArrowForwardIcon />}
-							onClick={() => toNextStop()}
-							disabled={!isNextStopAvailable}
-						>
-							下站
-						</Button>
-						<Button
-							color="error"
-							variant="contained"
-							startIcon={<NotificationsIcon />}
-							onClick={() => setUserPreference(prev => { return { ...prev, stopPressed: !prev.stopPressed } })}
-						>
-							{userPreference.stopPressed ? `解除鐘` : `按鐘`}
-						</Button>
-						<Button
-							variant="contained"
-							startIcon={<RefreshIcon />}
-							onClick={() => setCurrentStopIndex(0)}
-							disabled={isEmptyObject(routeDetail) || currentStopIndex == 0}
-						>
-							重新開始
-						</Button>
-						<Button
-							color="secondary"
-							variant="contained"
-							startIcon={<CachedIcon />}
-							onClick={() => changeBound()}
-							disabled={(selection == null || !routeHasTwoBound) || selection?.service_type != 1}
-						>
-							切換路線方向
-						</Button>
+					<section className='flex flex-wrap max-sm:gap-[2vw] gap-[1vw] mb-[1em] mx-0'>
+						<Tooltip
+							arrow
+							placement="bottom-start"
+							title="Keyboard Shortcut: '←'">
+							<Button
+								color="error"
+								variant="contained"
+								startIcon={<ArrowBackIcon />}
+								onClick={() => toPrevStop()}
+								disabled={!isPrevStopAvailable}
+							>
+								上站
+							</Button>
+						</Tooltip>
+						<Tooltip
+							arrow
+							placement="bottom-start"
+							title="Keyboard shortcut: '→'">
+							<Button
+								color="success"
+								variant="contained"
+								startIcon={<ArrowForwardIcon />}
+								onClick={() => toNextStop()}
+								disabled={!isNextStopAvailable}
+							>
+								下站
+							</Button>
+						</Tooltip>
+						<Tooltip
+							arrow
+							placement="bottom-start"
+							title="Keyboard shortcut: 'HOME'">
+							<Button
+								variant="contained"
+								startIcon={<RefreshIcon />}
+								onClick={() => setCurrentStopIndex(0)}
+								disabled={isEmptyObject(routeDetail) || currentStopIndex == 0}
+							>
+								首站重新開始
+							</Button>
+						</Tooltip>
+						<Tooltip
+							arrow
+							placement="bottom-start"
+							title="Keyboard shortcut: 'END'">
+							<Button
+								color="secondary"
+								variant="contained"
+								startIcon={<CachedIcon />}
+								onClick={() => changeBound()}
+								disabled={(selection == null || !routeHasTwoBound) || selection?.service_type != 1}
+							>
+								切換路線方向
+							</Button>
+						</Tooltip>
 						<Button
 							color="ochre"
 							variant="contained"
@@ -255,7 +392,6 @@ function App() {
 						>
 							自定義車長資料
 						</Button>
-
 					</section>
 
 					{/* Customizeable driver info with input group */}

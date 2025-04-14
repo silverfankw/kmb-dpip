@@ -1,13 +1,14 @@
 import './App.css'
 import { useState, useEffect } from "react"
 import { RouteDisplayHeading } from './RouteDisplayHeading'
+import { HoldHandrailNotice } from './component/HoldHandrailNotice'
+import { MindDoorNotice } from './component/MindDoorNotice'
 
 {/* DPIP main screen with full details */ }
 export const DPIPMainScreen = ({ detail, currentStopIndex, userPreference, containerStyle }) => {
 
     const nextStopIndex = currentStopIndex + 1
     const nextNextStopIndex = nextStopIndex + 1
-    // const lastStopIndex = detail?.stops?.length - 1
     const stopNameZh = detail?.stops?.[currentStopIndex]?.zh
     const stopNameEn = detail?.stops?.[currentStopIndex]?.en
 
@@ -124,15 +125,35 @@ export const DPIPMainScreen = ({ detail, currentStopIndex, userPreference, conta
                 {/* --- Big next stop name --- */}
                 <div className="@container col-start-1 col-end-5 bg-white flex justify-center items-center">
                     {
-                        currentBigStopNameLanguage == "zh" ?
-                            <span style={computeStopNameWidth("zh")} className='font-[500] max-sm:text-[8.5cqw] max-md:text-[10cqw] text-[10cqw] 
+                        userPreference.handrailNotice ?
+                            <HoldHandrailNotice
+                                zhNameOverrideStyle={`!text-[4.25rem]
+                                    max-xs:!text-[2.5rem] xs:max-sm:!text-[2.5rem] 
+                                    sm:max-md:!text-[3rem]`}
+                                enNameOverrideStyle={`!text-[2rem]
+                                    max-xs:!text-[1.25rem] xs:max-sm:!text-[1.25rem] 
+                                    sm:max-md:!text-[1.375rem]`}>
+                            </HoldHandrailNotice>
+
+                            : userPreference.mindDoorNotice ?
+                                <MindDoorNotice
+                                    zhNameOverrideStyle={`!text-[4.25rem]
+                                    max-xs:!text-[2.5rem] xs:max-sm:!text-[2.5rem] 
+                                    sm:max-md:!text-[3rem]`}
+                                    enNameOverrideStyle={`!text-[2rem]
+                                    max-xs:!text-[1.25rem] xs:max-sm:!text-[1.25rem] 
+                                    sm:max-md:!text-[1.375rem]`}>
+                                </MindDoorNotice>
+                                :
+                                currentBigStopNameLanguage == "zh" ?
+                                    <span style={computeStopNameWidth("zh")} className='font-[500] max-sm:text-[8.5cqw] max-md:text-[10cqw] text-[10cqw] 
                     whitespace-nowrap overflow-hidden'>
-                                {stopNameZh}
-                            </span>
-                            :
-                            <span style={computeStopNameWidth("en")} className='text-center font-[500] max-sm:text-[4cqw] max-md:text-[5cqw] text-[5cqw]'>
-                                {stopNameEn}
-                            </span>
+                                        {stopNameZh}
+                                    </span>
+                                    :
+                                    <span style={computeStopNameWidth("en")} className='text-center font-[500] max-sm:text-[4cqw] max-md:text-[5cqw] text-[5cqw]'>
+                                        {stopNameEn}
+                                    </span>
                     }
                 </div>
 
