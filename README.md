@@ -3,7 +3,7 @@ Project Demo🔗👉🏻: https://silverfankw.github.io/kmb-dpip/
 ## Introduction
 🚏 This project aims to simulate KMB Dynamic Passenger Information Panel (DPIP), displaying route destination and bus stops name.
 
-👀 You can refer to the real life example here: https://hkbus.fandom.com/wiki/%E5%8B%95%E6%85%8B%E5%B7%B4%E5%A3%AB%E7%AB%99%E9%A1%AF%E7%A4%BA%E5%B1%8F#%E5%8B%95%E6%85%8B%E4%B9%98%E5%AE%A2%E8%B3%87%E8%A8%8A%E7%B3%BB%E7%B5%B1
+👀 You can refer to the HK Bus Fandom article here for more detail: https://hkbus.fandom.com/wiki/%E5%8B%95%E6%85%8B%E5%B7%B4%E5%A3%AB%E7%AB%99%E9%A1%AF%E7%A4%BA%E5%B1%8F
 
 This project is developed by React + Vite, tailwindCSS & Material UI.
 
