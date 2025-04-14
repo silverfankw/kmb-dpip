@@ -1,24 +1,25 @@
-# Project 
-Project Demo: https://silverfankw.github.io/kmb-dpip/
+Project Demo🔗👉🏻: https://silverfankw.github.io/kmb-dpip/
+
+## Introduction
+🚏 This project aims to simulate KMB Dynamic Passenger Information Panel (DPIP), displaying route destination and bus stops name.
+
+👀 You can refer to the real life example here: https://hkbus.fandom.com/wiki/%E5%8B%95%E6%85%8B%E5%B7%B4%E5%A3%AB%E7%AB%99%E9%A1%AF%E7%A4%BA%E5%B1%8F#%E5%8B%95%E6%85%8B%E4%B9%98%E5%AE%A2%E8%B3%87%E8%A8%8A%E7%B3%BB%E7%B5%B1
+
+This project is developed by React + Vite, tailwindCSS & Material UI.
 
 
-This project aims to simulate KMB Dynamic Passenger Information Panel (DPIP), displaying route destination and bus stops name.
-
-This project is developed by React + Vite & Material UI.
-
-<ins>Version1.2</ins>
-Code revamp, Refactor CSS to tailwind classes, Compatible responsive design in each element
-
-<ins>Version 1.1</ins> 
-![{58F15786-7099-43E2-AAEF-62C81585717F}](https://github.com/user-attachments/assets/6d7140bf-dd53-4195-8e6e-c44fc7319806)
-<ins> Version 1 </ins> ![kmb-dpip-preview](https://github.com/silverfankw/kmb-dpip/assets/36290205/5ebe8197-7bc4-4733-90ae-05605996ab06)
+## Versions
+<ins>**V2🆕✨**</ins>
+- Added features: enable hold handrail or door closing notification messages, customizable driver information
+- Code revamp, Refactor all CSS to tailwind classes, Compatible responsive design in each element
+  
+![{A0508B16-F659-4249-A131-045E6F6AFF96}](https://github.com/user-attachments/assets/f93b9e7e-48d1-42f6-8ac7-a6a46e19a385)
 
 
-
-
-
-
-
+<ins>**V1**</ins> 
+- Basic function (Searchable route, navigate between next stop and previous stop, restart from first bus stop, switch route bound)
+  
+![kmb-dpip-preview](https://github.com/silverfankw/kmb-dpip/assets/36290205/5ebe8197-7bc4-4733-90ae-05605996ab06)
 
 
 # React + Vite
