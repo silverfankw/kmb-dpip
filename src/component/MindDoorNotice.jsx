@@ -7,7 +7,7 @@ export const MindDoorNotice = ({ containerOverrideStyle, zhNameOverrideStyle, en
         text-white ${zhNameOverrideStyle}`}>
             車門正在關上
         </div>
-        <div className={`max-md:text-[1.75rem] text-[2.5rem] text-white ${enNameOverrideStyle}`}>
+        <div className={`mt-[-0.5rem] max-md:text-[1.75rem] text-[2.5rem] text-white ${enNameOverrideStyle}`}>
             Door Closing
         </div>
     </div>

@@ -54,7 +54,7 @@ export const DpipNextStop = ({ stopZh, stopEn }) => {
     return (
         <>
             {/* Horizontal gray divider line */}
-            <div className="col-start-1 col-end-5 bg-[#eee8eba3]"></div>
+            <div className="col-start-1 col-end-5 bg-[#f7f6f6c5]"></div>
 
             {/* White circle spot */}
             <div className={`@container flex flex-col items-center justify-center bg-[#FF0000]`}>

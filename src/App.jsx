@@ -9,7 +9,6 @@ import Button from '@mui/material/Button';
 import Switch from '@mui/material/Switch';
 import Typography from '@mui/material/Typography';
 import Tooltip from '@mui/material/Tooltip';
-import FormControlLabel from '@mui/material/FormControlLabel';
 import { IconButton } from '@mui/material';
 
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
@@ -29,6 +28,8 @@ import { DPIPSecScreen } from './DpipSecScreen'
 import { DPIPMainScreen } from './DpipMainScreen'
 // import { BellButton } from './component/BellButton';
 import { Input } from "./component/Input"
+import Footer from './component/Footer';
+import { SwitchButton } from './component/SwitchButton';
 
 function App() {
 	const [selection, setSelection] = useState(null)
@@ -46,7 +47,7 @@ function App() {
 		}
 	)
 	const containerStyle = {
-		basic: "shadow-[0.25rem_1.75rem_0.75rem_rgba(0,0,0,0.5)] max-sm:border-[.25em] max-sm:outline-[.75rem] border-[.5em] border-solid border-[#0e0e0fbf] rounded-xl outline outline-[1rem] outline-black",
+		basic: "shadow-[0.5rem_0.5rem_1rem_0.25rem_#FFF] max-sm:border-[.25em] max-sm:outline-[.75rem] border-[.5em] border-solid border-[#0e0e0fbf] rounded-xl outline outline-[1rem] outline-[#1B1212]",
 		new: "border-solid border-black "
 	}
 
@@ -197,7 +198,7 @@ function App() {
 	return (
 		<ThemeProvider theme={theme}>
 			<routeContext.Provider value={{ routeDetail, currentStopIndex, lastStopIndex }}>
-				<div className="focus:outline-hidden p-[2rem] flex flex-col gap-2" tabIndex={1}
+				<div className="select-none focus:outline-hidden p-[2rem] flex flex-col gap-2" tabIndex={1}
 					onKeyDown={(e) => handleKeyboardControl(e.key)}>
 
 					{/* Query section for route input and selection */}
@@ -232,7 +233,7 @@ function App() {
 					<section className='flex flex-wrap max-sm:gap-[2vw] gap-[1vw] my-[0.5em]'>
 
 						{/* Stop Bell toggle */}
-						<FormControlLabel
+						<SwitchButton
 							sx={{
 								width: "max-content",
 								bgcolor: "error.main",
@@ -254,14 +255,14 @@ function App() {
 							label={
 								<>
 									<NotificationsIcon color="snowwhite" />
-									<Typography variant="button" className="noselect" color="white">
+									<Typography variant="button" color="white">
 										{userPreference.stopPressed ? `  解除鐘` : ` 按鐘`}
 									</Typography>
 								</>}
 						/>
 
 						{/* Hold Handrail Notice toggle */}
-						<FormControlLabel
+						<SwitchButton
 							sx={{
 								width: "max-content",
 								bgcolor: "ochre.main",
@@ -285,14 +286,14 @@ function App() {
 							label={
 								<>
 									<FeedbackIcon />
-									<Typography className="noselect" variant="button">
+									<Typography variant="button">
 										「緊握扶手」提示
 									</Typography>
 								</>}
 						/>
 
 						{/* Mind Door Notice toggle */}
-						<FormControlLabel
+						<SwitchButton
 							sx={
 								theme => ({
 									width: "max-content",
@@ -320,7 +321,7 @@ function App() {
 							label={
 								<>
 									<DoorSlidingIcon />
-									<Typography className="noselect" variant="button">
+									<Typography variant="button">
 										「車門正在關上」提示
 									</Typography>
 								</>}
@@ -332,58 +333,70 @@ function App() {
 						<Tooltip
 							arrow
 							placement="bottom-start"
-							title="Keyboard Shortcut: '←'">
-							<Button
-								color="error"
-								variant="contained"
-								startIcon={<ArrowBackIcon />}
-								onClick={() => toPrevStop()}
-								disabled={!isPrevStopAvailable}
-							>
-								上站
-							</Button>
+							title="鍵盤快捷鍵: '←'">
+							<span>
+								<Button
+									color="error"
+									variant="contained"
+									startIcon={<ArrowBackIcon />}
+									onClick={() => toPrevStop()}
+									disabled={!isPrevStopAvailable}
+								>
+									上站
+								</Button>
+							</span>
 						</Tooltip>
+
 						<Tooltip
 							arrow
 							placement="bottom-start"
-							title="Keyboard shortcut: '→'">
-							<Button
-								color="success"
-								variant="contained"
-								startIcon={<ArrowForwardIcon />}
-								onClick={() => toNextStop()}
-								disabled={!isNextStopAvailable}
-							>
-								下站
-							</Button>
+							title="鍵盤快捷鍵: '→'">
+							<span>
+								<Button
+									color="success"
+									variant="contained"
+									startIcon={<ArrowForwardIcon />}
+									onClick={() => toNextStop()}
+									disabled={!isNextStopAvailable}
+								>
+									下站
+								</Button>
+							</span>
 						</Tooltip>
+
 						<Tooltip
 							arrow
 							placement="bottom-start"
-							title="Keyboard shortcut: 'HOME'">
-							<Button
-								variant="contained"
-								startIcon={<RefreshIcon />}
-								onClick={() => setCurrentStopIndex(0)}
-								disabled={isEmptyObject(routeDetail) || currentStopIndex == 0}
-							>
-								首站重新開始
-							</Button>
+							title="鍵盤快捷鍵: 'HOME'">
+							<span>
+								<Button
+									variant="contained"
+									startIcon={<RefreshIcon />}
+									onClick={() => setCurrentStopIndex(0)}
+									disabled={isEmptyObject(routeDetail) || currentStopIndex == 0}
+								>
+									首站重新開始
+								</Button>
+							</span>
 						</Tooltip>
+
 						<Tooltip
 							arrow
 							placement="bottom-start"
-							title="Keyboard shortcut: 'END'">
-							<Button
-								color="secondary"
-								variant="contained"
-								startIcon={<CachedIcon />}
-								onClick={() => changeBound()}
-								disabled={(selection == null || !routeHasTwoBound) || selection?.service_type != 1}
-							>
-								切換路線方向
-							</Button>
+							title="鍵盤快捷鍵: 'END'">
+							<span>
+								<Button
+									color="secondary"
+									variant="contained"
+									startIcon={<CachedIcon />}
+									onClick={() => changeBound()}
+									disabled={(selection == null || !routeHasTwoBound) || selection?.service_type != 1}
+								>
+									切換路線方向
+								</Button>
+							</span>
 						</Tooltip>
+
 						<Button
 							color="ochre"
 							variant="contained"
@@ -398,7 +411,7 @@ function App() {
 					{userPreference.customizeDriverInfo ?
 						<section className="flex gap-3 mb-[1em]">
 							<Input
-								placeholder="車長中文姓氏"
+								placeholder="車長中文姓氏 (最多2字)"
 								maxLength={2}
 								defaultValue={userPreference.driverInfo.nameZh}
 								onChange={v => {
@@ -410,7 +423,7 @@ function App() {
 								}} />
 							<Input
 								style={"capitalize"}
-								placeholder="車長英文姓氏"
+								placeholder="車長英文姓氏 (最多10字)"
 								maxLength={10}
 								defaultValue={userPreference.driverInfo.nameEn}
 								onChange={v => {
@@ -421,7 +434,7 @@ function App() {
 									})
 								}} />
 
-							<Input placeholder="職員編號"
+							<Input placeholder="職員編號 (0至6位數字)"
 								type="number"
 								minLength={1}
 								maxLength={6}
@@ -438,7 +451,7 @@ function App() {
 
 					{/* DPIP main screen with full details */}
 					<section className="py-4 flex flex-wrap 
-					max-md:gap-[6vw] gap-[3vw] noselect">
+					max-md:gap-[6vw] gap-[3vw]">
 						<DPIPMainScreen
 							detail={routeDetail}
 							currentStopIndex={currentStopIndex}
@@ -455,6 +468,7 @@ function App() {
 
 					</section>
 
+					<Footer />
 				</div >
 			</routeContext.Provider>
 		</ThemeProvider >
