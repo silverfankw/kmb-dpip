@@ -329,7 +329,7 @@ function App() {
 					</section>
 
 					{/* Button groups to control DPIP */}
-					<section className='flex flex-wrap max-sm:gap-[2vw] gap-[1vw] mb-[1em] mx-0'>
+					<section className='flex flex-wrap max-sm:gap-[2vw] gap-[1vw] mb-[1em] mx-0 select-none'>
 						<Tooltip
 							arrow
 							placement="bottom-start"
@@ -434,7 +434,7 @@ function App() {
 									})
 								}} />
 
-							<Input placeholder="職員編號 (0至6位數字)"
+							<Input placeholder="職員編號 (1位至6位數字)"
 								type="number"
 								minLength={1}
 								maxLength={6}
