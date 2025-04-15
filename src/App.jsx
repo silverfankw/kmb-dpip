@@ -93,7 +93,7 @@ function App() {
 			fetchKMBData().catch(console.error())
 	}, [])
 
-	const lastStopIndex = routeDetail?.stops?.length - 1 ?? 0
+	const lastStopIndex = routeDetail?.stops?.length - 1
 	const isPrevStopAvailable = currentStopIndex - 1 >= 0
 	const isNextStopAvailable = currentStopIndex + 3 <= lastStopIndex + 2
 
