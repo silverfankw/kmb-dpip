@@ -3,21 +3,15 @@ import { useState, useEffect } from "react"
 
 export const DpipNextStop = ({ stopZh, stopEn }) => {
 
-    // const charFilterRegex = new RegExp(
-    //     '[A-Za-z0-9_\]+|' +                             // ASCII letters (no accents)
-    //     '[\u4E00-\u9FFF\uF900-\uFAFF\u3400-\u4DBF]',   // Single CJK ideographs
-    //     'g')
-
     const [windowWidth, setWindowWidth] = useState(window.innerWidth)
 
-    const zhFontEmRatio = windowWidth < 540 ? 2.25 :
-        windowWidth < 640 ? 2.375 :
-            windowWidth < 768 ? 3 :
-                windowWidth < 1024 ? 3.5 : 3.75
+    const zhFontEmRatio = windowWidth < 640 ? 2.375 :
+        windowWidth < 768 ? 3 :
+            windowWidth < 1280 ? 3.5 : 3.75
 
     const enFontEmRatio = windowWidth < 640 ? 1 :
         windowWidth < 768 ? 1.25 :
-            windowWidth < 1024 ? 1.375 : 1.5
+            windowWidth < 1280 ? 1.375 : 1.5
 
     const handleWindowSizeChange = () => setWindowWidth(window.innerWidth)
 
@@ -29,6 +23,7 @@ export const DpipNextStop = ({ stopZh, stopEn }) => {
     const computeStopNameWidth = (type) => {
 
         const stopNameFullLen = type == "zh" ? stopZh?.length : stopEn?.length ?? 0
+
         // console.log(stopNameFullLen)
 
         // Terminate function if no stop name is ready
@@ -45,9 +40,9 @@ export const DpipNextStop = ({ stopZh, stopEn }) => {
         // If stop name english length too long, scale down the font size
         if (type == "en" && stopNameFullLen >= 45) {
             if (stopNameFullLen >= 50)
-                return { fontSize: `${enFontEmRatio * 0.75}rem` }
-            else
                 return { fontSize: `${enFontEmRatio * 0.8}rem` }
+            else
+                return { fontSize: `${enFontEmRatio * 0.85}rem` }
         }
     }
 
@@ -69,18 +64,18 @@ export const DpipNextStop = ({ stopZh, stopEn }) => {
                 <div className="font-[500] relative flex flex-col left-[1.5%] h-[90%] whitespace-nowrap">
 
                     <div
-                        className="relative max-xs:text-[2.25rem] 
-                        xs:max-sm:text-[2.375rem] sm:max-md:text-[3rem] md:max-lg:text-[3.5rem]
-                        lg:max-xl:text-[3.75rem] text-[3.75rem]"
+                        className="relative 
+                        max-sm:text-[2.5rem] sm:max-md:text-[2.75rem] 
+                        md:max-xl:text-[3.375rem] text-[3.75rem]"
                         style={computeStopNameWidth("zh")}
                     >
                         {stopZh ?? ""}
                     </div>
 
                     <span
-                        className="absolute top-[75%] max-xs:text-[1rem] 
-                        xs:max-sm:text-[1rem] sm:max-md:text-[1.25rem] md:max-lg:text-[1.375rem]
-                        lg:max-xl:text-[1.5rem] text-[1.5rem]"
+                        className="absolute top-[75%] 
+                        max-sm:text-[1.05rem] sm:max-md:text-[1.25rem] 
+                        md:max-xl:text-[1.375rem] text-[1.5rem]"
                         style={computeStopNameWidth("en")}
                     >
                         {stopEn ?? ""}

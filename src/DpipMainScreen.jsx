@@ -53,18 +53,19 @@ export const DPIPMainScreen = ({ detail, currentStopIndex, userPreference, conta
 
     return (
         <>
+            {/* w-[50rem] h-[30rem] max-w-[480px]:h-[18rem] xs:max-sm:h-[20rem] 
+                    max-sm:h-[22.5rem] max-md:h-[25rem] */}
+
             {/* --- Screen Monitor Grid Layout --- */}
             <div className={`grid grid-rows-[0.5fr_1.85fr_0.0375fr_1fr_0.125fr]
-            w-[50rem] h-[30rem] max-w-[480px]:h-[18rem] xs:max-sm:h-[20rem] 
-            max-sm:h-[22.5rem] max-md:h-[25rem]
                 ${containerStyle[userPreference.containerStyle]}`}>
 
                 {/* --- Next stop Indicator --- */}
                 <div className={`@container col-start-1 col-end-2 flex flex-col text-center 
                     ${userPreference.stopPressed ? `bg-[#FF0000] text-white` : `bg-[#FFFF00] text-black`}`}>
-                    <div className={`max-sm:text-[18cqw] text-[15cqw] font-[600] `}>
+                    <div className={`max-sm:text-[16cqw] text-[15cqw] mb-[-4px] font-[600] `}>
                         下一站{userPreference.stopPressed && `停於`}</div>
-                    <div className={`max-sm:text-[10cqw] text-[7.5cqw] font-[400] `}>
+                    <div className={`max-sm:text-[9cqw] text-[7.5cqw] font-[400] `}>
                         Next {userPreference.stopPressed ? `Stopping at` : `Stop`}</div>
                 </div>
 
@@ -79,32 +80,32 @@ export const DPIPMainScreen = ({ detail, currentStopIndex, userPreference, conta
                     text-center tracking-tighter'>
 
                         <div className='@container absolute w-1/3'>
-                            <div className='max-xs:text-[11cqw] text-[9cqw] 
+                            <div className='text-[9cqw] 
                             whitespace-nowrap overflow-hidden text-ellipsis'>
                                 {detail?.stops?.[currentStopIndex]?.zh}
                             </div>
-                            <div className='max-xs:text-[7cqw] text-[5cqw]
+                            <div className='max-sm:text-[6cqw] text-[5cqw]
                             whitespace-nowrap overflow-hidden text-ellipsis'>
                                 {detail?.stops?.[currentStopIndex]?.en}</div>
                         </div>
 
                         <div className='@container absolute left-[33%] w-1/3'>
-                            <div className='max-xs:text-[11cqw] text-[9cqw] 
+                            <div className='text-[9cqw] 
                             whitespace-nowrap overflow-hidden text-ellipsis'>
                                 {detail?.stops?.[nextStopIndex]?.zh}
                             </div>
-                            <div className='max-xs:text-[7cqw] text-[5cqw] 
+                            <div className='max-sm:text-[6cqw] text-[5cqw] 
                             whitespace-nowrap overflow-hidden text-ellipsis'>
                                 {detail?.stops?.[nextStopIndex]?.en}
                             </div>
                         </div>
 
-                        <div className='@container absolute left-[66%] w-1/3 '>
-                            <div className='max-xs:text-[11cqw] text-[9cqw] 
+                        <div className='@container absolute left-[66%] w-1/3'>
+                            <div className='text-[9cqw] 
                             whitespace-nowrap overflow-hidden text-ellipsis'>
                                 {detail?.stops?.[nextNextStopIndex]?.zh}
                             </div>
-                            <div className='max-xs:text-[7cqw] text-[5cqw] 
+                            <div className='max-sm:text-[6cqw] text-[5cqw] 
                             whitespace-nowrap overflow-hidden text-ellipsis'>
                                 {detail?.stops?.[nextNextStopIndex]?.en}
                             </div>
@@ -131,7 +132,7 @@ export const DPIPMainScreen = ({ detail, currentStopIndex, userPreference, conta
                                     max-xs:!text-[2.5rem] xs:max-sm:!text-[2.5rem] 
                                     sm:max-md:!text-[3rem]`}
                                 enNameOverrideStyle={`!text-[2rem]
-                                    max-xs:!text-[1.25rem] xs:max-sm:!text-[1.25rem] 
+                                    max-xs:!text-[1.175rem] xs:max-sm:!text-[1.175rem] 
                                     sm:max-md:!text-[1.375rem]`}>
                             </HoldHandrailNotice>
 

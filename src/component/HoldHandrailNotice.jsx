@@ -1,6 +1,6 @@
 export const HoldHandrailNotice = ({ containerOverrideStyle, zhNameOverrideStyle, enNameOverrideStyle }) =>
-    <div className={`w-full row-span-99 col-span-2 
-flex flex-col item-center justify-center text-center
+    <div className={`w-full h-full row-span-99 col-span-2 
+flex flex-col gap-1 item-center justify-center text-center
  bg-amber-300 ${containerOverrideStyle}`}>
         <div className={`tracking-wider text-[6rem] font-[700]
     max-xs:text-[3.5rem] xs:max-sm:text-[3.75rem] sm:max-md:text-[4.5rem] 

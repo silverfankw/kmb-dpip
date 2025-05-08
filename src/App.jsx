@@ -18,7 +18,7 @@ import CachedIcon from '@mui/icons-material/Cached';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import KeyboardHideIcon from '@mui/icons-material/KeyboardHide';
 import BadgeIcon from '@mui/icons-material/Badge';
-import FeedbackIcon from '@mui/icons-material/Feedback';
+import HandshakeIcon from '@mui/icons-material/Handshake';
 import DoorSlidingIcon from '@mui/icons-material/DoorSliding';
 import { Popover } from '@base-ui-components/react/popover';
 
@@ -47,7 +47,7 @@ function App() {
 		}
 	)
 	const containerStyle = {
-		basic: "shadow-[0.5rem_0.5rem_1rem_0.25rem_#FFF] max-sm:border-[.25em] max-sm:outline-[.75rem] border-[.5em] border-solid border-[#0e0e0fbf] rounded-xl outline outline-[1rem] outline-[#1B1212]",
+		basic: "w-[800px] h-[480px] max-xl:w-[700px] max-xl:h-[420px] max-md:w-[600px] max-md:h-[360px] max-sm:w-[500px] max-sm:h-[330px] shadow-[0.5rem_0.5rem_1rem_0.25rem_#FFF] max-md:border-[.25em] border-[.375rem] border-solid border-[#0e0e0fbf] rounded-xl outline outline-[0.875rem] outline-[#000000]",
 		new: "border-solid border-black "
 	}
 
@@ -230,7 +230,7 @@ function App() {
 					{/* <BellButton onClick={() => setUserPreference(prev => { return { ...prev, stopPressed: !prev.stopPressed } })} /> */}
 
 					{/* Switch groups to control DPIP */}
-					<section className='flex flex-wrap max-sm:gap-[2vw] gap-[1vw] my-[0.5em]'>
+					<section className='flex flex-wrap gap-[10px] my-[0.5em]'>
 
 						{/* Stop Bell toggle */}
 						<SwitchButton
@@ -255,7 +255,7 @@ function App() {
 							label={
 								<>
 									<NotificationsIcon color="snowwhite" />
-									<Typography variant="button" color="white">
+									<Typography className="max-md:hidden" variant="button" color="white">
 										{userPreference.stopPressed ? `  解除鐘` : ` 按鐘`}
 									</Typography>
 								</>}
@@ -285,8 +285,8 @@ function App() {
 							}
 							label={
 								<>
-									<FeedbackIcon />
-									<Typography variant="button">
+									<HandshakeIcon />
+									<Typography className="max-md:hidden" variant="button">
 										「緊握扶手」提示
 									</Typography>
 								</>}
@@ -294,18 +294,14 @@ function App() {
 
 						{/* Mind Door Notice toggle */}
 						<SwitchButton
-							sx={
-								theme => ({
-									width: "max-content",
-									bgcolor: "ochre.main",
-									borderRadius: 1,
-									paddingRight: "10px",
-									boxShadow: "0px 2px 4px -1px rgba(0,0,0,0.2),0px 4px 5px 0px rgba(0,0,0,0.14),0px 1px 10px 0px rgba(0,0,0,0.12)",
-									"&:hover": { bgcolor: "ochre.dark" },
-									marginLeft: { // fix responsive layout flex-wrap causing margin left overflow
-										[theme.breakpoints.down('md')]: { marginLeft: "0px" },
-									}
-								})}
+							sx={{
+								width: "max-content",
+								bgcolor: "ochre.main",
+								borderRadius: 1,
+								paddingRight: "10px",
+								boxShadow: "0px 2px 4px -1px rgba(0,0,0,0.2),0px 4px 5px 0px rgba(0,0,0,0.14),0px 1px 10px 0px rgba(0,0,0,0.12)",
+								"&:hover": { bgcolor: "ochre.dark" },
+							}}
 							control={
 								<Switch
 									checked={userPreference.mindDoorNotice}
@@ -321,28 +317,29 @@ function App() {
 							label={
 								<>
 									<DoorSlidingIcon />
-									<Typography variant="button">
-										「車門正在關上」提示
+									<Typography className="max-md:hidden" variant="button">
+										「車門關上」提示
 									</Typography>
 								</>}
 						/>
 					</section>
 
 					{/* Button groups to control DPIP */}
-					<section className='flex flex-wrap max-sm:gap-[2vw] gap-[1vw] mb-[1em] mx-0 select-none'>
+					<section className='flex flex-wrap gap-[15px] mb-[1em] mx-0 select-none'>
 						<Tooltip
 							arrow
 							placement="bottom-start"
-							title="鍵盤快捷鍵: '←'">
+							title="上一站 鍵盤快捷鍵: '←'">
 							<span>
 								<Button
+									style={{ height: "40px" }}
 									color="error"
 									variant="contained"
 									startIcon={<ArrowBackIcon />}
 									onClick={() => toPrevStop()}
 									disabled={!isPrevStopAvailable}
 								>
-									上站
+									<span className="max-md:hidden">上站</span>
 								</Button>
 							</span>
 						</Tooltip>
@@ -350,16 +347,17 @@ function App() {
 						<Tooltip
 							arrow
 							placement="bottom-start"
-							title="鍵盤快捷鍵: '→'">
+							title="下一站 鍵盤快捷鍵: '→'">
 							<span>
 								<Button
+									style={{ height: "40px" }}
 									color="success"
 									variant="contained"
 									startIcon={<ArrowForwardIcon />}
 									onClick={() => toNextStop()}
 									disabled={!isNextStopAvailable}
 								>
-									下站
+									<span className="max-md:hidden">下站</span>
 								</Button>
 							</span>
 						</Tooltip>
@@ -367,15 +365,16 @@ function App() {
 						<Tooltip
 							arrow
 							placement="bottom-start"
-							title="鍵盤快捷鍵: 'HOME'">
+							title="重設至首站 鍵盤快捷鍵: 'HOME'">
 							<span>
 								<Button
+									style={{ height: "40px" }}
 									variant="contained"
 									startIcon={<RefreshIcon />}
 									onClick={() => setCurrentStopIndex(0)}
 									disabled={isEmptyObject(routeDetail) || currentStopIndex == 0}
 								>
-									首站重新開始
+									<span className="max-md:hidden">首站重新開始</span>
 								</Button>
 							</span>
 						</Tooltip>
@@ -383,28 +382,37 @@ function App() {
 						<Tooltip
 							arrow
 							placement="bottom-start"
-							title="鍵盤快捷鍵: 'END'">
+							title="切換路線方向 鍵盤快捷鍵: 'END'">
 							<span>
 								<Button
+									style={{ height: "40px" }}
 									color="secondary"
 									variant="contained"
 									startIcon={<CachedIcon />}
 									onClick={() => changeBound()}
 									disabled={(selection == null || !routeHasTwoBound) || selection?.service_type != 1}
 								>
-									切換路線方向
+									<span className="max-md:hidden">切換路線方向</span>
 								</Button>
 							</span>
 						</Tooltip>
 
-						<Button
-							color="ochre"
-							variant="contained"
-							startIcon={<BadgeIcon />}
-							onClick={() => { setUserPreference(prev => { return { ...prev, customizeDriverInfo: !prev.customizeDriverInfo } }) }}
-						>
-							自定義車長資料
-						</Button>
+						<Tooltip
+							arrow
+							placement="bottom-start"
+							title="自定義車長資料顯示">
+							<span>
+								<Button
+									style={{ height: "40px" }}
+									color="ochre"
+									variant="contained"
+									startIcon={<BadgeIcon />}
+									onClick={() => { setUserPreference(prev => { return { ...prev, customizeDriverInfo: !prev.customizeDriverInfo } }) }}
+								>
+									<span className="max-md:hidden">自定義車長資料</span>
+								</Button>
+							</span>
+						</Tooltip>
 					</section>
 
 					{/* Customizeable driver info with input group */}
@@ -450,8 +458,7 @@ function App() {
 						</section> : <></>}
 
 					{/* DPIP main screen with full details */}
-					<section className="py-4 flex flex-wrap 
-					max-md:gap-[6vw] gap-[3vw]">
+					<section className="py-4 flex flex-wrap gap-10">
 						<DPIPMainScreen
 							detail={routeDetail}
 							currentStopIndex={currentStopIndex}

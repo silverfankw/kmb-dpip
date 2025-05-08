@@ -13,7 +13,6 @@ export const DPIPSecScreen = ({ stops, currentStopIndex, userPreference, contain
     return (
         <>
             <div className={`grid grid-cols-[10fr_90fr] grid-rows-[3.25fr_0.025fr_2fr_0.025fr_2fr]
-            w-[50rem] h-[30rem] max-sm:h-[20rem] max-md:h-[25rem]
                 ${containerStyle[userPreference.containerStyle]}`}>
 
                 {userPreference.mindDoorNotice ?

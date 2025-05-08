@@ -1,5 +1,5 @@
 export const MindDoorNotice = ({ containerOverrideStyle, zhNameOverrideStyle, enNameOverrideStyle }) => (
-    <div className={`w-full flex flex-col col-span-3
+    <div className={`w-full h-full flex flex-col gap-1 col-span-3
     justify-center item-center text-center bg-[#FF0000] ${containerOverrideStyle}`}>
 
         <div className={`max-md:text-[3.25rem] 
