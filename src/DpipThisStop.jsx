@@ -33,7 +33,7 @@ export const DpipThisStop = ({ stopZh, stopEn }) => {
         // 3. Chinese Stop Name with >= 10 pure chinese word length (e.g. 大窩口轉車站 - 大窩口站 (A2))
 
         const stopNameFullLen = type == "zh" ? stopZh?.length : stopEn?.length ?? 0
-        const chineseOnlyLen = stopZh?.match(charFilterRegex).length ?? 0 // > 9 will overflow
+        const chineseOnlyLen = stopZh?.match(charFilterRegex)?.length ?? 0 // > 9 will overflow
         const fullWidthSymbolLen = stopZh?.match(fullWidthSymbolRegex)?.length ?? 0
         // console.log(stopNameFullLen, chineseOnlyLen, fullWidthSymbolLen)
 
