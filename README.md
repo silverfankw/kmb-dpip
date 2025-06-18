@@ -1,3 +1,4 @@
+
 Project Demo🔗👉🏻: https://silverfankw.github.io/kmb-dpip/
 
 ## Introduction
@@ -9,25 +10,26 @@ This project is developed by React + Vite, tailwindCSS & Material UI.
 
 
 ## Versions
-<ins>**V2🆕✨**</ins>
-- Added features: enable hold handrail or door closing notification messages, customizable driver information
+<ins>**Version 2</ins>🆕✨**
+- Added features:
+  1. A comprehensive, detailed bus stop progress bar, displaying more stop information in limited area
+  2. Traditional compact bus stop progress bar & the new detailed bus stop progress bar will take turn switching display in preset interval
+  3. Fullscreen mode (while keyboard shortcut navigation is available at the same time)
+- Code refactor to improve performance, readability and project structure
+  
+![image](https://github.com/user-attachments/assets/7adb991b-e37e-4d96-8067-c77634dfe316)
+
+
+<ins>**Version 1.1**</ins>
+- Added features:
+  1. Enable hold handrail or door closing notification messages
+  2. Customizable driver information
 - Code revamp, Refactor all CSS to tailwind classes, Compatible responsive design in each element
   
 ![{A0508B16-F659-4249-A131-045E6F6AFF96}](https://github.com/user-attachments/assets/f93b9e7e-48d1-42f6-8ac7-a6a46e19a385)
 
 
-<ins>**V1**</ins> 
+<ins>**Version 1**</ins> 
 - Basic function (Searchable route, navigate between next stop and previous stop, restart from first bus stop, switch route bound)
   
 ![kmb-dpip-preview](https://github.com/silverfankw/kmb-dpip/assets/36290205/5ebe8197-7bc4-4733-90ae-05605996ab06)
-
-
-# React + Vite
-
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
-
-Currently, two official plugins are available:
-
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
-
