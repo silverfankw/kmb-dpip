@@ -1,11 +1,23 @@
-export const HoldHandrailNotice = ({ containerOverrideStyle, zhNameOverrideStyle, enNameOverrideStyle }) =>
-    <div className={`w-full h-full row-span-99 col-span-2 
-flex flex-col gap-1 item-center justify-center text-center
- bg-amber-300 ${containerOverrideStyle}`}>
-        <div className={`tracking-wider text-[6rem] font-[700]
-    max-xs:text-[3.5rem] xs:max-sm:text-[3.75rem] sm:max-md:text-[4.5rem] 
-    md:max-lg:text-[5.5rem] ${zhNameOverrideStyle}`}>請緊握扶手</div>
-        <div className={`mt-[-0.5rem] tracking-tight text-[2.75rem] font-[700]
-    max-xs:text-[1.5rem] xs:max-sm:text-[1.75rem] sm:max-md:text-[2rem]
-    md:max-lg:text-[2.5rem] ${enNameOverrideStyle}`}>Please hold the handrail</div>
-    </div>
+export const HoldHandrailNotice = ({
+    containerOverrideStyle = "",
+    zhNameOverrideStyle = "",
+    enNameOverrideStyle = ""
+}) => {
+
+    const styleClasses = {
+        noticeContainer: "@container w-full h-full row-span-99 col-span-2 flex flex-col items-center justify-center bg-amber-300",
+        textZh: "text-[12cqw] mt-[-1cqw] tracking-wider font-[700]",
+        textEn: "text-[5.5cqw] mt-[-1.5cqw] tracking-tight font-[700]"
+    }
+
+    return (
+        <div className={styleClasses.noticeContainer + " " + containerOverrideStyle}>
+            <div className={styleClasses.textZh + " " + zhNameOverrideStyle}>
+                請緊握扶手
+            </div>
+            <div className={styleClasses.textEn + " " + enNameOverrideStyle}>
+                Please hold the handrail
+            </div>
+        </div>
+    )
+}

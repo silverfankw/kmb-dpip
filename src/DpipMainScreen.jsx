@@ -1,174 +1,180 @@
 import './App.css'
-import { useState, useEffect } from "react"
-import { RouteDisplayHeading } from './RouteDisplayHeading'
-import { HoldHandrailNotice } from './component/HoldHandrailNotice'
-import { MindDoorNotice } from './component/MindDoorNotice'
+import { useEffect, useRef } from "react"
+import {
+    RouteDisplayHeading,
+    HoldHandrailNotice,
+    MindDoorNotice,
+    StopFullProgressBar,
+    StopCompactProgressBar
+} from './component'
+
+// Constants for intervals milliseconds
+const progressBarInterval = 11000
+const stopNameInterval = 4500
 
 {/* DPIP main screen with full details */ }
-export const DPIPMainScreen = ({ detail, currentStopIndex, userPreference, containerStyle }) => {
+export const DPIPMainScreen = ({
+    detail,
+    currentStopIndex,
+    userPreference: {
+        monitorStyle,
+        stopPressed,
+        driverInfo,
+        mindDoorNotice,
+        handrailNotice
+    },
+    monitorStyleOptions,
+    screenTarget }) => {
 
-    const nextStopIndex = currentStopIndex + 1
-    const nextNextStopIndex = nextStopIndex + 1
+    // Ensure detail and stops are defined
     const stopNameZh = detail?.stops?.[currentStopIndex]?.zh
     const stopNameEn = detail?.stops?.[currentStopIndex]?.en
 
-    const [currentBigStopNameLanguage, setCurrentBigStopNameLanguage] = useState("zh")
-    const [windowWidth, setWindowWidth] = useState(window.innerWidth)
+    // Refs for toggling visibility of elements
+    const fullProgressBarRef = useRef(null)
+    const compactProgressBarRef = useRef(null)
+    const zhStopNameRef = useRef(null)
+    const enStopNameRef = useRef(null)
 
-    const handleWindowSizeChange = () => setWindowWidth(window.innerWidth)
-
+    // Display toggles setup
     useEffect(() => {
-        window.addEventListener('resize', handleWindowSizeChange)
-        return () => window.removeEventListener('resize', handleWindowSizeChange)
+        // Helper to toggle display between two refs
+        const toggleDisplay = (refA, refB) => {
+            if (refA.current && refB.current) {
+                const isAVisible = refA.current.style.display !== "none"
+                refA.current.style.display = isAVisible ? "none" : "block"
+                refB.current.style.display = isAVisible ? "block" : "none"
+            }
+        }
+
+        if (fullProgressBarRef.current && compactProgressBarRef.current) {
+            fullProgressBarRef.current.style.display = "block"
+            compactProgressBarRef.current.style.display = "none"
+        }
+        if (zhStopNameRef.current && enStopNameRef.current) {
+            zhStopNameRef.current.style.display = "block"
+            enStopNameRef.current.style.display = "none"
+        }
+
+        const progressBarToggleTimer = setInterval(() => {
+            toggleDisplay(fullProgressBarRef, compactProgressBarRef)
+        }, progressBarInterval)
+
+        const stopNameToggleTimer = setInterval(() => {
+            toggleDisplay(zhStopNameRef, enStopNameRef)
+        }, stopNameInterval)
+
+        return () => {
+            clearInterval(progressBarToggleTimer)
+            clearInterval(stopNameToggleTimer)
+        }
     }, [])
 
+    // Reset stop name display when notice toggles change
     useEffect(() => {
-        // Switch the content after 4 seconds
-        const interval = setInterval(() => {
-            setCurrentBigStopNameLanguage(prevLang => prevLang == "zh" ? "en" : "zh")
-        }, 4000)
-        return () => { clearInterval(interval) }
-    }, [detail, currentStopIndex])
-
-    const zhFontEmRatio = windowWidth < 540 ? 2.25 :
-        windowWidth < 640 ? 2.375 :
-            windowWidth < 768 ? 3 :
-                windowWidth < 1024 ? 3.5 : 3.75
-
-    const computeStopNameWidth = () => {
-
-        const stopNameFullLen = stopNameZh?.length ?? 0
-
-        // Terminate function if no stop name is ready
-        if (stopNameFullLen == 0) { return }
-
-        // If stop name chinese length too long, scale down the font size
-        if (stopNameFullLen >= 13) {
-            if (stopNameFullLen >= 14)
-                return { fontSize: `${zhFontEmRatio * 0.75}rem` }
-            else
-                return { fontSize: `${zhFontEmRatio * 0.85}rem` }
+        if (handrailNotice || mindDoorNotice) {
+            // Hide both stop names when a notice is active
+            if (zhStopNameRef.current) zhStopNameRef.current.style.display = "none"
+            if (enStopNameRef.current) enStopNameRef.current.style.display = "none"
         }
+        else {
+            // Show zh and hide en by default when no notice is active
+            if (zhStopNameRef.current) zhStopNameRef.current.style.display = "block"
+            if (enStopNameRef.current) enStopNameRef.current.style.display = "none"
+        }
+    }, [handrailNotice, mindDoorNotice])
+
+    // Tailwind CSS classes for the layout
+    const styleClasses = {
+        parentGrid: `select-none grid grid-rows-[0.5fr_1.85fr_0.0375fr_1fr_0.125fr] ${monitorStyleOptions[monitorStyle]}`,
+        nextStopIndicatorGrid: `@container col-start-1 col-end-2 flex flex-col text-center items-center justify-center ${stopPressed ? "bg-[#FF0000] text-white" : "bg-[#FFFF00] text-black"}`,
+        nextStopIndicatorZh: "max-sm:text-[16cqw] text-[15cqw] mb-[-4px] font-[600]",
+        nextStopIndicatorEn: "max-sm:text-[9cqw] text-[7.5cqw] font-[400]",
+        routeHeadingGrid: "@container col-start-2 col-end-5 flex items-center pl-1 bg-black text-white",
+        stopProgressBarGrid: "@container col-start-1 col-end-5 bg-white",
+        stopProgressBarContainer: "relative top-[87.5%] font-[400] text-center tracking-tight",
+        dividerGrid: "col-start-1 col-end-5 bg-black",
+        stopNameGrid: "@container col-start-1 col-end-5 bg-white flex justify-center items-center",
+        stopNameZh: "font-[500] max-sm:text-[8.5cqw] max-md:text-[10cqw] text-[8cqw] whitespace-nowrap overflow-hidden",
+        stopNameEn: "text-center font-[500] max-sm:text-[4cqw] max-md:text-[5cqw] text-[5cqw]",
+        driverInfoGrid: `@container flex justify-center col-start-1 col-end-5 font-extralight text-white p-1 ${stopPressed ? "bg-[#FF0000]" : "bg-black"}`,
+        driverInfoText: "text-[2cqw] max-md:text-[2.25cqw]",
+        capitalize: "capitalize",
+        noticeZhOverrideStyle: "!text-[8cqw]",
+        noticeEnOverrideStyle: "!text-[3.75cqw]",
     }
 
     return (
         <>
-            {/* w-[50rem] h-[30rem] max-w-[480px]:h-[18rem] xs:max-sm:h-[20rem] 
-                    max-sm:h-[22.5rem] max-md:h-[25rem] */}
-
             {/* --- Screen Monitor Grid Layout --- */}
-            <div className={`grid grid-rows-[0.5fr_1.85fr_0.0375fr_1fr_0.125fr]
-                ${containerStyle[userPreference.containerStyle]}`}>
+            <div
+                ref={screenTarget}
+                className={styleClasses.parentGrid}>
 
                 {/* --- Next stop Indicator --- */}
-                <div className={`@container col-start-1 col-end-2 flex flex-col text-center 
-                    ${userPreference.stopPressed ? `bg-[#FF0000] text-white` : `bg-[#FFFF00] text-black`}`}>
-                    <div className={`max-sm:text-[16cqw] text-[15cqw] mb-[-4px] font-[600] `}>
-                        下一站{userPreference.stopPressed && `停於`}</div>
-                    <div className={`max-sm:text-[9cqw] text-[7.5cqw] font-[400] `}>
-                        Next {userPreference.stopPressed ? `Stopping at` : `Stop`}</div>
+                <div className={styleClasses.nextStopIndicatorGrid}>
+                    <div className={styleClasses.nextStopIndicatorZh}>
+                        下一站{stopPressed && `停於`}</div>
+                    <div className={styleClasses.nextStopIndicatorEn}>
+                        Next {stopPressed ? `Stopping at` : `Stop`}</div>
                 </div>
 
                 {/* --- Route Number & Destination --- */}
-                <div className="@container col-start-2 col-end-5 flex items-center bg-black text-white">
+                <div className={styleClasses.routeHeadingGrid}>
                     <RouteDisplayHeading />
                 </div>
 
                 {/* --- This stop & 2 next stop & stop indicator line --- */}
-                <div className="col-start-1 col-end-5 bg-white">
-                    <div className='relative top-[30%] font-[400] 
-                    text-center tracking-tighter'>
-
-                        <div className='@container absolute w-1/3'>
-                            <div className='text-[9cqw] 
-                            whitespace-nowrap overflow-hidden text-ellipsis'>
-                                {detail?.stops?.[currentStopIndex]?.zh}
-                            </div>
-                            <div className='max-sm:text-[6cqw] text-[5cqw]
-                            whitespace-nowrap overflow-hidden text-ellipsis'>
-                                {detail?.stops?.[currentStopIndex]?.en}</div>
-                        </div>
-
-                        <div className='@container absolute left-[33%] w-1/3'>
-                            <div className='text-[9cqw] 
-                            whitespace-nowrap overflow-hidden text-ellipsis'>
-                                {detail?.stops?.[nextStopIndex]?.zh}
-                            </div>
-                            <div className='max-sm:text-[6cqw] text-[5cqw] 
-                            whitespace-nowrap overflow-hidden text-ellipsis'>
-                                {detail?.stops?.[nextStopIndex]?.en}
-                            </div>
-                        </div>
-
-                        <div className='@container absolute left-[66%] w-1/3'>
-                            <div className='text-[9cqw] 
-                            whitespace-nowrap overflow-hidden text-ellipsis'>
-                                {detail?.stops?.[nextNextStopIndex]?.zh}
-                            </div>
-                            <div className='max-sm:text-[6cqw] text-[5cqw] 
-                            whitespace-nowrap overflow-hidden text-ellipsis'>
-                                {detail?.stops?.[nextNextStopIndex]?.en}
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* Red line */}
-                    <div className='relative top-[73%] flex justify-around w-[95%] h-2 bg-red-600'>
-                        <div className='relative w-2 h-2 outline-white outline-double rounded-[50%] bg-yellow-300'></div>
-                        <div className='left-[1rem] relative w-2 h-2 border-solid rounded-[50%] bg-white'></div>
-                        <div className='left-[2rem] relative w-2 h-2 border-solid rounded-[50%] bg-white'></div>
+                <div className={styleClasses.stopProgressBarGrid}>
+                    <div className={styleClasses.stopProgressBarContainer}>
+                        <StopFullProgressBar barRef={fullProgressBarRef} />
+                        <StopCompactProgressBar barRef={compactProgressBarRef} />
                     </div>
                 </div>
 
                 {/* --- Horizontal divider line --- */}
-                <div className="col-start-1 col-end-5 bg-black"></div>
+                <div className={styleClasses.dividerGrid}></div>
 
                 {/* --- Big next stop name --- */}
-                <div className="@container col-start-1 col-end-5 bg-white flex justify-center items-center">
+                <div className={styleClasses.stopNameGrid} >
                     {
-                        userPreference.handrailNotice ?
+                        handrailNotice ?
                             <HoldHandrailNotice
-                                zhNameOverrideStyle={`!text-[4.25rem]
-                                    max-xs:!text-[2.5rem] xs:max-sm:!text-[2.5rem] 
-                                    sm:max-md:!text-[3rem]`}
-                                enNameOverrideStyle={`!text-[2rem]
-                                    max-xs:!text-[1.175rem] xs:max-sm:!text-[1.175rem] 
-                                    sm:max-md:!text-[1.375rem]`}>
+                                zhNameOverrideStyle={styleClasses.noticeZhOverrideStyle}
+                                enNameOverrideStyle={styleClasses.noticeEnOverrideStyle}>
                             </HoldHandrailNotice>
 
-                            : userPreference.mindDoorNotice ?
+                            : mindDoorNotice ?
                                 <MindDoorNotice
-                                    zhNameOverrideStyle={`!text-[4.25rem]
-                                    max-xs:!text-[2.5rem] xs:max-sm:!text-[2.5rem] 
-                                    sm:max-md:!text-[3rem]`}
-                                    enNameOverrideStyle={`!text-[2rem]
-                                    max-xs:!text-[1.25rem] xs:max-sm:!text-[1.25rem] 
-                                    sm:max-md:!text-[1.375rem]`}>
+                                    zhNameOverrideStyle={styleClasses.noticeZhOverrideStyle}
+                                    enNameOverrideStyle={styleClasses.noticeEnOverrideStyle}>
                                 </MindDoorNotice>
                                 :
-                                currentBigStopNameLanguage == "zh" ?
-                                    <span style={computeStopNameWidth("zh")} className='font-[500] max-sm:text-[8.5cqw] max-md:text-[10cqw] text-[10cqw] 
-                    whitespace-nowrap overflow-hidden'>
+                                <>
+                                    <span
+                                        ref={zhStopNameRef}
+                                        className={styleClasses.stopNameZh}>
                                         {stopNameZh}
                                     </span>
-                                    :
-                                    <span style={computeStopNameWidth("en")} className='text-center font-[500] max-sm:text-[4cqw] max-md:text-[5cqw] text-[5cqw]'>
+                                    <span
+                                        ref={enStopNameRef}
+                                        className={styleClasses.stopNameEn}>
                                         {stopNameEn}
                                     </span>
+                                </>
                     }
                 </div>
 
                 {/* --- Driver Info --- */}
-                <div className={`@container flex justify-center col-start-1 col-end-5 font-extralight text-white p-1
-                  ${userPreference.stopPressed ? `bg-[#FF0000]` : `bg-black`}`}>
-                    <span className="max-md:text-[2.25cqw]">
-                        {userPreference?.driverInfo?.nameZh}車長正為您服務 &nbsp; Bus Captain&nbsp;
+                <div className={styleClasses.driverInfoGrid}>
+                    <span className={styleClasses.driverInfoText}>
+                        {driverInfo?.nameZh}車長正為您服務 &nbsp; Bus Captain&nbsp;
                     </span>
-                    <span className="max-md:text-[2.25cqw] capitalize">
-                        {userPreference?.driverInfo?.nameEn}&nbsp;
+                    <span className={styleClasses.driverInfoText + " " + styleClasses.capitalize}>
+                        {driverInfo?.nameEn}&nbsp;
                     </span>
-                    <span className="max-md:text-[2.25cqw]">is serving you &nbsp;&nbsp;
-                        員工編號 &nbsp;Emp. No: {userPreference?.driverInfo?.staffNo}</span>
+                    <span className={styleClasses.driverInfoText}>is serving you &nbsp;&nbsp;
+                        員工編號 &nbsp;Emp. No: {driverInfo?.staffNo}</span>
                 </div>
 
             </div >

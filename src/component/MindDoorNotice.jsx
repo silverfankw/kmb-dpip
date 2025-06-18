@@ -1,14 +1,23 @@
-export const MindDoorNotice = ({ containerOverrideStyle, zhNameOverrideStyle, enNameOverrideStyle }) => (
-    <div className={`w-full h-full flex flex-col gap-1 col-span-3
-    justify-center item-center text-center bg-[#FF0000] ${containerOverrideStyle}`}>
+export const MindDoorNotice = ({
+    containerOverrideStyle = "",
+    zhNameOverrideStyle = "",
+    enNameOverrideStyle = ""
+}) => {
 
-        <div className={`max-md:text-[3.25rem] 
-        md:max-lg:text-[4.5rem] text-[4.5rem] 
-        text-white ${zhNameOverrideStyle}`}>
-            車門正在關上
+    const styleClasses = {
+        noticeContainer: "@container w-full h-full flex flex-col gap-1 col-span-3 justify-center items-center text-center bg-[#FF0000]",
+        textZh: "text-[10cqw] mt-[-1cqw] text-white font-[600]",
+        textEn: "text-[5cqw] mt-[-1.5cqw] text-white font-[600]"
+    }
+
+    return (
+        <div className={styleClasses.noticeContainer + " " + containerOverrideStyle}>
+            <div className={styleClasses.textZh + " " + zhNameOverrideStyle}>
+                車門正在關上
+            </div>
+            <div className={styleClasses.textEn + " " + enNameOverrideStyle}>
+                Door Closing
+            </div>
         </div>
-        <div className={`mt-[-0.5rem] max-md:text-[1.75rem] text-[2.5rem] text-white ${enNameOverrideStyle}`}>
-            Door Closing
-        </div>
-    </div>
-)
+    )
+}

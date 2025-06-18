@@ -1,4 +1,4 @@
-import FormControlLabel from '@mui/material/FormControlLabel';
+import FormControlLabel from '@mui/material/FormControlLabel'
 
 export const SwitchButton = ({ sx, control, label }) => {
     return (

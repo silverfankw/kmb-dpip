@@ -1,50 +1,67 @@
 import './App.css'
+import ArrowCircle from "../src/arrow_circle.svg?react"
 
 import { DpipThisStop } from './DpipThisStop'
 import { DpipNextStop } from './DpipNextStop'
-import { HoldHandrailNotice } from './component/HoldHandrailNotice'
-import ArrowCircle from "../src/arrow_circle.svg?react"
-import { MindDoorNotice } from './component/MindDoorNotice'
+import { HoldHandrailNotice, MindDoorNotice } from './component'
 
-{/* DPIP secondary screen with only 3 next stops */ }
-export const DPIPSecScreen = ({ stops, currentStopIndex, userPreference, containerStyle }) => {
+export const DPIPSecScreen = ({
+    stops,
+    currentStopIndex,
+    userPreference: { monitorStyle, mindDoorNotice, handrailNotice },
+    monitorStyleOptions,
+    screenTarget
+}) => {
 
+    const showMindDoor = mindDoorNotice
+    const showHandrail = handrailNotice
+
+    const nextStops = [1, 2].map(offset => (
+        <DpipNextStop
+            key={offset}
+            stopZh={stops?.[currentStopIndex + offset]?.zh}
+            stopEn={stops?.[currentStopIndex + offset]?.en}
+        />
+    ))
+
+    // Tailwind Styles for the layout
+    const styleClasses = {
+        parentGrid: `select-none grid grid-cols-[10fr_90fr] grid-rows-[3.25fr_0.025fr_2fr_0.025fr_2fr] ${monitorStyleOptions[monitorStyle]}`,
+        arrowContainer: "@container text-center bg-[#FF0000]",
+        arrowIcon: "mt-[0.5rem] justify-center",
+        thisStopContainer: "flex flex-col bg-white",
+    }
 
     return (
-        <>
-            <div className={`grid grid-cols-[10fr_90fr] grid-rows-[3.25fr_0.025fr_2fr_0.025fr_2fr]
-                ${containerStyle[userPreference.containerStyle]}`}>
-
-                {userPreference.mindDoorNotice ?
-                    <MindDoorNotice />
-                    : <>
-                        <div className={`@container text-center bg-[#FF0000]`}>
-                            <div className="mt-[0.5rem] justify-center">
-                                <ArrowCircle />
-                            </div>
+        <div
+            ref={screenTarget}
+            className={styleClasses.parentGrid}
+        >
+            {showMindDoor ? (
+                <MindDoorNotice />
+            ) : (
+                <>
+                    <div className={styleClasses.arrowContainer}>
+                        <div className={styleClasses.arrowIcon}>
+                            <ArrowCircle />
                         </div>
-                        <div className={`flex flex-col bg-white`}>
-                            <DpipThisStop
-                                stopZh={stops?.[currentStopIndex]?.zh}
-                                stopEn={stops?.[currentStopIndex]?.en} />
-                        </div>
-                    </>
-                }
+                    </div>
+                    <div className={styleClasses.thisStopContainer}>
+                        <DpipThisStop
+                            stopZh={stops?.[currentStopIndex]?.zh}
+                            stopEn={stops?.[currentStopIndex]?.en}
+                        />
+                    </div>
+                </>
+            )}
 
-                {userPreference.handrailNotice ?
-                    <HoldHandrailNotice />
-                    :
-                    <>
-                        <DpipNextStop
-                            stopZh={stops?.[currentStopIndex + 1]?.zh}
-                            stopEn={stops?.[currentStopIndex + 1]?.en} />
-
-                        <DpipNextStop
-                            stopZh={stops?.[currentStopIndex + 2]?.zh}
-                            stopEn={stops?.[currentStopIndex + 2]?.en} />
-                    </>
-                }
-            </div >
-        </>
+            {showHandrail ? (
+                <HoldHandrailNotice />
+            ) : (
+                <>
+                    {nextStops}
+                </>
+            )}
+        </div>
     )
 }

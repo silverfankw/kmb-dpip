@@ -1,55 +1,103 @@
 import './App.css'
 
-import { useEffect, useState } from 'react'
-import { createFilter } from 'react-select';
-import AsyncSelect from 'react-select/async';
+import { useState, useRef, useMemo, useCallback, useReducer } from 'react'
+import { useKeyboardNavigation } from "./hooks/useKeyboardNavigation"
+import { useRouteList } from './hooks/useRouteList'
+import { useRouteSelection } from "./hooks/useRouteSelection"
+import { userPreferenceReducer, initialUserPreference } from "./reducers/userPreferenceReducer"
 
-import { createTheme, ThemeProvider } from '@mui/material/styles';
-import Button from '@mui/material/Button';
-import Switch from '@mui/material/Switch';
-import Typography from '@mui/material/Typography';
-import Tooltip from '@mui/material/Tooltip';
-import { IconButton } from '@mui/material';
+import { createFilter } from 'react-select'
+import { routeContext } from './context/Provider'
 
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
-import RefreshIcon from '@mui/icons-material/Refresh';
-import CachedIcon from '@mui/icons-material/Cached';
-import NotificationsIcon from '@mui/icons-material/Notifications';
-import KeyboardHideIcon from '@mui/icons-material/KeyboardHide';
-import BadgeIcon from '@mui/icons-material/Badge';
-import HandshakeIcon from '@mui/icons-material/Handshake';
-import DoorSlidingIcon from '@mui/icons-material/DoorSliding';
-import { Popover } from '@base-ui-components/react/popover';
-
-import { routeContext } from './context/Provider';
-import { isEmptyObject } from "../util/util"
+import AsyncSelect from 'react-select/async'
 import { DPIPSecScreen } from './DpipSecScreen'
 import { DPIPMainScreen } from './DpipMainScreen'
-// import { BellButton } from './component/BellButton';
-import { Input } from "./component/Input"
-import Footer from './component/Footer';
-import { SwitchButton } from './component/SwitchButton';
+import { createTheme, ThemeProvider } from '@mui/material/styles'
+import { Footer, DPIPButtonGroup, SwitchGroup, DriverInfoInputGroup } from './component'
+import { isEmptyObject } from '../utility/Util'
 
-function App() {
-	const [selection, setSelection] = useState(null)
-	const [routeDetail, setRouteDetail] = useState({})
-	const [currentStopIndex, setCurrentStopIndex] = useState(0)
-	const [routeHasTwoBound, setRouteHasTwoBound] = useState(false)
-	const [userPreference, setUserPreference] = useState(
-		{
-			containerStyle: "basic",
-			stopPressed: false,
-			driverInfo: { nameZh: "九巴仔", nameEn: "KMB Boy", staffNo: "1933" },
-			customizeDriverInfo: false,
-			mindDoorNotice: false,
-			handrailNotice: false,
-		}
-	)
-	const containerStyle = {
-		basic: "w-[800px] h-[480px] max-xl:w-[700px] max-xl:h-[420px] max-md:w-[600px] max-md:h-[360px] max-sm:w-[500px] max-sm:h-[330px] shadow-[0.5rem_0.5rem_1rem_0.25rem_#FFF] max-md:border-[.25em] border-[.375rem] border-solid border-[#0e0e0fbf] rounded-xl outline outline-[0.875rem] outline-[#000000]",
+const styleClasses = {
+	container: "select-none focus:outline-hidden p-[2rem] flex flex-col gap-2",
+	querySection: "flex gap-3",
+	asyncSelectWrapper: "w-full md:w-2/3 lg:w-2/3 xl:w-2/5 2xl:w-2/5 z-3",
+	switchSection: "flex flex-wrap gap-[10px] my-[0.5em]",
+	buttonSection: "flex flex-wrap gap-[15px] mb-[1em] mx-0 select-none",
+	driverInfoSection: "flex gap-3 mb-[1em]",
+	screenSection: "py-4 flex flex-wrap gap-10",
+	monitorStyleOptions: {
+		basic: "w-[800px] h-[480px] max-xl:w-[700px] max-xl:h-[420px] max-md:w-[600px] max-md:h-[360px] max-sm:w-[500px] max-sm:h-[330px] shadow-[0.5rem_0.5rem_1rem_0.25rem_#FFF] max-md:border-[.25em] border-[.375rem] border-solid border-[#0e0e0fbf] rounded-xl outline outline-[0.875rem] outline-[#000000] z-1",
 		new: "border-solid border-black "
 	}
+}
+
+const App = () => {
+
+	const routeList = useRouteList()
+
+	const {
+		routeDetail,
+		currentStopIndex,
+		setCurrentStopIndex,
+		routeHasTwoBound,
+		selectRoute,
+		changeBound,
+	} = useRouteSelection(routeList)
+
+	const mainScreenTarget = useRef(null)
+	const secScreenTarget = useRef(null)
+
+	const [inputValue, setInputValue] = useState("")
+	const [userPreference, dispatchUserPreference] = useReducer(
+		userPreferenceReducer, initialUserPreference
+	)
+
+	const lastStopIndex = useMemo(() => routeDetail?.stops?.length - 1, [routeDetail])
+
+	const isPrevStopAvailable = useMemo(() => currentStopIndex > 0, [currentStopIndex])
+
+	const isNextStopAvailable = useMemo(() => currentStopIndex + 1 <= lastStopIndex,
+		[currentStopIndex, lastStopIndex]
+	)
+
+	const searchRoute = useCallback((inputValue, callback) => {
+		let filtered
+
+		if (!inputValue) {
+			filtered = routeList.slice(0, 50)
+		}
+		else {
+			const upperCaseInput = inputValue.toUpperCase()
+			filtered = routeList.filter(route => route.route.toUpperCase().includes(upperCaseInput))
+		}
+
+		callback(filtered.map(route => (
+			{
+				label: `${route.route} ｜ ${route.orig_tc} 往 ${route.dest_tc} ｜${route.service_type != 1 ? "＊特別班" : ""}`,
+				value: JSON.stringify(route)
+			}
+		)))
+	}, [routeList])
+
+
+	const toPrevStop = useCallback(
+		() => { if (isPrevStopAvailable) setCurrentStopIndex(prev => prev - 1) },
+		[isPrevStopAvailable, setCurrentStopIndex]
+	)
+
+	const toNextStop = useCallback(
+		() => { if (isNextStopAvailable) setCurrentStopIndex(prev => prev + 1) },
+		[isNextStopAvailable, setCurrentStopIndex]
+	)
+
+	useKeyboardNavigation({
+		onPrev: toPrevStop,
+		onNext: toNextStop,
+		onHome: () => setCurrentStopIndex(0),
+		onEnd: changeBound,
+		isActive: !isEmptyObject(routeDetail),
+		debounceMs: 50,
+		isDisabled: false,
+	})
 
 	const theme = createTheme({
 		palette: {
@@ -59,167 +107,32 @@ function App() {
 				dark: '#A29415',
 				contrastText: '#242105',
 			},
-			gold: {
-				main: "#996515",
-				light: '#B17A02',
-				dark: '#B17A02',
-				contrastText: '#B17A02',
-			},
-			navy: {
-				main: "#12296C",
-			},
-			darkred: {
-				main: "#8B0000",
-				light: '#8B0000',
-				dark: '#8B0000',
-				contrastText: '#8B0000',
-			},
+
 			snowwhite: {
 				main: "#FFFFFF",
 			}
 		},
-	});
-
-	const getRouteList = () => JSON.parse(localStorage.getItem("routeList"))
-
-	useEffect(() => {
-		const fetchKMBData = async () => {
-			const response = await fetch("https://data.etabus.gov.hk/v1/transport/kmb/route/").then(
-				resp => resp.json()).then(json => json.data)
-			localStorage.setItem("routeList", JSON.stringify(response))
-		}
-
-		if (!getRouteList())
-			fetchKMBData().catch(console.error())
-	}, [])
-
-	const lastStopIndex = routeDetail?.stops?.length - 1
-	const isPrevStopAvailable = currentStopIndex - 1 >= 0
-	const isNextStopAvailable = currentStopIndex + 3 <= lastStopIndex + 2
-
-	const searchRoute = route => {
-		// Input to uppercase to prevent result loss
-		const upperCaseRoute = route.toUpperCase()
-		return new Promise((resolve) => {
-			setTimeout(() => { resolve(routeOptions(upperCaseRoute)) }, 200)
-		})
-	}
-
-	const checkRoundTripBound = (inputRoute) => {
-		const boundCheck =
-			getRouteList().some(route => route.bound == "I" && route.route == inputRoute) &&
-			getRouteList().some(route => route.bound == "O" && route.route == inputRoute)
-		setRouteHasTwoBound(boundCheck)
-	}
-
-	// Render options for async select
-	const routeOptions = () => {
-		// Render route options array for async select
-		return getRouteList().map(
-			(route) => {
-				return {
-					label: `${route.route} ｜ ${route.orig_tc} 往 ${route.dest_tc} ｜${route.service_type != 1 ? "＊特別班" : ""}`,
-					value:
-						JSON.stringify(
-							{
-								route: route.route,
-								bound: route.bound == "I" ? "inbound" : "outbound",
-								service_type: route.service_type,
-								dest_tc: route.dest_tc,
-								dest_en: route.dest_en,
-							}
-						)
-				}
-			})
-	}
-
-	const selectRoute = async ({ value }) => {
-		const routeInfo = JSON.parse(value)
-		setCurrentStopIndex(0)
-		setSelection(routeInfo)
-
-		const { route, bound, service_type, dest_tc, dest_en } = routeInfo
-		checkRoundTripBound(route)
-
-		const stopIDs = await fetch(`https://data.etabus.gov.hk/v1/transport/kmb/route-stop/${route}/${bound}/${service_type}`).then(
-			resp => resp.json()).then(json => json.data).then(data => data.map(stops => stops.stop))
-
-		const routeAllStops = await Promise.all(
-			stopIDs.map(stopID => fetch(`https://data.etabus.gov.hk/v1/transport/kmb/stop/${stopID}`).then(
-				resp => resp.json()
-			).then(json => json.data).then(data => { return { en: data.name_en, zh: data.name_tc } }))
-		)
-		setRouteDetail(routeDetail => {
-			return { ...routeDetail, route, stops: routeAllStops, dest_en, dest_tc }
-		})
-	}
-
-	const toPrevStop = () => { if (isPrevStopAvailable) setCurrentStopIndex(prev => prev - 1) }
-
-	const toNextStop = () => { if (isNextStopAvailable) setCurrentStopIndex(prev => prev + 1) }
-
-	const changeBound = () => {
-		if ((selection != null || routeHasTwoBound) || selection?.service_type == 1) {
-			const { bound } = selection
-			selectRoute({
-				value: JSON.stringify(
-					{
-						...selection,
-						bound: bound == "inbound" ? "outbound" : "inbound",
-					})
-			})
-		}
-	}
-
-	const handleKeyboardControl = (key) => {
-		// Do nothing if no route selected
-		if (selection == null)
-			return
-
-		// Check if key pressed is left or right and move stop
-		switch (key) {
-			case "ArrowLeft":
-				toPrevStop()
-				break
-			case "ArrowRight":
-				toNextStop()
-				break
-			case "Home":
-				setCurrentStopIndex(0)
-				break
-			case "End":
-				changeBound()
-				break
-			default:
-				return
-		}
-	}
+	})
 
 	return (
 		<ThemeProvider theme={theme}>
-			<routeContext.Provider value={{ routeDetail, currentStopIndex, lastStopIndex }}>
-				<div className="select-none focus:outline-hidden p-[2rem] flex flex-col gap-2" tabIndex={1}
-					onKeyDown={(e) => handleKeyboardControl(e.key)}>
+			<routeContext.Provider value={{ routeDetail, currentStopIndex, lastStopIndex, userPreference }}>
+				<div className={styleClasses.container} tabIndex={1}>
 
 					{/* Query section for route input and selection */}
-					<section className="flex gap-3">
-						<IconButton
-							disabled={true}
-							// disabled={false}
-							color="ochre"
-							onClick={e => { }}>
-							<KeyboardHideIcon />
-						</IconButton>
-
-
-						<div className='w-full md:w-2/3 lg:w-2/3 xl:w-2/5 2xl:w-2/5'>
+					<section className={styleClasses.querySection}>
+						<div className={styleClasses.asyncSelectWrapper}>
 							<AsyncSelect
+								inputValue={inputValue}
+								onInputChange={setInputValue}
 								autoCapitalize="characters"
 								autoFocus
 								isClearable
 								cacheOptions
-								defaultOptions={false}
-								placeholder="請輸入九巴路線編號 &nbsp; Please enter KMB route."
+								defaultOptions={routeList.slice(0, 50).map(route => ({
+									label: `${route.route} ｜ ${route.orig_tc} 往 ${route.dest_tc}`,
+									value: JSON.stringify(route)
+								}))} placeholder="請輸入九巴路線編號。 Please input KMB route."
 								filterOption={createFilter({ matchFrom: "start" })}
 								loadOptions={searchRoute}
 								onChange={selectRoute}
@@ -227,254 +140,61 @@ function App() {
 						</div>
 					</section>
 
-					{/* <BellButton onClick={() => setUserPreference(prev => { return { ...prev, stopPressed: !prev.stopPressed } })} /> */}
-
 					{/* Switch groups to control DPIP */}
-					<section className='flex flex-wrap gap-[10px] my-[0.5em]'>
-
-						{/* Stop Bell toggle */}
-						<SwitchButton
-							sx={{
-								width: "max-content",
-								bgcolor: "error.main",
-								borderRadius: 1,
-								paddingRight: "10px", // Expand box to fit content
-								marginLeft: "0px", // Reset the default left overflow
-								boxShadow: "0px 2px 4px -1px rgba(0,0,0,0.2),0px 4px 5px 0px rgba(0,0,0,0.14),0px 1px 10px 0px rgba(0,0,0,0.12)",
-								"&:hover": { bgcolor: "error.dark" }
-							}}
-							control={
-								<Switch
-									checked={userPreference.stopPressed}
-									color="darkred"
-									onChange={() => setUserPreference(prev => {
-										return { ...prev, stopPressed: !prev.stopPressed }
-									})}
-									name="stop pressed" />
-							}
-							label={
-								<>
-									<NotificationsIcon color="snowwhite" />
-									<Typography className="max-md:hidden" variant="button" color="white">
-										{userPreference.stopPressed ? `  解除鐘` : ` 按鐘`}
-									</Typography>
-								</>}
-						/>
-
-						{/* Hold Handrail Notice toggle */}
-						<SwitchButton
-							sx={{
-								width: "max-content",
-								bgcolor: "ochre.main",
-								borderRadius: 1,
-								paddingRight: "10px",
-								boxShadow: "0px 2px 4px -1px rgba(0,0,0,0.2),0px 4px 5px 0px rgba(0,0,0,0.14),0px 1px 10px 0px rgba(0,0,0,0.12)",
-								"&:hover": { bgcolor: "ochre.dark" }
-							}}
-							control={
-								<Switch
-									checked={userPreference.handrailNotice}
-									color="gold"
-									onChange={() => setUserPreference(prev => {
-										return {
-											...prev,
-											handrailNotice: !prev.handrailNotice,
-											mindDoorNotice: prev.mindDoorNotice && false
-										}
-									})} name="handrail notice" />
-							}
-							label={
-								<>
-									<HandshakeIcon />
-									<Typography className="max-md:hidden" variant="button">
-										「緊握扶手」提示
-									</Typography>
-								</>}
-						/>
-
-						{/* Mind Door Notice toggle */}
-						<SwitchButton
-							sx={{
-								width: "max-content",
-								bgcolor: "ochre.main",
-								borderRadius: 1,
-								paddingRight: "10px",
-								boxShadow: "0px 2px 4px -1px rgba(0,0,0,0.2),0px 4px 5px 0px rgba(0,0,0,0.14),0px 1px 10px 0px rgba(0,0,0,0.12)",
-								"&:hover": { bgcolor: "ochre.dark" },
-							}}
-							control={
-								<Switch
-									checked={userPreference.mindDoorNotice}
-									color="gold"
-									onChange={() => setUserPreference(prev => {
-										return {
-											...prev,
-											handrailNotice: prev.handrailNotice && false,
-											mindDoorNotice: !prev.mindDoorNotice
-										}
-									})} name="mind door notice" />
-							}
-							label={
-								<>
-									<DoorSlidingIcon />
-									<Typography className="max-md:hidden" variant="button">
-										「車門關上」提示
-									</Typography>
-								</>}
-						/>
+					<section className={styleClasses.switchSection}>
+						<SwitchGroup
+							userPreference={userPreference}
+							dispatchUserPreference={dispatchUserPreference} />
 					</section>
 
 					{/* Button groups to control DPIP */}
-					<section className='flex flex-wrap gap-[15px] mb-[1em] mx-0 select-none'>
-						<Tooltip
-							arrow
-							placement="bottom-start"
-							title="上一站 鍵盤快捷鍵: '←'">
-							<span>
-								<Button
-									style={{ height: "40px" }}
-									color="error"
-									variant="contained"
-									startIcon={<ArrowBackIcon />}
-									onClick={() => toPrevStop()}
-									disabled={!isPrevStopAvailable}
-								>
-									<span className="max-md:hidden">上站</span>
-								</Button>
-							</span>
-						</Tooltip>
-
-						<Tooltip
-							arrow
-							placement="bottom-start"
-							title="下一站 鍵盤快捷鍵: '→'">
-							<span>
-								<Button
-									style={{ height: "40px" }}
-									color="success"
-									variant="contained"
-									startIcon={<ArrowForwardIcon />}
-									onClick={() => toNextStop()}
-									disabled={!isNextStopAvailable}
-								>
-									<span className="max-md:hidden">下站</span>
-								</Button>
-							</span>
-						</Tooltip>
-
-						<Tooltip
-							arrow
-							placement="bottom-start"
-							title="重設至首站 鍵盤快捷鍵: 'HOME'">
-							<span>
-								<Button
-									style={{ height: "40px" }}
-									variant="contained"
-									startIcon={<RefreshIcon />}
-									onClick={() => setCurrentStopIndex(0)}
-									disabled={isEmptyObject(routeDetail) || currentStopIndex == 0}
-								>
-									<span className="max-md:hidden">首站重新開始</span>
-								</Button>
-							</span>
-						</Tooltip>
-
-						<Tooltip
-							arrow
-							placement="bottom-start"
-							title="切換路線方向 鍵盤快捷鍵: 'END'">
-							<span>
-								<Button
-									style={{ height: "40px" }}
-									color="secondary"
-									variant="contained"
-									startIcon={<CachedIcon />}
-									onClick={() => changeBound()}
-									disabled={(selection == null || !routeHasTwoBound) || selection?.service_type != 1}
-								>
-									<span className="max-md:hidden">切換路線方向</span>
-								</Button>
-							</span>
-						</Tooltip>
-
-						<Tooltip
-							arrow
-							placement="bottom-start"
-							title="自定義車長資料顯示">
-							<span>
-								<Button
-									style={{ height: "40px" }}
-									color="ochre"
-									variant="contained"
-									startIcon={<BadgeIcon />}
-									onClick={() => { setUserPreference(prev => { return { ...prev, customizeDriverInfo: !prev.customizeDriverInfo } }) }}
-								>
-									<span className="max-md:hidden">自定義車長資料</span>
-								</Button>
-							</span>
-						</Tooltip>
+					<section className={styleClasses.buttonSection}>
+						<DPIPButtonGroup
+							isPrevStopAvailable={isPrevStopAvailable}
+							isNextStopAvailable={isNextStopAvailable}
+							toPrevStop={toPrevStop}
+							toNextStop={toNextStop}
+							currentStopIndex={currentStopIndex}
+							setCurrentStopIndex={setCurrentStopIndex}
+							routeHasTwoBound={routeHasTwoBound}
+							changeBound={changeBound}
+							routeDetail={routeDetail}
+							userPreference={userPreference}
+							dispatchUserPreference={dispatchUserPreference}
+							mainScreenTarget={mainScreenTarget}
+							secScreenTarget={secScreenTarget} />
 					</section>
 
 					{/* Customizeable driver info with input group */}
-					{userPreference.customizeDriverInfo ?
-						<section className="flex gap-3 mb-[1em]">
-							<Input
-								placeholder="車長中文姓氏 (最多2字)"
-								maxLength={2}
-								defaultValue={userPreference.driverInfo.nameZh}
-								onChange={v => {
-									if (v == "") v = "九巴仔"
-									setUserPreference({
-										...userPreference,
-										driverInfo: { ...userPreference.driverInfo, nameZh: v }
-									})
-								}} />
-							<Input
-								style={"capitalize"}
-								placeholder="車長英文姓氏 (最多10字)"
-								maxLength={10}
-								defaultValue={userPreference.driverInfo.nameEn}
-								onChange={v => {
-									if (v == "") v = "KMB Boy"
-									setUserPreference({
-										...userPreference,
-										driverInfo: { ...userPreference.driverInfo, nameEn: v }
-									})
-								}} />
-
-							<Input placeholder="職員編號 (1位至6位數字)"
-								type="number"
-								minLength={1}
-								maxLength={6}
-								defaultValue={userPreference.driverInfo.staffNo}
-								onInput={e => e.target.value = Math.abs(e.target.value.slice(0, 6))}
-								onChange={v => {
-									if (v == "") v = "1933"
-									setUserPreference({
-										...userPreference,
-										driverInfo: { ...userPreference.driverInfo, staffNo: v }
-									})
-								}} />
-						</section> : <></>}
+					{userPreference.customizeDriverInfoToggle &&
+						<section className={styleClasses.driverInfoSection}>
+							<DriverInfoInputGroup
+								userPreference={userPreference}
+								dispatchUserPreference={dispatchUserPreference} />
+						</section>}
 
 					{/* DPIP main screen with full details */}
-					<section className="py-4 flex flex-wrap gap-10">
+					<section className={styleClasses.screenSection}>
 						<DPIPMainScreen
 							detail={routeDetail}
 							currentStopIndex={currentStopIndex}
 							userPreference={userPreference}
-							containerStyle={containerStyle}
+							monitorStyleOptions={styleClasses.monitorStyleOptions}
+							screenTarget={mainScreenTarget}
 						/>
 
 						<DPIPSecScreen
 							stops={routeDetail.stops}
 							currentStopIndex={currentStopIndex}
 							userPreference={userPreference}
-							containerStyle={containerStyle}
+							monitorStyleOptions={styleClasses.monitorStyleOptions}
+							screenTarget={secScreenTarget}
+
 						/>
 
 					</section>
 
+					{/* Footer section */}
 					<Footer />
 				</div >
 			</routeContext.Provider>

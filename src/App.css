@@ -2,13 +2,6 @@
 
 @theme {
   --breakpoint-xs: 30rem;
-  --container-10xs: 2rem; // 32px
-  --container-9xs: 4rem;  // 64px
-  --container-8xs: 6rem;  // 96px
-  --container-7xs: 8rem;  // 128px
-  --container-6xs: 10rem; // 160px
-  --container-5xs: 12rem; // 192px  // 224px
-  --container-4xs: 14rem; 
 }
 
 .noselect {

@@ -1,0 +1,18 @@
+@import "tailwindcss";
+
+@theme {
+    --animate-bullet-pulse: bulletPulse 1.5s step-start infinite;
+
+    @keyframes bulletPulse {  
+        0%, 100% {
+            outline: none;
+        }
+
+        50% {
+            outline: .15cqw solid white;
+            border: .15cqw solid #FF0000;
+            background-color: yellow;
+            scale: 1.5;
+        }        
+    }
+}       
