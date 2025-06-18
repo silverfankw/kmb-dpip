@@ -140,7 +140,7 @@ export const DPIPButtonGroup = ({
                     title={label}>
                     <span>
                         <Button
-                            disabled={isEmptyObject(routeDetail) || navigator.userAgentData.mobile}
+                            disabled={isEmptyObject(routeDetail)}
                             style={{ height: "40px" }}
                             color="info"
                             variant="contained"

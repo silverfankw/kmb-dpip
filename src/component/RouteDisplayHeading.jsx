@@ -1,6 +1,6 @@
 import { useContext } from "react"
 import { routeContext } from '../context/Provider'
-import TripleArrow from "../triple_arrow.svg?react"
+import { TripleArrow } from "./TripleArrow"
 
 // Tailwind CSS classes for the component
 const styleClasses = {
