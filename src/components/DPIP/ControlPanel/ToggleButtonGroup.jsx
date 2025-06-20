@@ -1,3 +1,5 @@
+import { useSelector, useDispatch } from "react-redux"
+import { setStopPressed, setShowHandrailAndMindDoorNotice } from "@store/userPreferenceSlice"
 import { SwitchButton } from '@components'
 
 import Switch from '@mui/material/Switch'
@@ -6,7 +8,11 @@ import HandshakeIcon from '@mui/icons-material/Handshake'
 import DoorSlidingIcon from '@mui/icons-material/DoorSliding'
 import NotificationsIcon from '@mui/icons-material/Notifications'
 
-export const ToggleButtonGroup = ({ userPreference, dispatchUserPreference }) => {
+export const ToggleButtonGroup = () => {
+
+    const { stopPressed, showHandrailNotice, showMindDoorNotice } = useSelector(state => state.userPreference)
+    const dispatch = useDispatch()
+
     return (
         <>
             {/* Stop Bell toggle */}
@@ -16,7 +22,7 @@ export const ToggleButtonGroup = ({ userPreference, dispatchUserPreference }) =>
                     bgcolor: "error.main",
                     borderRadius: 1,
                     paddingRight: "10px", // Expand box to fit content
-                    marginLeft: "0px",// Reset the default left overflow
+                    margin: "0px",
                     boxShadow: "0px 2px 4px -1px rgba(0,0,0,0.2),0px 4px 5px 0px rgba(0,0,0,0.14),0px 1px 10px 0px rgba(0,0,0,0.12)",
                     "&:hover": { bgcolor: "error.dark" },
                     height: "48px",
@@ -24,12 +30,11 @@ export const ToggleButtonGroup = ({ userPreference, dispatchUserPreference }) =>
                 }}
                 control={
                     <Switch
-                        checked={userPreference.stopPressed}
+                        checked={stopPressed}
                         color="darkred"
-                        onChange={() => dispatchUserPreference(({
-                            type: "SET_STOP_PRESSED",
-                            payload: !userPreference.stopPressed
-                        }))}
+                        onChange={() =>
+                            dispatch(setStopPressed(!stopPressed))
+                        }
                         name="stop pressed" />
                 }
                 label={
@@ -44,7 +49,7 @@ export const ToggleButtonGroup = ({ userPreference, dispatchUserPreference }) =>
                                 }
                             }}
                         >
-                            {userPreference.stopPressed ? `  解除鐘` : ` 按鐘`}
+                            {stopPressed ? `  解除` : ` 按鐘`}
                         </Typography>
                     </>} />
             <SwitchButton
@@ -52,7 +57,7 @@ export const ToggleButtonGroup = ({ userPreference, dispatchUserPreference }) =>
                     width: "max-content",
                     bgcolor: "ochre.main",
                     borderRadius: 1,
-                    paddingRight: "10px",
+                    margin: "0px",
                     boxShadow: "0px 2px 4px -1px rgba(0,0,0,0.2),0px 4px 5px 0px rgba(0,0,0,0.14),0px 1px 10px 0px rgba(0,0,0,0.12)",
                     "&:hover": { bgcolor: "ochre.dark" },
                     height: "48px",
@@ -61,16 +66,17 @@ export const ToggleButtonGroup = ({ userPreference, dispatchUserPreference }) =>
                 }}
                 control={
                     <Switch
-                        checked={userPreference.handrailNotice}
+                        checked={showHandrailNotice}
                         color="gold"
-                        onChange={() =>
-                            dispatchUserPreference({
-                                type: "SET_HANDRAIL_NOTICE",
-                                payload: {
-                                    handrailNotice: !userPreference.handrailNotice,
-                                    mindDoorNotice: userPreference.mindDoorNotice && false
-                                }
-                            })}
+                        onChange={() => {
+                            dispatch(
+                                setShowHandrailAndMindDoorNotice(
+                                    {
+                                        showHandrailNotice: !showHandrailNotice,
+                                        showMindDoorNotice: showMindDoorNotice && false
+                                    })
+                            )
+                        }}
                         name="handrail notice" />
                 }
                 label={
@@ -94,7 +100,7 @@ export const ToggleButtonGroup = ({ userPreference, dispatchUserPreference }) =>
                     width: "max-content",
                     bgcolor: "ochre.main",
                     borderRadius: 1,
-                    paddingRight: "10px",
+                    margin: "0px",
                     boxShadow: "0px 2px 4px -1px rgba(0,0,0,0.2),0px 4px 5px 0px rgba(0,0,0,0.14),0px 1px 10px 0px rgba(0,0,0,0.12)",
                     "&:hover": { bgcolor: "ochre.dark" },
                     height: "48px",
@@ -102,16 +108,17 @@ export const ToggleButtonGroup = ({ userPreference, dispatchUserPreference }) =>
                 }}
                 control={
                     <Switch
-                        checked={userPreference.mindDoorNotice}
+                        checked={showMindDoorNotice}
                         color="gold"
-                        onChange={() =>
-                            dispatchUserPreference({
-                                type: "SET_MIND_DOOR_NOTICE",
-                                payload: {
-                                    mindDoorNotice: !userPreference.mindDoorNotice,
-                                    handrailNotice: userPreference.handrailNotice && false
-                                }
-                            })}
+                        onChange={() => {
+                            dispatch(
+                                setShowHandrailAndMindDoorNotice(
+                                    {
+                                        showMindDoorNotice: !showMindDoorNotice,
+                                        showHandrailNotice: showHandrailNotice && false
+                                    })
+                            )
+                        }}
                         name="mind door notice" />
                 }
                 label={

@@ -1,5 +1,4 @@
-import { useContext } from "react"
-import { routeContext } from '@contexts/Provider'
+import { useSelector } from "react-redux"
 import { TripleArrow } from "@components"
 
 // Tailwind CSS classes for the component
@@ -16,7 +15,7 @@ const styleClasses = {
 
 export const RouteDisplayHeading = () => {
 
-    const { routeDetail, lastStopIndex } = useContext(routeContext)
+    const { routeDetail, lastStopIndex } = useSelector(state => state.routeSelection)
 
     return (
         <>

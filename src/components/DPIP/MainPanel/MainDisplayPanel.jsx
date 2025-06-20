@@ -1,7 +1,8 @@
 import '@css/App.css'
 import { useEffect, useRef } from "react"
-import stringWidth from "string-width"
 import { useToggleDisplay } from "@hooks"
+import { useSelector } from "react-redux"
+import stringWidth from "string-width"
 
 import {
     RouteDisplayHeading,
@@ -43,21 +44,21 @@ const getClampTextStyle = (text) => {
 }
 
 export const MainDisplayPanel = ({
-    detail,
-    currentStopIndex,
-    userPreference: {
-        monitorStyle,
-        stopPressed,
-        driverInfo,
-        mindDoorNotice,
-        handrailNotice
-    },
     monitorStyleOptions,
     screenTarget
 }) => {
 
-    const stopNameZh = detail?.stops?.[currentStopIndex]?.zh
-    const stopNameEn = detail?.stops?.[currentStopIndex]?.en
+    const { routeDetail, currentStopIndex } = useSelector(state => state.routeSelection)
+    const {
+        showHandrailNotice,
+        showMindDoorNotice,
+        monitorStyle,
+        stopPressed,
+        driverInfo
+    } = useSelector(state => state.userPreference)
+
+    const stopNameZh = routeDetail?.stops?.[currentStopIndex]?.zh
+    const stopNameEn = routeDetail?.stops?.[currentStopIndex]?.en
 
     const fullProgressBarRef = useRef(null)
     const compactProgressBarRef = useRef(null)
@@ -65,19 +66,19 @@ export const MainDisplayPanel = ({
     const enStopNameRef = useRef(null)
 
     // Toggle progress bar and stop name display
-    useToggleDisplay(fullProgressBarRef, compactProgressBarRef, progressBarInterval, [detail?.route, detail?.bound, detail?.service_type])
-    useToggleDisplay(zhStopNameRef, enStopNameRef, stopNameInterval, [detail?.route, detail?.bound, detail?.service_type])
+    useToggleDisplay(fullProgressBarRef, compactProgressBarRef, progressBarInterval, [routeDetail?.route, routeDetail?.bound, routeDetail?.service_type])
+    useToggleDisplay(zhStopNameRef, enStopNameRef, stopNameInterval, [routeDetail?.route, routeDetail?.bound, routeDetail?.service_type])
 
     // Reset stop name display when notice toggles change
     useEffect(() => {
-        if (handrailNotice || mindDoorNotice) {
+        if (showHandrailNotice || showMindDoorNotice) {
             zhStopNameRef.current && (zhStopNameRef.current.style.display = "none")
             enStopNameRef.current && (enStopNameRef.current.style.display = "none")
         } else {
             zhStopNameRef.current && (zhStopNameRef.current.style.display = "block")
             enStopNameRef.current && (enStopNameRef.current.style.display = "none")
         }
-    }, [handrailNotice, mindDoorNotice])
+    }, [showHandrailNotice, showMindDoorNotice])
 
     // Compose dynamic classes
     const styleClasses = {
@@ -106,7 +107,7 @@ export const MainDisplayPanel = ({
 
             {/* Progress Bar (only if stops exist) */}
             <div className={styleClasses.stopProgressBarGrid}>
-                {detail?.stops?.length > 0 && (
+                {routeDetail?.stops?.length > 0 && (
                     <div className={styleClasses.stopProgressBarContainer}>
                         <StopFullProgressBar progressBarRef={fullProgressBarRef} />
                         <StopCompactProgressBar progressBarRef={compactProgressBarRef} />
@@ -119,12 +120,12 @@ export const MainDisplayPanel = ({
 
             {/* Big next stop name */}
             <div className={styleClasses.stopNameGrid}>
-                {handrailNotice ? (
+                {showHandrailNotice ? (
                     <HoldHandrailNotice
                         zhNameOverrideStyle={styleClasses.noticeZhOverrideStyle}
                         enNameOverrideStyle={styleClasses.noticeEnOverrideStyle}
                     />
-                ) : mindDoorNotice ? (
+                ) : showMindDoorNotice ? (
                     <MindDoorNotice
                         zhNameOverrideStyle={styleClasses.noticeZhOverrideStyle}
                         enNameOverrideStyle={styleClasses.noticeEnOverrideStyle}

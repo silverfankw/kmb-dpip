@@ -1,4 +1,5 @@
 import '@css/App.css'
+import { useSelector } from 'react-redux'
 
 import {
     HoldHandrailNotice,
@@ -9,15 +10,14 @@ import {
 } from '../'
 
 export const AuxiliaryDisplayPanel = ({
-    stops,
-    currentStopIndex,
-    userPreference: { monitorStyle, mindDoorNotice, handrailNotice },
     monitorStyleOptions,
     screenTarget
 }) => {
 
-    const showMindDoor = mindDoorNotice
-    const showHandrail = handrailNotice
+    const { routeDetail, currentStopIndex } = useSelector(state => state.routeSelection)
+    const { monitorStyle, showMindDoorNotice, showHandrailNotice } = useSelector(state => state.userPreference)
+
+    const stops = routeDetail?.stops
 
     const upcomingStops = [1, 2].map(offset => (
         <UpcomingStopNameDisplay
@@ -40,7 +40,7 @@ export const AuxiliaryDisplayPanel = ({
             ref={screenTarget}
             className={styleClasses.parentGrid}
         >
-            {showMindDoor ? (
+            {showMindDoorNotice ? (
                 <MindDoorNotice />
             ) : (
                 <>
@@ -58,7 +58,7 @@ export const AuxiliaryDisplayPanel = ({
                 </>
             )}
 
-            {showHandrail ? (
+            {showHandrailNotice ? (
                 <HoldHandrailNotice />
             ) : (
                 <>

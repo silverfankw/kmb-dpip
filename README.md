@@ -6,18 +6,19 @@ Project Demo🔗👉🏻: https://silverfankw.github.io/kmb-dpip/
 
 👀 You can refer to the HK Bus Fandom article here for more detail: https://hkbus.fandom.com/wiki/%E5%8B%95%E6%85%8B%E5%B7%B4%E5%A3%AB%E7%AB%99%E9%A1%AF%E7%A4%BA%E5%B1%8F
 
-This project is developed by React + Vite, tailwindCSS & Material UI.
+This project is developed by React + Vite, Redux, tailwindCSS v4 & Material UI.
 
 
 ## Versions
 <ins>**Version 2</ins>🆕✨**
 - Added features:
-  1. A comprehensive, detailed bus stop progress bar, displaying more stop information in limited area
+  1. A comprehensive, detailed bus stop progress bar, displaying more stop information in main panel
   2. Traditional compact bus stop progress bar & the new detailed bus stop progress bar will take turn switching display in preset interval
   3. Fullscreen mode (while keyboard shortcut navigation is available at the same time)
+  4. Reorganize UI component Layout
 - Code refactor to improve performance, readability and project structure
   
-![image](https://github.com/user-attachments/assets/7adb991b-e37e-4d96-8067-c77634dfe316)
+![image](https://github.com/user-attachments/assets/02c343cd-56bb-499d-99ae-3f64f6e9a4e0)
 
 
 <ins>**Version 1.1**</ins>

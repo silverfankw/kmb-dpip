@@ -1,6 +1,6 @@
 import "@css/animation.css"
-import { useContext, useEffect, useRef, useState } from "react"
-import { routeContext } from "@contexts/Provider"
+import { useEffect, useRef, useState } from "react"
+import { useSelector } from "react-redux"
 
 // Tailwind CSS classes for the component
 const styleClasses = {
@@ -24,7 +24,7 @@ const styleClasses = {
 const arrowStageInterval = 750
 
 export const StopCompactProgressBar = ({ progressBarRef }) => {
-    const { routeDetail, currentStopIndex } = useContext(routeContext)
+    const { routeDetail, currentStopIndex } = useSelector(state => state.routeSelection)
     const [arrowStage, setArrowStage] = useState(0)
     const intervalRef = useRef(null)
 

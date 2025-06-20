@@ -1,8 +1,7 @@
 import "@css/animation.css"
-import { useContext } from "react"
-import { routeContext } from "@contexts/Provider"
+
+import { useSelector } from "react-redux"
 import { useFullProgressBarWindow } from "@hooks"
-import { isEmptyObject } from "@utils"
 
 const splitProgressBarCriteria = 32
 
@@ -42,7 +41,9 @@ const StopBullet = ({ stop, i, currentStopIndex }) => {
 }
 
 export const StopFullProgressBar = ({ progressBarRef }) => {
-    const { routeDetail, currentStopIndex } = useContext(routeContext)
+
+
+    const { routeDetail, currentStopIndex, isUserSelectedRoute } = useSelector(state => state.routeSelection)
     const stopLength = routeDetail?.stops?.length ?? 0
 
     const rangeSize = splitProgressBarCriteria
@@ -65,7 +66,7 @@ export const StopFullProgressBar = ({ progressBarRef }) => {
             <div className={styleClasses.container}>
 
                 {/* Start of Progress Bar */}
-                {!isEmptyObject(routeDetail) && windowStart === 0 && (
+                {isUserSelectedRoute && windowStart === 0 && (
                     <div className={styleClasses.startLineContainer}>
                         {[...Array(2)].map((_, idx) => (
                             <div key={idx} className={styleClasses.startLineBar}></div>
@@ -95,7 +96,7 @@ export const StopFullProgressBar = ({ progressBarRef }) => {
             </div>
 
             {/* End of Progress Bar */}
-            {!isEmptyObject(routeDetail) && windowEnd === stopLength && (
+            {isUserSelectedRoute && windowEnd === stopLength && (
                 <div className={styleClasses.endLineContainer}>
                     {[...Array(2)].map((_, idx) => (
                         <div key={idx} className={styleClasses.endLineBar}></div>

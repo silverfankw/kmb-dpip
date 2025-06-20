@@ -14,6 +14,7 @@
                     "@hooks": "./src/hooks",
                     "@contexts": "./src/contexts",
                     "@reducers": "./src/reducers",
+                    "@store": "./src/store",
                     "@utils": "./src/utils",
                 }
             }
