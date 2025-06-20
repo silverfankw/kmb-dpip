@@ -1,12 +1,14 @@
 import { useState, useCallback } from "react"
-import { fetchStopIDs, fetchAllStops } from '../api/kmb'
-import { isEmptyObject } from '../../utility/Util'
+import { fetchStopIDs, fetchAllStops } from '@api/kmb'
+import { isEmptyObject } from '@utils'
 
 export const useRouteSelection = routeList => {
 
     const [routeDetail, setRouteDetail] = useState({})
     const [currentStopIndex, setCurrentStopIndex] = useState(0)
     const [routeHasTwoBound, setRouteHasTwoBound] = useState(false)
+
+    const isUserSelectedRoute = !isEmptyObject(routeDetail)
 
     // Check if the route has both inbound and outbound
     const checkRoundTripBound = useCallback((inputRoute) => {
@@ -17,11 +19,11 @@ export const useRouteSelection = routeList => {
     }, [routeList])
 
     // Select a route and fetch its stops
-    const selectRoute = useCallback(async ({ value }) => {
+    const selectRoute = useCallback(async (routeDetail) => {
         try {
             setCurrentStopIndex(0)
-            const routeInfo = JSON.parse(value)
-            const { route, bound, service_type, orig_tc, orig_en, dest_tc, dest_en } = routeInfo
+            const { route, bound, service_type, orig_tc, orig_en, dest_tc, dest_en } = routeDetail
+
             checkRoundTripBound(route)
 
             const normalizedBound = bound === "I" || bound === "inbound" ? "inbound" : "outbound"
@@ -46,18 +48,18 @@ export const useRouteSelection = routeList => {
 
     // Change route bound
     const changeBound = useCallback(() => {
-        if (!isEmptyObject(routeDetail) && (routeHasTwoBound || routeDetail?.service_type === 1)) {
+        if (isUserSelectedRoute &&
+            (routeHasTwoBound || routeDetail?.service_type === 1)) {
             const { bound } = routeDetail
             selectRoute({
-                value: JSON.stringify({
-                    ...routeDetail,
-                    bound: bound === "inbound" ? "outbound" : "inbound",
-                })
+                ...routeDetail,
+                bound: bound === "inbound" ? "outbound" : "inbound",
             })
         }
-    }, [routeDetail, routeHasTwoBound, selectRoute])
+    }, [routeDetail, routeHasTwoBound, selectRoute, isUserSelectedRoute])
 
     return {
+        isUserSelectedRoute,
         routeDetail,
         setRouteDetail,
         currentStopIndex,

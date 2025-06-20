@@ -1,11 +1,14 @@
-import './App.css'
-import ArrowCircle from "../src/arrow_circle.svg?react"
+import '@css/App.css'
 
-import { DpipThisStop } from './DpipThisStop'
-import { DpipNextStop } from './DpipNextStop'
-import { HoldHandrailNotice, MindDoorNotice } from './component'
+import {
+    HoldHandrailNotice,
+    MindDoorNotice,
+    CurrentStopNameDisplay,
+    UpcomingStopNameDisplay,
+    CurrentStopIndicator
+} from '../'
 
-export const DPIPSecScreen = ({
+export const AuxiliaryDisplayPanel = ({
     stops,
     currentStopIndex,
     userPreference: { monitorStyle, mindDoorNotice, handrailNotice },
@@ -16,8 +19,8 @@ export const DPIPSecScreen = ({
     const showMindDoor = mindDoorNotice
     const showHandrail = handrailNotice
 
-    const nextStops = [1, 2].map(offset => (
-        <DpipNextStop
+    const upcomingStops = [1, 2].map(offset => (
+        <UpcomingStopNameDisplay
             key={offset}
             stopZh={stops?.[currentStopIndex + offset]?.zh}
             stopEn={stops?.[currentStopIndex + offset]?.en}
@@ -29,7 +32,7 @@ export const DPIPSecScreen = ({
         parentGrid: `select-none grid grid-cols-[10fr_90fr] grid-rows-[3.25fr_0.025fr_2fr_0.025fr_2fr] ${monitorStyleOptions[monitorStyle]}`,
         arrowContainer: "@container text-center bg-[#FF0000]",
         arrowIcon: "mt-[0.5rem] justify-center",
-        thisStopContainer: "flex flex-col bg-white",
+        currentStopContainer: "flex flex-col bg-white",
     }
 
     return (
@@ -43,11 +46,11 @@ export const DPIPSecScreen = ({
                 <>
                     <div className={styleClasses.arrowContainer}>
                         <div className={styleClasses.arrowIcon}>
-                            <ArrowCircle />
+                            <CurrentStopIndicator />
                         </div>
                     </div>
-                    <div className={styleClasses.thisStopContainer}>
-                        <DpipThisStop
+                    <div className={styleClasses.currentStopContainer}>
+                        <CurrentStopNameDisplay
                             stopZh={stops?.[currentStopIndex]?.zh}
                             stopEn={stops?.[currentStopIndex]?.en}
                         />
@@ -59,7 +62,7 @@ export const DPIPSecScreen = ({
                 <HoldHandrailNotice />
             ) : (
                 <>
-                    {nextStops}
+                    {upcomingStops}
                 </>
             )}
         </div>

@@ -5,7 +5,7 @@ export const useKeyboardNavigation = ({
     onNext,
     onHome,
     onEnd,
-    isActive = true,
+    isUserSelectedRoute = true,
     debounceMs = 50,
     isDisabled = false,
 }) => {
@@ -41,7 +41,7 @@ export const useKeyboardNavigation = ({
     )
 
     useEffect(() => {
-        if (!isActive) return
+        if (!isUserSelectedRoute) return
         const handleKeyDown = (e) => handleKeyboardControl(e.key)
         window.addEventListener("keydown", handleKeyDown)
 
@@ -52,5 +52,5 @@ export const useKeyboardNavigation = ({
                 debounceRef.current = null
             }
         }
-    }, [handleKeyboardControl, isActive])
+    }, [handleKeyboardControl, isUserSelectedRoute])
 }

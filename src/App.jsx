@@ -1,31 +1,29 @@
-import './App.css'
+import "@css/asyncSelect.css"
+import { createTheme, ThemeProvider } from '@mui/material/styles'
 
 import { useState, useRef, useMemo, useCallback, useReducer } from 'react'
-import { useKeyboardNavigation } from "./hooks/useKeyboardNavigation"
-import { useRouteList } from './hooks/useRouteList'
-import { useRouteSelection } from "./hooks/useRouteSelection"
-import { userPreferenceReducer, initialUserPreference } from "./reducers/userPreferenceReducer"
+import { useKeyboardNavigation, useRouteList, useRouteSelection } from "@hooks"
+import { userPreferenceReducer, initialUserPreference } from "@reducers/userPreferenceReducer"
+import { routeContext } from '@contexts/Provider'
 
-import { createFilter } from 'react-select'
-import { routeContext } from './context/Provider'
+import {
+	Background,
+	Footer,
+	ControlPanel,
+	MainDisplayPanel,
+	AuxiliaryDisplayPanel,
+} from '@components'
 
 import AsyncSelect from 'react-select/async'
-import { DPIPSecScreen } from './DpipSecScreen'
-import { DPIPMainScreen } from './DpipMainScreen'
-import { createTheme, ThemeProvider } from '@mui/material/styles'
-import { Footer, DPIPButtonGroup, SwitchGroup, DriverInfoInputGroup } from './component'
-import { isEmptyObject } from '../utility/Util'
 
 const styleClasses = {
-	container: "select-none focus:outline-hidden p-[2rem] flex flex-col gap-2",
-	querySection: "flex gap-3",
-	asyncSelectWrapper: "w-full md:w-2/3 lg:w-2/3 xl:w-2/5 2xl:w-2/5 z-3",
-	switchSection: "flex flex-wrap gap-[10px] my-[0.5em]",
-	buttonSection: "flex flex-wrap gap-[15px] mb-[1em] mx-0 select-none",
-	driverInfoSection: "flex gap-3 mb-[1em]",
-	screenSection: "py-4 flex flex-wrap gap-10",
+	container: "select-none focus:outline-hidden p-[2rem] flex flex-col gap-3",
+	querySection: "flex gap-3 bg-black/60 backdrop-blur-md shadow-2xl rounded-2xl p-6 items-center justify-center max-md:flex-col max-md:gap-2 border border-gray-700",
+	asyncSelectWrapper: "w-full md:w-2/3 xl:w-1/2",
+	controlPanelSection: "flex flex-wrap gap-4 justify-center bg-[#18181b]/80 rounded-2xl shadow-lg p-6 w-full max-md:flex-col max-md:gap-3 border border-gray-700",
+	screenPanelSection: "py-4 flex flex-wrap items-center justify-center gap-10",
 	monitorStyleOptions: {
-		basic: "w-[800px] h-[480px] max-xl:w-[700px] max-xl:h-[420px] max-md:w-[600px] max-md:h-[360px] max-sm:w-[500px] max-sm:h-[330px] shadow-[0.5rem_0.5rem_1rem_0.25rem_#FFF] max-md:border-[.25em] border-[.375rem] border-solid border-[#0e0e0fbf] rounded-xl outline outline-[0.875rem] outline-[#000000] z-1",
+		basic: "w-[800px] h-[480px] max-xl:w-[700px] max-xl:h-[420px] max-md:w-[600px] max-md:h-[360px] max-sm:w-[500px] max-sm:h-[330px] shadow-[0.5rem_0.5rem_1rem_0.25rem_#23272f] max-md:border-[.25em] border-[.375rem] border-solid border-[#23272f] rounded-xl outline outline-[0.875rem] outline-[#000000] z-1",
 		new: "border-solid border-black "
 	}
 }
@@ -34,7 +32,27 @@ const App = () => {
 
 	const routeList = useRouteList()
 
+	// Create first 50 default routes dropdown for the input
+	const defaultRouteOptions = routeList?.slice(0, 50)?.map(route => ({
+		label: `${route.route} ｜ ${route.orig_tc} 往 ${route.dest_tc}`,
+		value: `${route.route}-${route.bound}-${route.service_type}`,
+		detail: route
+	}))
+
+	const mainScreenTarget = useRef(null)
+	const secScreenTarget = useRef(null)
+
+	const [selectedOption, setSelectedOption] = useState(null)
+
+	// To store the previous dropdown options for async-select after route selection
+	const [prevOptions, setPrevOptions] = useState([])
+
+	const [userPreference, dispatchUserPreference] = useReducer(
+		userPreferenceReducer, initialUserPreference
+	)
+
 	const {
+		isUserSelectedRoute,
 		routeDetail,
 		currentStopIndex,
 		setCurrentStopIndex,
@@ -42,14 +60,6 @@ const App = () => {
 		selectRoute,
 		changeBound,
 	} = useRouteSelection(routeList)
-
-	const mainScreenTarget = useRef(null)
-	const secScreenTarget = useRef(null)
-
-	const [inputValue, setInputValue] = useState("")
-	const [userPreference, dispatchUserPreference] = useReducer(
-		userPreferenceReducer, initialUserPreference
-	)
 
 	const lastStopIndex = useMemo(() => routeDetail?.stops?.length - 1, [routeDetail])
 
@@ -67,15 +77,19 @@ const App = () => {
 		}
 		else {
 			const upperCaseInput = inputValue.toUpperCase()
-			filtered = routeList.filter(route => route.route.toUpperCase().includes(upperCaseInput))
+			filtered = routeList.filter(route => route.route.toUpperCase().startsWith(upperCaseInput))
 		}
 
-		callback(filtered.map(route => (
+		const results = filtered.map(route => (
 			{
 				label: `${route.route} ｜ ${route.orig_tc} 往 ${route.dest_tc} ｜${route.service_type != 1 ? "＊特別班" : ""}`,
-				value: JSON.stringify(route)
+				value: `${route.route}-${route.bound}-${route.service_type}`,
+				detail: route
 			}
-		)))
+		))
+
+		setPrevOptions(results)
+		callback(results)
 	}, [routeList])
 
 
@@ -94,8 +108,8 @@ const App = () => {
 		onNext: toNextStop,
 		onHome: () => setCurrentStopIndex(0),
 		onEnd: changeBound,
-		isActive: !isEmptyObject(routeDetail),
-		debounceMs: 50,
+		isUserSelectedRoute,
+		debounceMs: 100,
 		isDisabled: false,
 	})
 
@@ -117,39 +131,41 @@ const App = () => {
 	return (
 		<ThemeProvider theme={theme}>
 			<routeContext.Provider value={{ routeDetail, currentStopIndex, lastStopIndex, userPreference }}>
+				<Background />
+
 				<div className={styleClasses.container} tabIndex={1}>
 
 					{/* Query section for route input and selection */}
 					<section className={styleClasses.querySection}>
 						<div className={styleClasses.asyncSelectWrapper}>
 							<AsyncSelect
-								inputValue={inputValue}
-								onInputChange={setInputValue}
-								autoCapitalize="characters"
+								inputId="routeInput"
+								classNamePrefix="routeInputSelect"
+								menuPortalTarget={document.body}
+								styles={{
+									menuPortal: base => ({ ...base, zIndex: 9999 }),
+								}}
 								autoFocus
 								isClearable
 								cacheOptions
-								defaultOptions={routeList.slice(0, 50).map(route => ({
-									label: `${route.route} ｜ ${route.orig_tc} 往 ${route.dest_tc}`,
-									value: JSON.stringify(route)
-								}))} placeholder="請輸入九巴路線編號。 Please input KMB route."
-								filterOption={createFilter({ matchFrom: "start" })}
+								defaultOptions={
+									prevOptions.length == 0 ?
+										defaultRouteOptions : prevOptions}
+								placeholder="請輸入九巴路線編號。 Please input KMB route."
 								loadOptions={searchRoute}
-								onChange={selectRoute}
+								value={selectedOption}
+								onChange={option => {
+									selectRoute(option.detail)
+									setSelectedOption(option)
+								}}
 							/>
 						</div>
 					</section>
 
-					{/* Switch groups to control DPIP */}
-					<section className={styleClasses.switchSection}>
-						<SwitchGroup
-							userPreference={userPreference}
-							dispatchUserPreference={dispatchUserPreference} />
-					</section>
-
-					{/* Button groups to control DPIP */}
-					<section className={styleClasses.buttonSection}>
-						<DPIPButtonGroup
+					{/* Control Panel with buttons and switches to control DPIP */}
+					<section className={styleClasses.controlPanelSection}>
+						<ControlPanel
+							isUserSelectedRoute={isUserSelectedRoute}
 							isPrevStopAvailable={isPrevStopAvailable}
 							isNextStopAvailable={isNextStopAvailable}
 							toPrevStop={toPrevStop}
@@ -165,17 +181,9 @@ const App = () => {
 							secScreenTarget={secScreenTarget} />
 					</section>
 
-					{/* Customizeable driver info with input group */}
-					{userPreference.customizeDriverInfoToggle &&
-						<section className={styleClasses.driverInfoSection}>
-							<DriverInfoInputGroup
-								userPreference={userPreference}
-								dispatchUserPreference={dispatchUserPreference} />
-						</section>}
-
 					{/* DPIP main screen with full details */}
-					<section className={styleClasses.screenSection}>
-						<DPIPMainScreen
+					<section className={styleClasses.screenPanelSection}>
+						<MainDisplayPanel
 							detail={routeDetail}
 							currentStopIndex={currentStopIndex}
 							userPreference={userPreference}
@@ -183,13 +191,12 @@ const App = () => {
 							screenTarget={mainScreenTarget}
 						/>
 
-						<DPIPSecScreen
+						<AuxiliaryDisplayPanel
 							stops={routeDetail.stops}
 							currentStopIndex={currentStopIndex}
 							userPreference={userPreference}
 							monitorStyleOptions={styleClasses.monitorStyleOptions}
 							screenTarget={secScreenTarget}
-
 						/>
 
 					</section>

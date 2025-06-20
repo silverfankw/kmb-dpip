@@ -1,7 +1,8 @@
-import { Input } from "./Input"
+import { Input } from "@components"
 
 export const DriverInfoInputGroup = ({ userPreference, dispatchUserPreference }) => (
 	<>
+		<p className="">車長資料</p>
 		<Input
 			placeholder="車長中文姓氏 (最多2字)"
 			maxLength={2}

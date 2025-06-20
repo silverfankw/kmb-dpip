@@ -1,6 +1,6 @@
-import "../Animation.css"
+import "@css/animation.css"
 import { useContext, useEffect, useRef, useState } from "react"
-import { routeContext } from "../context/Provider"
+import { routeContext } from "@contexts/Provider"
 
 // Tailwind CSS classes for the component
 const styleClasses = {
@@ -23,7 +23,7 @@ const styleClasses = {
 
 const arrowStageInterval = 750
 
-export const StopCompactProgressBar = ({ barRef }) => {
+export const StopCompactProgressBar = ({ progressBarRef }) => {
     const { routeDetail, currentStopIndex } = useContext(routeContext)
     const [arrowStage, setArrowStage] = useState(0)
     const intervalRef = useRef(null)
@@ -41,7 +41,7 @@ export const StopCompactProgressBar = ({ barRef }) => {
     }, [currentStopIndex])
 
     return (
-        <div ref={barRef}>
+        <div ref={progressBarRef}>
             <div className={styleClasses.container}>
 
                 {/* Stop info above progress bar */}

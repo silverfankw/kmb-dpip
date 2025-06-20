@@ -1,7 +1,8 @@
 export const TripleArrow = (props) => (
     <svg
-        width="48"
-        height="48"
+        width="100%"
+        height="100%"
+        style={{ display: "block", maxWidth: "200px", height: "auto" }}
         xmlns="http://www.w3.org/2000/svg"
         shapeRendering="geometricPrecision"
         textRendering="geometricPrecision"
@@ -58,5 +59,5 @@ export const TripleArrow = (props) => (
                 />
             </g>
         </g>
-    </svg>
+    </svg >
 )

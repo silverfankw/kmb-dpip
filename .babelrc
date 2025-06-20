@@ -1,0 +1,22 @@
+{
+    "plugins": [
+        [
+            "babel-plugin-module-resolver",
+            {
+                "root": [
+                    "./src"
+                ],
+                "alias": {
+                    "@api": "./src/api",
+                    "@assets": "./src/assets",
+                    "@components": "./src/components",
+                    "@css": "./src/assets/css",
+                    "@hooks": "./src/hooks",
+                    "@contexts": "./src/contexts",
+                    "@reducers": "./src/reducers",
+                    "@utils": "./src/utils",
+                }
+            }
+        ]
+    ]
+}

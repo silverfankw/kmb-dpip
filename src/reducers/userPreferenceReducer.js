@@ -7,7 +7,7 @@ export const initialUserPreference = {
     handrailNotice: false,
 };
 
-export function userPreferenceReducer(state, action) {
+export const userPreferenceReducer = (state, action) => {
     switch (action.type) {
         case "SET_MONITOR_STYLE":
             return { ...state, monitorStyle: action.payload };

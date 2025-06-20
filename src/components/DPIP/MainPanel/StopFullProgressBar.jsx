@@ -1,27 +1,11 @@
-import "../Animation.css"
+import "@css/animation.css"
 import { useContext } from "react"
-import { routeContext } from "../context/Provider"
-import { isEmptyObject } from "../../utility/Util"
+import { routeContext } from "@contexts/Provider"
+import { useFullProgressBarWindow } from "@hooks"
+import { isEmptyObject } from "@utils"
 
-const splitProgressBarCriteria = 34
+const splitProgressBarCriteria = 32
 
-function calculateProgress({
-    shouldSplit,
-    isFirstPage,
-    currentStopIndex,
-    stopLength,
-}) {
-    if (!shouldSplit) return (currentStopIndex / (stopLength + 1)) * 100 ?? 100
-
-    const pageStart = isFirstPage ? 0 : splitProgressBarCriteria
-    const pageEnd = isFirstPage ?
-        splitProgressBarCriteria + 2 :
-        stopLength - splitProgressBarCriteria + 1
-
-    return ((currentStopIndex - pageStart) / pageEnd) * 100 ?? 100
-}
-
-// Tailwind CSS classes for the component
 const styleClasses = {
     container: "@container line-container w-[93%] relative",
     startLineContainer: "flex left-[1px] gap-[2px] absolute z-1",
@@ -32,7 +16,7 @@ const styleClasses = {
     stopName: "stop-name text-black text-[1.75cqw] max-md:text-[2cqw] absolute top-[-3cqw] max-md:top-[-3.5cqw] left-1/2 -translate-x-[5%] -rotate-[65deg] origin-left whitespace-nowrap",
     stopNameCurrent: "font-black",
     stopNamePast: "!text-gray-300",
-    splitEllipsis: "absolute top-[-7cqw] right-[3cqw] text-xl",
+    splitEllipsis: "absolute top-[-7cqw] right-[-3cqw] text-xl",
     endLineContainer: "flex gap-[2px] relative justify-end w-[94.5%] max-md:w-[96%]",
     endLineBar: "bg-[#FF0000] w-[.2cqw] h-[2.5cqw] max-md:w-[.375cqw] max-mx:h-[3.5cqw]",
 }
@@ -43,11 +27,7 @@ const StopBullet = ({ stop, i, currentStopIndex }) => {
 
     return (
         <div className={styleClasses.bullet} style={{ position: "relative" }}>
-
-            {/* If current Stop: Render animated bullet */}
             {isCurrentStop && <div className={styleClasses.bulletPulse} />}
-
-            {/* Stop name above bullet*/}
             <div
                 className={[
                     styleClasses.stopName,
@@ -61,36 +41,34 @@ const StopBullet = ({ stop, i, currentStopIndex }) => {
     )
 }
 
-export const StopFullProgressBar = ({ barRef }) => {
+export const StopFullProgressBar = ({ progressBarRef }) => {
     const { routeDetail, currentStopIndex } = useContext(routeContext)
     const stopLength = routeDetail?.stops?.length ?? 0
 
-    const shouldSplit = stopLength > splitProgressBarCriteria
-    const isFirstPage = shouldSplit && currentStopIndex <= splitProgressBarCriteria
-    const isSecondPage = shouldSplit && currentStopIndex > splitProgressBarCriteria
+    const rangeSize = splitProgressBarCriteria
+    const rangeSlide = Math.floor(rangeSize * 0.8)
 
-    const stopProgressPercentage = calculateProgress({
-        shouldSplit,
-        isFirstPage,
-        currentStopIndex,
-        stopLength,
-    })
+    const [windowStart, windowEnd] = useFullProgressBarWindow(
+        stopLength, currentStopIndex, rangeSize, rangeSlide)
 
-    const shouldDisplayStartLine = !shouldSplit || isFirstPage
-    const shouldDisplayEndLine = !shouldSplit || isSecondPage
+    const stopsInWindow = windowEnd - windowStart
+    const progressInWindow = currentStopIndex - windowStart
+    const stopProgressPercentage =
+        stopsInWindow > 1
+            ? (progressInWindow / (stopsInWindow + 1)) * 100
+            : 0
+
+    const showNonEndEllipsis = stopLength > rangeSize && windowEnd < stopLength
 
     return (
-        <div ref={barRef}>
+        <div ref={progressBarRef}>
             <div className={styleClasses.container}>
 
                 {/* Start of Progress Bar */}
-                {!isEmptyObject(routeDetail) && shouldDisplayStartLine && (
+                {!isEmptyObject(routeDetail) && windowStart === 0 && (
                     <div className={styleClasses.startLineContainer}>
                         {[...Array(2)].map((_, idx) => (
-                            <div
-                                key={idx}
-                                className={styleClasses.startLineBar}
-                            ></div>
+                            <div key={idx} className={styleClasses.startLineBar}></div>
                         ))}
                     </div>
                 )}
@@ -102,36 +80,25 @@ export const StopFullProgressBar = ({ barRef }) => {
                     }}
                     className={styleClasses.progressBar}
                 >
-                    {routeDetail?.stops?.map((stop, i) => {
-                        if (
-                            shouldSplit &&
-                            ((isFirstPage && i > splitProgressBarCriteria) ||
-                                (!isFirstPage && i < splitProgressBarCriteria))
-                        )
-                            return null
-                        return (
-                            <StopBullet
-                                key={i} stop={stop} i={i}
-                                currentStopIndex={currentStopIndex}
-                            />
-                        )
-                    })}
+                    {routeDetail?.stops?.slice(windowStart, windowEnd).map((stop, i) => (
+                        <StopBullet
+                            key={windowStart + i}
+                            stop={stop}
+                            i={windowStart + i}
+                            currentStopIndex={currentStopIndex}
+                        />
+                    ))}
+                    {showNonEndEllipsis && (
+                        <div className={styleClasses.splitEllipsis}>...</div>
+                    )}
                 </div>
             </div>
 
-            {/* Split Ellipsis */}
-            {isFirstPage && (
-                <div className={styleClasses.splitEllipsis}>...</div>
-            )}
-
             {/* End of Progress Bar */}
-            {!isEmptyObject(routeDetail) && shouldDisplayEndLine && (
+            {!isEmptyObject(routeDetail) && windowEnd === stopLength && (
                 <div className={styleClasses.endLineContainer}>
                     {[...Array(2)].map((_, idx) => (
-                        <div
-                            key={idx}
-                            className={styleClasses.endLineBar}
-                        ></div>
+                        <div key={idx} className={styleClasses.endLineBar}></div>
                     ))}
                 </div>
             )}
