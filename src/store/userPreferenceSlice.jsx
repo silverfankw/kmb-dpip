@@ -1,7 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit'
 
 const initialState = {
-    monitorStyle: "basic",
     stopPressed: false,
     driverInfo: { nameZh: "九巴仔", nameEn: "KMB Boy", staffNo: "1933" },
     customizeDriverInfoToggle: false,
@@ -13,9 +12,6 @@ const userPreferenceSlice = createSlice({
     name: 'userPreference',
     initialState,
     reducers: {
-        setMonitorStyle(state, action) {
-            state.monitorStyle = action.payload
-        },
         setStopPressed(state, action) {
             state.stopPressed = action.payload
         },
@@ -39,7 +35,6 @@ const userPreferenceSlice = createSlice({
 })
 
 export const {
-    setMonitorStyle,
     setStopPressed,
     setDriverInfo,
     setCustomizeDriverInfoToggle,

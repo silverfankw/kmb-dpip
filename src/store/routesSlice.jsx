@@ -1,19 +1,8 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
-import { createSelector } from 'reselect'
 
 const initialState = []
 
 export const selectRoutes = state => state.routes
-
-export const selectDefaultRouteOptions = createSelector(
-    [selectRoutes],
-    routes =>
-        routes?.slice(0, 50)?.map(route => ({
-            label: `${route.route} ｜ ${route.orig_tc} 往 ${route.dest_tc}`,
-            value: `${route.route}-${route.bound}-${route.service_type}`,
-            detail: route,
-        }))
-)
 
 export const fetchRouteThunk = createAsyncThunk(
     'routes/fetchRoute',

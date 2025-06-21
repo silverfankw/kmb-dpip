@@ -8,6 +8,26 @@ import HandshakeIcon from '@mui/icons-material/Handshake'
 import DoorSlidingIcon from '@mui/icons-material/DoorSliding'
 import NotificationsIcon from '@mui/icons-material/Notifications'
 
+const buttonLabelSx = { fontSize: { xs: "1.25rem", md: "1rem" } }
+
+const getButtonSx = theme => {
+    return {
+        px: 2,
+        py: 3,
+        textAlign: "center",
+        width: "max-content",
+        bgcolor: `${theme}.main`,
+        borderRadius: 1,
+        margin: "0px",
+        boxShadow: "0px 2px 4px -1px rgba(0,0,0,0.2),0px 4px 5px 0px rgba(0,0,0,0.14),0px 1px 10px 0px rgba(0,0,0,0.12)",
+        "&:hover": {
+            bgcolor: `${theme}.dark`,
+            // transform: 'translateY(-2px) scale(1.04)',
+        },
+        height: { xs: "64px", md: "48px" },
+    }
+}
+
 export const ToggleButtonGroup = () => {
 
     const { stopPressed, showHandrailNotice, showMindDoorNotice } = useSelector(state => state.userPreference)
@@ -17,53 +37,25 @@ export const ToggleButtonGroup = () => {
         <>
             {/* Stop Bell toggle */}
             <SwitchButton
-                sx={{
-                    width: "max-content",
-                    bgcolor: "error.main",
-                    borderRadius: 1,
-                    paddingRight: "10px", // Expand box to fit content
-                    margin: "0px",
-                    boxShadow: "0px 2px 4px -1px rgba(0,0,0,0.2),0px 4px 5px 0px rgba(0,0,0,0.14),0px 1px 10px 0px rgba(0,0,0,0.12)",
-                    "&:hover": { bgcolor: "error.dark" },
-                    height: "48px",
-                    ["@media (max-width: 640px)"]: { height: "64px" }
-                }}
+                sx={getButtonSx("darkRed")}
                 control={
                     <Switch
                         checked={stopPressed}
                         color="darkred"
-                        onChange={() =>
-                            dispatch(setStopPressed(!stopPressed))
-                        }
+                        onChange={() => dispatch(setStopPressed(!stopPressed))}
                         name="stop pressed" />
                 }
                 label={
-                    <>
+                    <span style={{ display: "flex", alignItems: "center", gap: 6 }}>
                         <NotificationsIcon color="snowwhite" />
-                        <Typography
-                            variant="button"
-                            color="white"
-                            sx={{
-                                "@media (max-width:640px)": {
-                                    display: "none"
-                                }
-                            }}
-                        >
+                        <Typography variant="button" color="white" sx={buttonLabelSx}>
                             {stopPressed ? `  解除` : ` 按鐘`}
                         </Typography>
-                    </>} />
+                    </span>
+                }
+            />
             <SwitchButton
-                sx={{
-                    width: "max-content",
-                    bgcolor: "ochre.main",
-                    borderRadius: 1,
-                    margin: "0px",
-                    boxShadow: "0px 2px 4px -1px rgba(0,0,0,0.2),0px 4px 5px 0px rgba(0,0,0,0.14),0px 1px 10px 0px rgba(0,0,0,0.12)",
-                    "&:hover": { bgcolor: "ochre.dark" },
-                    height: "48px",
-                    ["@media (max-width: 640px)"]: { height: "64px" }
-
-                }}
+                sx={getButtonSx("ochre")}
                 control={
                     <Switch
                         checked={showHandrailNotice}
@@ -80,32 +72,18 @@ export const ToggleButtonGroup = () => {
                         name="handrail notice" />
                 }
                 label={
-                    <>
+                    <span style={{ display: "flex", alignItems: "center", gap: 6 }}>
                         <HandshakeIcon />
-                        <Typography
-                            sx={{
-                                "@media (max-width:640px)": {
-                                    fontSize: "1.125rem"
-                                }
-                            }}
-                            variant="button">
+                        <Typography sx={buttonLabelSx} variant="button">
                             「緊握扶手」
                         </Typography>
-                    </>}
+                    </span>
+                }
             />
 
             {/* Mind Door Notice toggle */}
             <SwitchButton
-                sx={{
-                    width: "max-content",
-                    bgcolor: "ochre.main",
-                    borderRadius: 1,
-                    margin: "0px",
-                    boxShadow: "0px 2px 4px -1px rgba(0,0,0,0.2),0px 4px 5px 0px rgba(0,0,0,0.14),0px 1px 10px 0px rgba(0,0,0,0.12)",
-                    "&:hover": { bgcolor: "ochre.dark" },
-                    height: "48px",
-                    ["@media (max-width: 640px)"]: { height: "64px" }
-                }}
+                sx={getButtonSx("ochre")}
                 control={
                     <Switch
                         checked={showMindDoorNotice}
@@ -122,18 +100,13 @@ export const ToggleButtonGroup = () => {
                         name="mind door notice" />
                 }
                 label={
-                    <>
+                    <span style={{ display: "flex", alignItems: "center", gap: 6 }}>
                         <DoorSlidingIcon />
-                        <Typography
-                            sx={{
-                                "@media (max-width:640px)": {
-                                    fontSize: "1.125rem"
-                                }
-                            }}
-                            variant="button">
+                        <Typography sx={buttonLabelSx} variant="button">
                             「車門關上」
                         </Typography>
-                    </>}
+                    </span>
+                }
             />
         </>
     )

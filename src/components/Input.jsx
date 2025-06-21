@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types'
-import { ErrorInputMessage } from './ErrorInputMessage'
+import { MessageText } from './MessageText'
 
 export const Input = ({
     id,
@@ -40,7 +40,7 @@ export const Input = ({
             // onKeyUp={handleSearch}
             />
             {invalidMessage && !validInput && value.length > 0 && (
-                <ErrorInputMessage message={invalidMessage} />
+                <MessageText message={invalidMessage} tailwindStyle="text-red-600" />
             )}
         </div>
     )

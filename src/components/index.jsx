@@ -2,7 +2,7 @@ export * from './DPIP'
 
 export { Background } from "./Background"
 export { Button } from './Button'
-export { ErrorInputMessage } from './ErrorInputMessage'
+export { MessageText } from './MessageText'
 export { Footer } from './Footer'
 export { Input } from './Input'
 export { Keypad } from './Keypad'

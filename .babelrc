@@ -15,7 +15,8 @@
                     "@contexts": "./src/contexts",
                     "@reducers": "./src/reducers",
                     "@store": "./src/store",
-                    "@utils": "./src/utils",
+                    "@theme": "./src/theme/theme",
+                    "@utils": "./src/utils"
                 }
             }
         ]

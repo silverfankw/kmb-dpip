@@ -31,7 +31,7 @@ const computeStopNameStyle = (stopName = "", lang = "en", windowWidth) => {
     }
 
     return {}
-};
+}
 
 export const CurrentStopNameDisplay = ({ stopZh = "", stopEn = "" }) => {
     const windowWidth = useWindowWidth()

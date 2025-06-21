@@ -1,10 +1,9 @@
-.routeInputSelect__control {
-    height: 42px;
-    @media (max-width: 768px) {
-        height: 64px;
-    }
+.routeInputSelect__input {
+    text-transform: uppercase;
 }
 
-#routeInput {
-    text-transform: uppercase;
+.routeInputSelect__placeholder {
+    @media (max-width: 640px) {
+        font-size: 0.85rem;
+    }
 }

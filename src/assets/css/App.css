@@ -1,7 +1,27 @@
 @import "tailwindcss"
 
 @theme {
-  --breakpoint-xs: 30rem;
+    /* Very old phones */
+    /* iPhone 3G: 320 x 480 */
+    --breakpoint-3xs: 300px;
+
+    /* Small Phones in Portrait Mode */
+    /* iPhone 7: 375 x 667 */
+    /* iPhone 8: 375 x 667 */
+    /* iPhone X: 375 x 812 */
+    /* Galaxy S24: 360 x 780 */
+    /* Pixel 3: 393 x 786 */
+    /* iPhone 16: 393 x 852 */
+    /* iPhone 16 Pro: 402 x 874 */
+    --breakpoint-2xs: 360px;
+
+    /* Big Phones in Portrait Mode */
+    /* iPhone XS Max: 414 x 896 */
+    /* Google Pixel 9 Pro XL: 412 x 915 */
+    /* Google Pixel 4 XL: 412 x 869 */
+    /* iPhone 13 Pro Max: 428 x 926 */
+    /* iPhone 16 Pro Max: 440 x 956 */
+    --breakpoint-xs: 412px;
 }
 
 .noselect {

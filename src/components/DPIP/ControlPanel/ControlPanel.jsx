@@ -3,9 +3,8 @@ import { useSelector } from 'react-redux'
 import { NavButtonGroup, ToggleButtonGroup, FuncButtonGroup, DriverInfoInputGroup } from '@components'
 
 const styleClasses = {
-    groupWrapper: "flex flex-wrap gap-4 ",
+    groupWrapper: "flex flex-wrap gap-4 max-md:gap-3",
     divider: "block max-2xl:hidden w-px bg-gray-300 mx-2",
-    button: "h-[48px] max-md:h-[64px]",
     driverInfoSection: "flex text-center items-center text-white gap-3",
 }
 

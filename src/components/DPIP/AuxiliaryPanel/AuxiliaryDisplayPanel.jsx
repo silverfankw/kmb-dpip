@@ -9,13 +9,10 @@ import {
     CurrentStopIndicator
 } from '../'
 
-export const AuxiliaryDisplayPanel = ({
-    monitorStyleOptions,
-    screenTarget
-}) => {
+export const AuxiliaryDisplayPanel = ({ monitorStyle, screenTarget }) => {
 
     const { routeDetail, currentStopIndex } = useSelector(state => state.routeSelection)
-    const { monitorStyle, showMindDoorNotice, showHandrailNotice } = useSelector(state => state.userPreference)
+    const { showMindDoorNotice, showHandrailNotice } = useSelector(state => state.userPreference)
 
     const stops = routeDetail?.stops
 
@@ -29,7 +26,7 @@ export const AuxiliaryDisplayPanel = ({
 
     // Tailwind Styles for the layout
     const styleClasses = {
-        parentGrid: `select-none grid grid-cols-[10fr_90fr] grid-rows-[3.25fr_0.025fr_2fr_0.025fr_2fr] ${monitorStyleOptions[monitorStyle]}`,
+        parentGrid: `select-none grid grid-cols-[10fr_90fr] grid-rows-[3.25fr_0.025fr_2fr_0.025fr_2fr] ${monitorStyle}`,
         arrowContainer: "@container text-center bg-[#FF0000]",
         arrowIcon: "mt-[0.5rem] justify-center",
         currentStopContainer: "flex flex-col bg-white",

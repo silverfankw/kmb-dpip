@@ -36,23 +36,18 @@ const baseStyleClasses = {
     noticeEnOverrideStyle: "!text-[3.75cqw]",
 }
 
-
 // --- Helper for dynamic stop name font size ---
 const getClampTextStyle = (text) => {
     const visualLength = stringWidth(text || "")
     return `clamp(2rem, ${Math.max(16 - visualLength * 0.45, 4.5)}cqw, 8.5cqw)`
 }
 
-export const MainDisplayPanel = ({
-    monitorStyleOptions,
-    screenTarget
-}) => {
+export const MainDisplayPanel = ({ monitorStyle, screenTarget }) => {
 
     const { routeDetail, currentStopIndex } = useSelector(state => state.routeSelection)
     const {
         showHandrailNotice,
         showMindDoorNotice,
-        monitorStyle,
         stopPressed,
         driverInfo
     } = useSelector(state => state.userPreference)
@@ -83,7 +78,7 @@ export const MainDisplayPanel = ({
     // Compose dynamic classes
     const styleClasses = {
         ...baseStyleClasses,
-        parentGrid: `${baseStyleClasses.parentGrid} ${monitorStyleOptions[monitorStyle]}`,
+        parentGrid: `${baseStyleClasses.parentGrid} ${monitorStyle}`,
         nextStopIndicatorGrid: `${baseStyleClasses.nextStopIndicatorGrid} ${stopPressed ? "bg-[#FF0000] text-white" : "bg-[#FFFF00] text-black"}`,
         driverInfoGrid: `${baseStyleClasses.driverInfoGrid} ${stopPressed ? "bg-[#FF0000]" : "bg-black"}`
     }

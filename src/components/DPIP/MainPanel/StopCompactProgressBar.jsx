@@ -47,7 +47,7 @@ export const StopCompactProgressBar = ({ progressBarRef }) => {
                 {/* Stop info above progress bar */}
                 <div className={styleClasses.stopInfoRow}>
                     {[0, 1, 2].map((offset) => {
-                        const stop = routeDetail?.stops?.[currentStopIndex + offset];
+                        const stop = routeDetail?.stops?.[currentStopIndex + offset]
                         return (
                             <div className={styleClasses.stopInfoCol} key={offset}>
                                 <div

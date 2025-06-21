@@ -10,7 +10,6 @@ export const DriverInfoInputGroup = () => {
 
 	return (
 		<>
-			<p className="">車長資料</p>
 			<Input
 				placeholder="車長中文姓氏 (最多2字)"
 				maxLength={2}
