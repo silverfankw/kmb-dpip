@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 @theme {
-    --animate-bullet-pulse: bulletPulse 1.5s step-start infinite;
+    --animate-bullet-pulse: bulletPulse 1.25s step-start infinite;
 
     @keyframes bulletPulse {  
         0%, 100% {

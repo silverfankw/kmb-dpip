@@ -2,7 +2,7 @@ import stringWidth from "string-width"
 import { useWindowWidth } from '@hooks/useWindowWidth'
 
 // Tailwind CSS style classes
-const styleClasses = {
+const styles = {
     container: "@container font-[500] relative width-[95%] h-[75%] left-[1.5%] tracking-[-0.0625rem]",
     zhStopName: "h-[12cqw] relative top-[2cqw] flex items-center",
     enStopNameWrapper: "absolute top-[80%] whitespace-nowrap",
@@ -37,16 +37,16 @@ export const CurrentStopNameDisplay = ({ stopZh = "", stopEn = "" }) => {
     const windowWidth = useWindowWidth()
 
     return (
-        <div className={styleClasses.container}>
+        <div className={styles.container}>
             <div
-                className={styleClasses.zhStopName}
+                className={styles.zhStopName}
                 style={computeStopNameStyle(stopZh, "zh")}
             >
                 {stopZh}
             </div>
-            <div className={styleClasses.enStopNameWrapper}>
+            <div className={styles.enStopNameWrapper}>
                 <span
-                    className={styleClasses.enStopName}
+                    className={styles.enStopName}
                     style={computeStopNameStyle(stopEn, "en", windowWidth)}
                 >
                     {stopEn}

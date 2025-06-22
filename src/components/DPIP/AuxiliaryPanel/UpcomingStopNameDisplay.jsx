@@ -1,7 +1,7 @@
 import stringWidth from "string-width"
 import { useWindowWidth } from '@hooks/useWindowWidth'
 
-const styleClasses = {
+const styles = {
     divider: "col-start-1 col-end-5 bg-[#f7f6f6c5]",
     stopIndicatorContainer: "@container flex flex-col items-center justify-center bg-[#FF0000]",
     stopIndicator: "inline-block rounded-[50%] bg-white w-[65cqw] h-[65cqw]",
@@ -37,26 +37,26 @@ export const UpcomingStopNameDisplay = ({ stopZh = "", stopEn = "" }) => {
     return (
         <>
             {/* Horizontal gray divider line */}
-            <div className={styleClasses.divider}></div>
+            <div className={styles.divider}></div>
 
             {/* White circle stop indicator */}
-            <div className={styleClasses.stopIndicatorContainer}>
-                <div className={styleClasses.stopIndicator}></div>
+            <div className={styles.stopIndicatorContainer}>
+                <div className={styles.stopIndicator}></div>
             </div>
 
             {/* Stop name container */}
-            <div className={styleClasses.stopNameContainer}>
+            <div className={styles.stopNameContainer}>
 
                 {/* Stop name content */}
-                <div className={styleClasses.stopNameContent}>
+                <div className={styles.stopNameContent}>
                     <div
-                        className={styleClasses.zhStopName}
+                        className={styles.zhStopName}
                         style={getStopNameFontStyle(stopZh, "zh")}
                     >
                         {stopZh}
                     </div>
                     <span
-                        className={styleClasses.enStopName}
+                        className={styles.enStopName}
                         style={getStopNameFontStyle(stopEn, "en", windowWidth)}
                     >
                         {stopEn}

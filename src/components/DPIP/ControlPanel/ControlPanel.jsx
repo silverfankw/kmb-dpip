@@ -2,7 +2,7 @@ import { useSelector } from 'react-redux'
 
 import { NavButtonGroup, ToggleButtonGroup, FuncButtonGroup, DriverInfoInputGroup } from '@components'
 
-const styleClasses = {
+const styles = {
     groupWrapper: "flex flex-wrap gap-4 max-md:gap-3",
     divider: "block max-2xl:hidden w-px bg-gray-300 mx-2",
     driverInfoSection: "flex text-center items-center text-white gap-3",
@@ -14,19 +14,19 @@ export const ControlPanel = ({ mainScreenTarget, secScreenTarget }) => {
 
     return (
         <>
-            <div className={styleClasses.groupWrapper}>
+            <div className={styles.groupWrapper}>
                 <NavButtonGroup />
             </div>
 
-            <div className={styleClasses.divider} />
+            <div className={styles.divider} />
 
-            <div className={styleClasses.groupWrapper}>
+            <div className={styles.groupWrapper}>
                 <ToggleButtonGroup />
             </div>
 
-            <div className={styleClasses.divider} />
+            <div className={styles.divider} />
 
-            <div className={styleClasses.groupWrapper}>
+            <div className={styles.groupWrapper}>
                 <FuncButtonGroup
                     mainScreenTarget={mainScreenTarget}
                     secScreenTarget={secScreenTarget}
@@ -35,7 +35,7 @@ export const ControlPanel = ({ mainScreenTarget, secScreenTarget }) => {
 
             {/* Customizeable driver info with input group */}
             {userPreference.customizeDriverInfoToggle &&
-                <section className={styleClasses.driverInfoSection}>
+                <section className={styles.driverInfoSection}>
                     <DriverInfoInputGroup />
                 </section>
             }

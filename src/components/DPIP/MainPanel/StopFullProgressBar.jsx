@@ -5,7 +5,7 @@ import { useFullProgressBarWindow } from "@hooks"
 
 const splitProgressBarCriteria = 32
 
-const styleClasses = {
+const styles = {
     container: "@container line-container w-[93%] relative",
     startLineContainer: "flex left-[1px] gap-[2px] absolute z-1",
     startLineBar: "bg-[gray] w-[.2cqw] h-[2.5cqw] max-md:w-[.375cqw] max-md:h-[3.5cqw]",
@@ -25,13 +25,13 @@ const StopBullet = ({ stop, i, currentStopIndex }) => {
     const isPastStop = i < currentStopIndex
 
     return (
-        <div className={styleClasses.bullet} style={{ position: "relative" }}>
-            {isCurrentStop && <div className={styleClasses.bulletPulse} />}
+        <div className={styles.bullet} style={{ position: "relative" }}>
+            {isCurrentStop && <div className={styles.bulletPulse} />}
             <div
                 className={[
-                    styleClasses.stopName,
-                    isCurrentStop && styleClasses.stopNameCurrent,
-                    isPastStop && styleClasses.stopNamePast
+                    styles.stopName,
+                    isCurrentStop && styles.stopNameCurrent,
+                    isPastStop && styles.stopNamePast
                 ].filter(Boolean).join(" ")}
             >
                 {stop.zh}
@@ -63,13 +63,13 @@ export const StopFullProgressBar = ({ progressBarRef }) => {
 
     return (
         <div ref={progressBarRef}>
-            <div className={styleClasses.container}>
+            <div className={styles.container}>
 
                 {/* Start of Progress Bar */}
                 {isUserSelectedRoute && windowStart === 0 && (
-                    <div className={styleClasses.startLineContainer}>
+                    <div className={styles.startLineContainer}>
                         {[...Array(2)].map((_, idx) => (
-                            <div key={idx} className={styleClasses.startLineBar}></div>
+                            <div key={idx} className={styles.startLineBar}></div>
                         ))}
                     </div>
                 )}
@@ -79,7 +79,7 @@ export const StopFullProgressBar = ({ progressBarRef }) => {
                     style={{
                         background: `linear-gradient(to right, gray 0%, gray ${stopProgressPercentage}%, red ${stopProgressPercentage}%)`,
                     }}
-                    className={styleClasses.progressBar}
+                    className={styles.progressBar}
                 >
                     {routeDetail?.stops?.slice(windowStart, windowEnd).map((stop, i) => (
                         <StopBullet
@@ -90,16 +90,16 @@ export const StopFullProgressBar = ({ progressBarRef }) => {
                         />
                     ))}
                     {showNonEndEllipsis && (
-                        <div className={styleClasses.splitEllipsis}>...</div>
+                        <div className={styles.splitEllipsis}>...</div>
                     )}
                 </div>
             </div>
 
             {/* End of Progress Bar */}
             {isUserSelectedRoute && windowEnd === stopLength && (
-                <div className={styleClasses.endLineContainer}>
+                <div className={styles.endLineContainer}>
                     {[...Array(2)].map((_, idx) => (
-                        <div key={idx} className={styleClasses.endLineBar}></div>
+                        <div key={idx} className={styles.endLineBar}></div>
                     ))}
                 </div>
             )}

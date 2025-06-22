@@ -17,7 +17,7 @@ const progressBarInterval = 11000
 const stopNameInterval = 4500
 
 // --- Styles outside component ---
-const baseStyleClasses = {
+const basestyles = {
     parentGrid: "select-none grid grid-rows-[0.5fr_1.85fr_0.0375fr_1fr_0.125fr]",
     nextStopIndicatorGrid: "@container col-start-1 col-end-2 flex flex-col text-center items-center justify-center",
     nextStopIndicatorZh: "max-sm:text-[16cqw] text-[15cqw] mb-[-4px] font-[600]",
@@ -76,34 +76,34 @@ export const MainDisplayPanel = ({ monitorStyle, screenTarget }) => {
     }, [showHandrailNotice, showMindDoorNotice])
 
     // Compose dynamic classes
-    const styleClasses = {
-        ...baseStyleClasses,
-        parentGrid: `${baseStyleClasses.parentGrid} ${monitorStyle}`,
-        nextStopIndicatorGrid: `${baseStyleClasses.nextStopIndicatorGrid} ${stopPressed ? "bg-[#FF0000] text-white" : "bg-[#FFFF00] text-black"}`,
-        driverInfoGrid: `${baseStyleClasses.driverInfoGrid} ${stopPressed ? "bg-[#FF0000]" : "bg-black"}`
+    const styles = {
+        ...basestyles,
+        parentGrid: `${basestyles.parentGrid} ${monitorStyle}`,
+        nextStopIndicatorGrid: `${basestyles.nextStopIndicatorGrid} ${stopPressed ? "bg-[#FF0000] text-white" : "bg-[#FFFF00] text-black"}`,
+        driverInfoGrid: `${basestyles.driverInfoGrid} ${stopPressed ? "bg-[#FF0000]" : "bg-black"}`
     }
 
     return (
-        <div ref={screenTarget} className={styleClasses.parentGrid}>
+        <div ref={screenTarget} className={styles.parentGrid}>
             {/* Next stop Indicator */}
-            <div className={styleClasses.nextStopIndicatorGrid}>
-                <div className={styleClasses.nextStopIndicatorZh}>
+            <div className={styles.nextStopIndicatorGrid}>
+                <div className={styles.nextStopIndicatorZh}>
                     下一站{stopPressed && `停於`}
                 </div>
-                <div className={styleClasses.nextStopIndicatorEn}>
+                <div className={styles.nextStopIndicatorEn}>
                     Next {stopPressed ? `Stopping at` : `Stop`}
                 </div>
             </div>
 
             {/* Route Number & Destination */}
-            <div className={styleClasses.routeHeadingGrid}>
+            <div className={styles.routeHeadingGrid}>
                 <RouteDisplayHeading />
             </div>
 
             {/* Progress Bar (only if stops exist) */}
-            <div className={styleClasses.stopProgressBarGrid}>
+            <div className={styles.stopProgressBarGrid}>
                 {routeDetail?.stops?.length > 0 && (
-                    <div className={styleClasses.stopProgressBarContainer}>
+                    <div className={styles.stopProgressBarContainer}>
                         <StopFullProgressBar progressBarRef={fullProgressBarRef} />
                         <StopCompactProgressBar progressBarRef={compactProgressBarRef} />
                     </div>
@@ -111,32 +111,32 @@ export const MainDisplayPanel = ({ monitorStyle, screenTarget }) => {
             </div>
 
             {/* Divider */}
-            <div className={styleClasses.dividerGrid}></div>
+            <div className={styles.dividerGrid}></div>
 
             {/* Big next stop name */}
-            <div className={styleClasses.stopNameGrid}>
+            <div className={styles.stopNameGrid}>
                 {showHandrailNotice ? (
                     <HoldHandrailNotice
-                        zhNameOverrideStyle={styleClasses.noticeZhOverrideStyle}
-                        enNameOverrideStyle={styleClasses.noticeEnOverrideStyle}
+                        zhNameOverrideStyle={styles.noticeZhOverrideStyle}
+                        enNameOverrideStyle={styles.noticeEnOverrideStyle}
                     />
                 ) : showMindDoorNotice ? (
                     <MindDoorNotice
-                        zhNameOverrideStyle={styleClasses.noticeZhOverrideStyle}
-                        enNameOverrideStyle={styleClasses.noticeEnOverrideStyle}
+                        zhNameOverrideStyle={styles.noticeZhOverrideStyle}
+                        enNameOverrideStyle={styles.noticeEnOverrideStyle}
                     />
                 ) : (
                     <>
                         <span
                             ref={zhStopNameRef}
-                            className={styleClasses.stopNameZh}
+                            className={styles.stopNameZh}
                             style={{ fontSize: getClampTextStyle(stopNameZh) }}
                         >
                             {stopNameZh}
                         </span>
                         <span
                             ref={enStopNameRef}
-                            className={styleClasses.stopNameEn}
+                            className={styles.stopNameEn}
                         >
                             {stopNameEn}
                         </span>
@@ -145,14 +145,14 @@ export const MainDisplayPanel = ({ monitorStyle, screenTarget }) => {
             </div>
 
             {/* Driver Info */}
-            <div className={styleClasses.driverInfoGrid}>
-                <span className={styleClasses.driverInfoText}>
+            <div className={styles.driverInfoGrid}>
+                <span className={styles.driverInfoText}>
                     {driverInfo?.nameZh}車長正為您服務 &nbsp; Bus Captain&nbsp;
                 </span>
-                <span className={`${styleClasses.driverInfoText} ${styleClasses.capitalize}`}>
+                <span className={`${styles.driverInfoText} ${styles.capitalize}`}>
                     {driverInfo?.nameEn}&nbsp;
                 </span>
-                <span className={styleClasses.driverInfoText}>
+                <span className={styles.driverInfoText}>
                     is serving you &nbsp;&nbsp;員工編號 &nbsp;Emp. No: {driverInfo?.staffNo}
                 </span>
             </div>

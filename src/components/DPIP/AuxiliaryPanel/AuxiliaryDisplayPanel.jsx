@@ -9,6 +9,14 @@ import {
     CurrentStopIndicator
 } from '../'
 
+// Tailwind Styles for the layout
+const styles = {
+    parentGrid: "select-none grid grid-cols-[10fr_90fr] grid-rows-[3.25fr_0.025fr_2fr_0.025fr_2fr]",
+    arrowContainer: "@container text-center bg-[#FF0000]",
+    arrowIcon: "mt-[0.5rem] justify-center",
+    currentStopContainer: "flex flex-col bg-white",
+}
+
 export const AuxiliaryDisplayPanel = ({ monitorStyle, screenTarget }) => {
 
     const { routeDetail, currentStopIndex } = useSelector(state => state.routeSelection)
@@ -24,29 +32,21 @@ export const AuxiliaryDisplayPanel = ({ monitorStyle, screenTarget }) => {
         />
     ))
 
-    // Tailwind Styles for the layout
-    const styleClasses = {
-        parentGrid: `select-none grid grid-cols-[10fr_90fr] grid-rows-[3.25fr_0.025fr_2fr_0.025fr_2fr] ${monitorStyle}`,
-        arrowContainer: "@container text-center bg-[#FF0000]",
-        arrowIcon: "mt-[0.5rem] justify-center",
-        currentStopContainer: "flex flex-col bg-white",
-    }
-
     return (
         <div
             ref={screenTarget}
-            className={styleClasses.parentGrid}
+            className={`${styles.parentGrid} ${monitorStyle}`}
         >
             {showMindDoorNotice ? (
                 <MindDoorNotice />
             ) : (
                 <>
-                    <div className={styleClasses.arrowContainer}>
-                        <div className={styleClasses.arrowIcon}>
+                    <div className={styles.arrowContainer}>
+                        <div className={styles.arrowIcon}>
                             <CurrentStopIndicator />
                         </div>
                     </div>
-                    <div className={styleClasses.currentStopContainer}>
+                    <div className={styles.currentStopContainer}>
                         <CurrentStopNameDisplay
                             stopZh={stops?.[currentStopIndex]?.zh}
                             stopEn={stops?.[currentStopIndex]?.en}

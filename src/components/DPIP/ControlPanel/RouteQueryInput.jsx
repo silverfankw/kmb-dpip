@@ -9,49 +9,153 @@ import { useSelector, useDispatch } from 'react-redux'
 import { selectRouteThunk } from "@store/routeSelectionSlice"
 import { getRouteTypeStyle } from "@utils"
 
-const separator = '｜'
-const specialTripKey = "＊ 特別班"
+const itemSeparator = '｜'
+const toSeparator = "往"
+
+const specialTripKey = "特別班"
 
 const styles = {
+    // Wrapper for each dropdown option
+    labelWrapper: {
+        display: "flex",
+        gap: "4px",
+        alignItems: "center",
+        fontSize: "18px",
+        fontWeight: 500,
+        minWidth: 0,
+    },
+    // Route label: column for Option, row for SingleValue
+    getRouteLabelStyle: type => ({
+        display: type === "Option" ? "inline-flex" : "flex",
+        flexDirection: type === "Option" ? "column" : "row",
+        gap: type === "Option" ? 0 : "4px",
+        width: type === "Option" ? "52px" : "fit-content",
+        alignItems: "center",
+        justifyContent: "center",
+        letterSpacing: "-0.25px",
+        minWidth: "52px",
+        position: "relative",
+    }),
+    // Special trip label
     specialTripLabel: {
-        marginLeft: "6px",
-        padding: "2px",
-        border: "1px solid rgba(255, 214, 0, 0.85)",
-        borderRadius: "2px",
-        backgroundColor: "rgba(255, 214, 0, 0.85)",
-        color: "#000"
+        marginTop: "2px",
+        fontSize: "12px",
+        padding: "2px 6px",
+        border: "1px solid rgba(8, 28, 81, 1)",
+        borderRadius: "4px",
+        backgroundColor: "rgba(255, 214, 0, 0.75)",
+        color: "#000",
+        lineHeight: 1.1,
+        maxWidth: "100%",
+        textAlign: "center",
+    },
+    // Terminus label (origin/destination)
+    terminusLabel: {
+        display: "inline-flex",
+        letterSpacing: "0.5px",
+        alignItems: "center",
+        gap: "10px",
+        minWidth: 0,
+        flex: 1,
+    },
+    // "往" label
+    toLabel: {
+        fontSize: "14px",
+        fontWeight: 400,
+    },
+    // react-select sx overrides
+    reactSelect: {
+        control: (base, state) => ({
+            ...base,
+            backgroundColor: "rgba(24, 27, 27, 0.5)",
+            color: "#fff",
+            borderColor: state.isFocused ? "#2563eb" : "#444",
+            boxShadow: state.isFocused ? "0 0 0 2px #2563eb" : base.boxShadow,
+            height: 42,
+        }),
+        menu: base => ({
+            ...base,
+            backgroundColor: "rgba(35, 39, 47, 0.85)",
+            color: "#fff",
+            zIndex: 9999,
+        }),
+        placeholder: base => ({
+            ...base,
+            color: "#777",
+            opacity: 1,
+        }),
+        option: (base, state) => ({
+            ...base,
+            backgroundColor: state.isFocused
+                ? "rgba(0, 0, 0, 1)"
+                : "rgba(32, 36, 38, 0.9)",
+            color: "#fff",
+        }),
+        input: base => ({
+            ...base,
+            color: "#fff",
+        }),
+        singleValue: base => ({
+            ...base,
+            color: "#fff",
+        }),
+        indicatorSeparator: (base, state) => ({
+            ...base,
+            backgroundColor: state.isFocused ? "#2563eb" : "#444"
+        }),
+        dropdownIndicator: (base, state) => ({
+            ...base,
+            color: state.isFocused ? "#00194f" : "#444",
+            "&:hover": { color: "#999" },
+        }),
+        clearIndicator: (base, state) => ({
+            ...base,
+            color: state.isFocused ? "#2563eb" : "#444",
+            "&:hover": { color: "#999" },
+        }),
     }
 }
 
 // Function to create async-select data structure from routes array for drop down option 
 const toRouteOption = route => ({
-    label: `${route.route}${separator} ${route.orig_tc} 往 ${route.dest_tc} ${separator}${route.service_type != 1 ? specialTripKey : ""}`,
+    label: `${route.route}${itemSeparator} ${route.orig_tc} ${toSeparator} ${route.dest_tc} ${itemSeparator}${route.service_type != 1 ? specialTripKey : ""}`,
     value: `${route.route}-${route.bound}-${route.service_type}`,
     detail: route,
 })
 
-const SpecialTripLabelRender = Component => {
+// Higher-order function to create styled route menu option component
+const getStyledRouteMenuOption = (Component, type) => {
     const Wrapped = props => {
+
         const { label } = props.data
-        const [routeLabel, terminusLabel, specialTripLabel] = label.split(separator)
+
+        const [routeLabel, terminusLabel, specialTripLabel] = label.split(itemSeparator)
         const routeStyle = useMemo(() => getRouteTypeStyle(routeLabel), [routeLabel])
+        const [originLabel, destinationLabel] = terminusLabel.split(toSeparator)
+
         return (
             <Component {...props}>
-                <span style={routeStyle}>
-                    {routeLabel}
-                </span>
-                {specialTripLabel?.includes(specialTripKey) && (
-                    <span style={styles.specialTripLabel}>
-                        {specialTripKey}
-                    </span>
-                )}
-                {separator}
-                {terminusLabel}
-                {separator}
+                <div style={styles.labelWrapper}>
+
+                    <div style={styles.getRouteLabelStyle(type)}>
+                        <span style={routeStyle}>{routeLabel}</span>
+                        {specialTripLabel?.includes(specialTripKey) && (
+                            <span style={styles.specialTripLabel}>{specialTripKey}</span>
+                        )}
+                    </div>
+
+                    <div style={styles.terminusLabel}>
+                        {itemSeparator}
+                        {originLabel}
+                        <span style={styles.toLabel}>{toSeparator}</span>
+                        {destinationLabel}
+                        {itemSeparator}
+                    </div>
+                </div>
             </Component>
         )
     }
-    Wrapped.displayName = `SpecialTripLabelRender(${Component.displayName || Component.name || "Component"})`
+    Wrapped.displayName = `getStyledRouteMenuOption(${type})`
     return Wrapped
 }
 
@@ -93,8 +197,8 @@ export const RouteQueryInput = () => {
     }
 
     // Memoize the styled dropdown option to prevent unnecessary render
-    const MemoizedOption = React.memo(SpecialTripLabelRender(components.Option))
-    const MemoizedSingleValue = React.memo(SpecialTripLabelRender(components.SingleValue))
+    const MemoizedOption = React.memo(getStyledRouteMenuOption(components.Option, "Option"))
+    const MemoizedSingleValue = React.memo(getStyledRouteMenuOption(components.SingleValue, "SingleValue"))
 
     return (
         <AsyncSelect
@@ -104,58 +208,7 @@ export const RouteQueryInput = () => {
             }}
             classNamePrefix="routeInputSelect"
             menuPortalTarget={document.body}
-            // menuPosition="fixed"
-            // menuPlacement="auto"
-            styles={{
-                control: (base, state) => ({
-                    ...base,
-                    backgroundColor: "rgba(24, 27, 27, 0.5)",
-                    color: "#fff",
-                    borderColor: state.isFocused ? "#2563eb" : "#444",
-                    boxShadow: state.isFocused ? "0 0 0 2px #2563eb" : base.boxShadow,
-                    height: 42,
-                }),
-                menu: base => ({
-                    ...base,
-                    backgroundColor: "rgba(35, 39, 47, 0.85)",
-                    color: "#fff",
-                    zIndex: 9999,
-                }),
-                placeholder: (base) => ({
-                    ...base,
-                    color: "#777",
-                    opacity: 1,
-                }),
-                option: (base, state) => ({
-                    ...base,
-                    backgroundColor: state.isFocused
-                        ? "rgba(0, 15, 15, 1)"
-                        : "rgba(20, 35, 40, 0.9)",
-                    color: "#fff",
-                }),
-                input: (base) => ({
-                    ...base,
-                    color: "#fff",
-                }),
-                singleValue: (base) => ({
-                    ...base,
-                    color: "#fff",
-                }),
-                indicatorSeparator: (base, state) => ({
-                    ...base,
-                    backgroundColor: state.isFocused ? "#2563eb" : "#444"
-                }),
-                dropdownIndicator: (base, state) => ({
-                    ...base,
-                    color: state.isFocused ? "#00194f" : "#444",
-                    "&:hover": { color: "#999" },
-                }),
-                clearIndicator: (base, state) => ({
-                    ...base,
-                    color: state.isFocused ? "#2563eb" : "#444",
-                    "&:hover": { color: "#999" },
-                }),
-            }}
+            styles={styles.reactSelect}
             autoFocus
             isClearable
             cacheOptions

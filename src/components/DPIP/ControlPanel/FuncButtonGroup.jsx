@@ -5,7 +5,7 @@ import { Button, Tooltip } from '@mui/material'
 import BadgeIcon from '@mui/icons-material/Badge'
 import FullscreenIcon from '@mui/icons-material/Fullscreen'
 
-const styleClasses = {
+const styles = {
     buttonLabel: "max-md:text-lg",
 }
 
@@ -83,25 +83,26 @@ export const FuncButtonGroup = ({ mainScreenTarget, secScreenTarget }) => {
                             )
                         }}
                     >
-                        <span className={styleClasses.buttonLabel}>更改車長資料</span>
+                        <span className={styles.buttonLabel}>更改車長資料</span>
                     </Button>
                 </span>
             </Tooltip >
             {
                 fullscreenBtnAttr.map(({ key, target, label }) => (
                     <Tooltip
-                        className={styleClasses.fullscreenTooltip}
+                        className={styles.fullscreenTooltip}
                         key={key}
                         arrow
                         placement="bottom-start"
-                        title={`選擇路線後才能開啟全螢幕顯示功能`}>
+                        title={`選擇路線後才能開啟全螢幕顯示功能`}
+                    >
                         <span>
                             <Button
-                                sx={getButtonSx("ochre")}
+                                sx={{ ...getButtonSx("ochre"), display: { xs: "none", md: "inline-block" } }}
                                 color="info"
                                 variant="contained"
                                 disabled={!isUserSelectedRoute}
-                                className={styleClasses.button}
+                                className={styles.button}
                                 startIcon={<FullscreenIcon />}
                                 onClick={() => {
                                     target.current.requestFullscreen()

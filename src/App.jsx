@@ -17,7 +17,7 @@ import {
 } from '@store/routeSelectionSlice'
 
 // Tailwind classes for layout
-const styleClasses = {
+const styles = {
 	rootContainer: "min-h-screen flex flex-col items-center",
 
 	contentContainer: [
@@ -96,12 +96,12 @@ const App = () => {
 		<>
 			<Background />
 			{/* rootContainer to footer to stick at bottom */}
-			<div className={styleClasses.rootContainer}>
-				<div className={styleClasses.contentContainer} tabIndex={1}>
+			<div className={styles.rootContainer}>
+				<div className={styles.contentContainer} tabIndex={1}>
 
 					{/* Query section for route input and selection */}
-					<section className={styleClasses.querySection}>
-						<div className={styleClasses.asyncSelectWrapper}>
+					<section className={styles.querySection}>
+						<div className={styles.asyncSelectWrapper}>
 							<SearchIcon
 								sx={{
 									color: "#999",
@@ -116,16 +116,16 @@ const App = () => {
 					</section>
 
 					{/* Control Panel with buttons and switches to control DPIP */}
-					<section className={styleClasses.controlPanelSection}>
+					<section className={styles.controlPanelSection}>
 						<ControlPanel
 							mainScreenTarget={mainScreenTarget}
 							secScreenTarget={secScreenTarget} />
 					</section>
 
 					{/* DPIP main screen with full details */}
-					<section className={styleClasses.screenPanelSection}>
-						<MainDisplayPanel monitorStyle={styleClasses.monitorStyle} screenTarget={mainScreenTarget} />
-						<AuxiliaryDisplayPanel monitorStyle={styleClasses.monitorStyle} screenTarget={secScreenTarget} />
+					<section className={styles.screenPanelSection}>
+						<MainDisplayPanel monitorStyle={styles.monitorStyle} screenTarget={mainScreenTarget} />
+						<AuxiliaryDisplayPanel monitorStyle={styles.monitorStyle} screenTarget={secScreenTarget} />
 					</section>
 				</div >
 

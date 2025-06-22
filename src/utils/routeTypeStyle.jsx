@@ -11,15 +11,13 @@ const routeTypeStyle = {
     airportOvernight: { backgroundColor: "#000000", color: "#DED702" },
     premier: { backgroundColor: "#E5B034" },
     shuttle: { backgroundColor: "#EB5136", color: "#0E2775" },
-    disneyRecreational: { backgroundColor: "#247DE2" },
+    disneyRecreational: { backgroundColor: "#146FD1" },
     r8: { backgroundColor: "#72C8E5", color: "#1C2EB5" },
     shared: {
-        fontSize: "18px",
         display: "inline-block",
         textAlign: "center",
         color: "#FFFFFF",   // default text color, will be replaced in setStyle func if required
-        padding: "1px",
-        width: "54px",
+        width: "52px",
         borderRadius: "2px",
         fontWeight: 700
     }
@@ -37,7 +35,8 @@ const routeTypeRules = [
     // Route that passed by Western Harbour Crossing:
     // With route prefix '9', followed by 2 subsequent digits, 
     // and an optional english letter at the end
-    { type: "whc", regex: /^9\d{2}[A-Z]?$/ },
+    // Excluding Sun Bus routes 917, 918 & 945
+    { type: "whc", regex: /^9(?!17|18|45$)\d{2}[A-Z]?$/ },
 
     // Overnight routes: with route prefix 'N' 
     // including late night 270S, 271S & 293S, rule excluding 'NA' routes

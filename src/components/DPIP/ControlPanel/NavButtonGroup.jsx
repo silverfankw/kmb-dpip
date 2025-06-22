@@ -14,7 +14,7 @@ import ArrowForwardIcon from '@mui/icons-material/ArrowForward'
 import RefreshIcon from '@mui/icons-material/Refresh'
 import CachedIcon from '@mui/icons-material/Cached'
 
-const styleClasses = {
+const styles = {
     buttonLabel: "max-md:text-lg",
 }
 
@@ -83,7 +83,7 @@ export const NavButtonGroup = () => {
                         onClick={() => dispatch(toPrevStop())}
                         disabled={!isPrevStopAvailable}
                     >
-                        <span className={styleClasses.buttonLabel}>上站</span>
+                        <span className={styles.buttonLabel}>上站</span>
                     </Button>
                 </span>
             </Tooltip>
@@ -97,7 +97,7 @@ export const NavButtonGroup = () => {
                         onClick={() => dispatch(toNextStop())}
                         disabled={!isNextStopAvailable}
                     >
-                        <span className={styleClasses.buttonLabel}>下站</span>
+                        <span className={styles.buttonLabel}>下站</span>
                     </Button>
                 </span>
             </Tooltip>
@@ -111,14 +111,14 @@ export const NavButtonGroup = () => {
                         onClick={() => dispatch(changeBoundThunk())}
                         disabled={(!isUserSelectedRoute || !routeHasTwoBound) || routeDetail?.service_type != 1}
                     >
-                        <span className={styleClasses.buttonLabel}>方向</span>
+                        <span className={styles.buttonLabel}>方向</span>
                     </Button>
                 </span>
             </Tooltip>
             <Tooltip arrow placement="bottom-start" title="重設至首站 鍵盤快捷鍵: 'HOME'">
                 <span>
                     <Button
-                        className={styleClasses.button}
+                        className={styles.button}
                         color="ochre"
                         variant="contained"
                         startIcon={<RefreshIcon />}
@@ -126,7 +126,7 @@ export const NavButtonGroup = () => {
                         onClick={() => dispatch(resetToFirstStop())}
                         disabled={!isUserSelectedRoute || currentStopIndex == 0}
                     >
-                        <span className={styleClasses.buttonLabel}>首站</span>
+                        <span className={styles.buttonLabel}>首站</span>
                     </Button>
                 </span>
             </Tooltip>

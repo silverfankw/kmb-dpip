@@ -2,9 +2,9 @@ import { useSelector } from "react-redux"
 import { TripleArrow } from "@components"
 
 // Tailwind CSS classes for the component
-const styleClasses = {
+const styles = {
     routeMarkerContainer: "text-center flex flex-col items-center basis-[10%]",
-    routeMarkerZh: "font-[500] max-sm:text-[4cqw] text-[4cqw] tracking-tighter ",
+    routeMarkerZh: "font-[500] max-sm:text-[4cqw] text-[4cqw] tracking-tighter",
     routeMarkerEn: "max-sm:text-[3cqw] text-[2.75cqw] tracking-tighter ",
     routeNumber: "font-[500] text-[6.5cqw] text-center tracking-tight basis-[17.5%]",
     arrowContainer: "flex justify-center basis-[10%] max-sm:basis-[2.5rem] max-xl:basis-[3.5rem]",
@@ -20,26 +20,26 @@ export const RouteDisplayHeading = () => {
     return (
         <>
             {/* Route Marker (Zh + En) */}
-            <div className={styleClasses.routeMarkerContainer}>
-                <div className={styleClasses.routeMarkerZh}>路線</div>
-                <div className={styleClasses.routeMarkerEn}>Route</div>
+            <div className={styles.routeMarkerContainer}>
+                <div className={styles.routeMarkerZh}>路線</div>
+                <div className={styles.routeMarkerEn}>Route</div>
             </div>
 
             {/* Exact Route */}
-            <div className={styleClasses.routeNumber}>
+            <div className={styles.routeNumber}>
                 {routeDetail.route}
             </div>
 
-            <div className={styleClasses.arrowContainer}>
+            <div className={styles.arrowContainer}>
                 <TripleArrow />
             </div>
 
             {/* Destination Name (Zh + En) */}
-            <div className={styleClasses.destContainer}>
-                <div className={styleClasses.destZh}>
+            <div className={styles.destContainer}>
+                <div className={styles.destZh}>
                     {routeDetail?.stops?.[lastStopIndex]?.zh}
                 </div>
-                <div className={styleClasses.destEn}>
+                <div className={styles.destEn}>
                     {routeDetail?.stops?.[lastStopIndex]?.en}
                 </div>
             </div>
