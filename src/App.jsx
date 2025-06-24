@@ -2,7 +2,7 @@ import { useTheme } from '@mui/material'
 import SearchIcon from '@mui/icons-material/Search'
 
 import {
-	Background, Footer, RouteQueryInput,
+	Background, Footer, RouteQueryInput, ErrorMessage,
 	ControlPanel, MainDisplayPanel, AuxiliaryDisplayPanel,
 } from '@components'
 
@@ -21,27 +21,26 @@ const styles = {
 	rootContainer: "min-h-screen flex flex-col items-center",
 
 	contentContainer: [
-		"flex-1",
 		"select-none focus:outline-hidden",
 		"p-[2rem] max-sm:p-2",
-		"flex flex-col",
-		"gap-3 max-sm:gap-2"
+		"flex flex-1 flex-col gap-3 ",
+		"max-sm:gap-2"
 	].join(" "),
 
 	querySection: [
 		"order-1 max-sm:order-2",
 		"flex gap-3 items-center justify-center",
-		"bg-[#18181b]/80 backdrop-blur-md shadow-2xl rounded-2xl",
+		"bg-[#18181b]/80 backdrop-blur-md shadow-2xl ",
 		"p-6 max-md:p-4 max-md:flex-col max-md:gap-2",
-		"border border-gray-600/90"
+		"border border-gray-600/90 rounded-2xl"
 	].join(" "),
 
 	controlPanelSection: [
 		"order-2 max-sm:order-3",
-		"flex flex-wrap justify-center gap-5",
-		"bg-[#18181b]/80 rounded-2xl shadow-lg",
+		"flex gap-5 flex-wrap justify-center",
+		"bg-[#18181b]/80 shadow-lg",
 		"p-6 w-full max-md:flex-col max-md:gap-4",
-		"border border-gray-600/90"
+		"border border-gray-600/90 rounded-2xl"
 	].join(" "),
 
 	screenPanelSection: [
@@ -54,6 +53,7 @@ const styles = {
 
 	monitorStyle: [
 		"w-[800px] h-[480px]",
+		// "w-[1200px] h-[400px]",
 		"max-xl:w-[700px] max-xl:h-[420px]",
 		"max-md:w-[600px] max-md:h-[360px]",
 		"max-sm:w-[400px] max-sm:h-[240px]",
@@ -75,7 +75,7 @@ const App = () => {
 		dispatch(fetchRouteThunk())
 	}, [dispatch])
 
-	const { isUserSelectedRoute } = useSelector(state => state.routeSelection)
+	const { isUserSelectedRoute, loadingError } = useSelector(state => state.routeSelection)
 
 	// Ref used for full screen function
 	const mainScreenTarget = useRef(null)
@@ -124,8 +124,12 @@ const App = () => {
 
 					{/* DPIP main screen with full details */}
 					<section className={styles.screenPanelSection}>
-						<MainDisplayPanel monitorStyle={styles.monitorStyle} screenTarget={mainScreenTarget} />
-						<AuxiliaryDisplayPanel monitorStyle={styles.monitorStyle} screenTarget={secScreenTarget} />
+						{loadingError ?
+							(<ErrorMessage error={loadingError} />) :
+							(<>
+								<MainDisplayPanel monitorStyle={styles.monitorStyle} screenTarget={mainScreenTarget} />
+								<AuxiliaryDisplayPanel monitorStyle={styles.monitorStyle} screenTarget={secScreenTarget} />
+							</>)}
 					</section>
 				</div >
 

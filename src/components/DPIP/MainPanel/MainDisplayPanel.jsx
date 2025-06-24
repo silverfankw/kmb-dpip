@@ -1,9 +1,10 @@
 import '@css/App.css'
 import { useEffect, useRef } from "react"
-import { useToggleDisplay } from "@hooks"
 import { useSelector } from "react-redux"
 import stringWidth from "string-width"
+import { useToggleDisplay } from "@hooks"
 
+import { LoadingSpinner } from '@components'
 import {
     RouteDisplayHeading,
     HoldHandrailNotice,
@@ -18,33 +19,116 @@ const stopNameInterval = 4500
 
 // --- Styles outside component ---
 const basestyles = {
-    parentGrid: "select-none grid grid-rows-[0.5fr_1.85fr_0.0375fr_1fr_0.125fr]",
-    nextStopIndicatorGrid: "@container col-start-1 col-end-2 flex flex-col text-center items-center justify-center",
-    nextStopIndicatorZh: "max-sm:text-[16cqw] text-[15cqw] mb-[-4px] font-[600]",
-    nextStopIndicatorEn: "max-sm:text-[9cqw] text-[7.5cqw] font-[400]",
-    routeHeadingGrid: "@container col-start-2 col-end-5 flex items-center pl-1 bg-black text-white",
-    stopProgressBarGrid: "@container col-start-1 col-end-5 bg-white",
-    stopProgressBarContainer: "relative top-[87.5%] font-[400] text-center tracking-tight",
-    dividerGrid: "col-start-1 col-end-5 bg-black",
-    stopNameGrid: "@container col-start-1 col-end-5 bg-white flex justify-center items-center",
-    stopNameZh: "font-[500] max-sm:text-[8.5cqw] max-md:text-[10cqw] text-[8cqw] whitespace-nowrap overflow-hidden",
-    stopNameEn: "text-center font-[500] max-sm:text-[4cqw] max-md:text-[5cqw] text-[5cqw]",
-    driverInfoGrid: "@container flex justify-center col-start-1 col-end-5 font-extralight text-white p-1",
-    driverInfoText: "text-[2cqw] max-md:text-[2.25cqw]",
+    parentGrid: [
+        "select-none",
+        "grid",
+        "grid-rows-[0.5fr_1.85fr_0.0375fr_1fr_0.125fr]"
+    ].join(" "),
+
+    nextStopIndicatorGrid: [
+        "@container",
+        "col-start-1 col-end-2",
+        "flex flex-col items-center justify-center",
+        "text-center",
+    ].join(" "),
+
+    nextStopIndicatorZh: [
+        "text-[15cqw]",
+        "mb-[-4px]",
+        "font-[600]",
+        "max-sm:text-[16cqw]",
+    ].join(" "),
+
+    nextStopIndicatorEn: [
+        "text-[7.5cqw]",
+        "max-sm:text-[9cqw]",
+        "font-[400]"
+    ].join(" "),
+
+    routeHeadingGrid: [
+        "@container",
+        "col-start-2 col-end-5",
+        "flex items-center",
+        "pl-1",
+        "bg-black text-white"
+    ].join(" "),
+
+    stopProgressBarGrid: [
+        "@container",
+        "col-start-1 col-end-5",
+        "bg-white"
+    ].join(" "),
+
+    stopProgressBarContainer: [
+        "h-full",
+        "font-[400]",
+        "text-center",
+        "tracking-tight"
+    ].join(" "),
+
+    dividerGrid: [
+        "col-start-1 col-end-5",
+        "bg-black"
+    ].join(" "),
+
+    stopNameGrid: [
+        "@container",
+        "col-start-1 col-end-5",
+        "bg-white",
+        "flex justify-center items-center"
+    ].join(" "),
+
+    stopNameZh: [
+        "font-[500]",
+        "text-[8cqw]",
+        "max-sm:text-[8.5cqw]",
+        "max-md:text-[10cqw]",
+        "whitespace-nowrap overflow-hidden"
+    ].join(" "),
+
+    stopNameEn: [
+        "text-center",
+        "font-[500]",
+        "text-[5cqw]",
+        "max-sm:text-[4cqw]",
+        "max-md:text-[5cqw]",
+    ].join(" "),
+
+    driverInfoGrid: [
+        "@container",
+        "flex justify-center",
+        "col-start-1 col-end-5",
+        "font-extralight",
+        "text-white",
+        "p-1"
+    ].join(" "),
+
+    driverInfoText: [
+        "text-[2cqw]",
+        "max-md:text-[2.25cqw]"
+    ].join(" "),
+
     capitalize: "capitalize",
+
     noticeZhOverrideStyle: "!text-[8cqw]",
-    noticeEnOverrideStyle: "!text-[3.75cqw]",
+
+    noticeEnOverrideStyle: "!text-[3.75cqw]"
 }
 
 // --- Helper for dynamic stop name font size ---
 const getClampTextStyle = (text) => {
     const visualLength = stringWidth(text || "")
-    return `clamp(2rem, ${Math.max(16 - visualLength * 0.45, 4.5)}cqw, 8.5cqw)`
+    return `clamp(2rem, ${Math.max(16 - visualLength * 0.45, 6.5)}cqw, 10cqw)`
 }
 
 export const MainDisplayPanel = ({ monitorStyle, screenTarget }) => {
 
-    const { routeDetail, currentStopIndex } = useSelector(state => state.routeSelection)
+    const {
+        routeDetail,
+        currentStopIndex,
+        isLoading,
+    } = useSelector(state => state.routeSelection)
+
     const {
         showHandrailNotice,
         showMindDoorNotice,
@@ -102,12 +186,13 @@ export const MainDisplayPanel = ({ monitorStyle, screenTarget }) => {
 
             {/* Progress Bar (only if stops exist) */}
             <div className={styles.stopProgressBarGrid}>
-                {routeDetail?.stops?.length > 0 && (
-                    <div className={styles.stopProgressBarContainer}>
-                        <StopFullProgressBar progressBarRef={fullProgressBarRef} />
-                        <StopCompactProgressBar progressBarRef={compactProgressBarRef} />
-                    </div>
-                )}
+                {isLoading ? (<LoadingSpinner />) :
+                    routeDetail?.stops?.length > 0 && (
+                        <div className={styles.stopProgressBarContainer}>
+                            <StopFullProgressBar progressBarRef={fullProgressBarRef} />
+                            <StopCompactProgressBar progressBarRef={compactProgressBarRef} />
+                        </div>
+                    )}
             </div>
 
             {/* Divider */}

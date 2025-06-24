@@ -3,10 +3,30 @@ import { useWindowWidth } from '@hooks/useWindowWidth'
 
 // Tailwind CSS style classes
 const styles = {
-    container: "@container font-[500] relative width-[95%] h-[75%] left-[1.5%] tracking-[-0.0625rem]",
-    zhStopName: "h-[12cqw] relative top-[2cqw] flex items-center",
-    enStopNameWrapper: "absolute top-[80%] whitespace-nowrap",
-    enStopName: "max-md:text-[4.25cqw] text-[4cqw]",
+    container: [
+        "@container",
+        "font-[500]",
+        "relative left-[1.5%]",
+        "w-[95%] h-[75%]",
+        "tracking-[-0.0625rem]"
+    ].join(" "),
+
+    zhStopName: [
+        "h-[12cqw]",
+        "relative top-[2cqw]",
+        "flex items-center"
+    ].join(" "),
+
+    enStopNameWrapper: [
+        "absolute",
+        "top-[80%]",
+        "whitespace-nowrap"
+    ].join(" "),
+
+    enStopName: [
+        "text-[4.5cqw]",
+        "max-md:text-[5cqw]"
+    ].join(" "),
 }
 
 const computeStopNameStyle = (stopName = "", lang = "en", windowWidth) => {
@@ -27,7 +47,9 @@ const computeStopNameStyle = (stopName = "", lang = "en", windowWidth) => {
 
     if (lang === "zh") {
         const visualLength = stringWidth(stopName)
-        return { fontSize: `clamp(7cqw, ${Math.max(20 - visualLength * 0.75, 7)}cqw, 11cqw)` }
+        return {
+            fontSize: `clamp(7cqw, ${Math.max(20 - visualLength * 0.75, 7)}cqw, 11cqw)`,
+        }
     }
 
     return {}

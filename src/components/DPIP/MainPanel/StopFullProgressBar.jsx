@@ -6,18 +6,79 @@ import { useFullProgressBarWindow } from "@hooks"
 const splitProgressBarCriteria = 32
 
 const styles = {
-    container: "@container line-container w-[93%] relative",
-    startLineContainer: "flex left-[1px] gap-[2px] absolute z-1",
-    startLineBar: "bg-[gray] w-[.2cqw] h-[2.5cqw] max-md:w-[.375cqw] max-md:h-[3.5cqw]",
-    progressBar: "@container line flex flex-row justify-evenly absolute left-1.5 w-full h-[1.5cqw] z-0",
-    bullet: "bullet w-[1.5cqw] h-[1.5cqw] bg-white border border-solid rounded-full relative z-1 shrink-0",
-    bulletPulse: "animate-bullet-pulse w-full h-full rounded-[50%] bg-white",
-    stopName: "stop-name text-black text-[1.75cqw] max-md:text-[2cqw] absolute top-[-3cqw] max-md:top-[-3.5cqw] left-1/2 -translate-x-[5%] -rotate-[65deg] origin-left whitespace-nowrap",
-    stopNameCurrent: "font-black",
-    stopNamePast: "!text-gray-300",
-    splitEllipsis: "absolute top-[-7cqw] right-[-3cqw] text-xl",
-    endLineContainer: "flex gap-[2px] relative justify-end w-[94.5%] max-md:w-[96%]",
-    endLineBar: "bg-[#FF0000] w-[.2cqw] h-[2.5cqw] max-md:w-[.375cqw] max-mx:h-[3.5cqw]",
+
+    refContainer: "h-full",
+    container: [
+        "line-container",
+        "@container flex",
+        "relative top-[87.5%]",
+        "w-[96.5%] h-[92%]"
+    ].join(" "),
+
+    startLineContainer: "flex gap-[2px] z-1",
+
+    endLineContainer: [
+        "flex gap-[2px] justify-end",
+        "relative",
+        "w-full",
+        "max-md:gap-[0.5px]"
+    ].join(" "),
+
+    progressBar: [
+        "@container line",
+        "flex flex-row justify-evenly",
+        "absolute left-1.5",
+        "w-[98%] h-[1.5cqw]",
+        "max-sm:w-[97%]",
+        "z-0"
+    ].join(" "),
+
+    bullet: [
+        "bullet relative",
+        "bg-white border border-solid rounded-full",
+        "w-[1.5cqw] h-[1.5cqw]",
+        "z-1 shrink-0"
+    ].join(" "),
+
+    bulletPulse: [
+        "animate-bullet-pulse",
+        "w-full h-full",
+        "rounded-[50%] bg-white"
+    ].join(" "),
+
+    startLineBar: [
+        "bg-[gray]",
+        "w-[.2cqw] h-[2.5cqw]",
+        "max-md:w-[.375cqw] max-md:h-[3.5cqw]"
+    ].join(" "),
+
+    endLineBar: [
+        "bg-[#FF0000]",
+        "w-[.2cqw] h-[2.5cqw]",
+        "max-md:w-[.375cqw] max-mx:h-[3.5cqw]"
+    ].join(" "),
+
+    stopName: [
+        "stop-name absolute",
+        "text-black text-[1.75cqw]",
+        "top-[-3cqw] left-1/2",
+        "-translate-x-[5%] -rotate-[65deg]",
+        "origin-left whitespace-nowrap",
+        "max-md:text-[2cqw] max-md:top-[-3.5cqw]"
+    ].join(" "),
+
+    stopNameCurrent: [
+        "font-black"
+    ].join(" "),
+
+    stopNamePast: [
+        "!text-gray-300"
+    ].join(" "),
+
+    splitEllipsis: [
+        "absolute text-xl",
+        "top-[-7cqw] right-[-3cqw]"
+    ].join(" ")
 }
 
 const StopBullet = ({ stop, i, currentStopIndex }) => {
@@ -42,7 +103,6 @@ const StopBullet = ({ stop, i, currentStopIndex }) => {
 
 export const StopFullProgressBar = ({ progressBarRef }) => {
 
-
     const { routeDetail, currentStopIndex, isUserSelectedRoute } = useSelector(state => state.routeSelection)
     const stopLength = routeDetail?.stops?.length ?? 0
 
@@ -62,7 +122,7 @@ export const StopFullProgressBar = ({ progressBarRef }) => {
     const showNonEndEllipsis = stopLength > rangeSize && windowEnd < stopLength
 
     return (
-        <div ref={progressBarRef}>
+        <div className={styles.refContainer} ref={progressBarRef}>
             <div className={styles.container}>
 
                 {/* Start of Progress Bar */}
@@ -93,16 +153,17 @@ export const StopFullProgressBar = ({ progressBarRef }) => {
                         <div className={styles.splitEllipsis}>...</div>
                     )}
                 </div>
+
+                {/* End of Progress Bar */}
+                {isUserSelectedRoute && windowEnd === stopLength && (
+                    <div className={styles.endLineContainer}>
+                        {[...Array(2)].map((_, idx) => (
+                            <div key={idx} className={styles.endLineBar}></div>
+                        ))}
+                    </div>
+                )}
             </div>
 
-            {/* End of Progress Bar */}
-            {isUserSelectedRoute && windowEnd === stopLength && (
-                <div className={styles.endLineContainer}>
-                    {[...Array(2)].map((_, idx) => (
-                        <div key={idx} className={styles.endLineBar}></div>
-                    ))}
-                </div>
-            )}
         </div>
     )
 }

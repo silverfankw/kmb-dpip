@@ -3,14 +3,66 @@ import { TripleArrow } from "@components"
 
 // Tailwind CSS classes for the component
 const styles = {
-    routeMarkerContainer: "text-center flex flex-col items-center basis-[10%]",
-    routeMarkerZh: "font-[500] max-sm:text-[4cqw] text-[4cqw] tracking-tighter",
-    routeMarkerEn: "max-sm:text-[3cqw] text-[2.75cqw] tracking-tighter ",
-    routeNumber: "font-[500] text-[6.5cqw] text-center tracking-tight basis-[17.5%]",
-    arrowContainer: "flex justify-center basis-[10%] max-sm:basis-[2.5rem] max-xl:basis-[3.5rem]",
-    destContainer: "flex flex-col pl-[0.5rem]",
-    destZh: "max-sm:text-[5cqw] max-md:text-[4.5cqw] text-[4.5cqw] font-[500] whitespace-nowrap",
-    destEn: "max-sm:text-[2.5cqw] max-md-[2.25cqw] text-[2.25cqw] font-[500] text-sm whitespace-nowrap",
+    routeMarkerContainer: [
+        "flex flex-col",
+        "basis-[10%]",
+        "text-center",
+        "items-center"
+    ].join(" "),
+
+    routeMarkerZh: [
+        "font-[500]",
+        "tracking-tighter",
+        "text-[4cqw]",
+        "max-sm:text-[4cqw]"
+    ].join(" "),
+
+    routeMarkerEn: [
+        "tracking-tighter",
+        "text-[2.75cqw]",
+        "max-sm:text-[3cqw]"
+    ].join(" "),
+
+
+    routeNumber: [
+        "basis-[17.5%]",
+        "font-[500]",
+        "text-[6.5cqw]",
+        "text-center",
+        "tracking-tight"
+    ].join(" "),
+
+
+    arrowContainer: [
+        "flex",
+        "basis-[10%]",
+        "max-xl:basis-[3.5rem]",
+        "max-sm:basis-[2.5rem]",
+        "justify-center"
+    ].join(" "),
+
+
+    destContainer: [
+        "flex flex-col",
+        "pl-[0.5rem]"
+    ].join(" "),
+
+    destZh: [
+        "font-[500]",
+        "whitespace-nowrap",
+        "text-[4.5cqw]",
+        "max-md:text-[4.5cqw]",
+        "max-sm:text-[5cqw]"
+    ].join(" "),
+
+    destEn: [
+        "font-[500]",
+        "text-sm",
+        "whitespace-nowrap",
+        "text-[2.25cqw]",
+        "max-md-[2.25cqw]",
+        "max-sm:text-[2.5cqw]"
+    ].join(" ")
 }
 
 export const RouteDisplayHeading = () => {

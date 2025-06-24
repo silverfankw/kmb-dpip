@@ -7,14 +7,20 @@ import {
     CurrentStopNameDisplay,
     UpcomingStopNameDisplay,
     CurrentStopIndicator
-} from '../'
+} from '@components'
 
 // Tailwind Styles for the layout
 const styles = {
-    parentGrid: "select-none grid grid-cols-[10fr_90fr] grid-rows-[3.25fr_0.025fr_2fr_0.025fr_2fr]",
+    parentGrid: [
+        "select-none",
+        "grid",
+        "grid-cols-[10fr_90fr]",
+        "grid-rows-[3.25fr_0.025fr_2fr_0.025fr_2fr]"
+    ].join(" "),
+
     arrowContainer: "@container text-center bg-[#FF0000]",
     arrowIcon: "mt-[0.5rem] justify-center",
-    currentStopContainer: "flex flex-col bg-white",
+    currentStopContainer: "flex flex-col bg-white"
 }
 
 export const AuxiliaryDisplayPanel = ({ monitorStyle, screenTarget }) => {

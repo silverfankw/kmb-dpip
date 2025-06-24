@@ -2,20 +2,64 @@ import stringWidth from "string-width"
 import { useWindowWidth } from '@hooks/useWindowWidth'
 
 const styles = {
-    divider: "col-start-1 col-end-5 bg-[#f7f6f6c5]",
-    stopIndicatorContainer: "@container flex flex-col items-center justify-center bg-[#FF0000]",
-    stopIndicator: "inline-block rounded-[50%] bg-white w-[65cqw] h-[65cqw]",
-    stopNameContainer: "@container relative flex flex-col bg-white tracking-[-0.0375rem]",
-    stopNameContent: "@container font-[500] relative flex flex-col left-[1.5%] h-[90%] whitespace-nowrap",
-    zhStopName: "relative max-md:top-[0.25cqw] top-[0.375cqw]",
-    enStopName: "absolute top-[72%] max-sm:text-[3.75cqw] sm:max-md:text-[3.5cqw] md:max-xl:text-[3.25cqw] text-[3.25cqw]",
+    divider: [
+        "col-start-1",
+        "col-end-5",
+        "bg-[#f7f6f6c5]"
+    ].join(" "),
+
+    stopIndicatorContainer: [
+        "@container",
+        "flex flex-col justify-center items-center",
+        "bg-[#FF0000]"
+    ].join(" "),
+
+    stopIndicator: [
+        "inline-block",
+        "rounded-[50%]",
+        "bg-white",
+        "w-[65cqw] h-[65cqw]"
+    ].join(" "),
+
+    stopNameContainer: [
+        "@container",
+        "relative",
+        "flex flex-col",
+        "bg-white",
+        "tracking-[-0.0375rem]"
+    ].join(" "),
+
+    stopNameContent: [
+        "@container",
+        "font-[500]",
+        "relative left-[1.5%]",
+        "flex flex-col",
+        "h-[90%]",
+        "whitespace-nowrap"
+    ].join(" "),
+
+    zhStopName: [
+        "relative",
+        "justify-center",
+        "max-md:top-[0.25cqw]",
+    ].join(" "),
+
+    enStopName: [
+        "justify-center",
+        "absolute top-[72.5%]",
+        "text-[3.5cqw]",
+        "max-sm:text-[3.75cqw]",
+        "sm:max-md:text-[3.5cqw]",
+        "md:max-xl:text-[3.25cqw]",
+    ].join(" ")
 }
 
 const getStopNameFontStyle = (text, lang, windowWidth) => {
     if (lang === "zh") {
         const visualLength = stringWidth(text || "")
         return {
-            fontSize: `clamp(7cqw, ${Math.max(18 - visualLength * 0.8, 7)}cqw, 8cqw)`
+            fontSize: `clamp(6.8cqw, ${Math.max(18 - visualLength * 0.8, 6.8)}cqw, 8cqw)`,
+            marginTop: `${visualLength >= 14 ? visualLength * 0.01 : 0}cqh`,
         }
     }
     else if (lang === "en") {

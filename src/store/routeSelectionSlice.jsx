@@ -7,6 +7,8 @@ const initialState = {
     lastStopIndex: 0,
     isUserSelectedRoute: false,
     routeHasTwoBound: false,
+    isLoading: false,
+    loadingError: null
 }
 
 export const selectIsPrevStopAvailable = state => state.routeSelection.currentStopIndex > 0
@@ -16,30 +18,46 @@ export const selectIsNextStopAvailable = state => state.routeSelection.currentSt
 export const selectRouteThunk = createAsyncThunk(
     'routeSelection/selectRoute',
     async ({ routeDetail, routes }, { dispatch }) => {
-        const { route, bound, service_type, orig_tc, orig_en, dest_tc, dest_en } = routeDetail
+        dispatch(setIsLoading(true))
+        dispatch(setLoadingError(null))
 
-        // Check if the route has both inbound and outbound
-        const hasTwoBound =
-            routes.some(r => r.bound === "I" && r.route === route) &&
-            routes.some(r => r.bound === "O" && r.route === route)
-        dispatch(setRouteHasTwoBound(hasTwoBound))
+        try {
+            const { route, bound, service_type, orig_tc, orig_en, dest_tc, dest_en } = routeDetail
 
-        const normalizedBound = bound === "I" || bound === "inbound" ? "inbound" : "outbound"
-        const stopIDs = await fetchStopIDs(route, normalizedBound, service_type)
-        const routeAllStops = await fetchAllStops(stopIDs)
+            // Check if the route has both inbound and outbound
+            const hasTwoBound =
+                routes.some(r => r.bound === "I" && r.route === route) &&
+                routes.some(r => r.bound === "O" && r.route === route)
+            dispatch(setRouteHasTwoBound(hasTwoBound))
 
-        dispatch(setCurrentStopIndex(0))
-        dispatch(setRouteDetail({
-            route,
-            bound: normalizedBound,
-            stops: routeAllStops,
-            orig_tc,
-            orig_en,
-            dest_tc,
-            dest_en,
-            service_type,
-        }))
-        dispatch(setIsUserSelectedRoute(true))
+            // Normalize bound to "inbound" or "outbound"
+            const normalizedBound = bound === "I" || bound === "inbound" ? "inbound" : "outbound"
+
+            // Fetch stopIDs for the selected route and bound
+            const stopIDs = await fetchStopIDs(route, normalizedBound, service_type)
+
+            // Fetch all stop details for the selected route
+            const routeAllStops = await fetchAllStops(stopIDs)
+
+            dispatch(setCurrentStopIndex(0))
+            dispatch(setRouteDetail({
+                route,
+                bound: normalizedBound,
+                stops: routeAllStops,
+                orig_tc,
+                orig_en,
+                dest_tc,
+                dest_en,
+                service_type,
+            }))
+            dispatch(setIsUserSelectedRoute(true))
+        }
+        catch (error) {
+            dispatch(setLoadingError(error.message))
+        }
+        finally {
+            dispatch(setIsLoading(false))
+        }
     }
 )
 
@@ -98,6 +116,12 @@ const routeSelectionSlice = createSlice({
         setRouteHasTwoBound(state, action) {
             state.routeHasTwoBound = action.payload
         },
+        setIsLoading: (state, action) => {
+            state.isLoading = action.payload
+        },
+        setLoadingError: (state, action) => {
+            state.loadingError = action.payload
+        },
     },
 
 })
@@ -110,6 +134,8 @@ export const {
     resetToFirstStop,
     setIsUserSelectedRoute,
     setRouteHasTwoBound,
+    setIsLoading,
+    setLoadingError
 } = routeSelectionSlice.actions
 
 export default routeSelectionSlice.reducer
