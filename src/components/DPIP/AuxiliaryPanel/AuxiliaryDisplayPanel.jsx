@@ -1,4 +1,4 @@
-import '@css/App.css'
+import '@styles/App.css'
 import { useSelector } from 'react-redux'
 
 import {

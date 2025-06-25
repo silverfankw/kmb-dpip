@@ -22,7 +22,7 @@ export const selectRouteThunk = createAsyncThunk(
         dispatch(setLoadingError(null))
 
         try {
-            const { route, bound, service_type, orig_tc, orig_en, dest_tc, dest_en } = routeDetail
+            const { route, bound, service_type, orig_tc, orig_en, dest_tc, dest_en, specialRemark } = routeDetail
 
             // Check if the route has both inbound and outbound
             const hasTwoBound =
@@ -49,6 +49,7 @@ export const selectRouteThunk = createAsyncThunk(
                 dest_tc,
                 dest_en,
                 service_type,
+                specialRemark,
             }))
             dispatch(setIsUserSelectedRoute(true))
         }
@@ -65,7 +66,7 @@ export const changeBoundThunk = createAsyncThunk(
     'routeSelection/changeBound',
     async (_, { getState, dispatch }) => {
         const routeSelection = getState().routeSelection
-        const routes = getState().routes
+        const routes = getState().route.routes
 
         const { routeDetail, routeHasTwoBound, isUserSelectedRoute } = routeSelection
 

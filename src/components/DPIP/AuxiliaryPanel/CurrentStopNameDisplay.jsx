@@ -1,5 +1,5 @@
 import stringWidth from "string-width"
-import { useWindowWidth } from '@hooks/useWindowWidth'
+import { useWindowSize } from '@hooks/useWindowSize'
 
 // Tailwind CSS style classes
 const styles = {
@@ -29,11 +29,11 @@ const styles = {
     ].join(" "),
 }
 
-const computeStopNameStyle = (stopName = "", lang = "en", windowWidth) => {
+const computeStopNameStyle = (stopName = "", lang = "en", windowSize) => {
     if (!stopName) return {}
 
     if (lang === "en") {
-        const enFontEmRatio = windowWidth < 640 ? 1.8 : windowWidth < 768 ? 1.625 : 1.75
+        const enFontEmRatio = windowSize < 640 ? 1.8 : windowSize < 768 ? 1.625 : 1.75
         const stopNameFullLen = stopName.length
 
         if (stopNameFullLen >= 34) {
@@ -56,7 +56,7 @@ const computeStopNameStyle = (stopName = "", lang = "en", windowWidth) => {
 }
 
 export const CurrentStopNameDisplay = ({ stopZh = "", stopEn = "" }) => {
-    const windowWidth = useWindowWidth()
+    const { windowSize } = useWindowSize()
 
     return (
         <div className={styles.container}>
@@ -69,7 +69,7 @@ export const CurrentStopNameDisplay = ({ stopZh = "", stopEn = "" }) => {
             <div className={styles.enStopNameWrapper}>
                 <span
                     className={styles.enStopName}
-                    style={computeStopNameStyle(stopEn, "en", windowWidth)}
+                    style={computeStopNameStyle(stopEn, "en", windowSize)}
                 >
                     {stopEn}
                 </span>

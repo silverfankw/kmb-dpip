@@ -1,5 +1,5 @@
 import stringWidth from "string-width"
-import { useWindowWidth } from '@hooks/useWindowWidth'
+import { useWindowSize } from '@hooks/useWindowSize'
 
 const styles = {
     divider: [
@@ -54,7 +54,7 @@ const styles = {
     ].join(" ")
 }
 
-const getStopNameFontStyle = (text, lang, windowWidth) => {
+const getStopNameFontStyle = (text, lang, windowSize) => {
     if (lang === "zh") {
         const visualLength = stringWidth(text || "")
         return {
@@ -63,7 +63,7 @@ const getStopNameFontStyle = (text, lang, windowWidth) => {
         }
     }
     else if (lang === "en") {
-        const enFontEmRatio = windowWidth < 768 ? 4 : windowWidth < 1280 ? 3.75 : 3.5
+        const enFontEmRatio = windowSize < 768 ? 4 : windowSize < 1280 ? 3.75 : 3.5
         const stopNameLen = text?.length ?? 0
         if (stopNameLen >= 45) {
             return {
@@ -76,7 +76,7 @@ const getStopNameFontStyle = (text, lang, windowWidth) => {
 }
 
 export const UpcomingStopNameDisplay = ({ stopZh = "", stopEn = "" }) => {
-    const windowWidth = useWindowWidth()
+    const { windowSize } = useWindowSize()
 
     return (
         <>
@@ -101,7 +101,7 @@ export const UpcomingStopNameDisplay = ({ stopZh = "", stopEn = "" }) => {
                     </div>
                     <span
                         className={styles.enStopName}
-                        style={getStopNameFontStyle(stopEn, "en", windowWidth)}
+                        style={getStopNameFontStyle(stopEn, "en", windowSize)}
                     >
                         {stopEn}
                     </span>

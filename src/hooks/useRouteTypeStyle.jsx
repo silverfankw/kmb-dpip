@@ -1,6 +1,7 @@
-const styleCache = new Map()
+import { useMemo } from 'react'
+import { useWindowSize } from "@hooks"
 
-const routeTypeStyle = {
+const routeTypeColors = {
     regular: {},
     xhtEhc: { backgroundColor: "#CF0001" },
     marathon: { backgroundColor: "#CF0001" },
@@ -13,14 +14,7 @@ const routeTypeStyle = {
     shuttle: { backgroundColor: "#EB5136", color: "#0E2775" },
     disneyRecreational: { backgroundColor: "#146FD1" },
     r8: { backgroundColor: "#72C8E5", color: "#1C2EB5" },
-    shared: {
-        display: "inline-block",
-        textAlign: "center",
-        color: "#FFFFFF",   // default text color, will be replaced in setStyle func if required
-        width: "52px",
-        borderRadius: "2px",
-        fontWeight: 700
-    }
+    awe: { backgroundColor: "#6F2F9F" },
 }
 
 const routeTypeRules = [
@@ -67,16 +61,57 @@ const routeTypeRules = [
     // Special service route only for Marathon participants,
     // With route prefix R, and followed by its original route number
     { type: "marathon", regex: /^R(108|603|673|678|680|934|936|948|960|961|968)$/i },
+
+    // AsiaWorld-Expo event route with route prefix 'X'
+    // Only X33, X36, X40, X43, X47
+    { type: "awe", regex: /^X(33|36|40|43|47)$/i },
 ]
 
-export const getRouteTypeStyle = route => {
+export const useRouteTypeStyle = () => {
+    const { isMobile } = useWindowSize()
 
-    if (styleCache.has(route)) {
-        return styleCache.get(route)
-    }
+    const getSizeCategory = useMemo(() => {
+        if (isMobile) return 'mobile'
+        return 'desktop'
+    }, [isMobile])
 
-    const styleResult = routeTypeRules.find(rule => rule.regex.test(route))
-    const style = { ...routeTypeStyle.shared, ...routeTypeStyle[styleResult?.type ?? "regular"] }
-    styleCache.set(route, style)
-    return style
+    const sharedStyle = useMemo(() => ({
+        display: "inline-block",
+        textAlign: "center",
+        color: "#FFFFFF",
+        width: isMobile ? "42px" : "52px",
+        borderRadius: "2px",
+        fontWeight: 700
+    }), [isMobile])
+
+    const routeTypeStyle = useMemo(() => ({
+        ...routeTypeColors,
+        shared: sharedStyle
+    }), [sharedStyle])
+
+    // Memoize the style cache
+    const styleCache = useMemo(() => new Map(), [])
+
+    // Memoize the getStyle function
+    const getStyle = useMemo(() => {
+        return (route) => {
+
+            const cacheKey = `${route}-${getSizeCategory}`
+
+            if (styleCache.has(cacheKey)) {
+                return styleCache.get(cacheKey)
+            }
+
+            const styleResult = routeTypeRules.find(rule => rule.regex.test(route))
+            const style = {
+                ...routeTypeStyle.shared,
+                ...routeTypeStyle[styleResult?.type ?? "regular"]
+            }
+
+            styleCache.set(route, style)
+            return style
+        }
+    }, [routeTypeStyle, styleCache, getSizeCategory])
+
+    return getStyle
 }

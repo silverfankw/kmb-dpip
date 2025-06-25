@@ -1,4 +1,4 @@
-import '@css/App.css'
+import '@styles/App.css'
 import { useEffect, useRef } from "react"
 import { useSelector } from "react-redux"
 import stringWidth from "string-width"
@@ -14,7 +14,7 @@ import {
 } from '@components/DPIP'
 
 // --- Constants ---
-const progressBarInterval = 11000
+const progressBarInterval = 1100000
 const stopNameInterval = 4500
 
 // --- Styles outside component ---

@@ -1,4 +1,4 @@
-import "@css/animation.css"
+import "@styles/animation.css"
 import { useEffect, useRef, useState } from "react"
 import { useSelector } from "react-redux"
 

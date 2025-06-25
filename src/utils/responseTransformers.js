@@ -24,3 +24,17 @@ export const transformStopDetail = (apiResponse) => {
         // stopId: extractStopId(nameEn)
     }
 }
+
+// Converts between KMB bound formats (I/O <-> 1/2)
+export const convertBound = (bound, toFormat = 'number') => {
+    if (!bound) return bound
+
+    const conversions = {
+        'number': { 'O': '1', 'I': '2' },
+        'letter': { '1': 'O', '2': 'I' }
+    }
+
+    return conversions[toFormat]?.[bound] || bound
+}
+
+export const removeLeadingZero = str => str ? String(parseInt(str, 10)) : str

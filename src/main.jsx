@@ -8,7 +8,7 @@ import { store } from '@store'
 import { theme } from '@theme'
 
 import App from './App.jsx'
-import '@css/index.css'
+import '@styles/index.css'
 
 // // Redux state log to validate redux state for each change
 // store.subscribe(() => {

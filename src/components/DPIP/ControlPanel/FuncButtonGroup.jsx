@@ -1,3 +1,5 @@
+import { useButtonStyles } from "@styles/buttonStyle"
+
 import { useSelector, useDispatch } from 'react-redux'
 import { setCustomizeDriverInfoToggle } from "@store/userPreferenceSlice"
 
@@ -5,48 +7,6 @@ import { Button, Tooltip } from '@mui/material'
 import BadgeIcon from '@mui/icons-material/Badge'
 import FullscreenIcon from '@mui/icons-material/Fullscreen'
 
-const styles = {
-    buttonLabel: "max-md:text-lg",
-}
-
-const getButtonSx = theme => {
-    return {
-        borderRadius: 2, // 16px
-        boxShadow: '0 2px 8px 0 rgba(0,0,0,0.10)',
-        fontWeight: 600,
-        fontSize: { xs: '1.1rem', md: '1rem' },
-        height: { xs: "64px", md: "48px" },
-        px: 3,
-        py: 1,
-        textTransform: 'none',
-        transition: 'box-shadow 0.2s, filter 0.15s, transform 0.15s, outline 0.15s',
-        outline: 'none',
-        '&:hover': {
-            boxShadow: '0 6px 24px 0 rgba(37,99,235,0.18)',
-            filter: 'brightness(1.08)',
-            transform: 'translateY(-2px) scale(1.04)',
-            outline: `2.5px solid ${theme}.dark`,
-            outlineOffset: '1px',
-        },
-        '&:focus-visible': {
-            outline: '2.5px solid #2563eb',
-            outlineOffset: '1px',
-        },
-        '&:active': {
-            boxShadow: '0 1px 4px 0 rgba(0,0,0,0.12)',
-            filter: 'brightness(0.97)',
-            transform: 'scale(0.98)',
-        },
-        '&.Mui-disabled': {
-            backgroundColor: '#2d2b2b !important',
-            color: '#595555 !important',
-            boxShadow: 'none',
-            opacity: 1,
-            border: '1px solid #2d2b2b',
-            cursor: 'not-allowed',
-        },
-    }
-}
 
 export const FuncButtonGroup = ({ mainScreenTarget, secScreenTarget }) => {
 
@@ -54,6 +14,7 @@ export const FuncButtonGroup = ({ mainScreenTarget, secScreenTarget }) => {
     const { customizeDriverInfoToggle } = useSelector(state => state.userPreference)
 
     const dispatch = useDispatch()
+    const styles = useButtonStyles("info")
 
     const fullscreenBtnAttr = [
         {
@@ -73,7 +34,7 @@ export const FuncButtonGroup = ({ mainScreenTarget, secScreenTarget }) => {
             <Tooltip arrow placement="bottom-start" title="自定義車長資料顯示">
                 <span>
                     <Button
-                        sx={getButtonSx("ochre")}
+                        sx={styles.button}
                         color="ochre"
                         variant="contained"
                         startIcon={<BadgeIcon />}
@@ -83,7 +44,7 @@ export const FuncButtonGroup = ({ mainScreenTarget, secScreenTarget }) => {
                             )
                         }}
                     >
-                        <span className={styles.buttonLabel}>更改車長資料</span>
+                        <span className={styles.label}>更改車長資料</span>
                     </Button>
                 </span>
             </Tooltip >
@@ -98,7 +59,7 @@ export const FuncButtonGroup = ({ mainScreenTarget, secScreenTarget }) => {
                     >
                         <span>
                             <Button
-                                sx={{ ...getButtonSx("ochre"), display: { xs: "none", md: "inline-block" } }}
+                                sx={{ ...styles.button, display: { xs: "none", md: "inline-block" } }}
                                 color="info"
                                 variant="contained"
                                 disabled={!isUserSelectedRoute}

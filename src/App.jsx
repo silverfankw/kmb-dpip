@@ -10,7 +10,7 @@ import { useRef, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { useKeyboardNavigation } from "@hooks"
 
-import { fetchRouteThunk } from "@store/routesSlice"
+import { getRoutesThunk } from "@store/routeSlice"
 import {
 	changeBoundThunk,
 	setCurrentStopIndex, toPrevStop, toNextStop
@@ -72,7 +72,7 @@ const App = () => {
 
 	// Get routeList from API by executeing fetch route from Redux thunk
 	useEffect(() => {
-		dispatch(fetchRouteThunk())
+		dispatch(getRoutesThunk())
 	}, [dispatch])
 
 	const { isUserSelectedRoute, loadingError } = useSelector(state => state.routeSelection)

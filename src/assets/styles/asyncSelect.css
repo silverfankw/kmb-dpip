@@ -2,6 +2,12 @@
     text-transform: uppercase;
 }
 
+@media (max-width: 768px) {
+    .routeInputSelect__menu {
+        max-height: 50vh !important;
+    }
+}
+
 .routeInputSelect__placeholder {
     @media (max-width: 640px) {
         font-size: 0.85rem;

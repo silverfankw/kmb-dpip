@@ -1,67 +1,25 @@
-import "@css/asyncSelect.css"
+import "@styles/asyncSelect.css"
+import debounce from 'lodash/debounce'
 
 import React from "react"
-import { useCallback, useMemo, useState } from "react"
+import { useCallback, useMemo, useState, useRef, useEffect } from "react"
 import AsyncSelect from 'react-select/async'
 import { components } from 'react-select'
 
 import { useSelector, useDispatch } from 'react-redux'
 import { selectRouteThunk } from "@store/routeSelectionSlice"
-import { getRouteTypeStyle } from "@utils"
-
-const itemSeparator = '｜'
-const toSeparator = "往"
-
-const specialTripKey = "特別班"
+import { useWindowSize } from "@hooks"
+import { RouteNumber, RouteDetails } from '@components'
+import { itemSeparator, toSeparator, specialTripKey } from "@utils"
 
 const styles = {
-    // Wrapper for each dropdown option
     labelWrapper: {
         display: "flex",
-        gap: "4px",
+        gap: "1.5px",
         alignItems: "center",
-        fontSize: "18px",
+        fontSize: window.innerWidth <= 768 ? "14px" : "18px",
         fontWeight: 500,
         minWidth: 0,
-    },
-    // Route label: column for Option, row for SingleValue
-    getRouteLabelStyle: type => ({
-        display: type === "Option" ? "inline-flex" : "flex",
-        flexDirection: type === "Option" ? "column" : "row",
-        gap: type === "Option" ? 0 : "4px",
-        width: type === "Option" ? "52px" : "fit-content",
-        alignItems: "center",
-        justifyContent: "center",
-        letterSpacing: "-0.25px",
-        minWidth: "52px",
-        position: "relative",
-    }),
-    // Special trip label
-    specialTripLabel: {
-        marginTop: "2px",
-        fontSize: "12px",
-        padding: "2px 6px",
-        border: "1px solid rgba(8, 28, 81, 1)",
-        borderRadius: "4px",
-        backgroundColor: "rgba(255, 214, 0, 0.75)",
-        color: "#000",
-        lineHeight: 1.1,
-        maxWidth: "100%",
-        textAlign: "center",
-    },
-    // Terminus label (origin/destination)
-    terminusLabel: {
-        display: "inline-flex",
-        letterSpacing: "0.5px",
-        alignItems: "center",
-        gap: "10px",
-        minWidth: 0,
-        flex: 1,
-    },
-    // "往" label
-    toLabel: {
-        fontSize: "14px",
-        fontWeight: 400,
     },
     // react-select sx overrides
     reactSelect: {
@@ -71,13 +29,15 @@ const styles = {
             color: "#fff",
             borderColor: state.isFocused ? "#2563eb" : "#444",
             boxShadow: state.isFocused ? "0 0 0 2px #2563eb" : base.boxShadow,
-            height: 42,
+            height: window.innerWidth <= 768 ? 36 : 42,
+            minHeight: window.innerWidth <= 768 ? 36 : 42,
         }),
         menu: base => ({
             ...base,
             backgroundColor: "rgba(35, 39, 47, 0.85)",
             color: "#fff",
             zIndex: 9999,
+            fontSize: window.innerWidth <= 768 ? "14px" : base.fontSize,
         }),
         placeholder: base => ({
             ...base,
@@ -118,87 +78,158 @@ const styles = {
 
 // Function to create async-select data structure from routes array for drop down option 
 const toRouteOption = route => ({
-    label: `${route.route}${itemSeparator} ${route.orig_tc} ${toSeparator} ${route.dest_tc} ${itemSeparator}${route.service_type != 1 ? specialTripKey : ""}`,
+    label: `${route.route}${itemSeparator} ${route.orig_tc} ${toSeparator} ${route.dest_tc} ${itemSeparator}${route.service_type != 1 ? specialTripKey : ""}${itemSeparator}${route.specialRemark ?? ""}`,
     value: `${route.route}-${route.bound}-${route.service_type}`,
     detail: route,
 })
 
-// Higher-order function to create styled route menu option component
-const getStyledRouteMenuOption = (Component, type) => {
-    const Wrapped = props => {
+const StyledRouteOption = ({ componentType, data, ...props }) => {
+    const { isMobile } = useWindowSize()
 
-        const { label } = props.data
+    const { label } = data
+    const [routeLabel, terminusLabel, specialTripLabel, specialRemarkLabel = ''] = label.split(itemSeparator)
+    const [originLabel, destinationLabel] = terminusLabel.split(toSeparator)
 
-        const [routeLabel, terminusLabel, specialTripLabel] = label.split(itemSeparator)
-        const routeStyle = useMemo(() => getRouteTypeStyle(routeLabel), [routeLabel])
-        const [originLabel, destinationLabel] = terminusLabel.split(toSeparator)
+    const WrappedComponent = componentType === 'Option' ? components.Option : components.SingleValue
 
-        return (
-            <Component {...props}>
-                <div style={styles.labelWrapper}>
+    const responsiveStyle = useMemo(() => ({
+        ...styles.labelWrapper,
+        fontSize: isMobile ? "14px" : "18px",
+        gap: isMobile ? "2px" : "4px"
+    }), [isMobile])
 
-                    <div style={styles.getRouteLabelStyle(type)}>
-                        <span style={routeStyle}>{routeLabel}</span>
-                        {specialTripLabel?.includes(specialTripKey) && (
-                            <span style={styles.specialTripLabel}>{specialTripKey}</span>
-                        )}
-                    </div>
+    return (
+        <WrappedComponent {...props} data={data}>
+            <div style={responsiveStyle}>
+                <RouteNumber
+                    route={routeLabel}
+                    isSpecial={specialTripLabel?.includes(specialTripKey)}
+                    componentType={componentType}
+                    isMobile={isMobile}
 
-                    <div style={styles.terminusLabel}>
-                        {itemSeparator}
-                        {originLabel}
-                        <span style={styles.toLabel}>{toSeparator}</span>
-                        {destinationLabel}
-                        {itemSeparator}
-                    </div>
-                </div>
-            </Component>
-        )
-    }
-    Wrapped.displayName = `getStyledRouteMenuOption(${type})`
-    return Wrapped
+                />
+                <RouteDetails
+                    origin={originLabel}
+                    destination={destinationLabel}
+                    remark={specialRemarkLabel}
+                />
+            </div>
+        </WrappedComponent>
+    )
 }
 
+const MemoizedOption = React.memo(props => <StyledRouteOption {...props} componentType="Option" />)
+MemoizedOption.displayName = 'MemoizedOption'
+
+const MemoizedSingleValue = React.memo(props => <StyledRouteOption {...props} componentType="SingleValue" />)
+MemoizedSingleValue.displayName = 'MemoizedSingleValue'
+
 export const RouteQueryInput = () => {
+    const { isMobile } = useWindowSize()
 
     const dispatch = useDispatch()
+    const { routes } = useSelector(state => state.route)
 
-    const routes = useSelector(state => state.routes)
-
-    // States for keeping previous route query in async-select dropdown
     const [selectedOption, setSelectedOption] = useState(null)
     const [prevOptions, setPrevOptions] = useState([])
 
-    // Create first 50 default routes dropdown for the input
-    const defaultRouteOptions = useMemo(
+    const defaultOptions = useMemo(
         () => routes?.slice(0, 50)?.map(toRouteOption),
-        [routes])
+        [routes]
+    )
 
-    //  Return async select dropdown options after promises fulfilled
-    const searchRoute = useCallback((inputValue, callback) => {
-        let filtered
+    const searchCache = useRef(new Map())
+    const [isSearching, setIsSearching] = useState(false)
 
-        if (!inputValue) {
-            filtered = routes.slice(0, 50)
+    // Memoize the search function with debounce
+    const debouncedSearch = useMemo(
+        () => debounce((inputValue, callback) => {
+            const cacheKey = inputValue?.toUpperCase() || ''
+
+            // Check cache first
+            if (searchCache.current.has(cacheKey)) {
+                const cachedResults = searchCache.current.get(cacheKey)
+                setPrevOptions(cachedResults)
+                callback(cachedResults)
+                setIsSearching(false)
+                return
+            }
+
+            // Use setTimeout to move filtering to next tick
+            setTimeout(() => {
+                try {
+                    // Filter routes
+                    const filtered = !inputValue
+                        ? routes.slice(0, 50)
+                        : routes.filter(route =>
+                            route.route.toUpperCase().startsWith(cacheKey)
+                        )
+
+                    // Process results in chunks of 50
+                    const processChunk = (start = 0) => {
+                        const chunk = filtered.slice(start, start + 50)
+                        const results = chunk.map(toRouteOption)
+
+                        if (start === 0) {
+                            // Cache and update UI with first chunk immediately
+                            searchCache.current.set(cacheKey, results)
+                            setPrevOptions(results)
+                            callback(results)
+                            setIsSearching(false)
+                        }
+                    }
+
+                    processChunk(0)
+                } catch (error) {
+                    console.error('Search error:', error)
+                    setIsSearching(false)
+                }
+            }, 0)
+        }, 150),
+        [routes]
+    )
+
+    // Clean up on unmount
+    useEffect(() => {
+        return () => {
+            debouncedSearch.cancel()
+            // eslint-disable-next-line react-hooks/exhaustive-deps
+            searchCache.current.clear()
         }
-        else {
-            const upperCaseInput = inputValue.toUpperCase()
-            filtered = routes.filter(route => route.route.toUpperCase().startsWith(upperCaseInput))
-        }
+    }, [debouncedSearch])
 
-        const results = filtered.map(route => toRouteOption(route))
+    const handleSearch = useCallback((inputValue, callback) => {
+        setIsSearching(true)
+        debouncedSearch(inputValue, callback)
+    }, [debouncedSearch])
 
-        setPrevOptions(results)
-        callback(results)
-    }, [routes])
+    const handleSelect = useCallback((option) => {
+        // Return when user clears selection
+        if (!option) return
 
-    const selectRoute = (routeDetail) => {
-        dispatch(selectRouteThunk({ routeDetail, routes }))
-    }
+        dispatch(selectRouteThunk({ routeDetail: option.detail, routes }))
+        setSelectedOption(option)
+    }, [dispatch, routes])
 
-    // Memoize the styled dropdown option to prevent unnecessary render
-    const MemoizedOption = React.memo(getStyledRouteMenuOption(components.Option, "Option"))
-    const MemoizedSingleValue = React.memo(getStyledRouteMenuOption(components.SingleValue, "SingleValue"))
+    const responsiveStyles = useMemo(() => ({
+        ...styles.reactSelect,
+        control: (base, state) => ({
+            ...base,
+            backgroundColor: "rgba(24, 27, 27, 0.5)",
+            color: "#fff",
+            borderColor: state.isFocused ? "#2563eb" : "#444",
+            boxShadow: state.isFocused ? "0 0 0 2px #2563eb" : base.boxShadow,
+            height: isMobile ? 36 : 42,
+            minHeight: isMobile ? 36 : 42,
+        }),
+        menu: base => ({
+            ...base,
+            backgroundColor: "rgba(35, 39, 47, 0.85)",
+            color: "#fff",
+            zIndex: 9999,
+            fontSize: isMobile ? "14px" : base.fontSize,
+        })
+    }), [isMobile])
 
     return (
         <AsyncSelect
@@ -208,18 +239,18 @@ export const RouteQueryInput = () => {
             }}
             classNamePrefix="routeInputSelect"
             menuPortalTarget={document.body}
-            styles={styles.reactSelect}
+            styles={responsiveStyles}
             autoFocus
             isClearable
             cacheOptions
-            defaultOptions={prevOptions.length == 0 ? defaultRouteOptions : prevOptions}
-            placeholder="輸入九巴路線編號　Input KMB route"
-            loadOptions={searchRoute}
+            defaultOptions={prevOptions.length ? prevOptions : defaultOptions}
+            placeholder="輸入九巴路線編號　Input KMB route."
+            loadingMessage={() => "搜尋路線中..."}
+            isLoading={isSearching}
+            filterOption={null}
+            loadOptions={handleSearch}
             value={selectedOption}
-            onChange={option => {
-                selectRoute(option.detail)
-                setSelectedOption(option)
-            }}
+            onChange={handleSelect}
         />
     )
 }

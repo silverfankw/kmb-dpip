@@ -1,4 +1,5 @@
 import { useSelector, useDispatch } from 'react-redux'
+import { useButtonStyles } from '@styles/buttonStyle'
 import {
     changeBoundThunk,
     selectIsPrevStopAvailable,
@@ -14,48 +15,6 @@ import ArrowForwardIcon from '@mui/icons-material/ArrowForward'
 import RefreshIcon from '@mui/icons-material/Refresh'
 import CachedIcon from '@mui/icons-material/Cached'
 
-const styles = {
-    buttonLabel: "max-md:text-lg",
-}
-
-const getButtonSx = theme => {
-    return {
-        borderRadius: 2, // 16px
-        boxShadow: '0 2px 8px 0 rgba(0,0,0,0.10)',
-        fontWeight: 600,
-        fontSize: { xs: '1.1rem', md: '1rem' },
-        height: { xs: "64px", md: "48px" },
-        px: 3,
-        py: 1,
-        textTransform: 'none',
-        transition: 'box-shadow 0.2s, filter 0.15s, transform 0.15s, outline 0.15s',
-        outline: 'none',
-        '&:hover': {
-            boxShadow: '0 6px 24px 0 rgba(37,99,235,0.18)',
-            filter: 'brightness(1.08)',
-            transform: 'translateY(-2px) scale(1.04)',
-            outline: `2.5px solid ${theme}.dark`,
-            outlineOffset: '1px',
-        },
-        '&:focus-visible': {
-            outline: '2.5px solid #2563eb',
-            outlineOffset: '1px',
-        },
-        '&:active': {
-            boxShadow: '0 1px 4px 0 rgba(0,0,0,0.12)',
-            filter: 'brightness(0.97)',
-            transform: 'scale(0.98)',
-        },
-        '&.Mui-disabled': {
-            backgroundColor: '#2d2b2b !important',
-            color: '#595555 !important',
-            boxShadow: 'none',
-            opacity: 1,
-            border: '1px solid #2d2b2b',
-            cursor: 'not-allowed',
-        },
-    }
-}
 
 export const NavButtonGroup = () => {
 
@@ -71,6 +30,11 @@ export const NavButtonGroup = () => {
     const isPrevStopAvailable = useSelector(selectIsPrevStopAvailable)
     const isNextStopAvailable = useSelector(selectIsNextStopAvailable)
 
+    const nextStopBtnStyle = useButtonStyles("nextGreen")
+    const prevStopBtnStyle = useButtonStyles("darkRed")
+    const resetStopBtnStyle = useButtonStyles("ochre")
+    const switchBoundBtnStyle = useButtonStyles("directionPurple")
+
     return (
         <>
             <Tooltip arrow placement="bottom-start" title="上一站 鍵盤快捷鍵: '←'">
@@ -78,12 +42,12 @@ export const NavButtonGroup = () => {
                     <Button
                         color="darkRed"
                         variant="contained"
-                        sx={getButtonSx("darkRed")}
+                        sx={prevStopBtnStyle.button}
                         startIcon={<ArrowBackIcon />}
                         onClick={() => dispatch(toPrevStop())}
                         disabled={!isPrevStopAvailable}
                     >
-                        <span className={styles.buttonLabel}>上站</span>
+                        <span className={prevStopBtnStyle.buttonLabel}>上站</span>
                     </Button>
                 </span>
             </Tooltip>
@@ -92,12 +56,12 @@ export const NavButtonGroup = () => {
                     <Button
                         color="nextGreen"
                         variant="contained"
-                        sx={getButtonSx("nextGreen")}
+                        sx={nextStopBtnStyle.button}
                         startIcon={<ArrowForwardIcon />}
                         onClick={() => dispatch(toNextStop())}
                         disabled={!isNextStopAvailable}
                     >
-                        <span className={styles.buttonLabel}>下站</span>
+                        <span className={nextStopBtnStyle.buttonLabel}>下站</span>
                     </Button>
                 </span>
             </Tooltip>
@@ -106,27 +70,27 @@ export const NavButtonGroup = () => {
                     <Button
                         color="directionPurple"
                         variant="contained"
-                        sx={getButtonSx("directionPurple")}
+                        sx={switchBoundBtnStyle.button}
                         startIcon={<CachedIcon />}
                         onClick={() => dispatch(changeBoundThunk())}
                         disabled={(!isUserSelectedRoute || !routeHasTwoBound) || routeDetail?.service_type != 1}
                     >
-                        <span className={styles.buttonLabel}>方向</span>
+                        <span className={switchBoundBtnStyle.buttonLabel}>方向</span>
                     </Button>
                 </span>
             </Tooltip>
             <Tooltip arrow placement="bottom-start" title="重設至首站 鍵盤快捷鍵: 'HOME'">
                 <span>
                     <Button
-                        className={styles.button}
+                        className={resetStopBtnStyle.button}
                         color="ochre"
                         variant="contained"
                         startIcon={<RefreshIcon />}
-                        sx={getButtonSx("ochre")}
+                        sx={resetStopBtnStyle.button}
                         onClick={() => dispatch(resetToFirstStop())}
                         disabled={!isUserSelectedRoute || currentStopIndex == 0}
                     >
-                        <span className={styles.buttonLabel}>首站</span>
+                        <span className={resetStopBtnStyle.buttonLabel}>首站</span>
                     </Button>
                 </span>
             </Tooltip>

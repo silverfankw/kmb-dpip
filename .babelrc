@@ -10,7 +10,7 @@
                     "@api": "./src/api",
                     "@assets": "./src/assets",
                     "@components": "./src/components",
-                    "@css": "./src/assets/css",
+                    "@styles": "./src/assets/styles",
                     "@hooks": "./src/hooks",
                     "@contexts": "./src/contexts",
                     "@reducers": "./src/reducers",

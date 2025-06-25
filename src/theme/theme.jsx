@@ -1,6 +1,17 @@
 import { createTheme } from '@mui/material'
 
 export const theme = createTheme({
+    breakpoints: {
+        values: {
+            xs: 480,
+            sm: 640,
+            md: 768,
+            lg: 1024,
+            xl: 1280,
+            '2xl': 1536,
+            '3xl': 1920,
+        },
+    },
     typography: {
         fontFamily: "Noto Sans, sans-serif"
     },

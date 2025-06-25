@@ -21,7 +21,7 @@
     /* Google Pixel 4 XL: 412 x 869 */
     /* iPhone 13 Pro Max: 428 x 926 */
     /* iPhone 16 Pro Max: 440 x 956 */
-    --breakpoint-xs: 412px;
+    --breakpoint-xs: 480px;
 }
 
 .noselect {

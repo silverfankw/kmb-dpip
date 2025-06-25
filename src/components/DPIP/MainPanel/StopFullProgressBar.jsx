@@ -1,4 +1,4 @@
-import "@css/animation.css"
+import "@styles/animation.css"
 
 import { useSelector } from "react-redux"
 import { useFullProgressBarWindow } from "@hooks"
@@ -12,7 +12,8 @@ const styles = {
         "line-container",
         "@container flex",
         "relative top-[87.5%]",
-        "w-[96.5%] h-[92%]"
+        "w-[96.5%] h-[92%]",
+        "max-md:top-[89%]",
     ].join(" "),
 
     startLineContainer: "flex gap-[2px] z-1",
@@ -61,10 +62,10 @@ const styles = {
     stopName: [
         "stop-name absolute",
         "text-black text-[1.75cqw]",
-        "top-[-3cqw] left-1/2",
+        "top-[-2.75cqw] left-1/2",
         "-translate-x-[5%] -rotate-[65deg]",
         "origin-left whitespace-nowrap",
-        "max-md:text-[2cqw] max-md:top-[-3.5cqw]"
+        "max-md:text-[2cqw] max-md:top-[-3cqw]"
     ].join(" "),
 
     stopNameCurrent: [
