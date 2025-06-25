@@ -14,7 +14,7 @@ import {
 } from '@components/DPIP'
 
 // --- Constants ---
-const progressBarInterval = 1100000
+const progressBarInterval = 11000
 const stopNameInterval = 4500
 
 // --- Styles outside component ---
