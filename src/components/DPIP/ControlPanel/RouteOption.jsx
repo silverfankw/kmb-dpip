@@ -18,6 +18,7 @@ export const RouteNumber = ({ route, isSpecial, componentType }) => {
             letterSpacing: "-0.25px",
             minWidth: isMobile ? "40px" : "52px",
             position: "relative",
+            transform: "scale(1, 1.1)",
         },
         specialTrip: {
             marginTop: "2px",

@@ -6,7 +6,7 @@ const styles = {
     container: [
         "@container",
         "font-[500]",
-        "relative left-[1.5%]",
+        "relative left-[1.25%]",
         "w-[95%] h-[75%]",
         "tracking-[-0.0625rem]"
     ].join(" "),
@@ -24,7 +24,7 @@ const styles = {
     ].join(" "),
 
     enStopName: [
-        "text-[4.5cqw]",
+        "text-[4.75cqw]",
         "max-md:text-[5cqw]"
     ].join(" "),
 }
@@ -38,9 +38,9 @@ const computeStopNameStyle = (stopName = "", lang = "en", windowSize) => {
 
         if (stopNameFullLen >= 34) {
             if (stopNameFullLen >= 44)
-                return { fontSize: `${enFontEmRatio * 2}cqw` }
+                return { fontSize: `${enFontEmRatio * 2.125}cqw` }
             else
-                return { fontSize: `${enFontEmRatio * 2.4}cqw` }
+                return { fontSize: `${enFontEmRatio * 2.5}cqw` }
         }
         return {}
     }
@@ -48,7 +48,7 @@ const computeStopNameStyle = (stopName = "", lang = "en", windowSize) => {
     if (lang === "zh") {
         const visualLength = stringWidth(stopName)
         return {
-            fontSize: `clamp(7cqw, ${Math.max(20 - visualLength * 0.75, 7)}cqw, 11cqw)`,
+            fontSize: `clamp(7cqw, ${Math.max(20 - visualLength * 0.7, 7.25)}cqw, 11cqw)`,
         }
     }
 

@@ -13,7 +13,8 @@ export const useButtonStyles = (color) => {
             color: theme => theme.palette[color]?.contrastText,
             borderRadius: 2,
             boxShadow: '0 2px 8px 0 rgba(0,0,0,0.10)',
-            fontWeight: 600,
+            fontFamily: "Zen Kaku Gothic Antique",
+            fontWeight: 500,
             fontSize: isMobile ? '1.1rem' : '1rem',
             height: isMobile ? "64px" : "48px",
             px: 3,
@@ -54,7 +55,9 @@ export const useButtonStyles = (color) => {
 
         label: {
             fontSize: isMobile ? "1.25rem" : "1rem",
-            whiteSpace: 'nowrap'
+            whiteSpace: 'nowrap',
+            fontFamily: "Zen Kaku Gothic Antique",
+            fontWeight: 500,
         },
 
         labelWrapper: { display: "flex", alignItems: "center", gap: 6 },
@@ -69,7 +72,7 @@ export const useButtonStyles = (color) => {
             },
             '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': {
                 backgroundColor: theme => theme.palette[color]?.dark || theme.palette.primary.dark,
-                opacity: 0.5,
+                opacity: 0.75,
             },
             transform: isMobile ? "scale(1.5)" : "scale(1.1)"
         },

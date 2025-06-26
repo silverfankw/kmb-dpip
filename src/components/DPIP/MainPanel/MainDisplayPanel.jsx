@@ -48,8 +48,8 @@ const basestyles = {
     routeHeadingGrid: [
         "@container",
         "col-start-2 col-end-5",
-        "flex items-center",
-        "pl-1",
+        "flex items-center gap-1",
+        "pl-0.5",
         "bg-black text-white"
     ].join(" "),
 

@@ -27,31 +27,32 @@ const styles = {
     routeNumber: [
         "basis-[17.5%]",
         "font-[500]",
-        "text-[6.5cqw]",
+        "text-[6.75cqw]",
         "text-center",
-        "tracking-tight"
+        "tracking-tight",
+        "scale-y-110",
     ].join(" "),
 
 
     arrowContainer: [
         "flex",
         "basis-[10%]",
-        "max-xl:basis-[3.5rem]",
-        "max-sm:basis-[2.5rem]",
+        "max-xl:basis-[3.25rem]",
+        "max-sm:basis-[2rem]",
         "justify-center"
     ].join(" "),
 
 
     destContainer: [
         "flex flex-col",
-        "pl-[0.5rem]"
+        "mr-0.5",
     ].join(" "),
 
     destZh: [
         "font-[500]",
         "whitespace-nowrap",
-        "text-[4.5cqw]",
-        "max-md:text-[4.5cqw]",
+        "text-[4.375cqw]",
+        "max-md:text-[4.375cqw]",
         "max-sm:text-[5cqw]"
     ].join(" "),
 

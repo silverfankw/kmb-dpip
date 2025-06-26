@@ -40,7 +40,7 @@ const styles = {
 		"flex gap-5 flex-wrap justify-center",
 		"bg-[#18181b]/80 shadow-lg",
 		"p-6 w-full max-md:flex-col max-md:gap-4",
-		"border border-gray-600/90 rounded-2xl"
+		"border border-gray-600/90 rounded-2xl",
 	].join(" "),
 
 	screenPanelSection: [

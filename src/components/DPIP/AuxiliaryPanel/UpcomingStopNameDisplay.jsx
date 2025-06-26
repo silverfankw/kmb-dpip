@@ -32,7 +32,7 @@ const styles = {
     stopNameContent: [
         "@container",
         "font-[500]",
-        "relative left-[1.5%]",
+        "relative left-[1.25%]",
         "flex flex-col",
         "h-[90%]",
         "whitespace-nowrap"
@@ -49,8 +49,8 @@ const styles = {
         "absolute top-[72.5%]",
         "text-[3.5cqw]",
         "max-sm:text-[3.75cqw]",
-        "sm:max-md:text-[3.5cqw]",
-        "md:max-xl:text-[3.25cqw]",
+        "sm:max-md:text-[3.75cqw]",
+        "md:max-xl:text-[3.5cqw]",
     ].join(" ")
 }
 
@@ -58,7 +58,7 @@ const getStopNameFontStyle = (text, lang, windowSize) => {
     if (lang === "zh") {
         const visualLength = stringWidth(text || "")
         return {
-            fontSize: `clamp(6.8cqw, ${Math.max(18 - visualLength * 0.8, 6.8)}cqw, 8cqw)`,
+            fontSize: `clamp(6.8cqw, ${Math.max(18 - visualLength * 0.5, 7)}cqw, 8cqw)`,
             marginTop: `${visualLength >= 14 ? visualLength * 0.01 : 0}cqh`,
         }
     }
