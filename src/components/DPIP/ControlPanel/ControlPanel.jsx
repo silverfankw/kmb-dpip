@@ -3,8 +3,8 @@ import { useSelector } from 'react-redux'
 import { NavButtonGroup, ToggleButtonGroup, FuncButtonGroup, DriverInfoInputGroup } from '@components'
 
 const styles = {
-    groupWrapper: "flex flex-wrap gap-4 max-md:gap-3 justify-center items-center w-full max-md:w-auto",
-    divider: "block max-2xl:hidden w-px bg-gray-300 mx-2",
+    groupWrapper: "flex flex-wrap gap-5 max-md:gap-3 justify-center",
+    switchGroupWrapper: "!gap-4",
     driverInfoSection: "flex text-center items-center text-white gap-3",
 }
 
@@ -18,13 +18,9 @@ export const ControlPanel = ({ mainScreenTarget, secScreenTarget }) => {
                 <NavButtonGroup />
             </div>
 
-            <div className={styles.divider} />
-
-            <div className={styles.groupWrapper}>
+            <div className={styles.groupWrapper + " " + styles.switchGroupWrapper}>
                 <ToggleButtonGroup />
             </div>
-
-            <div className={styles.divider} />
 
             <div className={styles.groupWrapper}>
                 <FuncButtonGroup

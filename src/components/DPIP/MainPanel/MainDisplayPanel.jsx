@@ -98,7 +98,7 @@ const basestyles = {
         "@container",
         "flex justify-center",
         "col-start-1 col-end-5",
-        "font-extralight",
+        "font-[400]",
         "text-white",
         "p-1"
     ].join(" "),

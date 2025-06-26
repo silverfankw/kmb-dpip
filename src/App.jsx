@@ -37,7 +37,7 @@ const styles = {
 
 	controlPanelSection: [
 		"order-2 max-sm:order-3",
-		"flex gap-5 flex-wrap justify-center",
+		"flex gap-4 flex-wrap justify-center",
 		"bg-[#18181b]/80 shadow-lg",
 		"p-6 w-full max-md:flex-col max-md:gap-4",
 		"border border-gray-600/90 rounded-2xl",

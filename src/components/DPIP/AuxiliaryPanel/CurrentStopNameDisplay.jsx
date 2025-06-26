@@ -48,7 +48,7 @@ const computeStopNameStyle = (stopName = "", lang = "en", windowSize) => {
     if (lang === "zh") {
         const visualLength = stringWidth(stopName)
         return {
-            fontSize: `clamp(7cqw, ${Math.max(20 - visualLength * 0.7, 7.25)}cqw, 11cqw)`,
+            fontSize: `clamp(7cqw, ${Math.max(20 - visualLength * 0.7, 7)}cqw, 11cqw)`,
         }
     }
 

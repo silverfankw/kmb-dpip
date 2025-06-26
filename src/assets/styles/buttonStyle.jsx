@@ -9,6 +9,7 @@ export const useButtonStyles = (color) => {
 
     return useMemo(() => ({
         button: {
+            margin: 0,
             backgroundColor: theme => theme.palette[color]?.main || theme.palette.primary.main,
             color: theme => theme.palette[color]?.contrastText,
             borderRadius: 2,
@@ -17,7 +18,7 @@ export const useButtonStyles = (color) => {
             fontWeight: 500,
             fontSize: isMobile ? '1.1rem' : '1rem',
             height: isMobile ? "64px" : "48px",
-            px: 3,
+            px: 2,
             py: 1,
             textTransform: 'none',
             transition: 'all 0.2s ease-in-out',

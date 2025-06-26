@@ -20,12 +20,12 @@ export const FuncButtonGroup = ({ mainScreenTarget, secScreenTarget }) => {
         {
             key: 'main',
             target: mainScreenTarget,
-            label: '主螢幕：全螢幕顯示',
+            label: '主螢幕全螢幕',
         },
         {
             key: 'sec',
             target: secScreenTarget,
-            label: '輔螢幕：全螢幕顯示',
+            label: '輔螢幕全螢幕',
         },
     ]
 

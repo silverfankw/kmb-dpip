@@ -58,7 +58,7 @@ const getStopNameFontStyle = (text, lang, windowSize) => {
     if (lang === "zh") {
         const visualLength = stringWidth(text || "")
         return {
-            fontSize: `clamp(6.8cqw, ${Math.max(18 - visualLength * 0.5, 7)}cqw, 8cqw)`,
+            fontSize: `clamp(6.8cqw, ${Math.max(18 - visualLength * 0.5, 6.875)}cqw, 8cqw)`,
             marginTop: `${visualLength >= 14 ? visualLength * 0.01 : 0}cqh`,
         }
     }
