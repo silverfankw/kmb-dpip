@@ -37,6 +37,7 @@ const basestyles = {
         "mb-[-4px]",
         "font-[600]",
         "max-sm:text-[16cqw]",
+        "max-sm:mb-[-1px]",
     ].join(" "),
 
     nextStopIndicatorEn: [
@@ -75,7 +76,7 @@ const basestyles = {
         "@container",
         "col-start-1 col-end-5",
         "bg-white",
-        "flex justify-center items-center"
+        "flex justify-center items-center",
     ].join(" "),
 
     stopNameZh: [
@@ -83,6 +84,7 @@ const basestyles = {
         "text-[8cqw]",
         "max-sm:text-[8.5cqw]",
         "max-md:text-[10cqw]",
+        "tracking-wider",
         "whitespace-nowrap overflow-hidden"
     ].join(" "),
 
@@ -100,7 +102,7 @@ const basestyles = {
         "col-start-1 col-end-5",
         "font-[400]",
         "text-white",
-        "p-1"
+        "p-0.5"
     ].join(" "),
 
     driverInfoText: [
@@ -238,7 +240,7 @@ export const MainDisplayPanel = ({ monitorStyle, screenTarget }) => {
                     {driverInfo?.nameEn}&nbsp;
                 </span>
                 <span className={styles.driverInfoText}>
-                    is serving you &nbsp;&nbsp;員工編號 &nbsp;Emp. No: {driverInfo?.staffNo}
+                    is serving you &nbsp;&nbsp;員工編號 &nbsp;Staff No.: {driverInfo?.staffNo}
                 </span>
             </div>
         </div>

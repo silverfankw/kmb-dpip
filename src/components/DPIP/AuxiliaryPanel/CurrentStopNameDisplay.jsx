@@ -14,7 +14,8 @@ const styles = {
     zhStopName: [
         "h-[12cqw]",
         "relative top-[2cqw]",
-        "flex items-center"
+        "flex items-center",
+        "tracking-normal"
     ].join(" "),
 
     enStopNameWrapper: [
@@ -29,30 +30,28 @@ const styles = {
     ].join(" "),
 }
 
-const computeStopNameStyle = (stopName = "", lang = "en", windowSize) => {
+const computeStopNameStyle = (stopName = "", lang = "en") => {
     if (!stopName) return {}
 
-    if (lang === "en") {
-        const enFontEmRatio = windowSize < 640 ? 1.8 : windowSize < 768 ? 1.625 : 1.75
-        const stopNameFullLen = stopName.length
+    const visualLength = stringWidth(stopName)
 
-        if (stopNameFullLen >= 34) {
-            if (stopNameFullLen >= 44)
-                return { fontSize: `${enFontEmRatio * 2.125}cqw` }
-            else
-                return { fontSize: `${enFontEmRatio * 2.5}cqw` }
-        }
-        return {}
+    const fontSizeConfig = {
+        en: { min: 4.25, base: 16, scale: 0.445, fallback: 4.5, max: 5.75 },
+        zh: { min: 7, base: 20, scale: 0.7, fallback: 7, max: 12.25 }
+    }
+
+    const config = fontSizeConfig[lang]
+    if (!config) return {}
+
+    const style = {
+        fontSize: `clamp(${config.min}cqw, ${Math.max(config.base - visualLength * config.scale, config.fallback)}cqw, ${config.max}cqw)`
     }
 
     if (lang === "zh") {
-        const visualLength = stringWidth(stopName)
-        return {
-            fontSize: `clamp(7cqw, ${Math.max(20 - visualLength * 0.7, 7)}cqw, 11cqw)`,
-        }
+        style.marginTop = `${visualLength * 0.0125}cqh`
     }
 
-    return {}
+    return style
 }
 
 export const CurrentStopNameDisplay = ({ stopZh = "", stopEn = "" }) => {

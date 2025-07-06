@@ -19,7 +19,7 @@ const FooterText = styled(Typography)(({ theme }) => ({
 export const Footer = () => (
     <StyledFooter component="footer">
         <Container maxWidth="xl">
-            <div className="max-md:hidden flex items-center justify-center">
+            <div className="select-none max-md:hidden flex items-center justify-center">
                 <FooterText variant="body2" component="div">
                     <a
                         target="_blank"

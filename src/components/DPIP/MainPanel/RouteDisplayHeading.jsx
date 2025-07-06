@@ -53,16 +53,17 @@ const styles = {
         "whitespace-nowrap",
         "text-[4.375cqw]",
         "max-md:text-[4.375cqw]",
-        "max-sm:text-[5cqw]"
+        "max-sm:text-[5cqw]",
+        "tracking-wide",
+        "max-sm:tracking-normal"
     ].join(" "),
 
     destEn: [
         "font-[500]",
         "text-sm",
         "whitespace-nowrap",
-        "text-[2.25cqw]",
-        "max-md-[2.25cqw]",
-        "max-sm:text-[2.5cqw]"
+        "text-[2.5cqw]",
+        "max-sm:text-[2.625cqw]",
     ].join(" ")
 }
 
