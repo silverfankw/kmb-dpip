@@ -1,5 +1,4 @@
 import stringWidth from "string-width"
-import { useWindowSize } from '@hooks/useWindowSize'
 
 // Tailwind CSS style classes
 const styles = {
@@ -7,7 +6,8 @@ const styles = {
         "@container",
         "font-[500]",
         "relative left-[1.25%]",
-        "w-[95%] h-[75%]",
+        "w-[95%]",
+        "h-full",
         "tracking-[-0.0625rem]"
     ].join(" "),
 
@@ -19,14 +19,18 @@ const styles = {
     ].join(" "),
 
     enStopNameWrapper: [
-        "absolute",
-        "top-[80%]",
-        "whitespace-nowrap"
+        "relative top-[15%]",
+        "flex",
+        "h-[33%]",
+        "w-full",
+        "leading-tight"
     ].join(" "),
 
     enStopName: [
-        "text-[4.75cqw]",
-        "max-md:text-[5cqw]"
+        "text-[5.125cqw]",
+        "max-md:text-[5.5cqw]",
+        "leading-[1.2]",
+        "w-full"
     ].join(" "),
 }
 
@@ -36,8 +40,8 @@ const computeStopNameStyle = (stopName = "", lang = "en") => {
     const visualLength = stringWidth(stopName)
 
     const fontSizeConfig = {
-        en: { min: 4.25, base: 16, scale: 0.445, fallback: 4.5, max: 5.75 },
-        zh: { min: 7, base: 20, scale: 0.7, fallback: 7, max: 12.25 }
+        en: {},
+        zh: { min: 7, base: 20, scale: 0.66, fallback: 7, max: 12.5 }
     }
 
     const config = fontSizeConfig[lang]
@@ -48,14 +52,21 @@ const computeStopNameStyle = (stopName = "", lang = "en") => {
     }
 
     if (lang === "zh") {
-        style.marginTop = `${visualLength * 0.0125}cqh`
+        style.marginTop = `${visualLength * 0.025}cqh`
+    }
+    else if (lang === "en") {
+        const willWrap = visualLength > 38
+        style.alignSelf = willWrap ? "flex-start" : "center"
+        if (willWrap) {
+            style.lineHeight = "1.3"
+            style.marginTop = "-.5rem"
+        }
     }
 
     return style
 }
 
 export const CurrentStopNameDisplay = ({ stopZh = "", stopEn = "" }) => {
-    const { windowSize } = useWindowSize()
 
     return (
         <div className={styles.container}>
@@ -68,7 +79,7 @@ export const CurrentStopNameDisplay = ({ stopZh = "", stopEn = "" }) => {
             <div className={styles.enStopNameWrapper}>
                 <span
                     className={styles.enStopName}
-                    style={computeStopNameStyle(stopEn, "en", windowSize)}
+                    style={computeStopNameStyle(stopEn, "en")}
                 >
                     {stopEn}
                 </span>

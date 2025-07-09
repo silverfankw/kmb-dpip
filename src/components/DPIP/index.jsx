@@ -4,4 +4,4 @@ export * from './AuxiliaryPanel'
 
 export { HoldHandrailNotice } from './HoldHandrailNotice'
 export { MindDoorNotice } from './MindDoorNotice'
-
+export { RestoreSelectionDialog } from './RestoreSelectionDialog'

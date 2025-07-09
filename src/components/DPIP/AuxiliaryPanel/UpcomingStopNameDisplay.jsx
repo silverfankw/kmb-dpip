@@ -58,7 +58,7 @@ const getStopNameFontStyle = (text, lang, windowSize) => {
 
     const fontSizeConfig = {
         zh: {
-            fontSize: `clamp(6.8cqw, ${Math.max(18 - stringWidth(text) * 0.5, 6.875)}cqw, 8.25cqw)`
+            fontSize: `clamp(6.8cqw, ${Math.max(18 - stringWidth(text) * 0.5, 6.75)}cqw, 8.25cqw)`
         },
         en: (() => {
             const textLength = text.length

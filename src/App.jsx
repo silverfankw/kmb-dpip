@@ -3,16 +3,16 @@ import SearchIcon from '@mui/icons-material/Search'
 
 import {
 	Background, Footer, RouteQueryInput, ErrorMessage,
-	ControlPanel, MainDisplayPanel, AuxiliaryDisplayPanel,
+	ControlPanel, MainDisplayPanel, AuxiliaryDisplayPanel
 } from '@components'
 
-import { useRef, useEffect } from 'react'
+import { useRef, useCallback, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import { useKeyboardNavigation } from "@hooks"
+import { useKeyboardNavigation, useLocalStorageState } from "@hooks"
 
 import { getRoutesThunk } from "@store/routeSlice"
 import {
-	changeBoundThunk,
+	changeBoundThunk, selectRouteThunk,
 	setCurrentStopIndex, toPrevStop, toNextStop
 } from '@store/routeSelectionSlice'
 
@@ -75,7 +75,73 @@ const App = () => {
 		dispatch(getRoutesThunk())
 	}, [dispatch])
 
-	const { isUserSelectedRoute, loadingError } = useSelector(state => state.routeSelection)
+	const { hasStoredData, storedData, saveToLocalStorage } = useLocalStorageState()
+	const { isUserSelectedRoute, loadingError, routeDetail, currentStopIndex } = useSelector(state => state.routeSelection)
+	const { routes } = useSelector(state => state.route)
+
+	// Check if stored data in localStorage
+	const handleRestoreSelection = useCallback(async () => {
+		if (storedData && routes.length > 0) {
+			try {
+				dispatch(selectRouteThunk({ routeDetail: storedData, routes }))
+				dispatch(setCurrentStopIndex(storedData.currentStopIndex || 0))
+			} catch (error) {
+				console.error('Error restoring selection:', error)
+			}
+		}
+	}, [dispatch, storedData, routes])
+
+	useEffect(() => {
+		if (hasStoredData && routes.length > 0) {
+			handleRestoreSelection()
+		}
+	}, [hasStoredData, routes, handleRestoreSelection])
+
+	useEffect(() => {
+		if (isUserSelectedRoute && routeDetail && Object.keys(routeDetail).length > 0) {
+			const dataToStore = {
+				route: routeDetail.route,
+				bound: routeDetail.bound,
+				service_type: routeDetail.service_type,
+				orig_tc: routeDetail.orig_tc,
+				orig_en: routeDetail.orig_en,
+				dest_tc: routeDetail.dest_tc,
+				dest_en: routeDetail.dest_en,
+				specialRemark: routeDetail.specialRemark,
+				currentStop_tc: routeDetail.stops[currentStopIndex]?.zh || "",
+				currentStop_en: routeDetail.stops[currentStopIndex]?.en || "",
+				currentStopIndex: currentStopIndex,
+				timestamp: Date.now()
+			}
+			saveToLocalStorage(dataToStore)
+		}
+	}, [isUserSelectedRoute, routeDetail, currentStopIndex, saveToLocalStorage])
+
+	useEffect(() => {
+		const handleBeforeUnload = () => {
+			if (isUserSelectedRoute && routeDetail && Object.keys(routeDetail).length > 0) {
+				const dataToStore = {
+					route: routeDetail.route,
+					bound: routeDetail.bound,
+					service_type: routeDetail.service_type,
+					orig_tc: routeDetail.orig_tc,
+					orig_en: routeDetail.orig_en,
+					dest_tc: routeDetail.dest_tc,
+					dest_en: routeDetail.dest_en,
+					specialRemark: routeDetail.specialRemark,
+					currentStop_tc: routeDetail.stops[currentStopIndex]?.zh || "",
+					currentStop_en: routeDetail.stops[currentStopIndex]?.en || "",
+					currentStopIndex: currentStopIndex,
+					timestamp: Date.now()
+				}
+				saveToLocalStorage(dataToStore)
+			}
+		}
+
+		window.addEventListener('beforeunload', handleBeforeUnload)
+		return () => window.removeEventListener('beforeunload', handleBeforeUnload)
+	}, [isUserSelectedRoute, routeDetail, currentStopIndex, saveToLocalStorage])
+
 
 	// Ref used for full screen function
 	const mainScreenTarget = useRef(null)
@@ -95,6 +161,7 @@ const App = () => {
 	return (
 		<>
 			<Background />
+
 			{/* rootContainer to footer to stick at bottom */}
 			<div className={styles.rootContainer}>
 				<div className={styles.contentContainer} tabIndex={1}>
