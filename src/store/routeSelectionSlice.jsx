@@ -23,18 +23,14 @@ export const selectRouteThunk = createAsyncThunk(
 
         try {
             const { route, bound, service_type, orig_tc, orig_en, dest_tc, dest_en, specialRemark } = routeDetail
-
             // Check if the route has both inbound and outbound
             const hasTwoBound =
                 routes.some(r => r.bound === "I" && r.route === route) &&
                 routes.some(r => r.bound === "O" && r.route === route)
             dispatch(setRouteHasTwoBound(hasTwoBound))
 
-            // Normalize bound to "inbound" or "outbound"
-            const normalizedBound = bound === "I" || bound === "inbound" ? "inbound" : "outbound"
-
             // Fetch stopIDs for the selected route and bound
-            const stopIDs = await fetchStopIDs(route, normalizedBound, service_type)
+            const stopIDs = await fetchStopIDs(route, bound, service_type)
 
             // Fetch all stop details for the selected route
             const routeAllStops = await fetchAllStops(stopIDs)
@@ -42,7 +38,7 @@ export const selectRouteThunk = createAsyncThunk(
             dispatch(setCurrentStopIndex(0))
             dispatch(setRouteDetail({
                 route,
-                bound: normalizedBound,
+                bound,
                 stops: routeAllStops,
                 orig_tc,
                 orig_en,
@@ -74,12 +70,17 @@ export const changeBoundThunk = createAsyncThunk(
             isUserSelectedRoute &&
             (routeHasTwoBound || routeDetail?.service_type === 1)
         ) {
-            const { bound } = routeDetail
-            const newBound = bound === "inbound" ? "outbound" : "inbound"
+            const { bound, orig_tc, dest_tc } = routeDetail
+            const newBound = bound === "I" ? "O" : "I"
 
             dispatch(
                 selectRouteThunk({
-                    routeDetail: { ...routeDetail, bound: newBound },
+                    routeDetail: {
+                        ...routeDetail,
+                        bound: newBound,
+                        dest_tc: orig_tc,
+                        orig_tc: dest_tc,
+                    },
                     routes
                 })
             )

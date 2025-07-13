@@ -15,7 +15,9 @@ export async function fetchAllRoutes() {
 }
 
 export async function fetchStopIDs(route, bound, service_type) {
-    const res = await fetch(`https://data.etabus.gov.hk/v1/transport/kmb/route-stop/${route}/${bound}/${service_type}`)
+    const normalizedBound = bound === "I" || bound === "inbound" ? "inbound" : "outbound"
+
+    const res = await fetch(`https://data.etabus.gov.hk/v1/transport/kmb/route-stop/${route}/${normalizedBound}/${service_type}`)
     const json = await res.json()
     return json.data.map(stop => stop.stop)
 }

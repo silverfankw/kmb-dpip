@@ -12,7 +12,7 @@ const styles = {
         "line-container",
         "@container flex",
         "relative top-[87.5%]",
-        "w-[96.5%] h-[92%]",
+        "w-[95%] h-[92%]",
         "max-md:top-[89%]",
     ].join(" "),
 
