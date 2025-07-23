@@ -23,3 +23,41 @@ export const createRouteOption = (route) => {
         detail: route
     }
 }
+
+export const compareRouteNumbers = (a, b) => {
+    const parseRoute = (route) => {
+        // Regex extracting route number pattern
+        const match = route.match(/^([A-Z]*)(\d+)([A-Z0-9]*)$/)
+
+        // Capture prefix (letter if exist), base route number, and suffix (letter if exist)
+        return match ? {
+            prefix: match[1] || '',
+            base: parseInt(match[2], 10),
+            suffix: match[3] || ''
+        } : {
+            prefix: '',
+            base: Infinity,
+            suffix: route
+        }
+    }
+
+    const routeA = parseRoute(a.route)
+    const routeB = parseRoute(b.route)
+
+    // Compare prefixes first (no prefix comes before letters)
+    if (routeA.prefix !== routeB.prefix) {
+        if (!routeA.prefix) return -1
+        if (!routeB.prefix) return 1
+        return routeA.prefix.localeCompare(routeB.prefix)
+    }
+
+    // Compare base numbers (>=1: list lower in sort, <=-1: list higher in sort)
+    if (routeA.base !== routeB.base) {
+        return routeA.base - routeB.base
+    }
+
+    // Finally compare suffixes
+    if (!routeA.suffix && routeB.suffix) return -1
+    if (!routeB.suffix && routeA.suffix) return 1
+    return routeA.suffix.localeCompare(routeB.suffix)
+}

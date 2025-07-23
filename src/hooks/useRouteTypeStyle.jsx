@@ -60,7 +60,7 @@ const routeTypeRules = [
 
     // Special service route only for Marathon participants,
     // With route prefix R, and followed by its original route number
-    { type: "marathon", regex: /^R(108|603|673|678|680|934|936|948|960|961|968)$/i },
+    { type: "marathon", regex: /^R(108|307|603|673|678|680|934|936|948|960|961|968)$/i },
 
     // AsiaWorld-Expo event route with route prefix 'X'
     // Only X33, X36, X40, X43, X47

@@ -1,4 +1,4 @@
-import { transformStopDetail, removeLeadingZero, convertBound } from '@utils'
+import { transformStopDetail, removeLeadingZero, convertBound, additionalRoutes, additionalRouteStops, compareRouteNumbers } from '@utils'
 
 const SPECIAL_ROUTE_REMARK_RESPONSE_KEY = "Desc_CHI"
 
@@ -11,7 +11,7 @@ export async function fetchAllRoutes() {
         throw new Error(`HTTP error! status: ${res.status} ${res.statusText}`)
     }
     const json = await res.json()
-    return json.data
+    return [...json.data, ...additionalRoutes].sort(compareRouteNumbers)
 }
 
 export async function fetchStopIDs(route, bound, service_type) {
@@ -19,7 +19,12 @@ export async function fetchStopIDs(route, bound, service_type) {
 
     const res = await fetch(`https://data.etabus.gov.hk/v1/transport/kmb/route-stop/${route}/${normalizedBound}/${service_type}`)
     const json = await res.json()
-    return json.data.map(stop => stop.stop)
+    const data = json.data
+
+    if (data.length == 0) {
+        return additionalRouteStops.filter(stop => stop.route === route && stop.bound === bound && stop.service_type === service_type).map(stop => stop.stop)
+    }
+    return data.map(stop => stop.stop)
 }
 
 export async function fetchStopDetail(stopID) {

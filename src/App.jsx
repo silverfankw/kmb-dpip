@@ -70,14 +70,14 @@ const App = () => {
 	const theme = useTheme()
 	const dispatch = useDispatch()
 
+	const { hasStoredData, storedData, saveToLocalStorage } = useLocalStorageState()
+	const { isUserSelectedRoute, loadingError, routeDetail, currentStopIndex } = useSelector(state => state.routeSelection)
+	const { routes } = useSelector(state => state.route)
+
 	// Get routeList from API by executeing fetch route from Redux thunk
 	useEffect(() => {
 		dispatch(getRoutesThunk())
 	}, [dispatch])
-
-	const { hasStoredData, storedData, saveToLocalStorage } = useLocalStorageState()
-	const { isUserSelectedRoute, loadingError, routeDetail, currentStopIndex } = useSelector(state => state.routeSelection)
-	const { routes } = useSelector(state => state.route)
 
 	// Check if stored data in localStorage
 	const handleRestoreSelection = useCallback(async () => {
@@ -132,7 +132,7 @@ const App = () => {
 					currentStop_tc: routeDetail.stops[currentStopIndex]?.zh || "",
 					currentStop_en: routeDetail.stops[currentStopIndex]?.en || "",
 					currentStopIndex: currentStopIndex,
-					timestamp: Date.now()
+					// timestamp: Date.now()
 				}
 				saveToLocalStorage(dataToStore)
 			}

@@ -5,6 +5,7 @@ import React from "react"
 import { useCallback, useMemo, useState, useRef, useEffect } from "react"
 import AsyncSelect from 'react-select/async'
 import { components } from 'react-select'
+import { ClipLoader } from "react-spinners"
 
 import { useSelector, useDispatch } from 'react-redux'
 import { selectRouteThunk } from "@store/routeSelectionSlice"
@@ -73,6 +74,7 @@ export const RouteQueryInput = () => {
     const [selectedOption, setSelectedOption] = useState(null)
     const [prevOptions, setPrevOptions] = useState([])
     const [isSearching, setIsSearching] = useState(false)
+    const isRoutesLoading = !routes || routes.length === 0
     const searchCache = useRef(new Map())
 
     useEffect(() => {
@@ -162,6 +164,11 @@ export const RouteQueryInput = () => {
             zIndex: 9999,
             fontSize: isMobile ? "14px" : base.fontSize,
         }),
+        menuList: base => ({
+            ...base,
+            maxHeight: isMobile ? "250px" : "500px",
+            overflowY: "auto",
+        }),
         placeholder: base => ({
             ...base,
             color: "#777",
@@ -207,11 +214,20 @@ export const RouteQueryInput = () => {
             classNamePrefix="routeInputSelect"
             menuPortalTarget={document.body}
             styles={selectStyles}
-            autoFocus
+            isDisabled={isRoutesLoading}
             isClearable
             cacheOptions
             defaultOptions={prevOptions.length ? prevOptions : defaultOptions}
-            placeholder="輸入九巴路線編號　Input KMB route."
+            placeholder={isRoutesLoading ?
+                <div style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "1rem",
+                    zIndex: 10
+                }}>
+                    <ClipLoader color="#2563eb" size={25} />
+                    <span>正在同步路線數據...</span>
+                </div> : "輸入九巴路線編號　Input KMB route."}
             loadingMessage={() => "搜尋路線中..."}
             isLoading={isSearching}
             filterOption={null}
