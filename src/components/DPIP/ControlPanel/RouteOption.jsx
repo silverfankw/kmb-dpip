@@ -1,6 +1,17 @@
 import { useMemo } from "react"
 import { useWindowSize, useRouteTypeStyle } from "@hooks"
-import { itemSeparator, toSeparator } from "@utils"
+import { toSeparator } from "@utils"
+
+const ItemSeparator = () => (
+    <div className="
+        relative
+        h-[70%] w-[2px]
+        bg-gradient-to-b from-gray-400/80 via-gray-300 to-gray-400/80
+        rounded-full
+        mx-1
+        self-center
+    "/>
+)
 
 export const RouteNumber = ({ route, isSpecial, componentType }) => {
     const { isMobile } = useWindowSize()
@@ -51,21 +62,18 @@ export const RouteDetails = ({ origin, destination, remark }) => {
     const styles = useMemo(() => ({
         wrapper: {
             display: "inline-flex",
+            flexDirection: "column",
             letterSpacing: isMobile ? "0" : "0.25px",
-            alignItems: "center",
-            gap: isMobile ? "4px" : "8px",
+            gap: "2px",
             minWidth: 0,
-            flexWrap: "nowrap",
-            overflow: "hidden",
-            textOverflow: "ellipsis"
+        },
+        detail: {
+            display: "flex",
+            alignItems: "center",
+            gap: "6px",
         },
         special: {
-            fontSize: isMobile ? "12px" : "15px",
-            textAlign: "center",
-            maxWidth: isMobile ? "120px" : "none",
-            overflow: "hidden",
-            textOverflow: "ellipsis",
-            whiteSpace: "nowrap"
+            fontSize: "12px",
         },
         to: {
             fontSize: isMobile ? "10px" : "14px",
@@ -76,19 +84,19 @@ export const RouteDetails = ({ origin, destination, remark }) => {
 
     return (
         <>
-            <span>{itemSeparator}</span>
+            <ItemSeparator />
             <div style={styles.wrapper}>
-                {origin}
-                <span style={styles.to}>{toSeparator}</span>
-                {destination}
+                <div style={styles.detail}>
+                    {origin}
+                    <span style={styles.to}>{toSeparator}</span>
+                    {destination}
+                </div>
+                {remark && (
+                    <div style={styles.special}>
+                        <span>{remark}</span>
+                    </div>
+                )}
             </div>
-            <span>{itemSeparator}</span>
-
-            {remark && (
-                <span style={styles.special}>
-                    {remark}
-                </span>
-            )}
         </>
     )
 }
