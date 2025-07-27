@@ -152,56 +152,159 @@ export const RouteQueryInput = () => {
             ...base,
             backgroundColor: "rgba(24, 27, 27, 0.5)",
             color: "#fff",
-            boxShadow: state.isFocused ? "0 0 0 2px #2563eb" : base.boxShadow,
+            boxShadow: state.isFocused ? "0 0 0 2px #2563eb" : "none",
             height: isMobile ? 36 : 42,
             minHeight: isMobile ? 36 : 42,
             border: `2px solid ${state.isFocused ? "#2563eb" : "#444"}`,
+            borderRadius: "8px",
+            transition: "all 0.2s ease",
+            "&:hover": {
+                border: "2px solid rgba(37, 99, 235, 0.5)",
+            }
         }),
         menu: base => ({
             ...base,
-            backgroundColor: "rgba(35, 39, 47, 0.85)",
+            backgroundColor: "rgba(23, 25, 28, 0.95)",
+            backdropFilter: "blur(8px)",
+            border: "1px solid rgba(37, 99, 235, 0.2)",
+            borderRadius: "12px",
+            boxShadow: "0 4px 20px rgba(0, 0, 0, 0.3)",
             color: "#fff",
             zIndex: 9999,
             fontSize: isMobile ? "14px" : base.fontSize,
+            overflow: "hidden",
+            transition: "all 0.2s ease",
+            width: "100%",
         }),
         menuList: base => ({
             ...base,
             maxHeight: isMobile ? "250px" : "500px",
+            overflowX: "hidden",
             overflowY: "auto",
+            "&::-webkit-scrollbar": {
+                width: "8px",
+            },
+            "&::-webkit-scrollbar-track": {
+                background: "transparent",
+            },
+            "&::-webkit-scrollbar-thumb": {
+                background: "#444",
+                borderRadius: "4px",
+                "&:hover": {
+                    background: "#555",
+                },
+            },
+        }),
+        option: (base, state) => ({
+            ...base,
+            position: "relative",
+            border: state.isSelected
+                ? "2px solid #3b82f6"
+                : state.isFocused
+                    ? "2px solid rgba(59, 130, 246, 0.5)"
+                    : "2px solid transparent",
+            borderRadius: "8px",
+            backgroundColor: state.isSelected
+                ? "rgba(59, 130, 246, 0.3)"
+                : state.isFocused
+                    ? "rgba(17, 24, 39, 0.95)"
+                    : "transparent",
+            color: state.isSelected ? "#fff" : "#e5e7eb",
+            cursor: "pointer",
+            margin: "4px",
+            padding: "8px 12px",
+            width: "auto",
+            whiteSpace: "normal",
+            wordWrap: "break-word",
+            transition: "all 0.2s ease",
+            "&:hover": {
+                backgroundColor: "rgba(59, 130, 246, 0.15)",
+                border: "2px solid rgba(59, 130, 246, 0.6)",
+                transform: "translateX(4px)",
+            },
+            "&:active": {
+                backgroundColor: "rgba(59, 130, 246, 0.25)",
+                transform: "translateX(2px)",
+            }
+        }),
+        input: base => ({
+            ...base,
+            color: "#fff",
+            margin: "0 2px",
         }),
         placeholder: base => ({
             ...base,
             color: "#777",
             opacity: 1,
         }),
-        option: (base, state) => ({
-            ...base,
-            border: `2px solid ${state.isFocused ? "#2563eb" : "transparent"}`,
-            borderRadius: "6px",
-            backgroundColor: state.isFocused ? "rgba(0, 0, 0, 1)" : "rgba(32, 36, 38, 0.9)",
-            color: "#fff",
-        }),
-        input: base => ({
-            ...base,
-            color: "#fff",
-        }),
         singleValue: base => ({
             ...base,
             color: "#fff",
+            margin: "0 2px",
+        }),
+        valueContainer: base => ({
+            ...base,
+            padding: "2px 8px",
+        }),
+        indicatorsContainer: base => ({
+            ...base,
+            "> div": {
+                padding: "6px",
+            },
         }),
         indicatorSeparator: (base, state) => ({
             ...base,
-            backgroundColor: state.isFocused ? "#2563eb" : "#444"
+            backgroundColor: state.isFocused ? "#2563eb" : "#444",
+            margin: "4px 0",
+            width: "2px",
+            transition: "all 0.2s ease",
         }),
         dropdownIndicator: (base, state) => ({
             ...base,
             color: state.isFocused ? "#2563eb" : "#444",
-            "&:hover": { color: "#444" },
+            padding: "6px",
+            transition: "all 0.2s ease",
+            "&:hover": {
+                color: "#2563eb",
+            },
         }),
         clearIndicator: (base, state) => ({
             ...base,
             color: state.isFocused ? "#2563eb" : "#444",
-            "&:hover": { color: "#999" },
+            padding: "6px",
+            transition: "all 0.2s ease",
+            "&:hover": {
+                color: "#2563eb",
+            },
+        }),
+        noOptionsMessage: base => ({
+            ...base,
+            color: "#777",
+            textAlign: "center",
+            padding: "12px",
+        }),
+        loadingMessage: base => ({
+            ...base,
+            color: "#777",
+            textAlign: "center",
+            padding: "12px",
+        }),
+        multiValue: base => ({
+            ...base,
+            backgroundColor: "rgba(37, 99, 235, 0.15)",
+            borderRadius: "4px",
+        }),
+        multiValueLabel: base => ({
+            ...base,
+            color: "#fff",
+        }),
+        multiValueRemove: base => ({
+            ...base,
+            color: "#777",
+            "&:hover": {
+                backgroundColor: "rgba(37, 99, 235, 0.3)",
+                color: "#fff",
+            },
         }),
     }), [isMobile])
 

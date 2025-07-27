@@ -2,7 +2,6 @@ import { useTheme, alpha } from '@mui/material/styles'
 import { useWindowSize } from '@hooks'
 import { useMemo } from 'react'
 
-
 export const useButtonStyles = (color) => {
     const theme = useTheme()
     const { isMobile } = useWindowSize()
@@ -10,46 +9,74 @@ export const useButtonStyles = (color) => {
     return useMemo(() => ({
         button: {
             margin: 0,
-            backgroundColor: theme => theme.palette[color]?.main || theme.palette.primary.main,
+            background: theme => `linear-gradient(135deg, 
+                ${alpha(theme.palette[color]?.main || theme.palette.primary.main, 0.9)},
+                ${alpha(theme.palette[color]?.dark || theme.palette.primary.dark, 0.8)}
+            )`,
+            backdropFilter: 'blur(8px)',
             color: theme => theme.palette[color]?.contrastText,
-            borderRadius: 2,
-            boxShadow: '0 2px 8px 0 rgba(0,0,0,0.10)',
+            borderRadius: '12px',
+            border: theme => `1px solid ${alpha(theme.palette[color]?.main || theme.palette.primary.main, 0.3)}`,
+            boxShadow: `
+                0 4px 12px rgba(0, 0, 0, 0.1),
+                inset 0 1px 1px rgba(255, 255, 255, 0.1)
+            `,
             fontFamily: "Zen Kaku Gothic Antique",
             fontWeight: 500,
             fontSize: isMobile ? '1.1rem' : '1rem',
             height: isMobile ? "64px" : "48px",
-            px: 2,
-            py: 1,
+            px: 3,
+            py: 1.5,
             textTransform: 'none',
-            transition: 'all 0.2s ease-in-out',
-            outline: 'none',
+            transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+            position: 'relative',
+            overflow: 'hidden',
+            zIndex: 1,
+
+            '&::before': {
+                content: '""',
+                position: 'absolute',
+                inset: 0,
+                background: 'linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent)',
+                transform: 'translateX(-100%)',
+                transition: 'transform 0.6s ease',
+                zIndex: -1,
+            },
 
             '&:hover': {
-                backgroundColor: theme => theme.palette[color]?.dark || theme.palette.primary.dark,
-                boxShadow: '0 6px 24px 0 rgba(37,99,235,0.18)',
-                filter: 'brightness(1.08)',
-                transform: 'translateY(-2px) scale(1.04)',
-                outline: `2.5px solid ${theme.palette[color]?.dark}`,
-                outlineOffset: '1px',
+                transform: 'translateY(-2px)',
+                boxShadow: theme => `
+                    0 8px 24px ${alpha(theme.palette[color]?.main || theme.palette.primary.main, 0.25)},
+                    inset 0 1px 1px rgba(255, 255, 255, 0.2)
+                `,
+                border: theme => `1px solid ${alpha(theme.palette[color]?.main || theme.palette.primary.main, 0.5)}`,
+                '&::before': {
+                    transform: 'translateX(100%)',
+                },
             },
 
             '&:focus-visible': {
-                outline: '2.5px solid #2563eb',
-                outlineOffset: '1px',
+                outline: 'none',
+                boxShadow: theme => `
+                    0 0 0 2px ${alpha(theme.palette[color]?.main || theme.palette.primary.main, 0.4)},
+                    0 8px 24px ${alpha(theme.palette[color]?.main || theme.palette.primary.main, 0.25)}
+                `,
             },
 
             '&:active': {
-                boxShadow: '0 1px 4px 0 rgba(0,0,0,0.12)',
-                filter: 'brightness(0.97)',
-                transform: 'scale(0.98)',
+                transform: 'translateY(1px) scale(0.98)',
+                boxShadow: `
+                    0 2px 8px rgba(0, 0, 0, 0.1),
+                    inset 0 1px 2px rgba(0, 0, 0, 0.1)
+                `,
             },
 
             '&.Mui-disabled': {
-                backgroundColor: '#2d2b2b !important',
-                color: '#595555 !important',
+                background: 'rgba(45, 43, 43, 0.6)',
+                backdropFilter: 'blur(4px)',
+                color: 'rgba(255, 255, 255, 0.3)',
+                border: '1px solid rgba(89, 85, 85, 0.2)',
                 boxShadow: 'none',
-                opacity: 1,
-                border: '1px solid #2d2b2b',
                 cursor: 'not-allowed',
             }
         },
@@ -59,29 +86,44 @@ export const useButtonStyles = (color) => {
             whiteSpace: 'nowrap',
             fontFamily: "Zen Kaku Gothic Antique",
             fontWeight: 500,
+            letterSpacing: '0.01em',
         },
 
-        labelWrapper: { display: "flex", alignItems: "center", gap: 6 },
+        labelWrapper: {
+            display: "flex",
+            alignItems: "center",
+            gap: 8,
+            position: 'relative',
+            zIndex: 2,
+        },
 
         switch: {
             '& .MuiSwitch-switchBase.Mui-checked': {
-                color: theme => theme.palette[color]?.light || theme.palette.primary.light,
+                color: theme => alpha(theme.palette[color]?.light || theme.palette.primary.light, 0.9),
                 '&:hover': {
                     backgroundColor: theme =>
-                        alpha(theme.palette[color]?.light || theme.palette.primary.light, 0.08),
+                        alpha(theme.palette[color]?.light || theme.palette.primary.light, 0.12),
                 },
             },
             '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': {
-                backgroundColor: theme => theme.palette[color]?.dark || theme.palette.primary.dark,
-                opacity: 0.75,
+                background: theme => `linear-gradient(135deg, 
+                    ${theme.palette[color]?.main || theme.palette.primary.main},
+                    ${theme.palette[color]?.dark || theme.palette.primary.dark}
+                )`,
+                opacity: 0.9,
             },
-            transform: isMobile ? "scale(1.5)" : "scale(1.1)"
+            transform: isMobile ? "scale(1.5)" : "scale(1.1)",
+            transition: 'transform 0.3s ease',
         },
 
         switchLabel: {
             display: "flex",
             alignItems: "center",
-            gap: isMobile ? 2 : 1
+            gap: isMobile ? 2 : 1,
+            transition: 'opacity 0.2s ease',
+            '&:hover': {
+                opacity: 0.9,
+            }
         }
     }), [color, isMobile, theme])
 }

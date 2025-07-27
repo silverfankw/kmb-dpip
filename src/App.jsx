@@ -27,20 +27,43 @@ const styles = {
 		"max-sm:gap-2"
 	].join(" "),
 
+	iconSx: {
+		color: "#999",
+		fontSize: 24,
+	},
+
+	asyncSelectWrapper: "flex items-center gap-4 w-full relative z-20",
+
 	querySection: [
 		"order-1 max-sm:order-2",
 		"flex gap-3 items-center justify-center",
-		"bg-[#18181b]/80 backdrop-blur-md shadow-2xl ",
-		"p-6 max-md:p-4 max-md:flex-col max-md:gap-2",
-		"border border-gray-600/90 rounded-2xl"
+		"bg-gradient-to-br from-[#18181b]/90 to-[#27272a]/80",
+		"backdrop-blur-md",
+		"shadow-[0_8px_32px_rgba(0,0,0,0.2)]",
+		"border border-gray-600/30",
+		"rounded-2xl",
+		"relative",
+		"p-6 max-md:p-4 max-md:flex-col max-md:gap-3",
+		"transition-all duration-300 ease-out",
+		"hover:shadow-[0_8px_32px_rgba(37,99,235,0.15)]",
+		"hover:border-blue-500/30",
+		"hover:from-[#18181b]/95 hover:to-[#27272a]/85",
+		"before:absolute before:inset-0 before:rounded-2xl",
+		"before:bg-gradient-to-br before:from-blue-500/5 before:to-purple-500/5",
+		"before:opacity-0 hover:before:opacity-100",
+		"before:transition-opacity before:duration-300",
 	].join(" "),
 
 	controlPanelSection: [
 		"order-2 max-sm:order-3",
 		"flex gap-4 flex-wrap justify-center",
-		"bg-[#18181b]/80 shadow-lg",
+		"bg-[#18181b]/80 backdrop-blur-md",
 		"p-6 w-full max-md:flex-col max-md:gap-4",
-		"border border-gray-600/90 rounded-2xl",
+		"border border-gray-600/20 rounded-2xl",
+		"shadow-[0_8px_32px_rgba(0,0,0,0.2)]",
+		"transition-all duration-300 ease-in-out",
+		"hover:shadow-[0_8px_32px_rgba(37,99,235,0.1)]",
+		"hover:border-blue-500/20",
 	].join(" "),
 
 	screenPanelSection: [
@@ -49,11 +72,8 @@ const styles = {
 		"gap-10 max-sm:gap-6 py-4"
 	].join(" "),
 
-	asyncSelectWrapper: "flex items-center gap-4 w-full",
-
 	monitorStyle: [
 		"w-[800px] h-[480px]",
-		// "w-[1200px] h-[400px]",
 		"max-xl:w-[700px] max-xl:h-[420px]",
 		"max-md:w-[600px] max-md:h-[360px]",
 		"max-sm:w-[400px] max-sm:h-[240px]",
@@ -61,7 +81,7 @@ const styles = {
 		"border-[.375rem] max-md:border-[.25em] border-solid border-[#23272f]",
 		"rounded-xl",
 		"outline outline-[0.875rem] max-sm:outline-[0.625rem] outline-[#000000]",
-		"z-1"
+		"z-1",
 	].join(" "),
 }
 
@@ -69,7 +89,6 @@ const App = () => {
 
 	const theme = useTheme()
 	const dispatch = useDispatch()
-
 	const { hasStoredData, storedData, saveToLocalStorage } = useLocalStorageState()
 	const { isUserSelectedRoute, loadingError, routeDetail, currentStopIndex } = useSelector(state => state.routeSelection)
 	const { routes } = useSelector(state => state.route)
@@ -171,8 +190,7 @@ const App = () => {
 						<div className={styles.asyncSelectWrapper}>
 							<SearchIcon
 								sx={{
-									color: "#999",
-									fontSize: 24,
+									...styles.iconSx,
 									[theme.breakpoints.down("sm")]: { display: "none" },
 								}}
 							/>
