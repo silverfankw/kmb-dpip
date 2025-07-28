@@ -7,14 +7,16 @@ const styles = {
         "flex flex-col",
         "basis-[10%]",
         "text-center",
-        "items-center"
+        "items-center",
+        "min-w-max",
+        "shrink-0",
     ].join(" "),
 
     routeMarkerZh: [
         "font-[500]",
         "tracking-tighter",
         "text-[4cqw]",
-        "max-sm:text-[4cqw]"
+        "max-sm:text-[4cqw]",
     ].join(" "),
 
     routeMarkerEn: [
@@ -22,7 +24,6 @@ const styles = {
         "text-[2.75cqw]",
         "max-sm:text-[3cqw]"
     ].join(" "),
-
 
     routeNumber: [
         "basis-[17.5%]",

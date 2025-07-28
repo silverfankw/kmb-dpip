@@ -58,7 +58,13 @@ export async function fetchAllStops(stopIDs) {
 export async function fetchSpecialRouteRemark(route, bound, service_type) {
     const convertedBound = convertBound(bound, 'number')
 
-    const res = await fetch(`https://search.kmb.hk/KMBWebSite/Function/FunctionRequest.ashx?action=getSpecialRoute&route=${route}&bound=${convertedBound}`)
+    const res = await fetch(`https://search.kmb.hk/KMBWebSite/Function/FunctionRequest.ashx?action=getSpecialRoute&route=${route}&bound=${convertedBound}`, {
+        headers: {
+            'Accept': 'application/json',
+            'Accept-Charset': 'utf-8'
+        }
+    })
+
     if (!res.ok) {
         throw new Error(`HTTP error! status: ${res.status} ${res.statusText}`)
     }

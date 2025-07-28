@@ -73,7 +73,7 @@ export const RouteDetails = ({ origin, destination, remark }) => {
             gap: "6px",
         },
         special: {
-            fontSize: "12px",
+            fontSize: isMobile ? "10px" : "12px",
         },
         to: {
             fontSize: isMobile ? "10px" : "14px",
