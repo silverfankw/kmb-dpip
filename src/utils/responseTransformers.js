@@ -1,7 +1,7 @@
 // Utility functions to transform API responses into a more usable format.
 
 // Regular expression to match stop ID pattern: (XX999) at the end of string
-const STOP_ID_REGEX = /\([A-Z]{2}\d{3}\)$/
+const STOP_ID_REGEX = /\([A-Z]{2}\d{3}[A-Za-z]?\)$/
 
 // Helper to extract stop name without ID
 const extractNameWithoutId = (fullName) => {
