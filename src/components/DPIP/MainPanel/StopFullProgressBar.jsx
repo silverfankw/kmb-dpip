@@ -108,10 +108,10 @@ export const StopFullProgressBar = ({ progressBarRef }) => {
     const stopLength = routeDetail?.stops?.length ?? 0
 
     const rangeSize = splitProgressBarCriteria
-    const rangeSlide = Math.floor(rangeSize * 0.8)
+    const slideThreshold = Math.floor(rangeSize * 0.8)
 
     const [windowStart, windowEnd] = useFullProgressBarWindow(
-        stopLength, currentStopIndex, rangeSize, rangeSlide)
+        stopLength, currentStopIndex, rangeSize, slideThreshold)
 
     const stopsInWindow = windowEnd - windowStart
     const progressInWindow = currentStopIndex - windowStart
