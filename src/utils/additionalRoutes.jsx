@@ -391,7 +391,7 @@ export const additionalRouteStops = [
     { "route": "N72E", "bound": "O", "service_type": "1", "seq": "10", "stop": "36AABE317D2F7A0B" },
     { "route": "N72E", "bound": "O", "service_type": "1", "seq": "11", "stop": "5EEA801CA265E5C1" },
     { "route": "N72E", "bound": "O", "service_type": "1", "seq": "12", "stop": "77BFE3A169866C7D" },
-    { "route": "N72E", "bound": "O", "service_type": "1", "seq": "13", "stop": "CD7C28BDF71C00D7" },
+    { "route": "N72E", "bound": "O", "service_type": "1", "seq": "13", "stop": "E10A0960D4E103B1" },
     { "route": "N72E", "bound": "O", "service_type": "1", "seq": "14", "stop": "1DEB855D55528B03" },
     { "route": "N72E", "bound": "O", "service_type": "1", "seq": "15", "stop": "11A1269F9B78F269" },
     { "route": "N72E", "bound": "O", "service_type": "1", "seq": "16", "stop": "5D75A800F823B45D" },
