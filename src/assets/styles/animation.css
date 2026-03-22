@@ -2,6 +2,12 @@
 
 @theme {
     --animate-bullet-pulse: bulletPulse 1.25s step-start infinite;
+    --animate-heading-fade-in: headingFadeIn 0.45s ease-in-out;
+
+    @keyframes headingFadeIn {
+        from { opacity: 0; }
+        to   { opacity: 1; }
+    }
 
     @keyframes bulletPulse {  
         0%, 100% {
