@@ -5,6 +5,7 @@ import { TripleArrow } from "@components"
 // Stage durations in ms: [bilingual, chinese-only, english-only]
 const STAGE_DURATIONS = [4500, 4500, 4500]
 
+
 // Tailwind CSS classes for the component
 const styles = {
     routeMarkerContainer: [
@@ -34,18 +35,17 @@ const styles = {
         "font-[500]",
         "text-[6.75cqw]",
         "text-center",
-        "tracking-tight",
-        "scale-y-110",
+        "scale-y-120",
     ].join(" "),
 
     routeNumberInline: [
         "font-[500]",
-        "text-[6.5cqw]",
+        "text-[6cqw]",
         "text-center",
-        "tracking-tight",
-        "scale-y-110",
+        "scale-y-120",
         "shrink-0",
         "self-center",
+        "ml-1 mr-1"
     ].join(" "),
 
     arrowContainer: [
@@ -69,18 +69,18 @@ const styles = {
     arrowContainerInline: [
         "flex",
         "items-center",
-        "w-[3.25rem]",
+        "w-[7cqw]",
         "shrink-0",
-        "justify-center"
+        "justify-center",
     ].join(" "),
 
     arrowContainerSmInline: [
         "flex",
         "items-center",
-        "w-[2rem]",
+        "w-[6cqw]",
         "shrink-0",
         "justify-center",
-        "ml-2",
+        "ml-1",
     ].join(" "),
 
     destContainer: [
@@ -95,7 +95,7 @@ const styles = {
         "max-md:text-[4.375cqw]",
         "max-sm:text-[5cqw]",
         "tracking-wide",
-        "max-sm:tracking-normal"
+        "max-sm:tracking-normal",
     ].join(" "),
 
     destEn: [
@@ -110,28 +110,28 @@ const styles = {
     markerZhInline: [
         "font-[500]",
         "tracking-tighter",
-        "text-[4.5cqw]",
-        "shrink-0", 
-        "mr-2"
+        "text-[3.5cqw]",
+        "shrink-0",
+        "mr-1"
     ].join(" "),
 
     markerEnInline: [
         "tracking-tighter",
-        "text-[4.5cqw]",
+        "text-[3.5cqw]",
         "shrink-0",
     ].join(" "),
 
     destZhInline: [
         "font-[500]",
         "whitespace-nowrap",
-        "text-[5cqw]",
+        "text-[5.5cqw]",
         "tracking-tight",
     ].join(" "),
 
     destEnInline: [
         "font-[500]",
         "whitespace-nowrap",
-        "text-[4.25cqw]",
+        "text-[4.5cqw]",
         "tracking-tight",
     ].join(" "),
 }
@@ -156,12 +156,12 @@ export const RouteDisplayHeading = () => {
         if (!el) return
         const container = el.parentElement
         if (!container || !container.clientWidth) return
-        el.style.transform = 'translateX(-50%) translateY(-50%) scale(1)'
+        el.style.transform = 'scale(1)'
         const naturalWidth = el.offsetWidth
         if (!naturalWidth) return
         const targetWidth = container.clientWidth * (stage === 1 ? 0.75 : 0.95)
         const scale = Math.min(1.1, targetWidth / naturalWidth)
-        el.style.transform = `translateX(-50%) translateY(-50%) scale(${scale})`
+        el.style.transform = `scale(${scale})`
     }, [stage])
 
     useLayoutEffect(() => {
@@ -181,7 +181,7 @@ export const RouteDisplayHeading = () => {
     return (
         <>
             {stage === 0 && (
-                <div className="flex-1 flex items-center gap-1">
+                <div className="flex-1 flex items-center gap-2">
                     <div className={styles.routeMarkerContainer}>
                         <div className={styles.routeMarkerZh}>路線</div>
                         <div className={styles.routeMarkerEn}>Route</div>
@@ -196,8 +196,8 @@ export const RouteDisplayHeading = () => {
             )}
 
             {(stage === 1 || stage === 2) && (
-                <div className="flex-1 h-full relative overflow-hidden">
-                    <div ref={stageRef} className="absolute top-1/2 left-1/2 inline-flex items-center gap-2">
+                <div className="flex-1 h-full flex items-center justify-center overflow-hidden">
+                    <div ref={stageRef} className="inline-flex items-center gap-2">
 
                         {stage === 1 && (
                             <>
