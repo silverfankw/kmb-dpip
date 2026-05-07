@@ -1,5 +1,6 @@
 
-Project Demo🔗👉🏻: https://silverfankw.github.io/kmb-dpip/
+<a href="https://silverf.dev/kmb-dpip/"><img src="https://img.shields.io/badge/Click_for_Project_Demo-blue?logo=googlechrome&logoColor=white&style=for-the-badge" alt="Button" /></a>
+
 
 ## Introduction
 🚏 This project aims to simulate KMB Dynamic Passenger Information Panel (DPIP), displaying route destination and bus stops name.
