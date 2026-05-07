@@ -5,7 +5,7 @@ const STOP_ID_REGEX = /\([A-Z]{2}\d{3}[A-Za-z]?\)$/
 
 // Helper to extract stop name without ID
 const extractNameWithoutId = (fullName) => {
-    return fullName.replace(STOP_ID_REGEX, '').trim()
+    return fullName.replace(STOP_ID_REGEX, '').replace(/[,-]/g, ' ').trim()
 }
 
 // Helper to extract just the stop ID

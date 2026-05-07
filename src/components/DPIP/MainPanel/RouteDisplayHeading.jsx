@@ -18,7 +18,7 @@ const styles = {
     ].join(" "),
 
     routeMarkerZh: [
-        "font-[500]",
+        "font-[450]",
         "tracking-tighter",
         "text-[4cqw]",
         "max-sm:text-[4cqw]",
@@ -32,14 +32,14 @@ const styles = {
 
     routeNumber: [
         "basis-[17.5%]",
-        "font-[500]",
+        "font-[450]",
         "text-[6.75cqw]",
         "text-center",
         "scale-y-120",
     ].join(" "),
 
     routeNumberInline: [
-        "font-[500]",
+        "font-[450]",
         "text-[6cqw]",
         "text-center",
         "scale-y-120",
@@ -89,7 +89,7 @@ const styles = {
     ].join(" "),
 
     destZh: [
-        "font-[500]",
+        "font-[450]",
         "whitespace-nowrap",
         "text-[4.375cqw]",
         "max-md:text-[4.375cqw]",
@@ -99,7 +99,7 @@ const styles = {
     ].join(" "),
 
     destEn: [
-        "font-[500]",
+        "font-[450]",
         "text-sm",
         "whitespace-nowrap",
         "text-[2.5cqw]",
@@ -108,7 +108,7 @@ const styles = {
 
     // Inline (single-language) variants
     markerZhInline: [
-        "font-[500]",
+        "font-[450]",
         "tracking-tighter",
         "text-[3.5cqw]",
         "shrink-0",
@@ -122,14 +122,14 @@ const styles = {
     ].join(" "),
 
     destZhInline: [
-        "font-[500]",
+        "font-[450]",
         "whitespace-nowrap",
         "text-[5.5cqw]",
         "tracking-tight",
     ].join(" "),
 
     destEnInline: [
-        "font-[500]",
+        "font-[450]",
         "whitespace-nowrap",
         "text-[4.5cqw]",
         "tracking-tight",

@@ -70,7 +70,7 @@ export const changeBoundThunk = createAsyncThunk(
             isUserSelectedRoute &&
             (routeHasTwoBound || routeDetail?.service_type === 1)
         ) {
-            const { bound, orig_tc, dest_tc } = routeDetail
+            const { bound, orig_tc, dest_tc, orig_en, dest_en } = routeDetail
             const newBound = bound === "I" ? "O" : "I"
 
             dispatch(
@@ -79,7 +79,9 @@ export const changeBoundThunk = createAsyncThunk(
                         ...routeDetail,
                         bound: newBound,
                         dest_tc: orig_tc,
-                        orig_tc: dest_tc,
+                        orig_tc: dest_tc, 
+                        dest_en: orig_en,
+                        orig_en: dest_en,
                     },
                     routes
                 })

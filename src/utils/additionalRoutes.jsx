@@ -839,3 +839,61 @@ export const additionalRouteStops = [
     { "route": "R968", "bound": "O", "service_type": "1", "seq": "14", "stop": "76B4054F2E1F00B0" },
     { "route": "R968", "bound": "O", "service_type": "1", "seq": "15", "stop": "17B98BD1165A7B92" },
 ]
+
+export const hardcodedStopIDs = {
+    'HK1_O_1':[
+        "HK1_O_1_1", "HK1_O_1_2", "HK1_O_1_3", "HK1_O_1_4", "HK1_O_1_5", "HK1_O_1_6", "HK1_O_1_7", "HK1_O_1_8", "HK1_O_1_9", "HK1_O_1_10",
+        "HK1_O_1_11", "HK1_O_1_12", "HK1_O_1_13", "HK1_O_1_14", "HK1_O_1_15", "HK1_O_1_16", "HK1_O_1_17"
+    ],
+    'HK1_O_2':[
+        "HK1_O_1_1", "HK1_O_1_2", "HK1_O_1_3", "HK1_O_1_4", "HK1_O_1_5", "HK1_O_1_6", "HK1_O_1_7", "HK1_O_1_8", "HK1_O_2_9",
+        "HK1_O_2_10", "HK1_O_2_11", "HK1_O_2_12"
+    ],
+    'HK2_O_1': [
+        "HK2_O_1_1","HK2_O_1_2","HK2_O_1_3", "HK2_O_1_4", "HK2_O_1_5", "HK2_O_1_6", "HK2_O_1_7", "HK2_O_1_8", "HK2_O_1_9", "HK2_O_1_10", 
+            "HK2_O_1_11", "HK2_O_1_12", "HK2_O_1_13", "HK2_O_1_14", "HK2_O_1_15", "HK2_O_1_16", "HK2_O_1_17", "HK2_O_1_18", "HK2_O_1_19"],
+}
+
+export const additionalRouteStopDetails = {
+    HK1_O_1_1: { en: "STAR FERRY", zh:"尖沙咀碼頭" },
+    HK1_O_1_2: { en: "2. CHINA HONG KONG CITY", zh: "2. 中港城" },
+    HK1_O_1_3: { en: "3. AUSTIN ROAD WEST", zh: "3. 柯士甸道西" },
+    HK1_O_1_4: { en: "4. M+", zh: "4. M+" },
+    HK1_O_1_5: { en: "5. HONG KONG PALACE MUSEUM", zh: "5. 香港故宮文化博物館" },
+    HK1_O_1_6: { en: "6. SHANGHAI STREET", zh: "6. 上海街" },
+    HK1_O_1_7: { en: "7. KOWLOON CENTRAL POST OFFICE", zh: "7. 九龍中央郵局" },
+    HK1_O_1_8: { en: "8. NELSON STREET", zh: "8. 奶路臣街" },
+    HK1_O_1_9: { en: "9. PRINCE EDWARD STATION", zh: "9. 太子站" },
+    HK1_O_1_10: { en: "10. PEI HO STREET", zh: "10. 北河街" },
+    HK1_O_1_11: { en: "11. SHEUNG LI UK GARDEN", zh: "11. 上李屋花園" },
+    HK1_O_1_12: { en: "12. PHONEIX STREET", zh: "12. 豐力樓" },
+    HK1_O_1_13: { en: "13. WONG TAI SIN BBI WONG TAI SIN TEMPLE", zh: "13. 黃大仙轉車站黃大仙廟" },
+    HK1_O_1_14: { en: "14. CHI LIN NUNNERY", zh: "14. 志蓮淨苑" },
+    HK1_O_1_15: { en: "15. KOWLOON CITY BBI REGAL ORIENTAL HOTEL", zh: "15. 九龍城轉車站富豪東方酒店" },
+    HK1_O_1_16: { en: "16. WING ON PLAZA", zh: "16. 永安廣場" },
+    HK1_O_1_17: { en: "17. STAR FERRY", zh: "17. 尖沙咀碼頭" },
+    HK1_O_2_9: { en: "9. MONG KOK STATION", zh: "9. 旺角站" },
+    HK1_O_2_10: { en: "10. PITT STREET", zh: "10. 碧街" },
+    HK1_O_2_11: { en: "11. CAMERON ROAD", zh: "11. 金馬倫道" },
+    HK1_O_2_12: { en: "12. STAR FERRY", zh: "12. 尖沙咀碼頭" },
+
+    HK2_O_1_1: { en: "1.KOWLOON STATION BUS TERMINUS", zh:"1. 尖沙咀碼頭海港城" },
+    HK2_O_1_2: { en: "2.WESTERN HARBOUR TUNNEL BBI NGA CHEUNG ROAD", zh: "2. 西隧轉車站雅翔道" },
+    HK2_O_1_3: { en: "3.AUSTIN ROAD XIQU CENTRE", zh: "3. 柯士甸道戲曲中心" },
+    HK2_O_1_4: { en: "4.CANTON ROAD GATEWAY HOTEL HK", zh: "4. 廣東道港威酒店" },
+    HK2_O_1_5: { en: "5.CANTON ROAD PEKING ROAD ", zh: "5. 廣東道北京道" },
+    HK2_O_1_6: { en: "6.CHINA HK CITY XIQU CENTRE", zh: "6. 中港城戲曲中心" },
+    HK2_O_1_7: { en: "7.JORDAN ROAD HSR STATION", zh: "7. 佐敦道高鐵站" },
+    HK2_O_1_8: { en: "8.FERRY STREET YAU MA TEI POLICE STATION", zh: "8. 渡船街油麻地警署" },
+    HK2_O_1_9: { en: "STONECUTTER BGE LONG-SPAN CABLE-STAYED BGE", zh: "昂船洲大橋雙塔斜拉橋" },
+    HK2_O_1_10: { en: "CONTAINER TERMINAL WITNESS DEV OF ENTREPOT", zh: "貨櫃碼頭見證轉口港發展" },
+    HK2_O_1_11: { en: "TSING MA BRIDGE ONE OF LONGEST SUSPENSION BGES", zh: "青馬大橋最長雙用懸索吊橋" },
+    HK2_O_1_12: { en: "MA WAN ONCE CRUCIAL FOR SAFEGUARDING HK", zh: "馬灣曾屬香港重要邊防" },
+    HK2_O_1_13: { en: "TING KAU BGE FIRST THREE-TOWER CABLE-STAYED BGE", zh: "汀九橋首條三塔斜拉索橋" },
+    HK2_O_1_14: { en: "TSING YI MIX OF RESIDENTIAL AND HEAVY INDUSTRY", zh: "青衣集住宅重工於一身" },
+    HK2_O_1_15: { en: "KMB HEADQUARTERS HK'S LARGEST BUS COMPANY", zh: "九巴總部香港最大巴士公司" },
+    HK2_O_1_16: { en: "WEST KLN CORRIDOR EXPERIENCE DIFF SIDES OF HK", zh: "西九龍走廊短時間看香港不同" },
+    HK2_O_1_17: { en: "8.FERRY STREET YAU MA TEI POLICE STATION", zh: "8. 渡船街油麻地警署" },
+    HK2_O_1_18: { en: "9.JORDAN ROAD HSR STATION", zh: "9. 佐敦道高鐵站" },
+    HK2_O_1_19: { en: "10.KOWLOON STATION BUS TERMINUS", zh:"10. 九龍站總站" },
+}

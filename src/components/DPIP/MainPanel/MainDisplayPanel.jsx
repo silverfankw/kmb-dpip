@@ -80,7 +80,7 @@ const basestyles = {
     ].join(" "),
 
     stopNameZh: [
-        "font-[500]",
+        "font-[450]",
         "text-[8cqw]",
         "max-sm:text-[8.5cqw]",
         "max-md:text-[10cqw]",
@@ -90,7 +90,7 @@ const basestyles = {
 
     stopNameEn: [
         "text-center",
-        "font-[500]",
+        "font-[450]",
         "text-[5cqw]",
         "max-sm:text-[4cqw]",
         "max-md:text-[5cqw]",

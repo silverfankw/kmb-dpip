@@ -31,7 +31,7 @@ const styles = {
 
     stopNameContent: [
         "@container",
-        "font-[500]",
+        "font-[450]",
         "relative left-[1.25%]",
         "flex flex-col justify-center",
         "h-[92.5%]",

@@ -1,4 +1,4 @@
-import { transformStopDetail, removeLeadingZero, convertBound, additionalRoutes, additionalRouteStops, compareRouteNumbers } from '@utils'
+import { transformStopDetail, removeLeadingZero, convertBound, additionalRoutes, additionalRouteStops, hardcodedStopIDs, additionalRouteStopDetails, compareRouteNumbers } from '@utils'
 
 const SPECIAL_ROUTE_REMARK_RESPONSE_KEY = "Desc_CHI"
 
@@ -17,6 +17,11 @@ export async function fetchAllRoutes() {
 export async function fetchStopIDs(route, bound, service_type) {
     const normalizedBound = bound === "I" || bound === "inbound" ? "inbound" : "outbound"
 
+    const routeTruncateIndex = `${route}_${bound}_${service_type}`
+    if (hardcodedStopIDs[routeTruncateIndex]) {
+        return hardcodedStopIDs[routeTruncateIndex]
+    }
+
     const res = await fetch(`https://data.etabus.gov.hk/v1/transport/kmb/route-stop/${route}/${normalizedBound}/${service_type}`)
     const json = await res.json()
     const data = json.data
@@ -33,6 +38,12 @@ export async function fetchStopDetail(stopID) {
         return stopCache.get(stopID)
     }
 
+    if (additionalRouteStopDetails[stopID]) {
+        const customStop = additionalRouteStopDetails[stopID]
+        stopCache.set(stopID, customStop)
+        return customStop
+    }
+
     try {
         const res = await fetch(`https://data.etabus.gov.hk/v1/transport/kmb/stop/${stopID}`)
         if (!res.ok)
@@ -46,6 +57,12 @@ export async function fetchStopDetail(stopID) {
 
     }
     catch (error) {
+        if (additionalRouteStopDetails[stopID]) {
+            const customStop = additionalRouteStopDetails[stopID]
+            stopCache.set(stopID, customStop)
+            return customStop
+        }
+
         console.error(`Error when fetching stop detail for stopID: ${stopID}`, error)
         throw error
     }

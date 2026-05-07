@@ -4,7 +4,7 @@ import stringWidth from "string-width"
 const styles = {
     container: [
         "@container",
-        "font-[500]",
+        "font-[450]",
         "relative left-[1.25%]",
         "w-[95%]",
         "h-full",
