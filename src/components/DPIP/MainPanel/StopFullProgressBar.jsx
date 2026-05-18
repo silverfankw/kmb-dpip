@@ -61,6 +61,7 @@ const styles = {
 
     stopName: [
         "stop-name absolute",
+        // "tracking-tighter",
         "text-black text-[1.75cqw]",
         "top-[-2.75cqw] left-1/2",
         "-translate-x-[5%] -rotate-[65deg]",

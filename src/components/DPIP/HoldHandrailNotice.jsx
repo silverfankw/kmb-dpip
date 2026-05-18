@@ -6,8 +6,8 @@ export const HoldHandrailNotice = ({
 
     const styles = {
         noticeContainer: "@container w-full h-full row-span-99 col-span-2 flex flex-col items-center justify-center bg-amber-300",
-        textZh: "text-[12cqw] mt-[-1cqw] tracking-wider font-[700]",
-        textEn: "text-[5.5cqw] mt-[-1.5cqw] tracking-tight font-[700]"
+        textZh: "text-[12cqw] mt-[-1cqw] tracking-wider font-extrabold",
+        textEn: "text-[5.5cqw] mt-[-1.5cqw] tracking-tight font-extrabold"
     }
 
     return (

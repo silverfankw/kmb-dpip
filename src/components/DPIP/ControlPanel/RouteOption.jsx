@@ -63,21 +63,21 @@ export const RouteDetails = ({ origin, destination, remark }) => {
         wrapper: {
             display: "inline-flex",
             flexDirection: "column",
-            letterSpacing: isMobile ? "0" : "0.25px",
+            letterSpacing: isMobile ? "0" : "-0.25px",
             gap: "2px",
             minWidth: 0,
         },
         detail: {
             display: "flex",
             alignItems: "center",
-            gap: "6px",
+            gap: "8px",
         },
         special: {
             fontSize: isMobile ? "10px" : "12px",
         },
         to: {
             fontSize: isMobile ? "10px" : "14px",
-            marginTop: "1.5px",
+            marginTop: "1px",
             fontWeight: 400,
         }
     }), [isMobile])

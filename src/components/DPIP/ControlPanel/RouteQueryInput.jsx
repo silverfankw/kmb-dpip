@@ -39,7 +39,7 @@ const RouteOption = ({ componentType, data, ...props }) => {
         gap: isMobile ? "2px" : "4px",
         alignItems: "center",
         fontSize: isMobile ? "14px" : "18px",
-        fontWeight: 500,
+        fontWeight: 600,
         minWidth: 0,
     }), [isMobile])
 

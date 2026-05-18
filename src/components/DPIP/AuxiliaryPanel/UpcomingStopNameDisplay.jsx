@@ -26,23 +26,24 @@ const styles = {
         "relative",
         "flex flex-col",
         "bg-white",
-        "tracking-[-0.0375rem]"
     ].join(" "),
 
     stopNameContent: [
         "@container",
-        "font-[450]",
+        "font-bold",
         "relative left-[1.25%]",
         "flex flex-col justify-center",
         "h-[92.5%]",
-        "whitespace-nowrap"
+        "whitespace-nowrap",
+        "leading-tight"
     ].join(" "),
 
     zhStopName: [
         "relative",
         "justify-center",
         "max-md:top-[0.25cqw]",
-        "tracking-normal"
+        "tracking-tight",
+        "leading-snug"
     ].join(" "),
 
     enStopName: [
@@ -50,6 +51,7 @@ const styles = {
         "text-[3.75cqw]",
         "max-sm:text-[3.75cqw]",
         "sm:max-md:text-[3.75cqw]",
+        "tracking-tighter",
     ].join(" ")
 }
 
@@ -65,7 +67,7 @@ const getStopNameFontStyle = (text, lang, windowSize) => {
             if (textLength < 45) return {}
 
             const baseSize = windowSize < 768 ? 4 : windowSize < 1280 ? 3.75 : 3.5
-            const scale = textLength >= 50 ? 0.8 : 0.85
+            const scale = textLength >= 50 ? 0.8 : 0.95
 
             return { fontSize: `${baseSize * scale}cqw` }
         })()

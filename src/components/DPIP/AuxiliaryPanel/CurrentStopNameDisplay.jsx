@@ -4,7 +4,7 @@ import stringWidth from "string-width"
 const styles = {
     container: [
         "@container",
-        "font-[450]",
+        "font-semibold",
         "relative left-[1.25%]",
         "w-[95%]",
         "h-full",
@@ -13,13 +13,13 @@ const styles = {
 
     zhStopName: [
         "h-[12cqw]",
-        "relative top-[2cqw]",
+        "relative top-[3cqw]",
         "flex items-center",
         "tracking-normal"
     ].join(" "),
 
     enStopNameWrapper: [
-        "relative top-[15%]",
+        "relative top-[17.5%]",
         "flex",
         "h-[33%]",
         "w-full",
@@ -27,7 +27,7 @@ const styles = {
     ].join(" "),
 
     enStopName: [
-        "text-[5.125cqw]",
+        "text-[5.375cqw]",
         "max-md:text-[5.5cqw]",
         "leading-[1.2]",
         "w-full"
@@ -55,7 +55,7 @@ const computeStopNameStyle = (stopName = "", lang = "en") => {
         style.marginTop = `${visualLength * 0.025}cqh`
     }
     else if (lang === "en") {
-        const willWrap = visualLength > 38
+        const willWrap = visualLength > 35
         style.alignSelf = willWrap ? "flex-start" : "center"
         if (willWrap) {
             style.lineHeight = "1.3"

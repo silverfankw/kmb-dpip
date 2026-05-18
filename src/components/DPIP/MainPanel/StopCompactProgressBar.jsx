@@ -12,7 +12,7 @@ const styles = {
     stopInfoCol: "stopInfoCol flex flex-col gap-0.5 basis-[33%] min-w-[0] h-full justify-center",
     stopZh: "relative text-[2.5cqw] w-full text-center flex items-center justify-center",
     stopZhCurrent: "font-bold",
-    stopEn: "relative text-[1.5cqw] w-full text-center flex items-center justify-center",
+    stopEn: "relative text-[1.75cqw] w-full text-center flex items-center justify-center",
     stopEnCurrent: "font-black",
     stopEnOther: "text-black",
 

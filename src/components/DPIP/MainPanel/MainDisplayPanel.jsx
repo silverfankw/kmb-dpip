@@ -33,17 +33,17 @@ const basestyles = {
     ].join(" "),
 
     nextStopIndicatorZh: [
-        "text-[15cqw]",
+        "text-[14cqw]",
         "mb-[-4px]",
-        "font-[600]",
+        "font-semibold",
         "max-sm:text-[16cqw]",
         "max-sm:mb-[-1px]",
     ].join(" "),
 
     nextStopIndicatorEn: [
-        "text-[7.5cqw]",
+        "text-[8cqw]",
         "max-sm:text-[9cqw]",
-        "font-[400]"
+        "font-semibold"
     ].join(" "),
 
     routeHeadingGrid: [
@@ -62,7 +62,7 @@ const basestyles = {
 
     stopProgressBarContainer: [
         "h-full",
-        "font-[400]",
+        "font-semibold",
         "text-center",
         "tracking-tight"
     ].join(" "),
@@ -80,17 +80,16 @@ const basestyles = {
     ].join(" "),
 
     stopNameZh: [
-        "font-[450]",
+        "font-semibold",
         "text-[8cqw]",
         "max-sm:text-[8.5cqw]",
         "max-md:text-[10cqw]",
-        "tracking-wider",
         "whitespace-nowrap overflow-hidden"
     ].join(" "),
 
     stopNameEn: [
         "text-center",
-        "font-[450]",
+        "font-semibold",
         "text-[5cqw]",
         "max-sm:text-[4cqw]",
         "max-md:text-[5cqw]",
@@ -100,14 +99,14 @@ const basestyles = {
         "@container",
         "flex justify-center",
         "col-start-1 col-end-5",
-        "font-[400]",
-        "text-white",
+        "font-semibold",
+        "text-white tracking-tight",
         "p-0.5"
     ].join(" "),
 
     driverInfoText: [
-        "text-[2cqw]",
-        "max-md:text-[2.25cqw]"
+        "text-[2.05cqw]",
+        "max-md:text-[2.375cqw]"
     ].join(" "),
 
     capitalize: "capitalize",

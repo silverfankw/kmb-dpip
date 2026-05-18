@@ -18,29 +18,28 @@ const styles = {
     ].join(" "),
 
     routeMarkerZh: [
-        "font-[450]",
+        "font-semibold",
         "tracking-tighter",
-        "text-[4cqw]",
-        "max-sm:text-[4cqw]",
+        "text-[3.5cqw]",
     ].join(" "),
 
     routeMarkerEn: [
         "tracking-tighter",
-        "text-[2.75cqw]",
-        "max-sm:text-[3cqw]"
+        "leading-none",
+        "text-[3.25cqw]",
     ].join(" "),
 
     routeNumber: [
         "basis-[17.5%]",
-        "font-[450]",
-        "text-[6.75cqw]",
+        "font-semibold",
+        "text-[6.5cqw]",
         "text-center",
-        "scale-y-120",
+        "scale-y-110",
     ].join(" "),
 
     routeNumberInline: [
-        "font-[450]",
-        "text-[6cqw]",
+        "font-semibold",
+        "text-[5.25cqw]",
         "text-center",
         "scale-y-120",
         "shrink-0",
@@ -86,50 +85,53 @@ const styles = {
     destContainer: [
         "flex flex-col",
         "mr-0.5",
+        "whitespace-nowrap",
+        "overflow-hidden",
+        "text-ellipsis",
     ].join(" "),
 
     destZh: [
-        "font-[450]",
+        "font-semibold",
         "whitespace-nowrap",
         "text-[4.375cqw]",
         "max-md:text-[4.375cqw]",
-        "max-sm:text-[5cqw]",
-        "tracking-wide",
+        "max-sm:text-[5.25cqw]",
         "max-sm:tracking-normal",
     ].join(" "),
 
     destEn: [
-        "font-[450]",
+        "mb-[2px]",
+        "font-semibold",
         "text-sm",
-        "whitespace-nowrap",
-        "text-[2.5cqw]",
-        "max-sm:text-[2.625cqw]",
+        "text-[2.625cqw]",
+        "max-sm:text-[3cqw]",
+        "leading-tight",
     ].join(" "),
 
     // Inline (single-language) variants
     markerZhInline: [
-        "font-[450]",
+        "font-semibold",
         "tracking-tighter",
-        "text-[3.5cqw]",
+        "text-[4cqw]",
         "shrink-0",
         "mr-1"
     ].join(" "),
 
     markerEnInline: [
         "tracking-tighter",
-        "text-[3.5cqw]",
+        "text-[4cqw]",
         "shrink-0",
     ].join(" "),
 
     destZhInline: [
-        "font-[450]",
+        "font-semibold",
         "whitespace-nowrap",
         "text-[5.5cqw]",
         "tracking-tight",
     ].join(" "),
 
     destEnInline: [
-        "font-[450]",
+        "font-semibold",
         "whitespace-nowrap",
         "text-[4.5cqw]",
         "tracking-tight",
