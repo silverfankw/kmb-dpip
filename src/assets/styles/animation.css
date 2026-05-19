@@ -16,9 +16,9 @@
 
         50% {
             outline: .15cqw solid white;
-            border: .15cqw solid #FF0000;
+            border: .2cqw solid #FF0000;
             background-color: yellow;
-            scale: 1.5;
+            scale: 1.75;
         }        
     }
 }       

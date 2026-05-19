@@ -34,15 +34,12 @@ const basestyles = {
 
     nextStopIndicatorZh: [
         "text-[14cqw]",
-        "mb-[-4px]",
+        "mb-[-2px]",
         "font-semibold",
-        "max-sm:text-[16cqw]",
-        "max-sm:mb-[-1px]",
     ].join(" "),
 
     nextStopIndicatorEn: [
         "text-[8cqw]",
-        "max-sm:text-[9cqw]",
         "font-semibold"
     ].join(" "),
 
@@ -80,7 +77,7 @@ const basestyles = {
     ].join(" "),
 
     stopNameZh: [
-        "font-semibold",
+        "font-semibold max-sm:font-medium",
         "text-[8cqw]",
         "max-sm:text-[8.5cqw]",
         "max-md:text-[10cqw]",
@@ -89,7 +86,7 @@ const basestyles = {
 
     stopNameEn: [
         "text-center",
-        "font-semibold",
+        "font-semibold max-sm:font-medium",
         "text-[5cqw]",
         "max-sm:text-[4cqw]",
         "max-md:text-[5cqw]",
@@ -106,7 +103,7 @@ const basestyles = {
 
     driverInfoText: [
         "text-[2.05cqw]",
-        "max-md:text-[2.375cqw]"
+        "max-md:text-[2.15cqw]"
     ].join(" "),
 
     capitalize: "capitalize",

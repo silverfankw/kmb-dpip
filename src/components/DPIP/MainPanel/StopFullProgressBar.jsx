@@ -61,12 +61,12 @@ const styles = {
 
     stopName: [
         "stop-name absolute",
-        // "tracking-tighter",
         "text-black text-[1.75cqw]",
         "top-[-2.75cqw] left-1/2",
         "-translate-x-[5%] -rotate-[65deg]",
         "origin-left whitespace-nowrap",
-        "max-md:text-[2cqw] max-md:top-[-3cqw]"
+        "max-md:text-[2cqw] max-md:top-[-3cqw]",
+        "max-sm:font-medium"
     ].join(" "),
 
     stopNameCurrent: [

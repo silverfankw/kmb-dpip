@@ -16,7 +16,6 @@ export const DriverInfoInputGroup = () => {
 				value={driverInfo?.nameZh}
 				defaultValue={driverInfo?.nameZh}
 				onChange={v => {
-					if (v == "") v = "九巴仔"
 					dispatch(setDriverInfo({ nameZh: v }))
 				}}
 			/>
@@ -27,7 +26,6 @@ export const DriverInfoInputGroup = () => {
 				value={driverInfo?.nameEn}
 				defaultValue={driverInfo?.nameEn}
 				onChange={v => {
-					if (v == "") v = "KMB Boy"
 					dispatch(setDriverInfo({ nameEn: v }))
 				}}
 			/>
@@ -40,7 +38,6 @@ export const DriverInfoInputGroup = () => {
 				defaultValue={driverInfo?.staffNo}
 				onInput={e => e.target.value = Math.abs(e.target.value.slice(0, 6))}
 				onChange={v => {
-					if (v == "") v = "1933"
 					dispatch(setDriverInfo({ staffNo: v }))
 				}}
 			/>

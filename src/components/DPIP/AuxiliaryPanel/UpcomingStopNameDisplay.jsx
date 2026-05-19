@@ -30,7 +30,6 @@ const styles = {
 
     stopNameContent: [
         "@container",
-        "font-bold",
         "relative left-[1.25%]",
         "flex flex-col justify-center",
         "h-[92.5%]",
@@ -41,6 +40,7 @@ const styles = {
     zhStopName: [
         "relative",
         "justify-center",
+        "font-bold max-sm:font-medium",
         "max-md:top-[0.25cqw]",
         "tracking-tight",
         "leading-snug"
@@ -49,8 +49,6 @@ const styles = {
     enStopName: [
         "justify-center",
         "text-[3.75cqw]",
-        "max-sm:text-[3.75cqw]",
-        "sm:max-md:text-[3.75cqw]",
         "tracking-tighter",
     ].join(" ")
 }

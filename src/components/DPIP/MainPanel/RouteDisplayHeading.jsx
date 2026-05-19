@@ -18,23 +18,25 @@ const styles = {
     ].join(" "),
 
     routeMarkerZh: [
+        "text-[3.5cqw]",
         "font-semibold",
         "tracking-tighter",
-        "text-[3.5cqw]",
     ].join(" "),
 
     routeMarkerEn: [
+        "text-[3.25cqw]",
+        "font-semibold",
         "tracking-tighter",
         "leading-none",
-        "text-[3.25cqw]",
     ].join(" "),
 
     routeNumber: [
         "basis-[17.5%]",
-        "font-semibold",
-        "text-[6.5cqw]",
+        "font-semibold max-sm:font-extrabold",
+        "text-[6.5cqw] max-sm:text-[6cqw]",
         "text-center",
-        "scale-y-110",
+        "scale-y-110 max-sm:scale-y-120",
+        "max-sm:tracking-tight",
     ].join(" "),
 
     routeNumberInline: [
@@ -44,7 +46,8 @@ const styles = {
         "scale-y-120",
         "shrink-0",
         "self-center",
-        "ml-1 mr-1"
+        "ml-1 mr-1",
+        "max-sm:tracking-tight",
     ].join(" "),
 
     arrowContainer: [
@@ -93,18 +96,14 @@ const styles = {
     destZh: [
         "font-semibold",
         "whitespace-nowrap",
-        "text-[4.375cqw]",
-        "max-md:text-[4.375cqw]",
-        "max-sm:text-[5.25cqw]",
+        "text-[4.375cqw] max-md:text-[4.375cqw] max-sm:text-[4.75cqw]",
         "max-sm:tracking-normal",
     ].join(" "),
 
     destEn: [
         "mb-[2px]",
         "font-semibold",
-        "text-sm",
-        "text-[2.625cqw]",
-        "max-sm:text-[3cqw]",
+        "text-[2.625cqw] max-sm:text-[2.75cqw]",
         "leading-tight",
     ].join(" "),
 
@@ -119,21 +118,21 @@ const styles = {
 
     markerEnInline: [
         "tracking-tighter",
-        "text-[4cqw]",
+        "text-[4cqw] max-sm:text-[3.5cqw]",
         "shrink-0",
     ].join(" "),
 
     destZhInline: [
         "font-semibold",
         "whitespace-nowrap",
-        "text-[5.5cqw]",
+        "text-[5.5cqw] max-sm:text-[5cqw]",
         "tracking-tight",
     ].join(" "),
 
     destEnInline: [
         "font-semibold",
         "whitespace-nowrap",
-        "text-[4.5cqw]",
+        "text-[4.5cqw] max-sm:text-[3.75cqw]",
         "tracking-tight",
     ].join(" "),
 }
