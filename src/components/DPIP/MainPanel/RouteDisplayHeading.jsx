@@ -36,7 +36,7 @@ const styles = {
         "text-[6.5cqw] max-sm:text-[6cqw]",
         "text-center",
         "scale-y-110 max-sm:scale-y-120",
-        "max-sm:tracking-tight",
+        "tracking-tight",
     ].join(" "),
 
     routeNumberInline: [
