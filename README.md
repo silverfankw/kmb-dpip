@@ -1,5 +1,5 @@
 
-<a href="https://silverf.dev/kmb-dpip/"><img src="https://img.shields.io/badge/Click_for_Project_Demo-blue?logo=googlechrome&logoColor=white&style=for-the-badge" alt="Button" /></a>
+<a href="https://silverfankw.github.io/kmb-dpip/"><img src="https://img.shields.io/badge/Click_for_Project_Demo-blue?logo=googlechrome&logoColor=white&style=for-the-badge" alt="Button" /></a>
 
 
 ## Introduction
@@ -19,7 +19,7 @@ This project is developed by React + Vite, Redux, tailwindCSS v4 & Material UI.
   4. Reorganize UI component Layout
 - Code refactor to improve performance, readability and project structure
   
-![image](https://github.com/user-attachments/assets/02c343cd-56bb-499d-99ae-3f64f6e9a4e0)
+![image](https://github.com/user-attachments/assets/418d7a1b-e12f-4aa9-849d-cdd6aefee50c)
 
 
 <ins>**Version 1.1**</ins>

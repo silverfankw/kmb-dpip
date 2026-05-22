@@ -66,7 +66,6 @@ const styles = {
         "-translate-x-[5%] -rotate-[65deg]",
         "origin-left whitespace-nowrap",
         "max-md:text-[2cqw] max-md:top-[-3cqw]",
-        "max-sm:font-medium"
     ].join(" "),
 
     stopNameCurrent: [

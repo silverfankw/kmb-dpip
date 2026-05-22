@@ -103,7 +103,7 @@ const basestyles = {
 
     driverInfoText: [
         "text-[2.05cqw]",
-        "max-md:text-[2.15cqw]"
+        "max-sm:text-[2.15cqw]"
     ].join(" "),
 
     capitalize: "capitalize",

@@ -111,21 +111,21 @@ const styles = {
     markerZhInline: [
         "font-semibold",
         "tracking-tighter",
-        "text-[4cqw]",
+        "text-[4cqw] max-md:text-[4.25cqw]",
         "shrink-0",
         "mr-1"
     ].join(" "),
 
     markerEnInline: [
         "tracking-tighter",
-        "text-[4cqw] max-sm:text-[3.5cqw]",
+        "text-[4cqw] max-sm:text-[4.5cqw]",
         "shrink-0",
     ].join(" "),
 
     destZhInline: [
         "font-semibold",
         "whitespace-nowrap",
-        "text-[5.5cqw] max-sm:text-[5cqw]",
+        "text-[5.5cqw] max-sm:text-[5.25cqw]",
         "tracking-tight",
     ].join(" "),
 
@@ -160,7 +160,7 @@ export const RouteDisplayHeading = () => {
         el.style.transform = 'scale(1)'
         const naturalWidth = el.offsetWidth
         if (!naturalWidth) return
-        const targetWidth = container.clientWidth * (stage === 1 ? 0.75 : 0.95)
+        const targetWidth = container.clientWidth * (stage === 1 ? 0.9 : 0.95)
         const scale = Math.min(1.1, targetWidth / naturalWidth)
         el.style.transform = `scale(${scale})`
     }, [stage])
