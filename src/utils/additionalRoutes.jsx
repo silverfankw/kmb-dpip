@@ -6,10 +6,10 @@ export const additionalRoutes = [
         "route": "52S",
         "bound": "I",
         "service_type": "1",
+        "orig_en": "Tsang Tsui",
+        "orig_tc": "曾咀",
         "dest_en": "Tuen Mun Road BBI",
         "dest_tc": "屯門公路轉車站",
-        "orig_en": "Tsang Tsui",
-        "orig_tc": "曾咀"
     },
     {
         "route": "52S",
@@ -1027,10 +1027,10 @@ export const additionalRouteStops = [
 
 export const hardcodedStopIDs = {
     '52S_I_1':[
-        "TU17-N-1630-0", "LU13-S-1000-0", "TS30-T-1000-0",
+        "TS30-T-1000-0", "LU13-S-1000-0", "TU17-N-1630-0",
     ],
     '52S_O_1':[
-        "TS30-T-1000-0", "LU13-S-1000-0", "TU17-N-1630-0",
+        "TU17-N-1630-0", "LU13-S-1000-0", "TS30-T-1000-0",
     ],
     "56S_I_1": [
         "TS30-T-1000-0", "LU13-S-1000-0", "TU05-N-1150-0", "TU04-T-1050-0",
