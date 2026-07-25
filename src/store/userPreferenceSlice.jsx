@@ -6,6 +6,7 @@ const initialState = {
     customizeDriverInfoToggle: false,
     showMindDoorNotice: false,
     showHandrailNotice: false,
+    uiMode: "night",
 }
 
 const userPreferenceSlice = createSlice({
@@ -31,6 +32,9 @@ const userPreferenceSlice = createSlice({
             state.showHandrailNotice = action.payload.showHandrailNotice
             state.showMindDoorNotice = action.payload.showMindDoorNotice
         },
+        setUiMode(state, action) {
+            state.uiMode = action.payload === "light" ? "light" : "night"
+        },
     },
 })
 
@@ -40,7 +44,8 @@ export const {
     setCustomizeDriverInfoToggle,
     setShowMindDoorNotice,
     setShowHandrailNotice,
-    setShowHandrailAndMindDoorNotice
+    setShowHandrailAndMindDoorNotice,
+    setUiMode
 } = userPreferenceSlice.actions
 
 export default userPreferenceSlice.reducer

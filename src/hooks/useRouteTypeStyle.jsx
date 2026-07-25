@@ -1,5 +1,6 @@
 import { useMemo } from 'react'
 import { useWindowSize } from "@hooks"
+import { useSelector } from 'react-redux'
 
 const routeTypeColors = {
     regular: {},
@@ -69,6 +70,8 @@ const routeTypeRules = [
 
 export const useRouteTypeStyle = () => {
     const { isMobile } = useWindowSize()
+    const { uiMode } = useSelector(state => state.userPreference)
+    const isLightMode = uiMode === "light"
 
     const getSizeCategory = useMemo(() => {
         if (isMobile) return 'mobile'
@@ -78,7 +81,6 @@ export const useRouteTypeStyle = () => {
     const sharedStyle = useMemo(() => ({
         display: "inline-block",
         textAlign: "center",
-        color: "#FFFFFF",
         width: isMobile ? "42px" : "52px",
         borderRadius: "2px",
         fontWeight: 700
@@ -86,8 +88,11 @@ export const useRouteTypeStyle = () => {
 
     const routeTypeStyle = useMemo(() => ({
         ...routeTypeColors,
+        regular: {
+            color: isLightMode ? "#000000" : "#FFFFFF",
+        },
         shared: sharedStyle
-    }), [sharedStyle])
+    }), [isLightMode, sharedStyle])
 
     // Memoize the style cache
     const styleCache = useMemo(() => new Map(), [])
@@ -96,22 +101,29 @@ export const useRouteTypeStyle = () => {
     const getStyle = useMemo(() => {
         return (route) => {
 
-            const cacheKey = `${route}-${getSizeCategory}`
+            const cacheKey = `${route}-${getSizeCategory}-${uiMode}`
 
             if (styleCache.has(cacheKey)) {
                 return styleCache.get(cacheKey)
             }
 
             const styleResult = routeTypeRules.find(rule => rule.regex.test(route))
+            const routeType = styleResult?.type ?? "regular"
             const style = {
                 ...routeTypeStyle.shared,
-                ...routeTypeStyle[styleResult?.type ?? "regular"]
+                ...routeTypeStyle[routeType]
             }
 
-            styleCache.set(route, style)
+            const preserveOriginalLightTextTypes = new Set(["airport", "airportOvernight", "shuttle", "r8"])
+
+            if (isLightMode && routeType !== "regular" && !preserveOriginalLightTextTypes.has(routeType)) {
+                style.color = "#FFFFFF"
+            }
+
+            styleCache.set(cacheKey, style)
             return style
         }
-    }, [routeTypeStyle, styleCache, getSizeCategory])
+    }, [isLightMode, routeTypeStyle, styleCache, getSizeCategory, uiMode])
 
     return getStyle
 }

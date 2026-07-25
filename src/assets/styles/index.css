@@ -22,6 +22,12 @@
   ::file-selector-button {
     border-color: var(--color-gray-200, currentcolor);
   }
+
+  html, body {
+    font-family: 'Noto Sans HK', 'Zen Kaku Gothic Antique', sans-serif;
+    /* Forces Chrome to synthesize and scale variable font weight axes */
+    font-synthesis: weight style;
+  }
 }
 
 :root {

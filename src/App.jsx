@@ -19,7 +19,7 @@ const styles = {
 
 	contentContainer: [
 		"select-none focus:outline-hidden",
-		"p-[1rem] max-sm:p-1.5",
+		"p-[2rem] max-sm:p-1.5",
 		"flex flex-1 flex-col gap-3 ",
 		"max-sm:gap-1"
 	].join(" "),
@@ -27,33 +27,24 @@ const styles = {
 	querySection: [
 		"order-1 max-sm:order-2",
 		"flex flex-wrap items-center gap-4 w-full relative z-20",
-		"bg-slate-950/45",
-		"backdrop-blur-xl",
-		"shadow-[0_12px_32px_rgba(2,6,23,0.28)]",
 		"rounded-[1.75rem]",
 		"overflow-hidden",
 		"p-4 max-md:p-2 max-sm:p-1.5",
-		"text-sm text-slate-200 sm:text-base max-sm:text-xs",
-		"transition-all duration-300 ease-out",
-		"hover:shadow-[0_16px_40px_rgba(14,165,233,0.1)]",
+		"text-sm sm:text-base max-sm:text-xs",
 		"max-sm:gap-1"
 	].join(" "),
-	queryStatusLabel: "text-slate-400",
-	queryStatusValue: "font-semibold text-slate-100",
-	queryStatusRouteValue: "font-semibold text-slate-100 flex items-center min-w-0 w-1/2 basis-1/2 shrink-0 max-sm:w-full max-sm:basis-full",
+	querySectionNight: "bg-[#13203a]/72 backdrop-blur-xl border border-slate-400/12 shadow-[0_12px_32px_rgba(8,15,32,0.24)] text-slate-100 hover:shadow-[0_14px_34px_rgba(56,189,248,0.10)]",
+	querySectionLight: "bg-white/92 backdrop-blur-xl border border-slate-200/90 shadow-[0_10px_24px_rgba(148,163,184,0.16)] text-slate-700 hover:shadow-[0_12px_28px_rgba(148,163,184,0.18)]",
+	queryStatusLabel: "max-xl:text-sm max-sm:text-xs font-medium",
+	queryStatusValue: "font-semibold",
+	queryStatusRouteValue: "font-semibold flex items-center min-w-0 w-1/2 basis-1/2 shrink-0 max-xl:w-3/5 max-xl:basis-3/5 max-sm:w-full max-sm:basis-full",
 	queryStatusRouteInputWrapper: "w-full",
-	queryStatusDivider: "text-slate-500",
-
-	controlPanelSection: [
-		"order-2 max-sm:order-3",
-		"flex gap-2 flex-wrap justify-center",
-		"p-3 md:p-4 w-full max-md:flex-col max-md:gap-2 max-sm:p-2 max-sm:gap-1",
-	].join(" "),
+	controlPanelOrderSection: "order-2 max-sm:order-3 w-full",
 
 	screenPanelSection: [
 		"order-3 max-sm:order-1",
 		"flex flex-wrap items-center justify-center",
-		"gap-10 max-sm:gap-3 max-sm:py-1"
+		"gap-8 py-3 max-sm:gap-3 max-sm:py-1"
 	].join(" "),
 
 	monitorShell: [
@@ -65,7 +56,7 @@ const styles = {
 	].join(" "),
 
 	monitorStyle: [
-		"w-[800px] h-[480px]",
+		"w-[840px] h-[480px]",
 		"max-xl:w-[700px] max-xl:h-[420px]",
 		"max-md:w-[600px] max-md:h-[360px]",
 		"max-sm:w-[400px] max-sm:h-[240px]",
@@ -83,10 +74,16 @@ const App = () => {
 	const { hasStoredData, storedData, saveToLocalStorage } = useLocalStorageState()
 	const { isUserSelectedRoute, loadingError, routeDetail, currentStopIndex } = useSelector(state => state.routeSelection)
 	const { routes } = useSelector(state => state.route)
+	const { uiMode } = useSelector(state => state.userPreference)
+	const isLightMode = uiMode === "light"
 	const totalStops = routeDetail?.stops?.length ?? 0
 	const currentStopSummary = totalStops > 0
-		? `${currentStopIndex + 1} / ${totalStops}`
-		: '-- / --'
+		? `${currentStopIndex + 1} / ${totalStops}` : '-'
+	const querySection = `${styles.querySection} ${isLightMode ? styles.querySectionLight : styles.querySectionNight}`
+	const queryStatusLabel = `${styles.queryStatusLabel} ${isLightMode ? "text-slate-600" : "text-slate-400"}`
+	const queryStatusValue = `${styles.queryStatusValue} ${isLightMode ? "text-slate-900" : "text-slate-100"}`
+	const queryStatusRouteValue = `${styles.queryStatusRouteValue} ${isLightMode ? "text-slate-900" : "text-slate-100"}`
+	const queryStatusDivider = `${styles.queryStatusDivider} ${isLightMode ? "text-slate-400" : "text-slate-500"}`
 
 	// Get routeList from API by executeing fetch route from Redux thunk
 	useEffect(() => {
@@ -174,33 +171,34 @@ const App = () => {
 
 	return (
 		<>
-			<Background />
+			<Background uiMode={uiMode} />
 
 			{/* rootContainer to footer to stick at bottom */}
 			<div className={styles.rootContainer}>
 				<div className={styles.contentContainer} tabIndex={1}>
 
 					{/* Query section for route input and selection */}
-					<section className={styles.querySection}>
-						<div className={styles.queryStatusRouteValue}>
+					<section className={querySection}>
+						<div className={queryStatusRouteValue}>
 							<div className={styles.queryStatusRouteInputWrapper}>
-								<RouteQueryInput label="路線" labelClassName={styles.queryStatusLabel} />
+								<RouteQueryInput label="路線" labelClassName={queryStatusLabel} />
 							</div>
 						</div>
-						<span className={styles.queryStatusLabel}>站數</span>
-						<span className={styles.queryStatusValue}>{currentStopSummary}</span>
+						<span className={queryStatusLabel}>站數</span>
+						<span className={queryStatusValue}>{currentStopSummary}</span>
 						{isUserSelectedRoute && routeDetail?.stops?.[currentStopIndex]?.zh && (
 							<>
-								<span className={styles.queryStatusDivider}>|</span>
-								<span className={styles.queryStatusLabel}>本站</span>
-								<span className={styles.queryStatusValue}>{routeDetail.stops[currentStopIndex].zh}</span>
+								<span className={queryStatusDivider}>|</span>
+								<span className={queryStatusLabel}>本站</span>
+								<span className={queryStatusValue}>{routeDetail.stops[currentStopIndex].zh}</span>
 							</>
 						)}
 					</section>
 
 					{/* Control Panel with buttons and switches to control DPIP */}
-					<section className={styles.controlPanelSection}>
+					<section className={styles.controlPanelOrderSection}>
 						<ControlPanel
+							uiMode={uiMode}
 							mainScreenTarget={mainScreenTarget}
 							secScreenTarget={secScreenTarget} />
 					</section>
@@ -221,7 +219,7 @@ const App = () => {
 				</div >
 
 				{/* Footer section */}
-				<Footer />
+				<Footer uiMode={uiMode} />
 			</div>
 		</>
 	)

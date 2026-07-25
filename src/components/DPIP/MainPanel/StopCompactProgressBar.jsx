@@ -13,7 +13,7 @@ const styles = {
     stopZh: "relative text-[2.5cqw] w-full text-center flex items-center justify-center",
     stopZhCurrent: "font-bold",
     stopEn: "relative text-[1.75cqw] w-full text-center flex items-center justify-center",
-    stopEnCurrent: "font-black",
+    stopEnCurrent: "font-bold",
     stopEnOther: "text-black",
 
     progressBar: [

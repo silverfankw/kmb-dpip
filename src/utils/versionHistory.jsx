@@ -1,6 +1,11 @@
 export const versionHistory = [
     {
-        version: "2.0.10 (Current)",
+        version: "2.1 (Current)",
+        date: "2026/07/25",
+        notes: "Added light mode / dark mode toggle. Refine layout."
+    },
+    {
+        version: "2.0.10",
         date: "2026/05/19",
         notes: "Adjusted font weight for better mobile display. Added version history dialog."
     },

@@ -35,7 +35,6 @@ export const RouteNumber = ({ route, isSpecial, componentType }) => {
             marginTop: "2px",
             fontSize: isMobile ? "10px" : "12px",
             padding: isMobile ? "1px 4px" : "2px 6px",
-            border: "1px solid rgba(8, 28, 81, 1)",
             borderRadius: "4px",
             backgroundColor: "rgba(255, 214, 0, 0.75)",
             color: "#000",

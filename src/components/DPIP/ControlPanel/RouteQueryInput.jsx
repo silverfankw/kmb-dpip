@@ -73,6 +73,8 @@ export const RouteQueryInput = ({ compact = false, label = '', labelClassName = 
     const dispatch = useDispatch()
     const { routes } = useSelector(state => state.route)
     const { routeDetail } = useSelector(state => state.routeSelection)
+    const { uiMode } = useSelector(state => state.userPreference)
+    const isLightMode = uiMode === "light"
 
     const [selectedOption, setSelectedOption] = useState(null)
     const [prevOptions, setPrevOptions] = useState([])
@@ -154,7 +156,9 @@ export const RouteQueryInput = ({ compact = false, label = '', labelClassName = 
         <components.Control {...props}>
             <SearchIcon
                 sx={{
-                    color: props.isFocused ? "#67e8f9" : "#8fdcff",
+                    color: props.isFocused
+                        ? (isLightMode ? "#0284c7" : "#67e8f9")
+                        : (isLightMode ? "#64748b" : "#8fdcff"),
                     fontSize: isMobile ? 20 : 24,
                     marginLeft: isMobile ? "10px" : "14px",
                     marginRight: isMobile ? "6px" : "8px",
@@ -175,7 +179,7 @@ export const RouteQueryInput = ({ compact = false, label = '', labelClassName = 
             )}
             {props.children}
         </components.Control>
-    ), [isMobile, label, labelClassName])
+    ), [isLightMode, isMobile, label, labelClassName])
 
     const CompactSingleValue = useCallback(
         props => <RouteOption {...props} componentType="SingleValue" compact={compact} />,
@@ -185,32 +189,40 @@ export const RouteQueryInput = ({ compact = false, label = '', labelClassName = 
     const selectStyles = useMemo(() => ({
         control: (base, state) => ({
             ...base,
-            background: "linear-gradient(135deg, rgba(15, 23, 42, 0.92), rgba(15, 23, 42, 0.72))",
-            color: "#fff",
+            background: isLightMode
+                ? "linear-gradient(135deg, rgba(255, 255, 255, 0.98), rgba(248, 250, 252, 0.96))"
+                : "linear-gradient(135deg, rgba(30, 41, 59, 0.90), rgba(51, 65, 85, 0.80))",
+            color: isLightMode ? "#0f172a" : "#fff",
             boxShadow: state.isFocused
-                ? "0 0 0 2px rgba(34, 211, 238, 0.28), 0 16px 40px rgba(8, 47, 73, 0.35)"
-                : "0 14px 34px rgba(2, 6, 23, 0.24)",
+                ? (isLightMode
+                    ? "0 0 0 2px rgba(14, 165, 233, 0.2), 0 16px 36px rgba(148, 163, 184, 0.22)"
+                    : "0 0 0 2px rgba(56, 189, 248, 0.22), 0 12px 28px rgba(15, 23, 42, 0.22)")
+                : (isLightMode
+                    ? "0 12px 28px rgba(148, 163, 184, 0.18)"
+                    : "0 10px 24px rgba(15, 23, 42, 0.18)"),
             height: isMobile ? 46 : 60,
             minHeight: isMobile ? 46 : 60,
-            border: `1px solid ${state.isFocused ? "rgba(34, 211, 238, 0.55)" : "rgba(148, 163, 184, 0.2)"}`,
+            border: `1px solid ${state.isFocused
+                ? (isLightMode ? "rgba(14, 165, 233, 0.45)" : "rgba(56, 189, 248, 0.42)")
+                : (isLightMode ? "rgba(148, 163, 184, 0.45)" : "rgba(148, 163, 184, 0.34)")}`,
             borderRadius: "20px",
-            transition: "all 0.24s ease",
+            transition: "border-color 0.18s ease, box-shadow 0.18s ease",
             "&:hover": {
-                border: "1px solid rgba(34, 211, 238, 0.4)",
+                border: `1px solid ${isLightMode ? "rgba(14, 165, 233, 0.35)" : "rgba(34, 211, 238, 0.4)"}`,
             }
         }),
         menu: base => ({
             ...base,
-            backgroundColor: "rgba(8, 15, 32, 0.96)",
+            backgroundColor: isLightMode ? "rgba(255, 255, 255, 0.995)" : "rgba(30, 41, 59, 0.96)",
             backdropFilter: "blur(18px)",
-            border: "1px solid rgba(148, 163, 184, 0.16)",
+            border: `1px solid ${isLightMode ? "rgba(203, 213, 225, 0.95)" : "rgba(148, 163, 184, 0.22)"}`,
             borderRadius: "20px",
-            boxShadow: "0 22px 50px rgba(2, 6, 23, 0.48)",
-            color: "#fff",
+            boxShadow: isLightMode ? "0 22px 50px rgba(148, 163, 184, 0.28)" : "0 18px 36px rgba(15, 23, 42, 0.28)",
+            color: isLightMode ? "#0f172a" : "#fff",
             zIndex: 99999,
             fontSize: isMobile ? "14px" : base.fontSize,
             overflow: "hidden",
-            transition: "all 0.2s ease",
+            transition: "none",
             width: "100%",
         }),
         menuPortal: base => ({
@@ -241,47 +253,47 @@ export const RouteQueryInput = ({ compact = false, label = '', labelClassName = 
             ...base,
             position: "relative",
             border: state.isSelected
-                ? "1px solid rgba(56, 189, 248, 0.55)"
+                ? `1px solid ${isLightMode ? "rgba(14, 165, 233, 0.45)" : "rgba(56, 189, 248, 0.55)"}`
                 : state.isFocused
-                    ? "1px solid rgba(56, 189, 248, 0.35)"
+                    ? `1px solid ${isLightMode ? "rgba(14, 165, 233, 0.28)" : "rgba(56, 189, 248, 0.35)"}`
                     : "1px solid transparent",
             borderRadius: "16px",
             backgroundColor: state.isSelected
-                ? "rgba(14, 165, 233, 0.2)"
+                ? (isLightMode ? "rgba(14, 165, 233, 0.12)" : "rgba(14, 165, 233, 0.2)")
                 : state.isFocused
-                    ? "rgba(15, 23, 42, 0.92)"
+                    ? (isLightMode ? "rgba(248, 250, 252, 0.96)" : "rgba(15, 23, 42, 0.92)")
                     : "transparent",
-            color: state.isSelected ? "#f8fafc" : "#e2e8f0",
+            color: isLightMode ? "#0f172a" : (state.isSelected ? "#f8fafc" : "#e2e8f0"),
             cursor: "pointer",
             margin: 0,
             padding: "10px 12px",
             width: "auto",
             whiteSpace: "normal",
             wordWrap: "break-word",
-            transition: "all 0.2s ease",
+            transition: "none",
             "&:hover": {
-                backgroundColor: "rgba(14, 165, 233, 0.14)",
-                border: "1px solid rgba(56, 189, 248, 0.45)",
+                backgroundColor: isLightMode ? "rgba(186, 230, 253, 0.28)" : "rgba(14, 165, 233, 0.14)",
+                border: `1px solid ${isLightMode ? "rgba(14, 165, 233, 0.4)" : "rgba(56, 189, 248, 0.45)"}`,
                 transform: "translateX(2px)",
             },
             "&:active": {
-                backgroundColor: "rgba(14, 165, 233, 0.22)",
+                backgroundColor: isLightMode ? "rgba(186, 230, 253, 0.38)" : "rgba(14, 165, 233, 0.22)",
             }
         }),
         input: base => ({
             ...base,
-            color: "#fff",
+            color: isLightMode ? "#0f172a" : "#fff",
             fontSize: isMobile ? "16px" : base.fontSize,
             margin: isMobile ? "0 2px" : "0 4px",
         }),
         placeholder: base => ({
             ...base,
-            color: "rgba(203, 213, 225, 0.72)",
+            color: isLightMode ? "rgba(71, 85, 105, 0.78)" : "rgba(203, 213, 225, 0.72)",
             opacity: 1,
         }),
         singleValue: base => ({
             ...base,
-            color: "#fff",
+            color: isLightMode ? "#0f172a" : "#fff",
             margin: isMobile ? "0 2px" : "0 4px",
         }),
         valueContainer: base => ({
@@ -296,38 +308,44 @@ export const RouteQueryInput = ({ compact = false, label = '', labelClassName = 
         }),
         indicatorSeparator: (base, state) => ({
             ...base,
-            backgroundColor: state.isFocused ? "rgba(34, 211, 238, 0.55)" : "rgba(148, 163, 184, 0.24)",
+            backgroundColor: state.isFocused
+                ? (isLightMode ? "rgba(14, 165, 233, 0.45)" : "rgba(56, 189, 248, 0.42)")
+                : (isLightMode ? "rgba(148, 163, 184, 0.45)" : "rgba(148, 163, 184, 0.24)"),
             margin: "8px 0",
             width: "1px",
-            transition: "all 0.2s ease",
+            transition: "none",
         }),
         dropdownIndicator: (base, state) => ({
             ...base,
-            color: state.isFocused ? "#67e8f9" : "#94a3b8",
+            color: state.isFocused
+                ? (isLightMode ? "#0284c7" : "#67e8f9")
+                : (isLightMode ? "#64748b" : "#94a3b8"),
             padding: "6px",
-            transition: "all 0.2s ease",
+            transition: "none",
             "&:hover": {
-                color: "#67e8f9",
+                color: isLightMode ? "#0284c7" : "#67e8f9",
             },
         }),
         clearIndicator: (base, state) => ({
             ...base,
-            color: state.isFocused ? "#67e8f9" : "#94a3b8",
+            color: state.isFocused
+                ? (isLightMode ? "#0284c7" : "#67e8f9")
+                : (isLightMode ? "#64748b" : "#94a3b8"),
             padding: "6px",
-            transition: "all 0.2s ease",
+            transition: "none",
             "&:hover": {
-                color: "#67e8f9",
+                color: isLightMode ? "#0284c7" : "#67e8f9",
             },
         }),
         noOptionsMessage: base => ({
             ...base,
-            color: "rgba(203, 213, 225, 0.72)",
+            color: isLightMode ? "rgba(71, 85, 105, 0.82)" : "rgba(203, 213, 225, 0.72)",
             textAlign: "center",
             padding: "12px",
         }),
         loadingMessage: base => ({
             ...base,
-            color: "rgba(203, 213, 225, 0.72)",
+            color: isLightMode ? "rgba(71, 85, 105, 0.82)" : "rgba(203, 213, 225, 0.72)",
             textAlign: "center",
             padding: "12px",
         }),
@@ -348,7 +366,7 @@ export const RouteQueryInput = ({ compact = false, label = '', labelClassName = 
                 color: "#fff",
             },
         }),
-    }), [isMobile])
+    }), [isLightMode, isMobile])
 
     return (
         <AsyncSelect
@@ -373,9 +391,9 @@ export const RouteQueryInput = ({ compact = false, label = '', labelClassName = 
                     zIndex: 10
                 }}>
                     <ClipLoader color="#2563eb" size={25} />
-                    <span>正在同步路線數據...</span>
-                </div> : "輸入九巴路線編號　Input KMB route."}
-            loadingMessage={() => "搜尋路線中..."}
+                    <span>{"\u6b63\u5728\u540c\u6b65\u8def\u7dda\u6578\u64da..."}</span>
+                </div> : "\u8f38\u5165\u4e5d\u5df4\u8def\u7dda\u7de8\u865f\u3000Input KMB route."}
+            loadingMessage={() => "\u641c\u5c0b\u8def\u7dda\u4e2d..."}
             isLoading={isSearching}
             filterOption={null}
             loadOptions={handleSearch}

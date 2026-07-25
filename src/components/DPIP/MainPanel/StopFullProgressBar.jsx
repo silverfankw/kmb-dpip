@@ -35,6 +35,7 @@ const styles = {
     ].join(" "),
 
     bullet: [
+        "font-medium",
         "bullet relative",
         "bg-white border border-solid rounded-full",
         "w-[1.5cqw] h-[1.5cqw]",
@@ -77,6 +78,7 @@ const styles = {
     ].join(" "),
 
     splitEllipsis: [
+        "text-black",
         "absolute text-xl",
         "top-[-7cqw] right-[-3cqw]"
     ].join(" ")

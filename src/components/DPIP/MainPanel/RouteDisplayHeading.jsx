@@ -19,20 +19,21 @@ const styles = {
 
     routeMarkerZh: [
         "text-[3.5cqw]",
-        "font-semibold",
+        // "font-semibold",
         "tracking-tighter",
     ].join(" "),
 
     routeMarkerEn: [
         "text-[3.25cqw]",
-        "font-semibold",
+        // "font-semibold",
         "tracking-tighter",
         "leading-none",
     ].join(" "),
 
     routeNumber: [
         "basis-[17.5%]",
-        "font-semibold max-sm:font-extrabold",
+        // "font-semibold",
+        // "max-sm:font-extrabold",
         "text-[6.5cqw] max-sm:text-[6cqw]",
         "text-center",
         "scale-y-110 max-sm:scale-y-120",
@@ -40,7 +41,7 @@ const styles = {
     ].join(" "),
 
     routeNumberInline: [
-        "font-semibold",
+        // "font-semibold",
         "text-[5.25cqw]",
         "text-center",
         "scale-y-120",
@@ -94,7 +95,7 @@ const styles = {
     ].join(" "),
 
     destZh: [
-        "font-semibold",
+        // "font-semibold",
         "whitespace-nowrap",
         "text-[4.375cqw] max-md:text-[4.375cqw] max-sm:text-[4.75cqw]",
         "max-sm:tracking-normal",
@@ -102,14 +103,14 @@ const styles = {
 
     destEn: [
         "mb-[2px]",
-        "font-semibold",
+        // "font-semibold",
         "text-[2.625cqw] max-sm:text-[2.75cqw]",
         "leading-tight",
     ].join(" "),
 
     // Inline (single-language) variants
     markerZhInline: [
-        "font-semibold",
+        // "font-semibold",
         "tracking-tighter",
         "text-[4cqw] max-md:text-[4.25cqw]",
         "shrink-0",
@@ -123,14 +124,14 @@ const styles = {
     ].join(" "),
 
     destZhInline: [
-        "font-semibold",
+        // "font-semibold",
         "whitespace-nowrap",
         "text-[5.5cqw] max-sm:text-[5.25cqw]",
         "tracking-tight",
     ].join(" "),
 
     destEnInline: [
-        "font-semibold",
+        // "font-semibold",
         "whitespace-nowrap",
         "text-[4.5cqw] max-sm:text-[3.75cqw]",
         "tracking-tight",

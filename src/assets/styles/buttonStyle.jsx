@@ -89,7 +89,11 @@ export const useButtonStyles = (color) => {
                 color: 'rgba(255, 255, 255, 0.3)',
                 border: '1px solid rgba(89, 85, 85, 0.24)',
                 boxShadow: 'none',
+                pointerEvents: 'auto',
                 cursor: 'not-allowed',
+                '& *': {
+                    cursor: 'not-allowed',
+                },
             }
         },
 

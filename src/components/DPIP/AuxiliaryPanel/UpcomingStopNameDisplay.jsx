@@ -41,7 +41,7 @@ const styles = {
     zhStopName: [
         "relative",
         "justify-center",
-        "font-bold max-sm:font-medium",
+        // "font-bold max-sm:font-medium",
         "max-md:top-[0.25cqw]",
         "tracking-tight",
         "leading-snug"
@@ -50,7 +50,7 @@ const styles = {
     enStopName: [
         "justify-center",
         "text-[3.75cqw]",
-        "font-bold max-sm:font-medium",
+        // "font-bold max-sm:font-medium",
         "tracking-tighter",
     ].join(" ")
 }
