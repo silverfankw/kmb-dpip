@@ -1,5 +1,6 @@
 import "@styles/asyncSelect.css"
 import debounce from 'lodash/debounce'
+import SearchIcon from '@mui/icons-material/Search'
 
 import React from "react"
 import { useCallback, useMemo, useState, useRef, useEffect } from "react"
@@ -147,28 +148,45 @@ export const RouteQueryInput = () => {
         setSelectedOption(option)
     }, [dispatch, routes])
 
+    const Control = useCallback((props) => (
+        <components.Control {...props}>
+            <SearchIcon
+                sx={{
+                    color: props.isFocused ? "#67e8f9" : "#8fdcff",
+                    fontSize: isMobile ? 20 : 24,
+                    marginLeft: isMobile ? "10px" : "14px",
+                    marginRight: isMobile ? "6px" : "8px",
+                    flexShrink: 0,
+                }}
+            />
+            {props.children}
+        </components.Control>
+    ), [isMobile])
+
     const selectStyles = useMemo(() => ({
         control: (base, state) => ({
             ...base,
-            backgroundColor: "rgba(24, 27, 27, 0.5)",
+            background: "linear-gradient(135deg, rgba(15, 23, 42, 0.92), rgba(15, 23, 42, 0.72))",
             color: "#fff",
-            boxShadow: state.isFocused ? "0 0 0 2px #2563eb" : "none",
-            height: isMobile ? 48 : 56,
-            minHeight: isMobile ? 48 : 56,
-            border: `2px solid ${state.isFocused ? "#2563eb" : "#444"}`,
-            borderRadius: "8px",
-            transition: "all 0.2s ease",
+            boxShadow: state.isFocused
+                ? "0 0 0 2px rgba(34, 211, 238, 0.28), 0 16px 40px rgba(8, 47, 73, 0.35)"
+                : "0 14px 34px rgba(2, 6, 23, 0.24)",
+            height: isMobile ? 46 : 60,
+            minHeight: isMobile ? 46 : 60,
+            border: `1px solid ${state.isFocused ? "rgba(34, 211, 238, 0.55)" : "rgba(148, 163, 184, 0.2)"}`,
+            borderRadius: "20px",
+            transition: "all 0.24s ease",
             "&:hover": {
-                border: "2px solid rgba(37, 99, 235, 0.5)",
+                border: "1px solid rgba(34, 211, 238, 0.4)",
             }
         }),
         menu: base => ({
             ...base,
-            backgroundColor: "rgba(23, 25, 28, 0.95)",
-            backdropFilter: "blur(8px)",
-            border: "1px solid rgba(37, 99, 235, 0.2)",
-            borderRadius: "12px",
-            boxShadow: "0 4px 20px rgba(0, 0, 0, 0.3)",
+            backgroundColor: "rgba(8, 15, 32, 0.96)",
+            backdropFilter: "blur(18px)",
+            border: "1px solid rgba(148, 163, 184, 0.16)",
+            borderRadius: "20px",
+            boxShadow: "0 22px 50px rgba(2, 6, 23, 0.48)",
             color: "#fff",
             zIndex: 9999,
             fontSize: isMobile ? "14px" : base.fontSize,
@@ -181,6 +199,7 @@ export const RouteQueryInput = () => {
             maxHeight: isMobile ? "250px" : "500px",
             overflowX: "hidden",
             overflowY: "auto",
+            padding: "8px",
             "&::-webkit-scrollbar": {
                 width: "8px",
             },
@@ -188,10 +207,10 @@ export const RouteQueryInput = () => {
                 background: "transparent",
             },
             "&::-webkit-scrollbar-thumb": {
-                background: "#444",
+                background: "rgba(148, 163, 184, 0.35)",
                 borderRadius: "4px",
                 "&:hover": {
-                    background: "#555",
+                    background: "rgba(148, 163, 184, 0.5)",
                 },
             },
         }),
@@ -199,93 +218,92 @@ export const RouteQueryInput = () => {
             ...base,
             position: "relative",
             border: state.isSelected
-                ? "2px solid #3b82f6"
+                ? "1px solid rgba(56, 189, 248, 0.55)"
                 : state.isFocused
-                    ? "2px solid rgba(59, 130, 246, 0.5)"
-                    : "2px solid transparent",
-            borderRadius: "8px",
+                    ? "1px solid rgba(56, 189, 248, 0.35)"
+                    : "1px solid transparent",
+            borderRadius: "16px",
             backgroundColor: state.isSelected
-                ? "rgba(59, 130, 246, 0.3)"
+                ? "rgba(14, 165, 233, 0.2)"
                 : state.isFocused
-                    ? "rgba(17, 24, 39, 0.95)"
+                    ? "rgba(15, 23, 42, 0.92)"
                     : "transparent",
-            color: state.isSelected ? "#fff" : "#e5e7eb",
+            color: state.isSelected ? "#f8fafc" : "#e2e8f0",
             cursor: "pointer",
-            margin: "4px",
-            padding: "8px 12px",
+            margin: 0,
+            padding: "10px 12px",
             width: "auto",
             whiteSpace: "normal",
             wordWrap: "break-word",
             transition: "all 0.2s ease",
             "&:hover": {
-                backgroundColor: "rgba(59, 130, 246, 0.15)",
-                border: "2px solid rgba(59, 130, 246, 0.6)",
-                transform: "translateX(4px)",
+                backgroundColor: "rgba(14, 165, 233, 0.14)",
+                border: "1px solid rgba(56, 189, 248, 0.45)",
+                transform: "translateX(2px)",
             },
             "&:active": {
-                backgroundColor: "rgba(59, 130, 246, 0.25)",
-                transform: "translateX(2px)",
+                backgroundColor: "rgba(14, 165, 233, 0.22)",
             }
         }),
         input: base => ({
             ...base,
             color: "#fff",
-            margin: "0 2px",
+            margin: isMobile ? "0 2px" : "0 4px",
         }),
         placeholder: base => ({
             ...base,
-            color: "#777",
+            color: "rgba(203, 213, 225, 0.72)",
             opacity: 1,
         }),
         singleValue: base => ({
             ...base,
             color: "#fff",
-            margin: "0 2px",
+            margin: isMobile ? "0 2px" : "0 4px",
         }),
         valueContainer: base => ({
             ...base,
-            padding: "2px 8px",
+            padding: isMobile ? "1px 8px 1px 2px" : "2px 12px 2px 4px",
         }),
         indicatorsContainer: base => ({
             ...base,
             "> div": {
-                padding: "6px",
+                padding: isMobile ? "4px" : "6px",
             },
         }),
         indicatorSeparator: (base, state) => ({
             ...base,
-            backgroundColor: state.isFocused ? "#2563eb" : "#444",
-            margin: "4px 0",
-            width: "2px",
+            backgroundColor: state.isFocused ? "rgba(34, 211, 238, 0.55)" : "rgba(148, 163, 184, 0.24)",
+            margin: "8px 0",
+            width: "1px",
             transition: "all 0.2s ease",
         }),
         dropdownIndicator: (base, state) => ({
             ...base,
-            color: state.isFocused ? "#2563eb" : "#444",
+            color: state.isFocused ? "#67e8f9" : "#94a3b8",
             padding: "6px",
             transition: "all 0.2s ease",
             "&:hover": {
-                color: "#2563eb",
+                color: "#67e8f9",
             },
         }),
         clearIndicator: (base, state) => ({
             ...base,
-            color: state.isFocused ? "#2563eb" : "#444",
+            color: state.isFocused ? "#67e8f9" : "#94a3b8",
             padding: "6px",
             transition: "all 0.2s ease",
             "&:hover": {
-                color: "#2563eb",
+                color: "#67e8f9",
             },
         }),
         noOptionsMessage: base => ({
             ...base,
-            color: "#777",
+            color: "rgba(203, 213, 225, 0.72)",
             textAlign: "center",
             padding: "12px",
         }),
         loadingMessage: base => ({
             ...base,
-            color: "#777",
+            color: "rgba(203, 213, 225, 0.72)",
             textAlign: "center",
             padding: "12px",
         }),
@@ -311,6 +329,7 @@ export const RouteQueryInput = () => {
     return (
         <AsyncSelect
             components={{
+                Control,
                 Option: MemoizedOption,
                 SingleValue: MemoizedSingleValue
             }}
@@ -325,7 +344,7 @@ export const RouteQueryInput = () => {
                 <div style={{
                     display: "flex",
                     alignItems: "center",
-                    gap: "1rem",
+                    gap: isMobile ? ".5rem" : "1rem",
                     zIndex: 10
                 }}>
                     <ClipLoader color="#2563eb" size={25} />

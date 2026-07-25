@@ -9,7 +9,7 @@ import {
     resetToFirstStop
 } from '@store/routeSelectionSlice'
 
-import { Button, Tooltip } from '@mui/material'
+import { Button, Tooltip, Typography } from '@mui/material'
 import ArrowBackIcon from '@mui/icons-material/ArrowBack'
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward'
 import RefreshIcon from '@mui/icons-material/Refresh'
@@ -34,66 +34,70 @@ export const NavButtonGroup = () => {
     const prevStopBtnStyle = useButtonStyles("darkRed")
     const resetStopBtnStyle = useButtonStyles("ochre")
     const switchBoundBtnStyle = useButtonStyles("directionPurple")
+    const buttonSx = style => ({ ...style.button, justifyContent: 'center' })
+    const styles = {
+        grid: "grid w-full gap-2 max-sm:gap-4 sm:grid-cols-2 xl:grid-cols-4",
+        item: "block w-full",
+    }
 
     return (
-        <>
+        <div className={styles.grid}>
             <Tooltip arrow placement="bottom-start" title="上一站 鍵盤快捷鍵: '←'">
-                <span>
+                <span className={styles.item}>
                     <Button
                         color="darkRed"
                         variant="contained"
-                        sx={prevStopBtnStyle.button}
+                        sx={buttonSx(prevStopBtnStyle)}
                         startIcon={<ArrowBackIcon />}
                         onClick={() => dispatch(toPrevStop())}
                         disabled={!isPrevStopAvailable}
                     >
-                        <span className={prevStopBtnStyle.buttonLabel}>上站</span>
+                        <Typography component="span" sx={prevStopBtnStyle.buttonLabel}>上站 Previous Stop</Typography>
                     </Button>
                 </span>
             </Tooltip>
             <Tooltip arrow placement="bottom-start" title="下一站 鍵盤快捷鍵: '→'">
-                <span>
+                <span className={styles.item}>
                     <Button
                         color="nextGreen"
                         variant="contained"
-                        sx={nextStopBtnStyle.button}
+                        sx={buttonSx(nextStopBtnStyle)}
                         startIcon={<ArrowForwardIcon />}
                         onClick={() => dispatch(toNextStop())}
                         disabled={!isNextStopAvailable}
                     >
-                        <span className={nextStopBtnStyle.buttonLabel}>下站</span>
+                        <Typography component="span" sx={nextStopBtnStyle.buttonLabel}>下站 Next Stop</Typography>
                     </Button>
                 </span>
             </Tooltip>
             <Tooltip arrow placement="bottom-start" title="切換路線方向 鍵盤快捷鍵: 'END'">
-                <span>
+                <span className={styles.item}>
                     <Button
                         color="directionPurple"
                         variant="contained"
-                        sx={switchBoundBtnStyle.button}
+                        sx={buttonSx(switchBoundBtnStyle)}
                         startIcon={<CachedIcon />}
                         onClick={() => dispatch(changeBoundThunk())}
                         disabled={(!isUserSelectedRoute || !routeHasTwoBound) || routeDetail?.service_type != 1}
                     >
-                        <span className={switchBoundBtnStyle.buttonLabel}>方向</span>
+                        <Typography component="span" sx={switchBoundBtnStyle.buttonLabel}>切換行車方向 Switch Bound</Typography>
                     </Button>
                 </span>
             </Tooltip>
             <Tooltip arrow placement="bottom-start" title="重設至首站 鍵盤快捷鍵: 'HOME'">
-                <span>
+                <span className={styles.item}>
                     <Button
-                        className={resetStopBtnStyle.button}
                         color="ochre"
                         variant="contained"
                         startIcon={<RefreshIcon />}
-                        sx={resetStopBtnStyle.button}
+                        sx={buttonSx(resetStopBtnStyle)}
                         onClick={() => dispatch(resetToFirstStop())}
                         disabled={!isUserSelectedRoute || currentStopIndex == 0}
                     >
-                        <span className={resetStopBtnStyle.buttonLabel}>首站</span>
+                        <Typography component="span" sx={resetStopBtnStyle.buttonLabel}>首站重新開始 Go to First Stop</Typography>
                     </Button>
                 </span>
             </Tooltip>
-        </>
+        </div>
     )
 }

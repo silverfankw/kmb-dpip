@@ -1,20 +1,25 @@
 import { useState, useEffect, useMemo } from 'react'
 import debounce from 'lodash/debounce'
 
-export const useWindowSize = () => {
-    const [size, setSize] = useState({
-        width: window.innerWidth,
+const getSize = () => {
+    const width = window.innerWidth
+
+    return {
+        width,
         height: window.innerHeight,
-        isMobile: window.innerWidth <= 768
-    })
+        isMobile: width <= 768,
+        isTablet: width > 768 && width < 1280,
+        isDesktop: width >= 1280,
+        deviceType: width <= 768 ? 'mobile' : width < 1280 ? 'tablet' : 'desktop'
+    }
+}
+
+export const useWindowSize = () => {
+    const [size, setSize] = useState(getSize())
 
     const handleResize = useMemo(
         () => debounce(() => {
-            setSize({
-                width: window.innerWidth,
-                height: window.innerHeight,
-                isMobile: window.innerWidth <= 768
-            })
+            setSize(getSize())
         }, 150),
         []
     )

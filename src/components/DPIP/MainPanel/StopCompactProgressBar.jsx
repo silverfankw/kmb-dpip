@@ -9,7 +9,7 @@ const styles = {
     refContainer: "compact-progress-bar h-full",
     stopNameContainer: "stop-name-container @container w-full h-full relative",
     stopInfoRow: "stopInfoRow flex gap-1 w-full relative top-[33%] mb-[12cqw] items-center justify-center",
-    stopInfoCol: "stopInfoCol flex flex-col gap-0.5 basis-[33%] min-w-[0] h-full justify-center",
+    stopInfoCol: "stopInfoCol flex flex-col gap-0.5 basis-[33%] min-w-[0] h-full justify-center text-black",
     stopZh: "relative text-[2.5cqw] w-full text-center flex items-center justify-center",
     stopZhCurrent: "font-bold",
     stopEn: "relative text-[1.75cqw] w-full text-center flex items-center justify-center",

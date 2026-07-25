@@ -3,38 +3,47 @@ import { useSelector } from 'react-redux'
 import { NavButtonGroup, ToggleButtonGroup, FuncButtonGroup, DriverInfoInputGroup } from '@components'
 
 const styles = {
-    groupWrapper: "flex flex-wrap gap-5 max-md:gap-3 justify-center",
-    switchGroupWrapper: "!gap-4",
-    driverInfoSection: "flex text-center items-center text-white gap-3",
+    layout: "grid w-full gap-2 max-sm:gap-1",
+    section: [
+        "rounded-[1rem]",
+        "border border-white/8",
+        "bg-gradient-to-br from-white/[0.07] to-white/[0.03]",
+        "p-2 md:p-2.5 max-sm:p-1.5",
+        "shadow-[inset_0_1px_0_rgba(255,255,255,0.04),0_8px_18px_rgba(0,0,0,0.14)]"
+    ].join(" "),
+    utilitySection: "grid gap-2 max-sm:gap-1 xl:grid-cols-2",
+    driverInfoGrid: "grid gap-2 max-sm:gap-1 md:grid-cols-3",
 }
 
 export const ControlPanel = ({ mainScreenTarget, secScreenTarget }) => {
-
     const userPreference = useSelector(state => state.userPreference)
 
     return (
-        <>
-            <div className={styles.groupWrapper}>
+        <div className={styles.layout}>
+            <section className={styles.section}>
                 <NavButtonGroup />
+            </section>
+
+            <div className={styles.utilitySection}>
+                <section className={styles.section}>
+                    <ToggleButtonGroup />
+                </section>
+
+                <section className={styles.section}>
+                    <FuncButtonGroup
+                        mainScreenTarget={mainScreenTarget}
+                        secScreenTarget={secScreenTarget}
+                    />
+                </section>
             </div>
 
-            <div className={styles.groupWrapper + " " + styles.switchGroupWrapper}>
-                <ToggleButtonGroup />
-            </div>
-
-            <div className={styles.groupWrapper}>
-                <FuncButtonGroup
-                    mainScreenTarget={mainScreenTarget}
-                    secScreenTarget={secScreenTarget}
-                />
-            </div>
-
-            {/* Customizeable driver info with input group */}
             {userPreference.customizeDriverInfoToggle &&
-                <section className={styles.driverInfoSection}>
-                    <DriverInfoInputGroup />
+                <section className={styles.section}>
+                    <div className={styles.driverInfoGrid}>
+                        <DriverInfoInputGroup />
+                    </div>
                 </section>
             }
-        </>
+        </div>
     )
 }

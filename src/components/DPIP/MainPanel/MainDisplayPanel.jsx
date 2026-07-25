@@ -73,6 +73,7 @@ const basestyles = {
         "@container",
         "col-start-1 col-end-5",
         "bg-white",
+        "text-black",
         "flex justify-center items-center",
     ].join(" "),
 
@@ -242,4 +243,3 @@ export const MainDisplayPanel = ({ monitorStyle, screenTarget }) => {
         </div>
     )
 }
-

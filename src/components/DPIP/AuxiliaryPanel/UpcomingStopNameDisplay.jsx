@@ -26,6 +26,7 @@ const styles = {
         "relative",
         "flex flex-col",
         "bg-white",
+        "text-black",
     ].join(" "),
 
     stopNameContent: [
@@ -49,6 +50,7 @@ const styles = {
     enStopName: [
         "justify-center",
         "text-[3.75cqw]",
+        "font-bold max-sm:font-medium",
         "tracking-tighter",
     ].join(" ")
 }

@@ -24,6 +24,31 @@
     --breakpoint-xs: 480px;
 }
 
+html {
+    min-height: 100%;
+    color-scheme: dark;
+    scroll-behavior: smooth;
+    overflow-x: hidden;
+}
+
+body {
+    min-height: 100vh;
+    margin: 0;
+    background: #050816;
+    color: #e2e8f0;
+    overflow-x: hidden;
+}
+
+#root {
+    min-height: 100vh;
+    overflow-x: hidden;
+}
+
+::selection {
+    background: rgba(34, 211, 238, 0.28);
+    color: #f8fafc;
+}
+
 .noselect {
   -webkit-touch-callout: none; /* iOS Safari */
     -webkit-user-select: none; /* Safari */

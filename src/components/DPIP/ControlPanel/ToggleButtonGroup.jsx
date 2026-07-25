@@ -15,12 +15,32 @@ export const ToggleButtonGroup = () => {
 
     const stopButtonStyles = useButtonStyles('darkRed')
     const notiStyles = useButtonStyles('ochre')
+    const buttonSx = style => ({
+        ...style.button,
+        display: 'grid',
+        gridTemplateColumns: 'auto 1fr auto',
+        alignItems: 'center',
+        columnGap: 1,
+        '& .MuiSwitch-root': {
+            gridColumn: 1,
+        },
+        '& .MuiFormControlLabel-label': {
+            gridColumn: 2,
+            display: 'flex',
+            justifyContent: 'center',
+        },
+        '&::after': {
+            content: '""',
+            gridColumn: 3,
+            width: { xs: 44, sm: 38 },
+        },
+    })
 
     return (
-        <>
+        <div className="grid w-full gap-2 max-sm:gap-4 sm:grid-cols-2 2xl:grid-cols-3">
             {/* Stop Bell toggle */}
             <SwitchButton
-                sx={stopButtonStyles.button}
+                sx={buttonSx(stopButtonStyles)}
                 control={
                     <Switch
                         checked={stopPressed}
@@ -35,13 +55,13 @@ export const ToggleButtonGroup = () => {
                         <Typography
                             variant="button"
                             sx={stopButtonStyles.label}>
-                            {stopPressed ? `  解除` : ` 按鐘`}
+                            {stopPressed ? `  解除按鐘` : ` 按鐘`}
                         </Typography>
                     </span>
                 }
             />
             <SwitchButton
-                sx={notiStyles.button}
+                sx={buttonSx(notiStyles)}
                 control={
                     <Switch
                         checked={showHandrailNotice}
@@ -62,7 +82,7 @@ export const ToggleButtonGroup = () => {
                     <span style={notiStyles.labelWrapper}>
                         <HandshakeIcon />
                         <Typography sx={notiStyles.label} variant="button">
-                            請緊握扶手
+                            請緊握扶手提示
                         </Typography>
                     </span>
                 }
@@ -70,7 +90,7 @@ export const ToggleButtonGroup = () => {
 
             {/* Mind Door Notice toggle */}
             <SwitchButton
-                sx={notiStyles.button}
+                sx={buttonSx(notiStyles)}
                 control={
                     <Switch
                         checked={showMindDoorNotice}
@@ -91,11 +111,11 @@ export const ToggleButtonGroup = () => {
                     <span style={notiStyles.labelWrapper}>
                         <DoorSlidingIcon />
                         <Typography sx={notiStyles.label} variant="button">
-                            車門正在關上
+                            車門正在關上提示
                         </Typography>
                     </span>
                 }
             />
-        </>
+        </div>
     )
 }

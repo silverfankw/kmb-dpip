@@ -20,7 +20,7 @@ const styles = {
 
     arrowContainer: "@container text-center bg-[#FF0000]",
     arrowIcon: "mt-[0.5rem] justify-center",
-    currentStopContainer: "flex flex-col bg-white"
+    currentStopContainer: "flex flex-col bg-white text-black"
 }
 
 export const AuxiliaryDisplayPanel = ({ monitorStyle, screenTarget }) => {

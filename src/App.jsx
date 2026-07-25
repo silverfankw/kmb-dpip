@@ -1,6 +1,3 @@
-import { useTheme } from '@mui/material'
-import SearchIcon from '@mui/icons-material/Search'
-
 import {
 	Background, Footer, RouteQueryInput, ErrorMessage,
 	ControlPanel, MainDisplayPanel, AuxiliaryDisplayPanel
@@ -8,7 +5,7 @@ import {
 
 import { useRef, useCallback, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import { useKeyboardNavigation, useLocalStorageState } from "@hooks"
+import { useKeyboardNavigation, useLocalStorageState, useRouteTypeStyle } from "@hooks"
 
 import { getRoutesThunk } from "@store/routeSlice"
 import {
@@ -22,54 +19,66 @@ const styles = {
 
 	contentContainer: [
 		"select-none focus:outline-hidden",
-		"p-[2rem] max-sm:p-2",
+		"p-[1rem] max-sm:p-1.5",
 		"flex flex-1 flex-col gap-3 ",
-		"max-sm:gap-2"
+		"max-sm:gap-1"
 	].join(" "),
 
-	iconSx: {
-		color: "#999",
-		fontSize: 24,
-	},
-
-	asyncSelectWrapper: "flex items-center gap-4 w-full relative z-20",
+	asyncSelectWrapper: "flex flex-col gap-2 w-full relative z-20 max-sm:gap-1",
+	queryStatusBar: [
+		"flex flex-wrap items-center gap-4",
+		"mt-1.5 rounded-xl bg-white/6 px-3 py-2 text-sm text-slate-200 sm:text-base",
+		"shadow-[inset_0_1px_0_rgba(255,255,255,0.05)] max-sm:text-xs",
+		"max-sm:gap-1 max-sm:px-2 max-sm:py-1.5"
+	].join(" "),
+	queryStatusLabel: "text-slate-400",
+	queryStatusValue: "font-semibold text-slate-100",
+	queryStatusRouteValue: "font-semibold text-slate-100 inline-flex items-center gap-2",
+	queryStatusDivider: "text-slate-500",
 
 	querySection: [
 		"order-1 max-sm:order-2",
 		"flex gap-3 items-center justify-center",
-		"bg-gradient-to-br from-[#18181b]/90 to-[#27272a]/80",
-		"backdrop-blur-md",
-		"shadow-[0_8px_32px_rgba(0,0,0,0.2)]",
-		"border border-gray-600/30",
-		"rounded-2xl",
+		"bg-slate-950/45",
+		"backdrop-blur-xl",
+		"shadow-[0_18px_48px_rgba(2,6,23,0.35)]",
+		"rounded-[1.75rem]",
 		"relative",
-		"p-6 max-md:p-4 max-md:flex-col max-md:gap-3",
+		"overflow-hidden",
+		"p-5 max-md:p-4 max-md:flex-col max-md:gap-3 max-sm:p-2 max-sm:gap-1",
 		"transition-all duration-300 ease-out",
-		"hover:shadow-[0_8px_32px_rgba(37,99,235,0.15)]",
-		"hover:border-blue-500/30",
-		"hover:from-[#18181b]/95 hover:to-[#27272a]/85",
-		"before:absolute before:inset-0 before:rounded-2xl",
-		"before:bg-gradient-to-br before:from-blue-500/5 before:to-purple-500/5",
-		"before:opacity-0 hover:before:opacity-100",
+		"hover:shadow-[0_22px_56px_rgba(14,165,233,0.16)]",
+		"hover:border-cyan-400/24",
+		"before:absolute before:inset-0 before:rounded-[1.75rem]",
+		"before:bg-linear-to-r before:from-cyan-400/8 before:via-transparent before:to-violet-400/8",
+		"before:opacity-100",
 		"before:transition-opacity before:duration-300",
 	].join(" "),
 
 	controlPanelSection: [
 		"order-2 max-sm:order-3",
-		"flex gap-4 flex-wrap justify-center",
-		"bg-[#18181b]/80 backdrop-blur-md",
-		"p-6 w-full max-md:flex-col max-md:gap-4",
-		"border border-gray-600/20 rounded-2xl",
-		"shadow-[0_8px_32px_rgba(0,0,0,0.2)]",
+		"flex gap-2 flex-wrap justify-center",
+		"bg-slate-950/40 backdrop-blur-xl",
+		"p-3 md:p-4 w-full max-md:flex-col max-md:gap-2 max-sm:p-2 max-sm:gap-1",
+		"border border-white/10 rounded-[1.5rem]",
+		"shadow-[0_18px_48px_rgba(2,6,23,0.3)]",
 		"transition-all duration-300 ease-in-out",
-		"hover:shadow-[0_8px_32px_rgba(37,99,235,0.1)]",
-		"hover:border-blue-500/20",
+		"hover:shadow-[0_18px_52px_rgba(14,165,233,0.12)]",
+		"hover:border-cyan-400/18",
 	].join(" "),
 
 	screenPanelSection: [
 		"order-3 max-sm:order-1",
 		"flex flex-wrap items-center justify-center",
-		"gap-10 max-sm:gap-6 py-4"
+		"gap-10 max-sm:gap-3 max-sm:py-1"
+	].join(" "),
+
+	monitorShell: [
+		"rounded-[2rem]",
+		"bg-white/[0.08]",
+		"p-3 max-sm:p-1",
+		"shadow-[0_18px_48px_rgba(2,6,23,0.28)]",
+		"ring-1 ring-white/10"
 	].join(" "),
 
 	monitorStyle: [
@@ -87,11 +96,16 @@ const styles = {
 
 const App = () => {
 
-	const theme = useTheme()
 	const dispatch = useDispatch()
+	const getRouteStyle = useRouteTypeStyle()
 	const { hasStoredData, storedData, saveToLocalStorage } = useLocalStorageState()
 	const { isUserSelectedRoute, loadingError, routeDetail, currentStopIndex } = useSelector(state => state.routeSelection)
 	const { routes } = useSelector(state => state.route)
+	const totalStops = routeDetail?.stops?.length ?? 0
+	const routeBadgeStyle = routeDetail?.route ? getRouteStyle(routeDetail.route) : null
+	const currentStopSummary = totalStops > 0
+		? `${currentStopIndex + 1} / ${totalStops}`
+		: '-- / --'
 
 	// Get routeList from API by executeing fetch route from Redux thunk
 	useEffect(() => {
@@ -188,14 +202,27 @@ const App = () => {
 					{/* Query section for route input and selection */}
 					<section className={styles.querySection}>
 						<div className={styles.asyncSelectWrapper}>
-							<SearchIcon
-								sx={{
-									...styles.iconSx,
-									[theme.breakpoints.down("sm")]: { display: "none" },
-								}}
-							/>
-							<div className="flex-1">
-								<RouteQueryInput />
+							<RouteQueryInput />
+							<div className={styles.queryStatusBar}>
+								<span className={styles.queryStatusLabel}>路線</span>
+								<span className={styles.queryStatusRouteValue}>
+									{routeDetail?.route ? (
+										<>
+											<span style={routeBadgeStyle}>{routeDetail.route}</span>
+											<span>{routeDetail.orig_tc} → {routeDetail.dest_tc}</span>
+										</>
+									) : '未選擇路線'}
+								</span>
+								<span className={styles.queryStatusDivider}>|</span>
+								<span className={styles.queryStatusLabel}>分站數目</span>
+								<span className={styles.queryStatusValue}>{currentStopSummary}</span>
+								{/* {isUserSelectedRoute && routeDetail?.stops?.[currentStopIndex]?.zh && (
+									<>
+										<span className={styles.queryStatusDivider}>|</span>
+										<span className={styles.queryStatusLabel}>本站</span>
+										<span className={styles.queryStatusValue}>{routeDetail.stops[currentStopIndex].zh}</span>
+									</>
+								)} */}
 							</div>
 						</div>
 					</section>
@@ -212,8 +239,12 @@ const App = () => {
 						{loadingError ?
 							(<ErrorMessage error={loadingError} />) :
 							(<>
-								<MainDisplayPanel monitorStyle={styles.monitorStyle} screenTarget={mainScreenTarget} />
-								<AuxiliaryDisplayPanel monitorStyle={styles.monitorStyle} screenTarget={secScreenTarget} />
+								<div className={styles.monitorShell}>
+									<MainDisplayPanel monitorStyle={styles.monitorStyle} screenTarget={mainScreenTarget} />
+								</div>
+								<div className={styles.monitorShell}>
+									<AuxiliaryDisplayPanel monitorStyle={styles.monitorStyle} screenTarget={secScreenTarget} />
+								</div>
 							</>)}
 					</section>
 				</div >
