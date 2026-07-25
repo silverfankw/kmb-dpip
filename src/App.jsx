@@ -5,7 +5,7 @@ import {
 
 import { useRef, useCallback, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import { useKeyboardNavigation, useLocalStorageState, useRouteTypeStyle } from "@hooks"
+import { useKeyboardNavigation, useLocalStorageState} from "@hooks"
 
 import { getRoutesThunk } from "@store/routeSlice"
 import {
@@ -24,47 +24,30 @@ const styles = {
 		"max-sm:gap-1"
 	].join(" "),
 
-	asyncSelectWrapper: "flex flex-col gap-2 w-full relative z-20 max-sm:gap-1",
-	queryStatusBar: [
-		"flex flex-wrap items-center gap-4",
-		"mt-1.5 rounded-xl bg-white/6 px-3 py-2 text-sm text-slate-200 sm:text-base",
-		"shadow-[inset_0_1px_0_rgba(255,255,255,0.05)] max-sm:text-xs",
-		"max-sm:gap-1 max-sm:px-2 max-sm:py-1.5"
+	querySection: [
+		"order-1 max-sm:order-2",
+		"flex flex-wrap items-center gap-4 w-full relative z-20",
+		"bg-slate-950/45",
+		"backdrop-blur-xl",
+		"shadow-[0_12px_32px_rgba(2,6,23,0.28)]",
+		"rounded-[1.75rem]",
+		"overflow-hidden",
+		"p-4 max-md:p-2 max-sm:p-1.5",
+		"text-sm text-slate-200 sm:text-base max-sm:text-xs",
+		"transition-all duration-300 ease-out",
+		"hover:shadow-[0_16px_40px_rgba(14,165,233,0.1)]",
+		"max-sm:gap-1"
 	].join(" "),
 	queryStatusLabel: "text-slate-400",
 	queryStatusValue: "font-semibold text-slate-100",
-	queryStatusRouteValue: "font-semibold text-slate-100 inline-flex items-center gap-2",
+	queryStatusRouteValue: "font-semibold text-slate-100 flex items-center min-w-0 w-1/2 basis-1/2 shrink-0 max-sm:w-full max-sm:basis-full",
+	queryStatusRouteInputWrapper: "w-full",
 	queryStatusDivider: "text-slate-500",
-
-	querySection: [
-		"order-1 max-sm:order-2",
-		"flex gap-3 items-center justify-center",
-		"bg-slate-950/45",
-		"backdrop-blur-xl",
-		"shadow-[0_18px_48px_rgba(2,6,23,0.35)]",
-		"rounded-[1.75rem]",
-		"relative",
-		"overflow-hidden",
-		"p-5 max-md:p-4 max-md:flex-col max-md:gap-3 max-sm:p-2 max-sm:gap-1",
-		"transition-all duration-300 ease-out",
-		"hover:shadow-[0_22px_56px_rgba(14,165,233,0.16)]",
-		"hover:border-cyan-400/24",
-		"before:absolute before:inset-0 before:rounded-[1.75rem]",
-		"before:bg-linear-to-r before:from-cyan-400/8 before:via-transparent before:to-violet-400/8",
-		"before:opacity-100",
-		"before:transition-opacity before:duration-300",
-	].join(" "),
 
 	controlPanelSection: [
 		"order-2 max-sm:order-3",
 		"flex gap-2 flex-wrap justify-center",
-		"bg-slate-950/40 backdrop-blur-xl",
 		"p-3 md:p-4 w-full max-md:flex-col max-md:gap-2 max-sm:p-2 max-sm:gap-1",
-		"border border-white/10 rounded-[1.5rem]",
-		"shadow-[0_18px_48px_rgba(2,6,23,0.3)]",
-		"transition-all duration-300 ease-in-out",
-		"hover:shadow-[0_18px_52px_rgba(14,165,233,0.12)]",
-		"hover:border-cyan-400/18",
 	].join(" "),
 
 	screenPanelSection: [
@@ -97,12 +80,10 @@ const styles = {
 const App = () => {
 
 	const dispatch = useDispatch()
-	const getRouteStyle = useRouteTypeStyle()
 	const { hasStoredData, storedData, saveToLocalStorage } = useLocalStorageState()
 	const { isUserSelectedRoute, loadingError, routeDetail, currentStopIndex } = useSelector(state => state.routeSelection)
 	const { routes } = useSelector(state => state.route)
 	const totalStops = routeDetail?.stops?.length ?? 0
-	const routeBadgeStyle = routeDetail?.route ? getRouteStyle(routeDetail.route) : null
 	const currentStopSummary = totalStops > 0
 		? `${currentStopIndex + 1} / ${totalStops}`
 		: '-- / --'
@@ -201,30 +182,20 @@ const App = () => {
 
 					{/* Query section for route input and selection */}
 					<section className={styles.querySection}>
-						<div className={styles.asyncSelectWrapper}>
-							<RouteQueryInput />
-							<div className={styles.queryStatusBar}>
-								<span className={styles.queryStatusLabel}>路線</span>
-								<span className={styles.queryStatusRouteValue}>
-									{routeDetail?.route ? (
-										<>
-											<span style={routeBadgeStyle}>{routeDetail.route}</span>
-											<span>{routeDetail.orig_tc} → {routeDetail.dest_tc}</span>
-										</>
-									) : '未選擇路線'}
-								</span>
-								<span className={styles.queryStatusDivider}>|</span>
-								<span className={styles.queryStatusLabel}>分站數目</span>
-								<span className={styles.queryStatusValue}>{currentStopSummary}</span>
-								{/* {isUserSelectedRoute && routeDetail?.stops?.[currentStopIndex]?.zh && (
-									<>
-										<span className={styles.queryStatusDivider}>|</span>
-										<span className={styles.queryStatusLabel}>本站</span>
-										<span className={styles.queryStatusValue}>{routeDetail.stops[currentStopIndex].zh}</span>
-									</>
-								)} */}
+						<div className={styles.queryStatusRouteValue}>
+							<div className={styles.queryStatusRouteInputWrapper}>
+								<RouteQueryInput label="路線" labelClassName={styles.queryStatusLabel} />
 							</div>
 						</div>
+						<span className={styles.queryStatusLabel}>站數</span>
+						<span className={styles.queryStatusValue}>{currentStopSummary}</span>
+						{isUserSelectedRoute && routeDetail?.stops?.[currentStopIndex]?.zh && (
+							<>
+								<span className={styles.queryStatusDivider}>|</span>
+								<span className={styles.queryStatusLabel}>本站</span>
+								<span className={styles.queryStatusValue}>{routeDetail.stops[currentStopIndex].zh}</span>
+							</>
+						)}
 					</section>
 
 					{/* Control Panel with buttons and switches to control DPIP */}

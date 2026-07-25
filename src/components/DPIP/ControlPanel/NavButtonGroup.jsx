@@ -52,7 +52,7 @@ export const NavButtonGroup = () => {
                         onClick={() => dispatch(toPrevStop())}
                         disabled={!isPrevStopAvailable}
                     >
-                        <Typography component="span" sx={prevStopBtnStyle.buttonLabel}>上站 Previous Stop</Typography>
+                        <Typography component="span" sx={prevStopBtnStyle.buttonLabel}>上一站 Previous Stop</Typography>
                     </Button>
                 </span>
             </Tooltip>
@@ -66,7 +66,7 @@ export const NavButtonGroup = () => {
                         onClick={() => dispatch(toNextStop())}
                         disabled={!isNextStopAvailable}
                     >
-                        <Typography component="span" sx={nextStopBtnStyle.buttonLabel}>下站 Next Stop</Typography>
+                        <Typography component="span" sx={nextStopBtnStyle.buttonLabel}>下一站 Next Stop</Typography>
                     </Button>
                 </span>
             </Tooltip>
@@ -94,7 +94,7 @@ export const NavButtonGroup = () => {
                         onClick={() => dispatch(resetToFirstStop())}
                         disabled={!isUserSelectedRoute || currentStopIndex == 0}
                     >
-                        <Typography component="span" sx={resetStopBtnStyle.buttonLabel}>首站重新開始 Go to First Stop</Typography>
+                        <Typography component="span" sx={resetStopBtnStyle.buttonLabel}>首站重新開始 Restart at the First Stop</Typography>
                     </Button>
                 </span>
             </Tooltip>

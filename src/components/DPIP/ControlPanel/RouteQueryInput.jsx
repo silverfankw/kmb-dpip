@@ -27,7 +27,7 @@ const createRouteOption = (route) => ({
     detail: route,
 })
 
-const RouteOption = ({ componentType, data, ...props }) => {
+const RouteOption = ({ componentType, data, compact = false, ...props }) => {
     const { isMobile } = useWindowSize()
     const { label } = data
     const [routeLabel, terminusLabel, specialTripLabel, specialRemarkLabel = ''] = label.split(itemSeparator)
@@ -53,11 +53,13 @@ const RouteOption = ({ componentType, data, ...props }) => {
                     componentType={componentType}
                     isMobile={isMobile}
                 />
-                <RouteDetails
-                    origin={originLabel}
-                    destination={destinationLabel}
-                    remark={specialRemarkLabel}
-                />
+                {!(componentType === 'SingleValue' && compact) && (
+                    <RouteDetails
+                        origin={originLabel}
+                        destination={destinationLabel}
+                        remark={specialRemarkLabel}
+                    />
+                )}
             </div>
         </WrappedComponent >
     )
@@ -66,7 +68,7 @@ const RouteOption = ({ componentType, data, ...props }) => {
 const MemoizedOption = React.memo(props => <RouteOption {...props} componentType="Option" />)
 const MemoizedSingleValue = React.memo(props => <RouteOption {...props} componentType="SingleValue" />)
 
-export const RouteQueryInput = () => {
+export const RouteQueryInput = ({ compact = false, label = '', labelClassName = '' }) => {
     const { isMobile } = useWindowSize()
     const dispatch = useDispatch()
     const { routes } = useSelector(state => state.route)
@@ -159,9 +161,26 @@ export const RouteQueryInput = () => {
                     flexShrink: 0,
                 }}
             />
+            {label && (
+                <span
+                    className={labelClassName}
+                    style={{
+                        marginRight: isMobile ? "6px" : "8px",
+                        whiteSpace: "nowrap",
+                        flexShrink: 0,
+                    }}
+                >
+                    {label}
+                </span>
+            )}
             {props.children}
         </components.Control>
-    ), [isMobile])
+    ), [isMobile, label, labelClassName])
+
+    const CompactSingleValue = useCallback(
+        props => <RouteOption {...props} componentType="SingleValue" compact={compact} />,
+        [compact]
+    )
 
     const selectStyles = useMemo(() => ({
         control: (base, state) => ({
@@ -188,11 +207,15 @@ export const RouteQueryInput = () => {
             borderRadius: "20px",
             boxShadow: "0 22px 50px rgba(2, 6, 23, 0.48)",
             color: "#fff",
-            zIndex: 9999,
+            zIndex: 99999,
             fontSize: isMobile ? "14px" : base.fontSize,
             overflow: "hidden",
             transition: "all 0.2s ease",
             width: "100%",
+        }),
+        menuPortal: base => ({
+            ...base,
+            zIndex: 99999,
         }),
         menuList: base => ({
             ...base,
@@ -248,6 +271,7 @@ export const RouteQueryInput = () => {
         input: base => ({
             ...base,
             color: "#fff",
+            fontSize: isMobile ? "16px" : base.fontSize,
             margin: isMobile ? "0 2px" : "0 4px",
         }),
         placeholder: base => ({
@@ -331,10 +355,11 @@ export const RouteQueryInput = () => {
             components={{
                 Control,
                 Option: MemoizedOption,
-                SingleValue: MemoizedSingleValue
+                SingleValue: compact ? CompactSingleValue : MemoizedSingleValue
             }}
             classNamePrefix="routeInputSelect"
             menuPortalTarget={document.body}
+            menuPosition="fixed"
             styles={selectStyles}
             isDisabled={isRoutesLoading}
             isClearable
