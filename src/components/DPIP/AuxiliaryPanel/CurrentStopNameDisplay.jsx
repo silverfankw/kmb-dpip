@@ -27,8 +27,8 @@ const styles = {
     ].join(" "),
 
     enStopName: [
-        "text-[5.375cqw]",
-        "max-md:text-[5.5cqw]",
+        "text-[5.5cqw]",
+        // "max-md:text-[5.5cqw]",
         "leading-[1.2]",
         "w-full"
     ].join(" "),
@@ -55,11 +55,11 @@ const computeStopNameStyle = (stopName = "", lang = "en") => {
         style.marginTop = `${visualLength * 0.025}cqh`
     }
     else if (lang === "en") {
-        const willWrap = visualLength > 35
+        const willWrap = visualLength > Math.floor(window.innerWidth / 10)
         style.alignSelf = willWrap ? "flex-start" : "center"
         if (willWrap) {
-            style.lineHeight = "1.3"
-            style.marginTop = "-.5rem"
+            style.lineHeight = "1.2"
+            style.marginTop = "0.5cqh"
         }
     }
 

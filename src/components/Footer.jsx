@@ -16,10 +16,10 @@ const styles = {
         "max-sm:gap-1 max-sm:px-3 max-sm:py-2",
         "sm:flex-row sm:items-center sm:justify-between"
     ].join(" "),
-    shellNight: "bg-[#13203a]/68 text-slate-200 shadow-[0_16px_40px_rgba(8,15,32,0.24)]",
-    shellLight: "bg-white/90 text-slate-700 shadow-[0_12px_28px_rgba(148,163,184,0.18)]",
-    linkNight: "text-slate-200 underline transition text-xs hover:text-cyan-200",
-    linkLight: "text-slate-700 underline transition text-xs hover:text-cyan-700",
+    shellNight: "text-slate-200",
+    shellLight: "text-slate-700",
+    linkNight: "text-slate-200 transition text-xs hover:text-cyan-200",
+    linkLight: "text-slate-700 transition text-xs hover:text-cyan-700",
     buttonNight: "text-slate-300 underline transition hover:text-cyan-200 hover:cursor-pointer",
     buttonLight: "text-slate-700 underline transition hover:text-cyan-700 hover:cursor-pointer",
     actionRow: "flex items-center gap-4 self-end sm:self-auto",
@@ -58,7 +58,7 @@ export const Footer = ({ uiMode = "night" }) => {
                             silverfankw/kmb-dpip-v2 @ 2026
                         </a>
                     </p>
-                    <p>This website is best viewed at 16:9 resolution.</p>
+                    <p className="select-none">This website is best viewed at 16:9 resolution.</p>
                     <div className={styles.actionRow}>
                         <button
                             type="button"

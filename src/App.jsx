@@ -44,7 +44,7 @@ const styles = {
 	screenPanelSection: [
 		"order-3 max-sm:order-1",
 		"flex flex-wrap items-center justify-center",
-		"gap-8 py-3 max-sm:gap-3 max-sm:py-1"
+		"gap-8 py-3 max-xl:gap-8 max-sm:gap-3 max-sm:py-1"
 	].join(" "),
 
 	monitorShell: [
@@ -56,7 +56,7 @@ const styles = {
 	].join(" "),
 
 	monitorStyle: [
-		"w-[840px] h-[480px]",
+		"w-[800px] h-[480px]",
 		"max-xl:w-[700px] max-xl:h-[420px]",
 		"max-md:w-[600px] max-md:h-[360px]",
 		"max-sm:w-[400px] max-sm:h-[240px]",

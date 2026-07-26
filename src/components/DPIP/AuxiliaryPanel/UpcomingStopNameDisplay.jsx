@@ -49,7 +49,7 @@ const styles = {
 
     enStopName: [
         "justify-center",
-        "text-[3.75cqw]",
+        "text-[3.875cqw]",
         // "font-bold max-sm:font-medium",
         "tracking-tighter",
     ].join(" ")
@@ -67,7 +67,7 @@ const getStopNameFontStyle = (text, lang, windowSize) => {
             if (textLength < 45) return {}
 
             const baseSize = windowSize < 768 ? 4 : windowSize < 1280 ? 3.75 : 3.5
-            const scale = textLength >= 50 ? 0.8 : 0.95
+            const scale = textLength >= 50 ? 0.8 : 1
 
             return { fontSize: `${baseSize * scale}cqw` }
         })()

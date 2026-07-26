@@ -78,7 +78,7 @@ const basestyles = {
     ].join(" "),
 
     stopNameZh: [
-        "font-semibold max-sm:font-medium",
+        // "font-semibold max-sm:font-medium",
         "text-[8cqw]",
         "max-sm:text-[8.5cqw]",
         "max-md:text-[10cqw]",
@@ -97,7 +97,7 @@ const basestyles = {
         "@container",
         "flex justify-center",
         "col-start-1 col-end-5",
-        "font-semibold",
+        // "font-semibold",
         "text-white tracking-tight",
         "p-0.5"
     ].join(" "),
