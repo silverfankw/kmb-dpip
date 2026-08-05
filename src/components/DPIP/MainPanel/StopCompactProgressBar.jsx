@@ -1,8 +1,5 @@
 import "@styles/animation.css"
-import { useEffect, useRef, useState } from "react"
 import { useSelector } from "react-redux"
-
-const arrowStageInterval = 750
 
 // Tailwind CSS classes for the component
 const styles = {
@@ -10,9 +7,9 @@ const styles = {
     stopNameContainer: "stop-name-container @container w-full h-full relative",
     stopInfoRow: "stopInfoRow flex gap-1 w-full relative top-[33%] mb-[12cqw] items-center justify-center",
     stopInfoCol: "stopInfoCol flex flex-col gap-0.5 basis-[33%] min-w-[0] h-full justify-center text-black",
-    stopZh: "relative text-[2.5cqw] w-full text-center flex items-center justify-center",
+    stopZh: "relative text-[2.75cqw] w-full text-center flex items-center justify-center",
     stopZhCurrent: "font-bold",
-    stopEn: "relative text-[1.75cqw] w-full text-center flex items-center justify-center",
+    stopEn: "relative text-[1.825cqw] max-sm:text-[2cqw] w-full text-center flex items-center justify-center",
     stopEnCurrent: "font-bold",
     stopEnOther: "text-black",
 
@@ -50,12 +47,17 @@ const styles = {
     bulletThird: "bulletThird translate-x-[11cqw]",
     arrowContainer: "absolute -translate-x-[37.5cqw]",
 
+    arrowBase: [
+        "opacity-0"
+    ].join(" "),
+
     arrowFirst: [
         "absolute left-0",
         "w-[1.5cqw] h-[1.5cqw]",
         "border-t-[0.25vw] border-r-[0.25vw]",
         "border-t-white border-r-white",
-        "rotate-45"
+        "rotate-45",
+        "animate-compact-arrow-first"
     ].join(" "),
 
     arrowSecond: [
@@ -63,7 +65,8 @@ const styles = {
         "w-[1.5cqw] h-[1.5cqw]",
         "border-t-[0.25vw] border-r-[0.25vw]",
         "border-t-white border-r-white",
-        "rotate-45"
+        "rotate-45",
+        "animate-compact-arrow-second"
     ].join(" "),
 
     arrowThird: [
@@ -71,7 +74,8 @@ const styles = {
         "w-[1.5cqw] h-[1.5cqw]",
         "border-t-[0.25vw] border-r-[0.25vw]",
         "border-t-white border-r-white",
-        "rotate-45"
+        "rotate-45",
+        "animate-compact-arrow-third"
     ].join(" "),
 
     endIndicator: "h-[1.75cqw] border-1 border-solid border-red-600 rounded-[1px]",
@@ -86,20 +90,6 @@ const styles = {
 
 export const StopCompactProgressBar = ({ progressBarRef }) => {
     const { routeDetail, currentStopIndex } = useSelector(state => state.routeSelection)
-    const [arrowStage, setArrowStage] = useState(0)
-    const intervalRef = useRef(null)
-
-    useEffect(() => {
-        setArrowStage(0)
-
-        if (intervalRef.current) clearInterval(intervalRef.current)
-
-        intervalRef.current = setInterval(() => {
-            setArrowStage(prev => (prev < 3 ? prev + 1 : 0))
-        }, arrowStageInterval)
-
-        return () => clearInterval(intervalRef.current)
-    }, [currentStopIndex])
 
     return (
         <div className={styles.refContainer} ref={progressBarRef}>
@@ -134,9 +124,9 @@ export const StopCompactProgressBar = ({ progressBarRef }) => {
             {/* Progress Bar: Arrow, Line and bullet */}
             <div className={styles.progressBar}>
                 <div className={styles.arrowContainer}>
-                    {arrowStage >= 1 && <div className={styles.arrowFirst}></div>}
-                    {arrowStage >= 2 && <div className={styles.arrowSecond}></div>}
-                    {arrowStage >= 3 && <div className={styles.arrowThird}></div>}
+                    <div className={`${styles.arrowBase} ${styles.arrowFirst}`}></div>
+                    <div className={`${styles.arrowBase} ${styles.arrowSecond}`}></div>
+                    <div className={`${styles.arrowBase} ${styles.arrowThird}`}></div>
                 </div>
 
                 {[0, 1, 2].map((idx) => (

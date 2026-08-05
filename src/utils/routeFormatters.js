@@ -12,6 +12,7 @@ export const formatRouteLabel = (route) => ({
 
 export const createRouteOption = (route) => {
     const { routeNumber, origin, destination, isSpecial, remark } = formatRouteLabel(route)
+
     return {
         label: [
             routeNumber,
@@ -20,7 +21,12 @@ export const createRouteOption = (route) => {
             remark || ''
         ].join(itemSeparator),
         value: `${route.route}-${route.bound}-${route.service_type}`,
-        detail: route
+        detail: route,
+        routeLabel: routeNumber,
+        originLabel: origin,
+        destinationLabel: destination,
+        isSpecial,
+        specialRemarkLabel: remark || ''
     }
 }
 

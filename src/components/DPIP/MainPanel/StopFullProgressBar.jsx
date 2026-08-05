@@ -57,12 +57,12 @@ const styles = {
     endLineBar: [
         "bg-[#FF0000]",
         "w-[.2cqw] h-[2.5cqw]",
-        "max-md:w-[.375cqw] max-mx:h-[3.5cqw]"
+        "max-md:w-[.375cqw] max-md:h-[3.5cqw]"
     ].join(" "),
 
     stopName: [
         "stop-name absolute",
-        "text-black text-[1.75cqw]",
+        "text-black text-[1.85cqw] max-sm:text-[2cqw]",
         "top-[-2.75cqw] left-1/2",
         "-translate-x-[5%] -rotate-[65deg]",
         "origin-left whitespace-nowrap",

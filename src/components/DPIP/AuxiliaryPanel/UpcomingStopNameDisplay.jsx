@@ -77,7 +77,7 @@ const getStopNameFontStyle = (text, lang, windowSize) => {
 }
 
 export const UpcomingStopNameDisplay = ({ stopZh = "", stopEn = "" }) => {
-    const { windowSize } = useWindowSize()
+    const { width } = useWindowSize()
 
     return (
         <>
@@ -102,7 +102,7 @@ export const UpcomingStopNameDisplay = ({ stopZh = "", stopEn = "" }) => {
                     </div>
                     <span
                         className={styles.enStopName}
-                        style={getStopNameFontStyle(stopEn, "en", windowSize)}
+                        style={getStopNameFontStyle(stopEn, "en", width)}
                     >
                         {stopEn}
                     </span>

@@ -13,13 +13,37 @@ import {
 	setCurrentStopIndex, toPrevStop, toNextStop
 } from '@store/routeSelectionSlice'
 
+const buildStoredSelection = (routeDetail, currentStopIndex, includeTimestamp = false) => {
+	if (!routeDetail || Object.keys(routeDetail).length === 0) {
+		return null
+	}
+
+	const data = {
+		route: routeDetail.route,
+		bound: routeDetail.bound,
+		service_type: routeDetail.service_type,
+		orig_tc: routeDetail.orig_tc,
+		orig_en: routeDetail.orig_en,
+		dest_tc: routeDetail.dest_tc,
+		dest_en: routeDetail.dest_en,
+		specialRemark: routeDetail.specialRemark,
+		currentStopIndex,
+	}
+
+	if (includeTimestamp) {
+		data.timestamp = Date.now()
+	}
+
+	return data
+}
+
 // Tailwind classes for layout
 const styles = {
 	rootContainer: "min-h-screen flex flex-col items-center",
 
 	contentContainer: [
 		"select-none focus:outline-hidden",
-		"p-[2rem] max-sm:p-1.5",
+		"px-16 py-[2rem] max-xl:px-10 max-sm:p-1.5",
 		"flex flex-1 flex-col gap-3 ",
 		"max-sm:gap-1"
 	].join(" "),
@@ -71,7 +95,7 @@ const styles = {
 const App = () => {
 
 	const dispatch = useDispatch()
-	const { hasStoredData, storedData, saveToLocalStorage } = useLocalStorageState()
+	const { hasStoredData, storedData, saveToLocalStorage, saveToLocalStorageNow } = useLocalStorageState()
 	const { isUserSelectedRoute, loadingError, routeDetail, currentStopIndex } = useSelector(state => state.routeSelection)
 	const { routes } = useSelector(state => state.route)
 	const { uiMode } = useSelector(state => state.userPreference)
@@ -110,48 +134,28 @@ const App = () => {
 
 	useEffect(() => {
 		if (isUserSelectedRoute && routeDetail && Object.keys(routeDetail).length > 0) {
-			const dataToStore = {
-				route: routeDetail.route,
-				bound: routeDetail.bound,
-				service_type: routeDetail.service_type,
-				orig_tc: routeDetail.orig_tc,
-				orig_en: routeDetail.orig_en,
-				dest_tc: routeDetail.dest_tc,
-				dest_en: routeDetail.dest_en,
-				specialRemark: routeDetail.specialRemark,
-				currentStop_tc: routeDetail.stops[currentStopIndex]?.zh || "",
-				currentStop_en: routeDetail.stops[currentStopIndex]?.en || "",
-				currentStopIndex: currentStopIndex,
-				timestamp: Date.now()
+			const dataToStore = buildStoredSelection(routeDetail, currentStopIndex, true)
+
+			if (dataToStore) {
+				saveToLocalStorage(dataToStore)
 			}
-			saveToLocalStorage(dataToStore)
 		}
 	}, [isUserSelectedRoute, routeDetail, currentStopIndex, saveToLocalStorage])
 
 	useEffect(() => {
 		const handleBeforeUnload = () => {
 			if (isUserSelectedRoute && routeDetail && Object.keys(routeDetail).length > 0) {
-				const dataToStore = {
-					route: routeDetail.route,
-					bound: routeDetail.bound,
-					service_type: routeDetail.service_type,
-					orig_tc: routeDetail.orig_tc,
-					orig_en: routeDetail.orig_en,
-					dest_tc: routeDetail.dest_tc,
-					dest_en: routeDetail.dest_en,
-					specialRemark: routeDetail.specialRemark,
-					currentStop_tc: routeDetail.stops[currentStopIndex]?.zh || "",
-					currentStop_en: routeDetail.stops[currentStopIndex]?.en || "",
-					currentStopIndex: currentStopIndex,
-					// timestamp: Date.now()
+				const dataToStore = buildStoredSelection(routeDetail, currentStopIndex)
+
+				if (dataToStore) {
+					saveToLocalStorageNow(dataToStore)
 				}
-				saveToLocalStorage(dataToStore)
 			}
 		}
 
 		window.addEventListener('beforeunload', handleBeforeUnload)
 		return () => window.removeEventListener('beforeunload', handleBeforeUnload)
-	}, [isUserSelectedRoute, routeDetail, currentStopIndex, saveToLocalStorage])
+	}, [isUserSelectedRoute, routeDetail, currentStopIndex, saveToLocalStorageNow])
 
 
 	// Ref used for full screen function

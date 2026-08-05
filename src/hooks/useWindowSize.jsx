@@ -1,7 +1,20 @@
-import { useState, useEffect, useMemo } from 'react'
+import { useSyncExternalStore } from 'react'
 import debounce from 'lodash/debounce'
 
+const defaultSize = {
+    width: 0,
+    height: 0,
+    isMobile: false,
+    isTablet: false,
+    isDesktop: true,
+    deviceType: 'desktop'
+}
+
 const getSize = () => {
+    if (typeof window === 'undefined') {
+        return defaultSize
+    }
+
     const width = window.innerWidth
 
     return {
@@ -14,23 +27,56 @@ const getSize = () => {
     }
 }
 
-export const useWindowSize = () => {
-    const [size, setSize] = useState(getSize())
+let currentSize = getSize()
+const listeners = new Set()
 
-    const handleResize = useMemo(
-        () => debounce(() => {
-            setSize(getSize())
-        }, 150),
-        []
-    )
+const hasWindowSizeChanged = (nextSize) => (
+    nextSize.width !== currentSize.width ||
+    nextSize.height !== currentSize.height ||
+    nextSize.isMobile !== currentSize.isMobile ||
+    nextSize.isTablet !== currentSize.isTablet ||
+    nextSize.isDesktop !== currentSize.isDesktop ||
+    nextSize.deviceType !== currentSize.deviceType
+)
 
-    useEffect(() => {
-        window.addEventListener('resize', handleResize)
-        return () => {
-            handleResize.cancel()
-            window.removeEventListener('resize', handleResize)
+const notifySizeChange = debounce(() => {
+    const nextSize = getSize()
+
+    if (!hasWindowSizeChanged(nextSize)) {
+        return
+    }
+
+    currentSize = nextSize
+    listeners.forEach(listener => listener())
+}, 150)
+
+const getSnapshot = () => {
+    const nextSize = getSize()
+
+    if (hasWindowSizeChanged(nextSize)) {
+        currentSize = nextSize
+    }
+
+    return currentSize
+}
+
+const subscribe = listener => {
+    listeners.add(listener)
+
+    if (listeners.size === 1 && typeof window !== 'undefined') {
+        window.addEventListener('resize', notifySizeChange)
+    }
+
+    return () => {
+        listeners.delete(listener)
+
+        if (listeners.size === 0 && typeof window !== 'undefined') {
+            notifySizeChange.cancel()
+            window.removeEventListener('resize', notifySizeChange)
         }
-    }, [handleResize])
+    }
+}
 
-    return size
+export const useWindowSize = () => {
+    return useSyncExternalStore(subscribe, getSnapshot, () => defaultSize)
 }

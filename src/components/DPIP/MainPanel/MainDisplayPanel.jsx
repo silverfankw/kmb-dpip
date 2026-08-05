@@ -1,5 +1,5 @@
 import '@styles/App.css'
-import { useEffect, useRef } from "react"
+import { useCallback, useEffect, useLayoutEffect, useRef } from "react"
 import { useSelector } from "react-redux"
 import stringWidth from "string-width"
 import { useToggleDisplay } from "@hooks"
@@ -16,40 +16,51 @@ import {
 // --- Constants ---
 const progressBarInterval = 11000
 const stopNameInterval = 4500
+const FIRST_STOP_WELCOME_ZH = "歡迎乘搭九龍巴士"
+const FIRST_STOP_WELCOME_EN = "WELCOME ABOARD"
+const STOP_NAME_ZH_SAFE_WIDTH_RATIO = 0.985
+
+const getStopNameZhBaseFontSize = (text) => {
+    const visualLength = Math.max(stringWidth(text || ""), 1)
+    return Math.max(10.25, Math.min(10.5, 13.5 - (Math.max(visualLength - 6, 0) * 0.3)))
+}
 
 // --- Styles outside component ---
 const basestyles = {
     parentGrid: [
         "select-none",
         "grid",
+        "grid-cols-[0.25fr_1fr]",
         "grid-rows-[0.5fr_1.85fr_0.0375fr_1fr_0.125fr]"
     ].join(" "),
 
     nextStopIndicatorGrid: [
         "@container",
         "col-start-1 col-end-2",
-        "flex flex-col items-center justify-center",
+        "h-full",
+        "flex flex-col gap-2 max-sm:gap-1 items-center justify-center",
         "text-center",
+        "leading-none",
     ].join(" "),
 
     nextStopIndicatorZh: [
-        "text-[14cqw]",
-        "mb-[-2px]",
-        "font-semibold",
+        "text-[18cqw]",
     ].join(" "),
 
     nextStopIndicatorEn: [
-        "text-[8cqw]",
-        "font-semibold"
+        "text-[10cqw]",
     ].join(" "),
 
     routeHeadingGrid: [
         "@container",
-        "col-start-2 col-end-5",
         "flex items-center gap-1",
         "pl-0.5",
         "bg-black text-white"
     ].join(" "),
+
+    routeHeadingGridDefault: "col-start-2 col-end-5",
+
+    routeHeadingGridFirstStop: "col-start-1 col-end-3",
 
     stopProgressBarGrid: [
         "@container",
@@ -78,16 +89,13 @@ const basestyles = {
     ].join(" "),
 
     stopNameZh: [
-        // "font-semibold max-sm:font-medium",
-        "text-[8cqw]",
-        "max-sm:text-[8.5cqw]",
-        "max-md:text-[10cqw]",
-        "whitespace-nowrap overflow-hidden"
+        "inline-block",
+        "shrink-0",
+        "whitespace-nowrap"
     ].join(" "),
 
     stopNameEn: [
         "text-center",
-        "font-semibold max-sm:font-medium",
         "text-[5cqw]",
         "max-sm:text-[4cqw]",
         "max-md:text-[5cqw]",
@@ -97,7 +105,6 @@ const basestyles = {
         "@container",
         "flex justify-center",
         "col-start-1 col-end-5",
-        // "font-semibold",
         "text-white tracking-tight",
         "p-0.5"
     ].join(" "),
@@ -112,12 +119,6 @@ const basestyles = {
     noticeZhOverrideStyle: "!text-[8cqw]",
 
     noticeEnOverrideStyle: "!text-[3.75cqw]"
-}
-
-// --- Helper for dynamic stop name font size ---
-const getClampTextStyle = (text) => {
-    const visualLength = stringWidth(text || "")
-    return `clamp(2rem, ${Math.max(16 - visualLength * 0.45, 6.5)}cqw, 10cqw)`
 }
 
 export const MainDisplayPanel = ({ monitorStyle, screenTarget }) => {
@@ -135,13 +136,44 @@ export const MainDisplayPanel = ({ monitorStyle, screenTarget }) => {
         driverInfo
     } = useSelector(state => state.userPreference)
 
-    const stopNameZh = routeDetail?.stops?.[currentStopIndex]?.zh
-    const stopNameEn = routeDetail?.stops?.[currentStopIndex]?.en
+    const isFirstStop = routeDetail?.stops?.length > 0 && currentStopIndex === 0
+    const stopNameZh = isFirstStop
+        ? FIRST_STOP_WELCOME_ZH
+        : routeDetail?.stops?.[currentStopIndex]?.zh
+    const stopNameEn = isFirstStop
+        ? FIRST_STOP_WELCOME_EN
+        : routeDetail?.stops?.[currentStopIndex]?.en
 
     const fullProgressBarRef = useRef(null)
     const compactProgressBarRef = useRef(null)
+    const stopNameGridRef = useRef(null)
     const zhStopNameRef = useRef(null)
     const enStopNameRef = useRef(null)
+
+    const applyStopNameZhScale = useCallback(() => {
+        const container = stopNameGridRef.current
+        const el = zhStopNameRef.current
+
+        if (!container || !el || el.style.display === "none") return
+
+        const contentWidth = el.scrollWidth
+        if (!contentWidth) return
+
+        const containerStyle = window.getComputedStyle(container)
+        const horizontalPadding =
+            parseFloat(containerStyle.paddingLeft || "0") +
+            parseFloat(containerStyle.paddingRight || "0")
+        const availableWidth = Math.max(
+            ((container.clientWidth - horizontalPadding) * STOP_NAME_ZH_SAFE_WIDTH_RATIO),
+            0
+        )
+        const scaleX = Math.min(1, availableWidth / contentWidth)
+
+        const nextTransform = `scaleX(${scaleX})`
+        if (el.style.transform !== nextTransform) {
+            el.style.transform = nextTransform
+        }
+    }, [])
 
     // Toggle progress bar and stop name display
     useToggleDisplay(fullProgressBarRef, compactProgressBarRef, progressBarInterval, [routeDetail?.route, routeDetail?.bound, routeDetail?.service_type])
@@ -149,34 +181,66 @@ export const MainDisplayPanel = ({ monitorStyle, screenTarget }) => {
 
     // Reset stop name display when notice toggles change
     useEffect(() => {
+        let animationFrameId = null
+
+        if (isFirstStop) {
+            zhStopNameRef.current && (zhStopNameRef.current.style.display = "block")
+            enStopNameRef.current && (enStopNameRef.current.style.display = "none")
+            animationFrameId = window.requestAnimationFrame(applyStopNameZhScale)
+            return () => window.cancelAnimationFrame(animationFrameId)
+        }
+
         if (showHandrailNotice || showMindDoorNotice) {
             zhStopNameRef.current && (zhStopNameRef.current.style.display = "none")
             enStopNameRef.current && (enStopNameRef.current.style.display = "none")
         } else {
             zhStopNameRef.current && (zhStopNameRef.current.style.display = "block")
             enStopNameRef.current && (enStopNameRef.current.style.display = "none")
+            animationFrameId = window.requestAnimationFrame(applyStopNameZhScale)
         }
-    }, [showHandrailNotice, showMindDoorNotice])
+
+        return () => {
+            if (animationFrameId !== null) {
+                window.cancelAnimationFrame(animationFrameId)
+            }
+        }
+    }, [applyStopNameZhScale, isFirstStop, showHandrailNotice, showMindDoorNotice])
+
+    useLayoutEffect(() => {
+        applyStopNameZhScale()
+    }, [applyStopNameZhScale, stopNameZh])
+
+    useEffect(() => {
+        const container = stopNameGridRef.current
+        if (!container) return
+
+        const ro = new ResizeObserver(applyStopNameZhScale)
+        ro.observe(container)
+        return () => ro.disconnect()
+    }, [applyStopNameZhScale])
 
     // Compose dynamic classes
     const styles = {
         ...basestyles,
         parentGrid: `${basestyles.parentGrid} ${monitorStyle}`,
         nextStopIndicatorGrid: `${basestyles.nextStopIndicatorGrid} ${stopPressed ? "bg-[#FF0000] text-white" : "bg-[#FFFF00] text-black"}`,
+        routeHeadingGrid: `${basestyles.routeHeadingGrid} ${isFirstStop ? basestyles.routeHeadingGridFirstStop : basestyles.routeHeadingGridDefault}`,
         driverInfoGrid: `${basestyles.driverInfoGrid} ${stopPressed ? "bg-[#FF0000]" : "bg-black"}`
     }
 
     return (
         <div ref={screenTarget} className={styles.parentGrid}>
             {/* Next stop Indicator */}
-            <div className={styles.nextStopIndicatorGrid}>
-                <div className={styles.nextStopIndicatorZh}>
-                    下一站{stopPressed && `停於`}
+            {!isFirstStop && (
+                <div className={styles.nextStopIndicatorGrid}>
+                    <div className={styles.nextStopIndicatorZh}>
+                        下一站{stopPressed && `停於`}
+                    </div>
+                    <div className={styles.nextStopIndicatorEn}>
+                        Next {stopPressed ? `Stopping at` : `Stop`}
+                    </div>
                 </div>
-                <div className={styles.nextStopIndicatorEn}>
-                    Next {stopPressed ? `Stopping at` : `Stop`}
-                </div>
-            </div>
+            )}
 
             {/* Route Number & Destination */}
             <div className={styles.routeHeadingGrid}>
@@ -198,8 +262,27 @@ export const MainDisplayPanel = ({ monitorStyle, screenTarget }) => {
             <div className={styles.dividerGrid}></div>
 
             {/* Big next stop name */}
-            <div className={styles.stopNameGrid}>
-                {showHandrailNotice ? (
+            <div ref={stopNameGridRef} className={styles.stopNameGrid}>
+                {isFirstStop ? (
+                    <>
+                        <span
+                            ref={zhStopNameRef}
+                            className={styles.stopNameZh}
+                            style={{
+                                fontSize: `${getStopNameZhBaseFontSize(stopNameZh)}cqw`,
+                                transformOrigin: "center center"
+                            }}
+                        >
+                            {stopNameZh}
+                        </span>
+                        <span
+                            ref={enStopNameRef}
+                            className={styles.stopNameEn}
+                        >
+                            {stopNameEn}
+                        </span>
+                    </>
+                ) : showHandrailNotice ? (
                     <HoldHandrailNotice
                         zhNameOverrideStyle={styles.noticeZhOverrideStyle}
                         enNameOverrideStyle={styles.noticeEnOverrideStyle}
@@ -214,7 +297,10 @@ export const MainDisplayPanel = ({ monitorStyle, screenTarget }) => {
                         <span
                             ref={zhStopNameRef}
                             className={styles.stopNameZh}
-                            style={{ fontSize: getClampTextStyle(stopNameZh) }}
+                            style={{
+                                fontSize: `${getStopNameZhBaseFontSize(stopNameZh)}cqw`,
+                                transformOrigin: "center center"
+                            }}
                         >
                             {stopNameZh}
                         </span>

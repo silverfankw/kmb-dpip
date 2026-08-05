@@ -13,9 +13,11 @@ const ItemSeparator = () => (
     "/>
 )
 
-export const RouteNumber = ({ route, isSpecial, componentType }) => {
-    const { isMobile } = useWindowSize()
-    const getRouteStyle = useRouteTypeStyle()
+export const RouteNumber = ({ route, isSpecial, componentType, isMobile: isMobileProp, getRouteStyle: getRouteStyleProp }) => {
+    const { isMobile: responsiveIsMobile } = useWindowSize()
+    const responsiveRouteStyle = useRouteTypeStyle()
+    const isMobile = isMobileProp ?? responsiveIsMobile
+    const getRouteStyle = getRouteStyleProp ?? responsiveRouteStyle
 
     const styles = useMemo(() => ({
         routeLabel: {
@@ -56,7 +58,8 @@ export const RouteNumber = ({ route, isSpecial, componentType }) => {
 }
 
 export const RouteDetails = ({ origin, destination, remark }) => {
-    const { isMobile } = useWindowSize()
+    const { isMobile: responsiveIsMobile } = useWindowSize()
+    const isMobile = remark?.isMobile ?? responsiveIsMobile
 
     const styles = useMemo(() => ({
         wrapper: {

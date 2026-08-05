@@ -15,7 +15,7 @@ const styles = {
         "select-none",
         "grid",
         "grid-cols-[10fr_90fr]",
-        "grid-rows-[3.25fr_0.025fr_1.75fr_0.025fr_1.75fr]"
+        "grid-rows-[3.125fr_0.025fr_1.75fr_0.025fr_1.75fr]"
     ].join(" "),
 
     arrowContainer: "@container text-center bg-[#FF0000]",

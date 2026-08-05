@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react'
+import { useRef, useEffect } from 'react'
 
 export const Keypad = ({ isOpen, onClose, position }) => {
     const keypadRef = useRef(null)

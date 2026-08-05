@@ -3,8 +3,7 @@ import stringWidth from "string-width"
 // Tailwind CSS style classes
 const styles = {
     container: [
-        "@container",
-        // "font-semibold max-sm:font-medium",
+        "@container flex flex-col gap-1 max-sm:gap-0.5",
         "relative left-[1.25%]",
         "w-[95%]",
         "h-full",
@@ -28,7 +27,6 @@ const styles = {
 
     enStopName: [
         "text-[5.5cqw]",
-        // "max-md:text-[5.5cqw]",
         "leading-[1.2]",
         "w-full"
     ].join(" "),
@@ -52,7 +50,7 @@ const computeStopNameStyle = (stopName = "", lang = "en") => {
     }
 
     if (lang === "zh") {
-        style.marginTop = `${visualLength * 0.025}cqh`
+        style.marginTop = `${visualLength * 0.0125}cqh`
     }
     else if (lang === "en") {
         const willWrap = visualLength > Math.floor(window.innerWidth / 10)

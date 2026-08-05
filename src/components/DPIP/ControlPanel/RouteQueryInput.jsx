@@ -1,37 +1,27 @@
 import "@styles/asyncSelect.css"
-import debounce from 'lodash/debounce'
 import SearchIcon from '@mui/icons-material/Search'
 
-import React from "react"
 import { useCallback, useMemo, useState, useRef, useEffect } from "react"
 import AsyncSelect from 'react-select/async'
 import { components } from 'react-select'
 import { ClipLoader } from "react-spinners"
 
 import { useSelector, useDispatch } from 'react-redux'
+import { fetchRouteStops } from "@api/kmb"
 import { selectRouteThunk } from "@store/routeSelectionSlice"
-import { useWindowSize } from "@hooks"
+import { ensureRouteRemarkThunk } from "@store/routeSlice"
+import { useWindowSize, useRouteTypeStyle } from "@hooks"
 import { RouteNumber, RouteDetails } from '@components'
-import { itemSeparator, toSeparator, specialTripKey } from "@utils"
+import { createRouteOption } from "@utils"
 
-const createRouteLabel = (route) => {
-    const specialTrip = route.service_type != 1 ? specialTripKey : ""
-    const remark = route.specialRemark ?? ""
-
-    return `${route.route}${itemSeparator} ${route.orig_tc} ${toSeparator} ${route.dest_tc} ${itemSeparator}${specialTrip}${itemSeparator}${remark}`
-}
-
-const createRouteOption = (route) => ({
-    label: createRouteLabel(route),
-    value: `${route.route}-${route.bound}-${route.service_type}`,
-    detail: route,
-})
-
-const RouteOption = ({ componentType, data, compact = false, ...props }) => {
-    const { isMobile } = useWindowSize()
-    const { label } = data
-    const [routeLabel, terminusLabel, specialTripLabel, specialRemarkLabel = ''] = label.split(itemSeparator)
-    const [originLabel, destinationLabel] = terminusLabel.split(toSeparator)
+const RouteOptionContent = ({ componentType, data, compact = false, isMobile, getRouteStyle, ...props }) => {
+    const {
+        routeLabel,
+        originLabel,
+        destinationLabel,
+        specialRemarkLabel = '',
+        isSpecial
+    } = data
 
     const WrappedComponent = componentType === 'Option' ? components.Option : components.SingleValue
 
@@ -49,15 +39,17 @@ const RouteOption = ({ componentType, data, compact = false, ...props }) => {
             <div style={style}>
                 <RouteNumber
                     route={routeLabel}
-                    isSpecial={specialTripLabel?.includes(specialTripKey)}
+                    isSpecial={isSpecial}
                     componentType={componentType}
                     isMobile={isMobile}
+                    getRouteStyle={getRouteStyle}
                 />
                 {!(componentType === 'SingleValue' && compact) && (
                     <RouteDetails
                         origin={originLabel}
                         destination={destinationLabel}
                         remark={specialRemarkLabel}
+                        isMobile={isMobile}
                     />
                 )}
             </div>
@@ -65,11 +57,9 @@ const RouteOption = ({ componentType, data, compact = false, ...props }) => {
     )
 }
 
-const MemoizedOption = React.memo(props => <RouteOption {...props} componentType="Option" />)
-const MemoizedSingleValue = React.memo(props => <RouteOption {...props} componentType="SingleValue" />)
-
 export const RouteQueryInput = ({ compact = false, label = '', labelClassName = '' }) => {
     const { isMobile } = useWindowSize()
+    const getRouteStyle = useRouteTypeStyle()
     const dispatch = useDispatch()
     const { routes } = useSelector(state => state.route)
     const { routeDetail } = useSelector(state => state.routeSelection)
@@ -77,10 +67,9 @@ export const RouteQueryInput = ({ compact = false, label = '', labelClassName = 
     const isLightMode = uiMode === "light"
 
     const [selectedOption, setSelectedOption] = useState(null)
-    const [prevOptions, setPrevOptions] = useState([])
-    const [isSearching, setIsSearching] = useState(false)
     const isRoutesLoading = !routes || routes.length === 0
-    const searchCache = useRef(new Map())
+    const prefetchedRouteKeys = useRef(new Set())
+    const prefetchedRouteRemarkKeys = useRef(new Set())
 
     useEffect(() => {
         if (routeDetail && Object.keys(routeDetail).length > 0) {
@@ -88,60 +77,70 @@ export const RouteQueryInput = ({ compact = false, label = '', labelClassName = 
         }
     }, [routeDetail])
 
-    const defaultOptions = useMemo(
-        () => routes?.slice(0, 50)?.map(createRouteOption),
+    const routeOptions = useMemo(
+        () => routes?.map(createRouteOption) ?? [],
         [routes]
     )
 
-    // Debounced search with caching
-    const debouncedSearch = useMemo(
-        () => debounce((inputValue, callback) => {
-            const cacheKey = inputValue?.toUpperCase() || ''
+    const searchIndex = useMemo(() => {
+        const index = new Map([['', routeOptions.slice(0, 50)]])
 
-            if (searchCache.current.has(cacheKey)) {
-                const cachedResults = searchCache.current.get(cacheKey)
-                setPrevOptions(cachedResults)
-                callback(cachedResults)
-                setIsSearching(false)
+        routeOptions.forEach(option => {
+            const routeNumber = option.detail.route.toUpperCase()
+
+            for (let i = 1; i <= routeNumber.length; i += 1) {
+                const prefix = routeNumber.slice(0, i)
+                const results = index.get(prefix) ?? []
+
+                if (results.length < 50) {
+                    results.push(option)
+                    index.set(prefix, results)
+                }
+            }
+        })
+
+        return index
+    }, [routeOptions])
+
+    const defaultOptions = useMemo(
+        () => searchIndex.get('') ?? [],
+        [searchIndex]
+    )
+
+    const prefetchSearchResults = useCallback((inputValue, results) => {
+        const normalizedInput = inputValue.trim().toUpperCase()
+
+        if (normalizedInput.length < 2 || results.length === 0) {
+            return
+        }
+
+        results.slice(0, 4).forEach(({ detail }) => {
+            const routeKey = `${detail.route}-${detail.bound}-${detail.service_type}`
+
+            if (prefetchedRouteKeys.current.has(routeKey)) {
                 return
             }
 
-            setTimeout(() => {
-                try {
-                    const filtered = !inputValue
-                        ? routes.slice(0, 50)
-                        : routes.filter(route =>
-                            route.route.toUpperCase().startsWith(cacheKey)
-                        )
+            prefetchedRouteKeys.current.add(routeKey)
+            void fetchRouteStops(detail.route, detail.bound, detail.service_type).catch(error => {
+                prefetchedRouteKeys.current.delete(routeKey)
+                console.error(`Error prefetching stops for route ${routeKey}:`, error)
+            })
 
-                    const results = filtered.slice(0, 50).map(route => createRouteOption(route, false))
-
-                    searchCache.current.set(cacheKey, results)
-                    setPrevOptions(results)
-                    callback(results)
-                    setIsSearching(false)
-                } catch (error) {
-                    console.error('Search error:', error)
-                    setIsSearching(false)
-                }
-            }, 0)
-        }, 150),
-        [routes]
-    )
-
-    // Cleanup on unmount
-    useEffect(() => {
-        const cacheRef = searchCache.current
-        return () => {
-            debouncedSearch.cancel()
-            cacheRef.clear()
-        }
-    }, [debouncedSearch])
+            if (detail.service_type !== "1" && !detail.specialRemark && !prefetchedRouteRemarkKeys.current.has(routeKey)) {
+                prefetchedRouteRemarkKeys.current.add(routeKey)
+                void dispatch(ensureRouteRemarkThunk(detail))
+            }
+        })
+    }, [dispatch])
 
     const handleSearch = useCallback((inputValue, callback) => {
-        setIsSearching(true)
-        debouncedSearch(inputValue, callback)
-    }, [debouncedSearch])
+        const normalizedInput = inputValue.trim().toUpperCase()
+        const results = searchIndex.get(normalizedInput) ?? []
+
+        callback(results)
+        prefetchSearchResults(inputValue, results)
+    }, [prefetchSearchResults, searchIndex])
 
     const handleSelect = useCallback((option) => {
         if (!option) {
@@ -181,9 +180,29 @@ export const RouteQueryInput = ({ compact = false, label = '', labelClassName = 
         </components.Control>
     ), [isLightMode, isMobile, label, labelClassName])
 
-    const CompactSingleValue = useCallback(
-        props => <RouteOption {...props} componentType="SingleValue" compact={compact} />,
-        [compact]
+    const Option = useCallback(
+        props => (
+            <RouteOptionContent
+                {...props}
+                componentType="Option"
+                isMobile={isMobile}
+                getRouteStyle={getRouteStyle}
+            />
+        ),
+        [getRouteStyle, isMobile]
+    )
+
+    const SingleValue = useCallback(
+        props => (
+            <RouteOptionContent
+                {...props}
+                componentType="SingleValue"
+                compact={compact}
+                isMobile={isMobile}
+                getRouteStyle={getRouteStyle}
+            />
+        ),
+        [compact, getRouteStyle, isMobile]
     )
 
     const selectStyles = useMemo(() => ({
@@ -372,8 +391,8 @@ export const RouteQueryInput = ({ compact = false, label = '', labelClassName = 
         <AsyncSelect
             components={{
                 Control,
-                Option: MemoizedOption,
-                SingleValue: compact ? CompactSingleValue : MemoizedSingleValue
+                Option,
+                SingleValue
             }}
             classNamePrefix="routeInputSelect"
             menuPortalTarget={document.body}
@@ -382,7 +401,7 @@ export const RouteQueryInput = ({ compact = false, label = '', labelClassName = 
             isDisabled={isRoutesLoading}
             isClearable
             cacheOptions
-            defaultOptions={prevOptions.length ? prevOptions : defaultOptions}
+            defaultOptions={defaultOptions}
             placeholder={isRoutesLoading ?
                 <div style={{
                     display: "flex",
@@ -394,7 +413,7 @@ export const RouteQueryInput = ({ compact = false, label = '', labelClassName = 
                     <span>{"\u6b63\u5728\u540c\u6b65\u8def\u7dda\u6578\u64da..."}</span>
                 </div> : "\u8f38\u5165\u4e5d\u5df4\u8def\u7dda\u7de8\u865f\u3000Input KMB route."}
             loadingMessage={() => "\u641c\u5c0b\u8def\u7dda\u4e2d..."}
-            isLoading={isSearching}
+            isLoading={isRoutesLoading}
             filterOption={null}
             loadOptions={handleSearch}
             value={selectedOption}

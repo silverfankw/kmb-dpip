@@ -8,12 +8,6 @@ const extractNameWithoutId = (fullName) => {
     return fullName?.replace(STOP_ID_REGEX, '')?.replace(/[,-]/g, ' ')?.trim()
 }
 
-// Helper to extract just the stop ID
-const extractStopId = (fullName) => {
-    const match = fullName.match(STOP_ID_REGEX)
-    return match ? match[0].replace(/[()]/g, '') : null
-}
-
 export const transformStopDetail = (apiResponse) => {
     const nameEn = apiResponse.data.name_en
     const nameZh = apiResponse.data.name_tc

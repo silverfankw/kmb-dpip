@@ -3,6 +3,9 @@
 @theme {
     --animate-bullet-pulse: bulletPulse 1.25s step-start infinite;
     --animate-heading-fade-in: headingFadeIn 0.45s ease-in-out;
+    --animate-compact-arrow-first: compactArrowFirst 3s step-end infinite;
+    --animate-compact-arrow-second: compactArrowSecond 3s step-end infinite;
+    --animate-compact-arrow-third: compactArrowThird 3s step-end infinite;
 
     @keyframes headingFadeIn {
         from { opacity: 0; }
@@ -19,6 +22,36 @@
             border: .2cqw solid #FF0000;
             background-color: yellow;
             scale: 1.75;
-        }        
+        }
+    }
+
+    @keyframes compactArrowFirst {
+        0%, 24.999% {
+            opacity: 0;
+        }
+
+        25%, 99.999% {
+            opacity: 1;
+        }
+    }
+
+    @keyframes compactArrowSecond {
+        0%, 49.999% {
+            opacity: 0;
+        }
+
+        50%, 99.999% {
+            opacity: 1;
+        }
+    }
+
+    @keyframes compactArrowThird {
+        0%, 74.999% {
+            opacity: 0;
+        }
+
+        75%, 99.999% {
+            opacity: 1;
+        }
     }
 }       
