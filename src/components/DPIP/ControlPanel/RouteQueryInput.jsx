@@ -1,15 +1,13 @@
 import "@styles/asyncSelect.css"
 import SearchIcon from '@mui/icons-material/Search'
 
-import { useCallback, useMemo, useState, useRef, useEffect } from "react"
+import { useCallback, useMemo, useState, useEffect } from "react"
 import AsyncSelect from 'react-select/async'
 import { components } from 'react-select'
 import { ClipLoader } from "react-spinners"
 
 import { useSelector, useDispatch } from 'react-redux'
-import { fetchRouteStops } from "@api/kmb"
 import { selectRouteThunk } from "@store/routeSelectionSlice"
-import { ensureRouteRemarkThunk } from "@store/routeSlice"
 import { useWindowSize, useRouteTypeStyle } from "@hooks"
 import { RouteNumber, RouteDetails } from '@components'
 import { createRouteOption } from "@utils"
@@ -68,8 +66,6 @@ export const RouteQueryInput = ({ compact = false, label = '', labelClassName = 
 
     const [selectedOption, setSelectedOption] = useState(null)
     const isRoutesLoading = !routes || routes.length === 0
-    const prefetchedRouteKeys = useRef(new Set())
-    const prefetchedRouteRemarkKeys = useRef(new Set())
 
     useEffect(() => {
         if (routeDetail && Object.keys(routeDetail).length > 0) {
@@ -107,40 +103,12 @@ export const RouteQueryInput = ({ compact = false, label = '', labelClassName = 
         [searchIndex]
     )
 
-    const prefetchSearchResults = useCallback((inputValue, results) => {
-        const normalizedInput = inputValue.trim().toUpperCase()
-
-        if (normalizedInput.length < 2 || results.length === 0) {
-            return
-        }
-
-        results.slice(0, 4).forEach(({ detail }) => {
-            const routeKey = `${detail.route}-${detail.bound}-${detail.service_type}`
-
-            if (prefetchedRouteKeys.current.has(routeKey)) {
-                return
-            }
-
-            prefetchedRouteKeys.current.add(routeKey)
-            void fetchRouteStops(detail.route, detail.bound, detail.service_type).catch(error => {
-                prefetchedRouteKeys.current.delete(routeKey)
-                console.error(`Error prefetching stops for route ${routeKey}:`, error)
-            })
-
-            if (detail.service_type !== "1" && !detail.specialRemark && !prefetchedRouteRemarkKeys.current.has(routeKey)) {
-                prefetchedRouteRemarkKeys.current.add(routeKey)
-                void dispatch(ensureRouteRemarkThunk(detail))
-            }
-        })
-    }, [dispatch])
-
     const handleSearch = useCallback((inputValue, callback) => {
         const normalizedInput = inputValue.trim().toUpperCase()
         const results = searchIndex.get(normalizedInput) ?? []
 
         callback(results)
-        prefetchSearchResults(inputValue, results)
-    }, [prefetchSearchResults, searchIndex])
+    }, [searchIndex])
 
     const handleSelect = useCallback((option) => {
         if (!option) {

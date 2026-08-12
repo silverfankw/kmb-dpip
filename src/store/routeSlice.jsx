@@ -1,122 +1,134 @@
-import { fetchAllRoutes, fetchSpecialRouteRemark } from '@api/kmb'
 import { createSlice } from '@reduxjs/toolkit'
+import { additionalRoutes, additionalRouteStops, additionalRouteStopDetails, compareRouteNumbers } from '@utils'
 
-const ROUTES_CACHE_KEY = 'routes'
-const ROUTES_CACHE_PERSIST_DELAY = 250
+const ROUTE_DATA_URL = 'https://raw.githubusercontent.com/silverfankw/kmb-route-stop/refs/heads/main/kmb_route_stop.json'
 
-let routesCachePersistTimeoutId = null
+let routesLoadPromise = null
 
 const initialState = {
     routes: [],
+    routesByKey: {},
     isLoading: false,
-    error: null
+    error: null,
+    isLoaded: false
 }
 
 const getRouteKey = route => `${route.route}-${route.bound}-${route.service_type}`
 
-const normalizeRoutes = routes => routes.map(route => ({
-    ...route,
-    specialRemark: route.specialRemark ?? ""
-}))
+const normalizeText = value => (value == null ? '' : String(value))
 
-const cacheRoutes = routes => {
-    localStorage.setItem(ROUTES_CACHE_KEY, JSON.stringify(routes))
-}
+const normalizeStopDetail = (stopId, stopLookup) => {
+    const stopDetail = stopLookup[stopId] ?? additionalRouteStopDetails[stopId]
 
-const flushRoutesCache = routes => {
-    if (routesCachePersistTimeoutId !== null) {
-        clearTimeout(routesCachePersistTimeoutId)
-        routesCachePersistTimeoutId = null
+    if (!stopDetail) {
+        return {
+            id: stopId,
+            zh: stopId,
+            en: stopId,
+        }
     }
 
-    cacheRoutes(routes)
+    return {
+        id: stopId,
+        zh: normalizeText(stopDetail.stop_name_zh ?? stopDetail.zh ?? stopDetail.name_tc ?? stopId),
+        en: normalizeText(stopDetail.stop_name_en ?? stopDetail.en ?? stopDetail.name_en ?? stopId),
+    }
 }
 
-const scheduleCacheRoutes = routes => {
-    if (typeof window === 'undefined') {
-        cacheRoutes(routes)
+const additionalRouteStopsByKey = additionalRouteStops.reduce((accumulator, stop) => {
+    const key = getRouteKey(stop)
+
+    if (!accumulator[key]) {
+        accumulator[key] = []
+    }
+
+    accumulator[key].push(stop.stop)
+    return accumulator
+}, {})
+
+const normalizeRoutes = rawData => {
+    const stopLookup = rawData?.stops ?? {}
+    const mergedRoutes = [...(Array.isArray(rawData?.routes) ? rawData.routes : []), ...additionalRoutes]
+    const seenRouteKeys = new Set()
+    const routes = []
+    const routesByKey = {}
+
+    mergedRoutes
+        .slice()
+        .sort(compareRouteNumbers)
+        .forEach(route => {
+            const key = getRouteKey(route)
+
+            if (seenRouteKeys.has(key)) {
+                return
+            }
+
+            seenRouteKeys.add(key)
+
+            const stopIDs = Array.isArray(route.stops) && route.stops.length > 0
+                ? route.stops
+                : additionalRouteStopsByKey[key] ?? []
+
+            const normalizedRoute = {
+                route: normalizeText(route.route),
+                bound: normalizeText(route.bound),
+                service_type: normalizeText(route.service_type),
+                orig_tc: normalizeText(route.orig_tc),
+                orig_en: normalizeText(route.orig_en),
+                dest_tc: normalizeText(route.dest_tc),
+                dest_en: normalizeText(route.dest_en),
+                specialRemark: normalizeText(route.special_remark_tc ?? route.special_remark_en ?? route.specialRemark ?? ''),
+                stops: stopIDs.map(stopID => normalizeStopDetail(stopID, stopLookup)),
+            }
+
+            routes.push(normalizedRoute)
+            routesByKey[key] = normalizedRoute
+        })
+
+    return { routes, routesByKey }
+}
+
+export const selectRoutes = state => state.route.routes
+
+export const getRoutesThunk = () => async (dispatch, getState) => {
+    if (getState().route.isLoaded) {
         return
     }
 
-    if (routesCachePersistTimeoutId !== null) {
-        clearTimeout(routesCachePersistTimeoutId)
+    if (routesLoadPromise) {
+        return routesLoadPromise
     }
 
-    routesCachePersistTimeoutId = window.setTimeout(() => {
-        routesCachePersistTimeoutId = null
-        cacheRoutes(routes)
-    }, ROUTES_CACHE_PERSIST_DELAY)
-}
-
-export const selectRoutes = state => state.routes
-
-export const fetchRoutesThunk = () => async (dispatch) => {
     dispatch(setLoading(true))
     dispatch(setError(null))
 
-    try {
-        const routes = await fetchAllRoutes()
-        const baseRoutes = normalizeRoutes(routes)
-
-        dispatch(setRoutes(baseRoutes))
-        flushRoutesCache(baseRoutes)
-    }
-    catch (error) {
-        console.error('Error fetching routes:', error)
-        dispatch(setError(error.message))
-    }
-    finally {
-        dispatch(setLoading(false))
-    }
-}
-
-export const getRoutesThunk = () => async (dispatch) => {
-    const cachedRoutes = localStorage.getItem(ROUTES_CACHE_KEY)
-
-    if (cachedRoutes) {
+    routesLoadPromise = (async () => {
         try {
-            dispatch(setRoutes(normalizeRoutes(JSON.parse(cachedRoutes))))
-            return
+            const res = await fetch(ROUTE_DATA_URL)
+
+            if (!res.ok) {
+                throw new Error(`HTTP error! status: ${res.status} ${res.statusText}`)
+            }
+
+            const rawText = await res.text()
+            const parsedData = JSON.parse(rawText.replace(/:\s*NaN\b/g, ': null'))
+            const normalizedRoutes = normalizeRoutes(parsedData)
+
+            dispatch(setRoutes(normalizedRoutes))
+            return normalizedRoutes
         }
         catch (error) {
-            console.error('Error reading cached routes:', error)
-            localStorage.removeItem(ROUTES_CACHE_KEY)
+            console.error('Error fetching centralized route data:', error)
+            dispatch(setError(error.message))
+            throw error
         }
-    }
+        finally {
+            dispatch(setLoading(false))
+            routesLoadPromise = null
+        }
+    })()
 
-    dispatch(fetchRoutesThunk())
-}
-
-export const ensureRouteRemarkThunk = routeDetail => async (dispatch, getState) => {
-    if (!routeDetail || routeDetail.service_type === "1") {
-        return
-    }
-
-    const currentRoute = getState().route.routes.find(
-        route => getRouteKey(route) === getRouteKey(routeDetail)
-    )
-
-    if (!currentRoute || currentRoute.specialRemark) {
-        return
-    }
-
-    try {
-        const remark = await fetchSpecialRouteRemark(
-            routeDetail.route,
-            routeDetail.bound,
-            routeDetail.service_type
-        )
-
-        dispatch(setRouteSpecialRemark({
-            route: routeDetail.route,
-            bound: routeDetail.bound,
-            service_type: routeDetail.service_type,
-            specialRemark: remark ?? ""
-        }))
-    }
-    catch (error) {
-        console.error(`Error fetching special remark for route ${getRouteKey(routeDetail)}:`, error)
-    }
+    return routesLoadPromise
 }
 
 const routeSlice = createSlice({
@@ -124,11 +136,14 @@ const routeSlice = createSlice({
     initialState,
     reducers: {
         setRoutes: (state, action) => {
-            state.routes = action.payload
+            state.routes = action.payload.routes
+            state.routesByKey = action.payload.routesByKey
+            state.isLoaded = true
         },
         setRouteSpecialRemark: (state, action) => {
             const { route, bound, service_type, specialRemark } = action.payload
-            const targetRoute = state.routes.find(
+            const routeKey = `${route}-${bound}-${service_type}`
+            const targetRoute = state.routesByKey[routeKey] ?? state.routes.find(
                 routeItem =>
                     routeItem.route === route &&
                     routeItem.bound === bound &&
@@ -140,7 +155,7 @@ const routeSlice = createSlice({
             }
 
             targetRoute.specialRemark = specialRemark
-            scheduleCacheRoutes(state.routes)
+            state.routesByKey[routeKey] = targetRoute
         },
         setLoading: (state, action) => {
             state.isLoading = action.payload

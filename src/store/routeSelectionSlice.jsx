@@ -1,5 +1,4 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
-import { fetchRouteStops, fetchSpecialRouteRemark } from '@api/kmb'
 
 const initialState = {
     routeDetail: {},
@@ -30,6 +29,10 @@ export const selectRouteThunk = createAsyncThunk(
         const currentSelection = getState().routeSelection
         const currentRouteKey = getSelectedRouteKey(currentSelection.routeDetail)
         const hasTwoBound = hasBothBounds(routes, routeDetail.route)
+        const routeState = getState().route
+        const selectedRoute = routeState.routesByKey?.[requestedRouteKey] ?? routes.find(
+            route => getSelectedRouteKey(route) === requestedRouteKey
+        ) ?? routeDetail
 
         dispatch(setRouteHasTwoBound(hasTwoBound))
         dispatch(setLoadingError(null))
@@ -43,8 +46,8 @@ export const selectRouteThunk = createAsyncThunk(
         dispatch(setIsLoading(true))
 
         try {
-            const { route, bound, service_type, orig_tc, orig_en, dest_tc, dest_en, specialRemark } = routeDetail
-            const routeAllStops = await fetchRouteStops(route, bound, service_type)
+            const { route, bound, service_type, orig_tc, orig_en, dest_tc, dest_en, specialRemark } = selectedRoute
+            const routeAllStops = selectedRoute?.stops ?? []
 
             dispatch(setCurrentStopIndex(0))
             dispatch(setRouteDetail({
@@ -56,33 +59,9 @@ export const selectRouteThunk = createAsyncThunk(
                 dest_tc,
                 dest_en,
                 service_type,
-                specialRemark,
+                specialRemark: specialRemark ?? "",
             }))
             dispatch(setIsUserSelectedRoute(true))
-
-            if (service_type !== "1" && !specialRemark) {
-                void (async () => {
-                    try {
-                        const fetchedRemark = await fetchSpecialRouteRemark(route, bound, service_type)
-                        dispatch(setRouteDetailSpecialRemark({
-                            route,
-                            bound,
-                            service_type,
-                            specialRemark: fetchedRemark ?? ""
-                        }))
-                    }
-                    catch (error) {
-                        console.error(`Error fetching selected route remark for ${route}-${bound}-${service_type}:`, error)
-                    }
-                })()
-            }
-
-            if (hasTwoBound) {
-                const oppositeBound = bound === "I" ? "O" : "I"
-                void fetchRouteStops(route, oppositeBound, service_type).catch(error => {
-                    console.error(`Error prefetching stops for route ${route} ${oppositeBound}:`, error)
-                })
-            }
         }
         catch (error) {
             dispatch(setLoadingError(error.message))
@@ -103,7 +82,7 @@ export const changeBoundThunk = createAsyncThunk(
 
         if (
             isUserSelectedRoute &&
-            (routeHasTwoBound || routeDetail?.service_type === 1)
+            (routeHasTwoBound || routeDetail?.service_type === "1")
         ) {
             const { bound, orig_tc, dest_tc, orig_en, dest_en } = routeDetail
             const newBound = bound === "I" ? "O" : "I"

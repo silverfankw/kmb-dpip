@@ -6,18 +6,18 @@ export const additionalRoutes = [
         "route": "52S",
         "bound": "I",
         "service_type": "1",
-        "orig_en": "Tsang Tsui",
+        "orig_en": "TSANG TSUI",
         "orig_tc": "曾咀",
-        "dest_en": "Tuen Mun Road BBI",
+        "dest_en": "TUEN MUN ROAD BBI",
         "dest_tc": "屯門公路轉車站",
     },
     {
         "route": "52S",
         "bound": "O",
         "service_type": "1",
-        "orig_en": "Tuen Mun Road BBI",
+        "orig_en": "TUEN MUN ROAD BBI",
         "orig_tc": "屯門公路轉車站",
-        "dest_en": "Tsang Tsui",
+        "dest_en": "TSANG TSUI",
         "dest_tc": "曾咀"
     },
     // 56S
@@ -25,18 +25,18 @@ export const additionalRoutes = [
         "route": "56S",
         "bound": "O",
         "service_type": "1",
-        "orig_en": "Tuen Mun Station",
+        "orig_en": "TUEN MUN STATION",
         "orig_tc": "屯門站",
-        "dest_en": "Tsang Tsui",
+        "dest_en": "TSANG TSUI",
         "dest_tc": "曾咀"
     },
     {
         "route": "56S",
         "bound": "I",
         "service_type": "1",
-        "orig_en": "Tsang Tsui",
+        "orig_en": "TSANG TSUI",
         "orig_tc": "曾咀",
-        "dest_en": "Tuen Mun Station",
+        "dest_en": "TUEN MUN STATION",
         "dest_tc": "屯門站",
     },
     // 61S
@@ -44,133 +44,95 @@ export const additionalRoutes = [
         "route": "61S",
         "bound": "I",
         "service_type": "1",
-        "dest_en": "Wo Hop Shek",
+        "dest_en": "WO HOP SHEK",
         "dest_tc": "和合石",
-        "orig_en": "Tuen Mun Central",
+        "orig_en": "TUEN MUN CENTRAL",
         "orig_tc": "屯門市中心"
     },
     {
         "route": "61S",
         "bound": "O",
         "service_type": "1",
-        "orig_en": "Wo Hop Shek",
+        "orig_en": "WO HOP SHEK",
         "orig_tc": "和合石",
-        "dest_en": "Tuen Mun Central",
+        "dest_en": "TUEN MUN CENTRAL",
         "dest_tc": "屯門市中心"
-    },
-    // 73S
-    {
-        "route": "73S",
-        "bound": "I",
-        "service_type": "1",
-        "dest_en": "Fanling Station",
-        "dest_tc": "粉嶺站",
-        "orig_en": "Wo Hop Shek (Kiu Tau Road)",
-        "orig_tc": "和合石 (橋頭路)"
-    },
-    {
-        "route": "73S",
-        "bound": "O",
-        "service_type": "1",
-        "orig_en": "Fanling Station",
-        "orig_tc": "粉嶺站",
-        "dest_en": "Wo Hop Shek (Kiu Tau Road)",
-        "dest_tc": "和合石 (橋頭路)"
-    },
-    // 76S
-    {
-        "route": "76S",
-        "bound": "I",
-        "service_type": "1",
-        "dest_en": "Fanling Station",
-        "dest_tc": "粉嶺站",
-        "orig_en": "Wo Hop Shek",
-        "orig_tc": "和合石"
-    },
-    {
-        "route": "76S",
-        "bound": "O",
-        "service_type": "1",
-        "orig_en": "Fanling Station",
-        "orig_tc": "粉嶺站",
-        "dest_en": "Wo Hop Shek",
-        "dest_tc": "和合石"
     },
     // 108R
     {
         "route": "108R",
         "bound": "O",
         "service_type": "1",
-        "dest_en": "Kai Yip",
+        "dest_en": "KAI YIP",
         "dest_tc": "啟業",
-        "orig_en": "Hong Kong Convention and Exhibition Centre",
-        "orig_tc": "香港會議展覽中心",
-        "specialRemark": "會展夜書市限定服務"
+        "orig_en": "HK CONVENTION & EXHIBITION CTR.",
+        "orig_tc": "會議展覽中心",
+        "special_remark_tc": "會展夜書市限定服務"
     },
     {
         "route": "108R",
         "bound": "O",
         "service_type": "2",
-        "dest_en": "Kai Yip",
+        "dest_en": "KAI YIP",
         "dest_tc": "啟業",
-        "orig_en": "Hong Kong Stadium",
+        "orig_en": "HONG KONG STADIUM",
         "orig_tc": "香港大球場",
-        "specialRemark": "2023香港國際七人欖球賽期間限定服務"
+        "special_remark_tc": "2023香港國際七人欖球賽期間限定服務"
     },
     // 111R
     {
         "route": "111R",
         "bound": "O",
         "service_type": "1",
-        "dest_en": "Kwun Tong (Yue Man Square)",
+        "dest_en": "KWUN TONG (YUE MAN SQUARE)",
         "dest_tc": "觀塘(裕民坊)",
-        "orig_en": "Wan Chai (HKCEC New Wing)",
+        "orig_en": "WAN CHAI (HKCEC NEW WING)",
         "orig_tc": "灣仔(會展新翼)",
-        "specialRemark": "會展夜書市限定服務"
+        "special_remark_tc": "會展夜書市限定服務"
     },
     // 134R
     {
         "route": "134R",
         "bound": "O",
         "service_type": "1",
-        "dest_en": "Tsuen Wan (Bayview Garden)",
+        "dest_en": "TSUEN WAN (BAYVIEW GARDEN)",
         "dest_tc": "荃灣(灣景花園)",
-        "orig_en": "Hong Kong Convention and Exhibition Centre",
-        "orig_tc": "香港會議展覽中心",
-        "specialRemark": "會展夜書市限定服務"
+        "orig_en": "HK CONVENTION & EXHIBITION CTR.",
+        "orig_tc": "會議展覽中心",
+        "special_remark_tc": "會展夜書市限定服務"
     },
     // 148R
     {
         "route": "148R",
         "bound": "O",
         "service_type": "1",
-        "dest_en": "Cheung On",
-        "dest_tc": "長安",
-        "orig_en": "Wan Chai (HKCEC New Wing)",
+        "dest_en": "TSING YI (CHEUNG ON ESTATE)",
+        "dest_tc": "青衣(長安邨)",
+        "orig_en": "WAN CHAI (HKCEC NEW WING)",
         "orig_tc": "灣仔(會展新翼)",
-        "specialRemark": "會展夜書市限定服務"
+        "special_remark_tc": "會展夜書市限定服務"
     },
     // 160R
     {
         "route": "160R",
         "bound": "O",
         "service_type": "1",
-        "dest_en": "Hung Shui Kiu (Hung Fuk Estate)",
+        "dest_en": "HUNG SHUI KIU (HUNG FUK ESTATE)",
         "dest_tc": "洪水橋(洪福邨)",
-        "orig_en": "Central (Central Ferry Piers)",
+        "orig_en": "CENTRAL (CENTRAL FERRY PIERS)",
         "orig_tc": "中環渡輪碼頭",
-        "specialRemark": "中環海濱大型活動散場特別服務"
+        "special_remark_tc": "中環海濱大型活動散場特別服務"
     },
     // 168R
     {
         "route": "168R",
         "bound": "O",
         "service_type": "1",
-        "dest_en": "Yuen Long (West)",
+        "dest_en": "YUEN LONG (WEST)",
         "dest_tc": "元朗(西)",
-        "orig_en": "Hong Kong Convention and Exhibition Centre",
+        "orig_en": "HONG KONG CONVENTION AND EXHIBITION CENTRE",
         "orig_tc": "香港會議展覽中心",
-        "specialRemark": "會展夜書市限定服務"
+        "special_remark_tc": "會展夜書市限定服務"
     },
     {
         "route": "168R",
@@ -178,72 +140,72 @@ export const additionalRoutes = [
         "service_type": "2",
         "dest_en": "Yuen Long (West)",
         "dest_tc": "元朗(西)",
-        "orig_en": "Central (Central Ferry Piers)",
+        "orig_en": "CENTRAL (CENTRAL FERRY PIERS)",
         "orig_tc": "中環渡輪碼頭",
-        "specialRemark": "中環海濱大型活動散場特別服務"
+        "special_remark_tc": "中環海濱大型活動散場特別服務"
     },
     // 178R
     {
         "route": "178R",
         "bound": "O",
         "service_type": "1",
-        "dest_en": "Fanling (Luen Wo Hui)",
+        "dest_en": "FANLING (LUEN WO HUI)",
         "dest_tc": "粉嶺(聯和墟)",
-        "orig_en": "Hong Kong Convention and Exhibition Centre",
+        "orig_en": "HONG KONG CONVENTION AND EXHIBITION CENTRE",
         "orig_tc": "香港會議展覽中心",
-        "specialRemark": "會展夜書市限定服務"
+        "special_remark_tc": "會展夜書市限定服務"
     },
     {
         "route": "178R",
         "bound": "O",
         "service_type": "2",
-        "dest_en": "Fanling (Luen Wo Hui)",
+        "dest_en": "FANLING (LUEN WO HUI)",
         "dest_tc": "粉嶺(聯和墟)",
-        "orig_en": "Central (Central Ferry Piers)",
+        "orig_en": "CENTRAL (CENTRAL FERRY PIERS)",
         "orig_tc": "中環渡輪碼頭",
-        "specialRemark": "中環海濱大型活動散場特別服務"
+        "special_remark_tc": "中環海濱大型活動散場特別服務"
     },
     // 191R
     {
         "route": "191R",
         "bound": "O",
         "service_type": "1",
-        "dest_en": "Lohas Park Station",
+        "dest_en": "LOHAS PARK STATION",
         "dest_tc": "康城站",
-        "orig_en": "Wan Chai (HKCEC New Wing)",
+        "orig_en": "WAN CHAI (HKCEC NEW WING)",
         "orig_tc": "灣仔(會展新翼)",
-        "specialRemark": "會展夜書市限定服務"
+        "special_remark_tc": "會展夜書市限定服務"
     },
     // 603R
     {
         "route": "603R",
         "bound": "O",
         "service_type": "1",
-        "dest_en": "On Tai (West)",
+        "dest_en": "ON TAI (WEST)",
         "dest_tc": "安泰(西)",
-        "orig_en": "Hong Kong Convention and Exhibition Centre",
+        "orig_en": "HONG KONG CONVENTION AND EXHIBITION CENTRE",
         "orig_tc": "香港會議展覽中心",
-        "specialRemark": "會展夜書市限定服務"
+        "special_remark_tc": "會展夜書市限定服務"
     },
     // 936R
     {
         "route": "936R",
         "bound": "O",
         "service_type": "1",
-        "dest_en": "Tsuen Wan (Bayview Garden)",
+        "dest_en": "TSUEN WAN (BAYVIEW GARDEN)",
         "dest_tc": "荃灣(灣景花園)",
-        "orig_en": "Hong Kong Stadium",
+        "orig_en": "HONG KONG STADIUM",
         "orig_tc": "香港大球場",
-        "specialRemark": "2023香港國際七人欖球賽期間限定服務"
+        "special_remark_tc": "2023香港國際七人欖球賽期間限定服務"
     },
     // N64P
     {
         "route": "N64P",
         "bound": "O",
         "service_type": "1",
-        "orig_en": "Tai Po Market Station",
+        "orig_en": "TAI PO MARKET STATION",
         "orig_tc": "大埔墟站",
-        "dest_en": "Ng Tung Chai (Pak Ngau Shek)",
+        "dest_en": "NG TUNG CHAI (PAK NGAU SHEK)",
         "dest_tc": "梧桐寨(白牛石)"
     },
     // N72E
@@ -251,42 +213,42 @@ export const additionalRoutes = [
         "route": "N72E",
         "bound": "O",
         "service_type": "1",
-        "orig_en": "Tai Mei Tuk",
+        "orig_en": "TAI MEI TUK",
         "orig_tc": "大尾督",
-        "dest_en": "Tsim Sha Tsui East (Mody Road)",
+        "dest_en": "TSIM SHA TSUI EAST (MODY ROAD)",
         "dest_tc": "尖沙咀東(麼地道)",
-        "specialRemark": "只於2018/11/11奧比斯盲俠行活動提供服務"
+        "special_remark_tc": "只於2018/11/11奧比斯盲俠行活動提供服務"
     },
     // N73E
     {
         "route": "N73E",
         "bound": "O",
         "service_type": "1",
-        "orig_en": "Tai Mei Tuk",
+        "orig_en": "TAI MEI TUK",
         "orig_tc": "大尾督",
-        "dest_en": "Tsuen Wan (Nina Tower)",
+        "dest_en": "TSUEN WAN (NINA TOWER)",
         "dest_tc": "荃灣(如心廣場)",
-        "specialRemark": "只於2018/11/11奧比斯盲俠行活動提供服務"
+        "special_remark_tc": "只於2018/11/11奧比斯盲俠行活動提供服務"
     },
     // N74E
     {
         "route": "N74E",
         "bound": "O",
         "service_type": "1",
-        "orig_en": "Tai Mei Tuk",
+        "orig_en": "TAI MEI TUK",
         "orig_tc": "大尾督",
-        "dest_en": "Kwun Tong Station",
+        "dest_en": "KWUN TONG STATION",
         "dest_tc": "觀塘站",
-        "specialRemark": "只於2018/11/11奧比斯盲俠行活動提供服務"
+        "special_remark_tc": "只於2018/11/11奧比斯盲俠行活動提供服務"
     },
     // N272
     {
         "route": "N272",
         "bound": "O",
         "service_type": "1",
-        "orig_en": "University Station",
+        "orig_en": "UNIVERSITY STATION",
         "orig_tc": "大學站",
-        "dest_en": "Pak Shek Kok (Circular)",
+        "dest_en": "PAK SHEK KOK (CIRCULAR)",
         "dest_tc": "白石角(循環線)",
     },
     // R94
@@ -294,50 +256,30 @@ export const additionalRoutes = [
         "route": "R94",
         "bound": "I",
         "service_type": "1",
-        "dest_en": "Tai Wo",
+        "dest_en": "TAI WO",
         "dest_tc": "太和",
-        "orig_en": "Wong Shek Pier",
+        "orig_en": "WONG SHEK PIER",
         "orig_tc": "黃石碼頭",
-        "specialRemark": "只於2019年4月23日至28日塔門聯鄉太平清醮提供服務"
+        "special_remark_tc": "只於2019年4月23日至28日塔門聯鄉太平清醮提供服務"
     },
     {
         "route": "R94",
         "bound": "O",
         "service_type": "1",
-        "orig_en": "Tai Wo",
+        "orig_en": "TAI WO",
         "orig_tc": "太和",
-        "dest_en": "Wong Shek Pier",
+        "dest_en": "WONG SHEK PIER",
         "dest_tc": "黃石碼頭",
-        "specialRemark": "只於2019年4月23日至28日塔門聯鄉太平清醮提供服務"
-    },
-    // R108
-    {
-        "route": "R108",
-        "bound": "O",
-        "service_type": "1",
-        "orig_en": "Kai Yip",
-        "orig_tc": "啟業",
-        "dest_en": "Causeway Bay (Victoria Park)",
-        "dest_tc": "銅鑼灣(維多利亞公園)"
-    },
-    // R215
-    {
-        "route": "R215",
-        "bound": "O",
-        "service_type": "1",
-        "orig_en": "Lam Tin (Kwong Tin Estate)",
-        "orig_tc": "藍田(廣田邨)",
-        "dest_en": "Tsim Sha Tsui East (Mody Road)",
-        "dest_tc": "尖沙咀東(麼地道)"
+        "special_remark_tc": "只於2019年4月23日至28日塔門聯鄉太平清醮提供服務"
     },
     // R260
     {
         "route": "R260",
         "bound": "O",
         "service_type": "1",
-        "orig_en": "Tuen Mun Ferry Pier",
+        "orig_en": "TUEN MUN FERRY PIER",
         "orig_tc": "屯門碼頭",
-        "dest_en": "Tsim Sha Tsui East (Mody Road)",
+        "dest_en": "TSIM SHA TSUI EAST (MODY ROAD)",
         "dest_tc": "尖沙咀東(麼地道)"
     },
     // R269
@@ -345,9 +287,9 @@ export const additionalRoutes = [
         "route": "R269",
         "bound": "O",
         "service_type": "1",
-        "orig_en": "Tin Tsz",
+        "orig_en": "TIN TSZ",
         "orig_tc": "天慈",
-        "dest_en": "Tsim Sha Tsui East (Mody Road)",
+        "dest_en": "TSIM SHA TSUI EAST (MODY ROAD)",
         "dest_tc": "尖沙咀東(麼地道)"
     },
     // R270
@@ -355,9 +297,9 @@ export const additionalRoutes = [
         "route": "R270",
         "bound": "O",
         "service_type": "1",
-        "orig_en": "Sheung Shui",
+        "orig_en": "SHEUNG SHUI",
         "orig_tc": "上水",
-        "dest_en": "Tsim Sha Tsui East (Mody Road)",
+        "dest_en": "TSIM SHA TSUI EAST (MODY ROAD)",
         "dest_tc": "尖沙咀東(麼地道)"
     },
     // R271
@@ -365,9 +307,9 @@ export const additionalRoutes = [
         "route": "R271",
         "bound": "O",
         "service_type": "1",
-        "orig_en": "Tai Po (Fu Heng)",
+        "orig_en": "TAI PO (FU HENG)",
         "orig_tc": "大埔(富亨)",
-        "dest_en": "Tsim Sha Tsui East (Mody Road)",
+        "dest_en": "TSIM SHA TSUI EAST (MODY ROAD)",
         "dest_tc": "尖沙咀東(麼地道)"
     },
     // R283
@@ -375,9 +317,9 @@ export const additionalRoutes = [
         "route": "R283",
         "bound": "O",
         "service_type": "1",
-        "orig_en": "Shek Mun Estate",
+        "orig_en": "SHEK MUN ESTATE",
         "orig_tc": "碩門邨",
-        "dest_en": "Tsim Sha Tsui East (Mody Road)",
+        "dest_en": "TSIM SHA TSUI EAST (MODY ROAD)",
         "dest_tc": "尖沙咀東(麼地道)"
     },
     // R287
@@ -385,9 +327,9 @@ export const additionalRoutes = [
         "route": "R287",
         "bound": "O",
         "service_type": "1",
-        "orig_en": "Wu Kai Sha Station",
+        "orig_en": "WU KAI SHA STATION",
         "orig_tc": "烏溪沙站",
-        "dest_en": "Tsim Sha Tsui East (Mody Road)",
+        "dest_en": "TSIM SHA TSUI EAST (MODY ROAD)",
         "dest_tc": "尖沙咀東(麼地道)"
     },
     // R298
@@ -395,9 +337,9 @@ export const additionalRoutes = [
         "route": "R298",
         "bound": "O",
         "service_type": "1",
-        "orig_en": "Hong Sing Garden",
+        "orig_en": "HONG SING GARDEN",
         "orig_tc": "康盛花園",
-        "dest_en": "Tsim Sha Tsui East (Mody Road)",
+        "dest_en": "TSIM SHA TSUI EAST (MODY ROAD)",
         "dest_tc": "尖沙咀東(麼地道)"
     },
     // R307
@@ -405,9 +347,9 @@ export const additionalRoutes = [
         "route": "R307",
         "bound": "O",
         "service_type": "1",
-        "orig_en": "Tai Po (Ting Tai Road)",
+        "orig_en": "TAI PO (TING TAI ROAD)",
         "orig_tc": "大埔(汀太路)",
-        "dest_en": "Causeway Bay (Victoria Park)",
+        "dest_en": "CAUSEWAY BAY (VICTORIA PARK)",
         "dest_tc": "銅鑼灣(維多利亞公園)"
     },
     // R603
@@ -415,9 +357,9 @@ export const additionalRoutes = [
         "route": "R603",
         "bound": "O",
         "service_type": "1",
-        "orig_en": "On Tai (West) (Wo Tai House)",
+        "orig_en": "ON TAI (WEST) (WO TAI HOUSE)",
         "orig_tc": "安泰(西)(和泰樓)",
-        "dest_en": "Causeway Bay (Victoria Park)",
+        "dest_en": "CAUSEWAY BAY (VICTORIA PARK)",
         "dest_tc": "銅鑼灣(維多利亞公園)"
     },
     // R673
@@ -425,9 +367,9 @@ export const additionalRoutes = [
         "route": "R673",
         "bound": "O",
         "service_type": "1",
-        "orig_en": "Sheung Shui (Ching Ho Estate)",
+        "orig_en": "SHEUNG SHUI (CHING HO ESTATE)",
         "orig_tc": "上水(清河邨)",
-        "dest_en": "Causeway Bay (Victoria Park)",
+        "dest_en": "CAUSEWAY BAY (VICTORIA PARK)",
         "dest_tc": "銅鑼灣(維多利亞公園)"
     },
     // R678
@@ -435,9 +377,9 @@ export const additionalRoutes = [
         "route": "R678",
         "bound": "O",
         "service_type": "1",
-        "orig_en": "Sheung Shui",
+        "orig_en": "SHEUNG SHUI",
         "orig_tc": "上水",
-        "dest_en": "Causeway Bay (Victoria Park)",
+        "dest_en": "CAUSEWAY BAY (VICTORIA PARK)",
         "dest_tc": "銅鑼灣(維多利亞公園)"
     },
     // R680
@@ -445,9 +387,9 @@ export const additionalRoutes = [
         "route": "R680",
         "bound": "O",
         "service_type": "1",
-        "orig_en": "Kam Ying Court",
+        "orig_en": "KAM YING COURT",
         "orig_tc": "錦英苑",
-        "dest_en": "Causeway Bay (Victoria Park)",
+        "dest_en": "CAUSEWAY BAY (VICTORIA PARK)",
         "dest_tc": "銅鑼灣(維多利亞公園)"
     },
     // R960
@@ -455,9 +397,9 @@ export const additionalRoutes = [
         "route": "R960",
         "bound": "O",
         "service_type": "1",
-        "orig_en": "Hung Shui Kiu (Hung Fuk Estate)",
+        "ORIG_EN": "HUNG SHUI KIU (HUNG FUK ESTATE)",
         "orig_tc": "洪水橋(洪福邨)",
-        "dest_en": "Causeway Bay (Victoria Park)",
+        "dest_en": "CAUSEWAY BAY (VICTORIA PARK)",
         "dest_tc": "銅鑼灣(維多利亞公園)"
     },
     // R961
@@ -465,9 +407,9 @@ export const additionalRoutes = [
         "route": "R961",
         "bound": "O",
         "service_type": "1",
-        "orig_en": "Tuen Mun (Shan King Estate)",
+        "orig_en": "TUEN MUN (SHAN KING ESTATE)",
         "orig_tc": "屯門(山景邨)",
-        "dest_en": "Causeway Bay (Victoria Park)",
+        "dest_en": "CAUSEWAY BAY (VICTORIA PARK)",
         "dest_tc": "銅鑼灣(維多利亞公園)"
     },
     // R968
@@ -475,9 +417,9 @@ export const additionalRoutes = [
         "route": "R968",
         "bound": "O",
         "service_type": "1",
-        "orig_en": "Yuen Long (Fung Cheung Road)",
+        "orig_en": "YUEN LONG (FUNG CHEUNG ROAD)",
         "orig_tc": "元朗(鳳翔路)",
-        "dest_en": "Causeway Bay (Victoria Park)",
+        "dest_en": "CAUSEWAY BAY (VICTORIA PARK)",
         "dest_tc": "銅鑼灣(維多利亞公園)"
     },
 ]

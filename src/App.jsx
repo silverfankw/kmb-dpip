@@ -109,7 +109,7 @@ const App = () => {
 	const queryStatusRouteValue = `${styles.queryStatusRouteValue} ${isLightMode ? "text-slate-900" : "text-slate-100"}`
 	const queryStatusDivider = `${styles.queryStatusDivider} ${isLightMode ? "text-slate-400" : "text-slate-500"}`
 
-	// Get routeList from API by executeing fetch route from Redux thunk
+	// Load route data into Redux once on startup
 	useEffect(() => {
 		dispatch(getRoutesThunk())
 	}, [dispatch])
