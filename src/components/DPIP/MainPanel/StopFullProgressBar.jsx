@@ -1,5 +1,6 @@
 import "@styles/animation.css"
 
+import { memo, useMemo } from "react"
 import { useSelector } from "react-redux"
 import { useFullProgressBarWindow } from "@hooks"
 
@@ -84,7 +85,7 @@ const styles = {
     ].join(" ")
 }
 
-const StopBullet = ({ stop, i, currentStopIndex }) => {
+const StopBullet = memo(function StopBullet({ stop, i, currentStopIndex }) {
     const isCurrentStop = i === currentStopIndex
     const isPastStop = i < currentStopIndex
 
@@ -102,7 +103,7 @@ const StopBullet = ({ stop, i, currentStopIndex }) => {
             </div>
         </div>
     )
-}
+})
 
 export const StopFullProgressBar = ({ progressBarRef }) => {
 
@@ -124,6 +125,8 @@ export const StopFullProgressBar = ({ progressBarRef }) => {
 
     const showNonEndEllipsis = stopLength > rangeSize && windowEnd < stopLength
 
+    const visibleStops = useMemo(() => routeDetail?.stops?.slice(windowStart, windowEnd) ?? [], [routeDetail?.stops, windowStart, windowEnd])
+
     return (
         <div className={styles.refContainer} ref={progressBarRef}>
             <div className={styles.container}>
@@ -144,7 +147,7 @@ export const StopFullProgressBar = ({ progressBarRef }) => {
                     }}
                     className={styles.progressBar}
                 >
-                    {routeDetail?.stops?.slice(windowStart, windowEnd).map((stop, i) => (
+                    {visibleStops.map((stop, i) => (
                         <StopBullet
                             key={windowStart + i}
                             stop={stop}

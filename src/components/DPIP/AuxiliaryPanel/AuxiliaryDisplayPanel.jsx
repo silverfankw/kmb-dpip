@@ -1,4 +1,5 @@
 import '@styles/App.css'
+import { memo, useMemo } from 'react'
 import { useSelector } from 'react-redux'
 
 import {
@@ -23,20 +24,20 @@ const styles = {
     currentStopContainer: "flex flex-col bg-white text-black"
 }
 
-export const AuxiliaryDisplayPanel = ({ monitorStyle, screenTarget }) => {
+export const AuxiliaryDisplayPanel = memo(function AuxiliaryDisplayPanel({ monitorStyle, screenTarget }) {
 
     const { routeDetail, currentStopIndex } = useSelector(state => state.routeSelection)
     const { showMindDoorNotice, showHandrailNotice } = useSelector(state => state.userPreference)
 
     const stops = routeDetail?.stops
 
-    const upcomingStops = [1, 2].map(offset => (
+    const upcomingStops = useMemo(() => [1, 2].map(offset => (
         <UpcomingStopNameDisplay
             key={offset}
             stopZh={stops?.[currentStopIndex + offset]?.zh}
             stopEn={stops?.[currentStopIndex + offset]?.en}
         />
-    ))
+    )), [currentStopIndex, stops])
 
     return (
         <div
@@ -70,4 +71,4 @@ export const AuxiliaryDisplayPanel = ({ monitorStyle, screenTarget }) => {
             )}
         </div>
     )
-}
+})

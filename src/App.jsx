@@ -188,13 +188,13 @@ const App = () => {
 								<RouteQueryInput label="路線" labelClassName={queryStatusLabel} />
 							</div>
 						</div>
-						<span className={queryStatusLabel}>站數</span>
-						<span className={queryStatusValue}>{currentStopSummary}</span>
 						{isUserSelectedRoute && routeDetail?.stops?.[currentStopIndex]?.zh && (
 							<>
-								<span className={queryStatusDivider}>|</span>
-								<span className={queryStatusLabel}>本站</span>
-								<span className={queryStatusValue}>{routeDetail.stops[currentStopIndex].zh}</span>
+							<span className={queryStatusLabel}>站數</span>
+							<span className={queryStatusValue}>{currentStopSummary}</span>
+									<span className={queryStatusDivider}>|</span>
+									<span className={queryStatusLabel}>本站</span>
+									<span className={queryStatusValue}>{routeDetail.stops[currentStopIndex].zh}</span>
 							</>
 						)}
 					</section>

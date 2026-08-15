@@ -1,3 +1,4 @@
+import { memo, useMemo } from "react"
 import stringWidth from "string-width"
 
 // Tailwind CSS style classes
@@ -20,6 +21,8 @@ const styles = {
     enStopNameWrapper: [
         "relative top-[17.5%]",
         "flex",
+        "items-center",
+        "justify-center",
         "h-[33%]",
         "w-full",
         "leading-tight"
@@ -36,52 +39,68 @@ const computeStopNameStyle = (stopName = "", lang = "en") => {
     if (!stopName) return {}
 
     const visualLength = stringWidth(stopName)
+    const viewportWidth = typeof window !== 'undefined' ? window.innerWidth : 1280
 
     const fontSizeConfig = {
-        en: {},
+        en: { min: 5.5, base: 8.75, scale: 0.09, fallback: 6, max: 10 },
         zh: { min: 7, base: 20, scale: 0.66, fallback: 7, max: 12.5 }
     }
 
     const config = fontSizeConfig[lang]
     if (!config) return {}
 
+    const dynamicFontSize = Math.min(
+        Math.max(config.base - visualLength * config.scale, config.fallback),
+        config.max
+    )
+
     const style = {
-        fontSize: `clamp(${config.min}cqw, ${Math.max(config.base - visualLength * config.scale, config.fallback)}cqw, ${config.max}cqw)`
+        fontSize: `clamp(${config.min}cqw, ${dynamicFontSize}cqw, ${config.max}cqw)`
     }
 
     if (lang === "zh") {
         style.marginTop = `${visualLength * 0.0125}cqh`
     }
     else if (lang === "en") {
-        const willWrap = visualLength > Math.floor(window.innerWidth / 10)
-        style.alignSelf = willWrap ? "flex-start" : "center"
+        const willWrap = visualLength > Math.max(10, Math.floor(viewportWidth / 18))
+        style.display = willWrap ? "flex" : "block"
+        style.width = "100%"
+        style.alignItems = "center"
+        style.alignSelf = "center"
+
         if (willWrap) {
-            style.lineHeight = "1.2"
+            style.lineHeight = "1.12"
             style.marginTop = "0.5cqh"
+            style.padding = "0 0.25rem"
+        }
+        else {
+            style.lineHeight = "1.2"
         }
     }
 
     return style
 }
 
-export const CurrentStopNameDisplay = ({ stopZh = "", stopEn = "" }) => {
+export const CurrentStopNameDisplay = memo(function CurrentStopNameDisplay({ stopZh = "", stopEn = "" }) {
+    const zhStyle = useMemo(() => computeStopNameStyle(stopZh, "zh"), [stopZh])
+    const enStyle = useMemo(() => computeStopNameStyle(stopEn, "en"), [stopEn])
 
     return (
         <div className={styles.container}>
             <div
                 className={styles.zhStopName}
-                style={computeStopNameStyle(stopZh, "zh")}
+                style={zhStyle}
             >
                 {stopZh}
             </div>
             <div className={styles.enStopNameWrapper}>
                 <span
                     className={styles.enStopName}
-                    style={computeStopNameStyle(stopEn, "en")}
+                    style={enStyle}
                 >
                     {stopEn}
                 </span>
             </div>
         </div>
     )
-}
+})

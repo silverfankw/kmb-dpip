@@ -41,7 +41,6 @@ const styles = {
     zhStopName: [
         "relative",
         "justify-center",
-        // "font-bold max-sm:font-medium",
         "max-md:top-[0.25cqw]",
         "tracking-tight",
         "leading-snug"
@@ -49,8 +48,7 @@ const styles = {
 
     enStopName: [
         "justify-center",
-        "text-[3.875cqw]",
-        // "font-bold max-sm:font-medium",
+        "text-[4.25cqw]",
         "tracking-tighter",
     ].join(" ")
 }
@@ -60,7 +58,7 @@ const getStopNameFontStyle = (text, lang, windowSize) => {
 
     const fontSizeConfig = {
         zh: {
-            fontSize: `clamp(6.8cqw, ${Math.max(18 - stringWidth(text) * 0.5, 6.75)}cqw, 8.25cqw)`
+            fontSize: `clamp(6.8cqw, ${Math.max(18 - stringWidth(text) * 0.5, 6.75)}cqw, 8.5cqw)`
         },
         en: (() => {
             const textLength = text.length
