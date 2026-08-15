@@ -43,7 +43,7 @@ const computeStopNameStyle = (stopName = "", lang = "en") => {
 
     const fontSizeConfig = {
         en: { min: 5.5, base: 8.75, scale: 0.09, fallback: 6, max: 10 },
-        zh: { min: 7, base: 20, scale: 0.66, fallback: 7, max: 12.5 }
+        zh: { min: 7, base: 20, scale: 0.69, fallback: 7, max: 12.5 }
     }
 
     const config = fontSizeConfig[lang]

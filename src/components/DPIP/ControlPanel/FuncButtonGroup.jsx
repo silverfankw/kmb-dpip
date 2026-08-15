@@ -6,6 +6,7 @@ import { setCustomizeDriverInfoToggle } from "@store/userPreferenceSlice"
 import { Button, Tooltip, Typography } from '@mui/material'
 import BadgeIcon from '@mui/icons-material/Badge'
 import FullscreenIcon from '@mui/icons-material/Fullscreen'
+import AspectRatioIcon from '@mui/icons-material/AspectRatio'
 
 
 export const FuncButtonGroup = ({ mainScreenTarget, secScreenTarget }) => {
@@ -57,6 +58,21 @@ export const FuncButtonGroup = ({ mainScreenTarget, secScreenTarget }) => {
                     </Button>
                 </span>
             </Tooltip >
+            <Tooltip arrow placement="bottom-start" title="調整主螢幕／輔螢幕尺寸（暫未實作）">
+                <span className={groupStyles.item}>
+                    <Button
+                        sx={buttonSx}
+                        color="warning"
+                        variant="contained"
+                        startIcon={<AspectRatioIcon />}
+                        onClick={() => {
+                            // Placeholder only; resize logic will be added later.
+                        }}
+                    >
+                        <Typography component="span" sx={styles.buttonLabel}>調整顯示尺寸</Typography>
+                    </Button>
+                </span>
+            </Tooltip>
             {
                 fullscreenBtnAttr.map(({ key, target, label }) => (
                     <Tooltip
