@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit'
-import { additionalRoutes, additionalRouteStops, additionalRouteStopDetails, compareRouteNumbers } from '@utils'
+import { compareRouteNumbers } from '@utils'
 
 const ROUTE_DATA_URL = 'https://raw.githubusercontent.com/silverfankw/kmb-route-stop/refs/heads/main/kmb_route_stop.json'
 
@@ -18,7 +18,7 @@ const getRouteKey = route => `${route.route}-${route.bound}-${route.service_type
 const normalizeText = value => (value == null ? '' : String(value))
 
 const normalizeStopDetail = (stopId, stopLookup) => {
-    const stopDetail = stopLookup[stopId] ?? additionalRouteStopDetails[stopId]
+    const stopDetail = stopLookup[stopId]
 
     if (!stopDetail) {
         return {
@@ -30,30 +30,19 @@ const normalizeStopDetail = (stopId, stopLookup) => {
 
     return {
         id: stopId,
-        zh: normalizeText(stopDetail.stop_name_zh ?? stopDetail.zh ?? stopDetail.name_tc ?? stopId),
-        en: normalizeText(stopDetail.stop_name_en ?? stopDetail.en ?? stopDetail.name_en ?? stopId),
+        zh: normalizeText(stopDetail.stop_name_zh ?? stopDetail.name_tc ?? stopId),
+        en: normalizeText(stopDetail.stop_name_en ?? stopDetail.name_en ?? stopId),
     }
 }
 
-const additionalRouteStopsByKey = additionalRouteStops.reduce((accumulator, stop) => {
-    const key = getRouteKey(stop)
-
-    if (!accumulator[key]) {
-        accumulator[key] = []
-    }
-
-    accumulator[key].push(stop.stop)
-    return accumulator
-}, {})
-
 const normalizeRoutes = rawData => {
     const stopLookup = rawData?.stops ?? {}
-    const mergedRoutes = [...(Array.isArray(rawData?.routes) ? rawData.routes : []), ...additionalRoutes]
+    const sourceRoutes = Array.isArray(rawData?.routes) ? rawData.routes : []
+    const normalizedRoutes = []
     const seenRouteKeys = new Set()
-    const routes = []
     const routesByKey = {}
 
-    mergedRoutes
+    sourceRoutes
         .slice()
         .sort(compareRouteNumbers)
         .forEach(route => {
@@ -65,9 +54,7 @@ const normalizeRoutes = rawData => {
 
             seenRouteKeys.add(key)
 
-            const stopIDs = Array.isArray(route.stops) && route.stops.length > 0
-                ? route.stops
-                : additionalRouteStopsByKey[key] ?? []
+            const stopIDs = Array.isArray(route.stops) ? route.stops : []
 
             const normalizedRoute = {
                 route: normalizeText(route.route),
@@ -81,11 +68,11 @@ const normalizeRoutes = rawData => {
                 stops: stopIDs.map(stopID => normalizeStopDetail(stopID, stopLookup)),
             }
 
-            routes.push(normalizedRoute)
+            normalizedRoutes.push(normalizedRoute)
             routesByKey[key] = normalizedRoute
         })
 
-    return { routes, routesByKey }
+    return { routes: normalizedRoutes, routesByKey }
 }
 
 export const selectRoutes = state => state.route.routes

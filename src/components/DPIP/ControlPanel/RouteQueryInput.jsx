@@ -98,17 +98,31 @@ export const RouteQueryInput = ({ compact = false, label = '', labelClassName = 
         return index
     }, [routeOptions])
 
-    const defaultOptions = useMemo(
-        () => searchIndex.get('') ?? [],
-        [searchIndex]
-    )
+    const defaultOptions = useMemo(() => {
+        const selectedRouteKey = selectedOption?.detail?.route?.toUpperCase() ?? ''
+        const preferredOptions = selectedRouteKey
+            ? (searchIndex.get(selectedRouteKey) ?? [])
+            : (searchIndex.get('') ?? [])
+
+        if (!selectedOption) {
+            return preferredOptions
+        }
+
+        const dedupedOptions = preferredOptions.filter(option => option.value !== selectedOption.value)
+        return [selectedOption, ...dedupedOptions]
+    }, [searchIndex, selectedOption])
 
     const handleSearch = useCallback((inputValue, callback) => {
         const normalizedInput = inputValue.trim().toUpperCase()
         const results = searchIndex.get(normalizedInput) ?? []
 
+        if (!normalizedInput) {
+            callback(defaultOptions)
+            return
+        }
+
         callback(results)
-    }, [searchIndex])
+    }, [defaultOptions, searchIndex])
 
     const handleSelect = useCallback((option) => {
         if (!option) {
