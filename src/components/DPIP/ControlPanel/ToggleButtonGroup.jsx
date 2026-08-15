@@ -82,7 +82,7 @@ export const ToggleButtonGroup = () => {
                     <span style={notiStyles.labelWrapper}>
                         <HandshakeIcon />
                         <Typography sx={notiStyles.label} variant="button">
-                            請緊握扶手提示
+                            緊握扶手提示
                         </Typography>
                     </span>
                 }
@@ -111,7 +111,7 @@ export const ToggleButtonGroup = () => {
                     <span style={notiStyles.labelWrapper}>
                         <DoorSlidingIcon />
                         <Typography sx={notiStyles.label} variant="button">
-                            車門正在關上提示
+                            車門關上提示
                         </Typography>
                     </span>
                 }

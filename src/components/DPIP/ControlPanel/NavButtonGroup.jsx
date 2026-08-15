@@ -44,30 +44,53 @@ export const NavButtonGroup = () => {
         width: 24,
         height: 24,
         minWidth: 24,
-        borderRadius: 5,
-        border: '1px solid rgba(255,255,255,0.32)',
-        background: 'linear-gradient(180deg, rgba(28,33,42,0.95) 0%, rgba(12,15,22,0.92) 100%)',
-        boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.12), inset 0 -2px 0 rgba(0,0,0,0.35), 0 1px 0 rgba(0,0,0,0.18)',
-        color: '#f5f7fb',
+        borderRadius: 6,
+        border: '1px solid rgba(255,255,255,0.2)',
+        background: 'linear-gradient(180deg, #586779 0%, #3a4658 28%, #1e2633 100%)',
+        boxShadow: 'inset 0 2px 0 rgba(255,255,255,0.28), inset 0 -2px 0 rgba(0,0,0,0.52), 0 2px 0 rgba(0,0,0,0.34), 0 0 0 1px rgba(13,17,23,0.68)',
+        color: '#f8fafc',
         lineHeight: 1,
         flexShrink: 0,
-        fontWeight: 700,
+        fontWeight: 800,
         textTransform: 'uppercase',
+        letterSpacing: '0.02em',
+        fontFamily: '"Segoe UI Symbol", "Noto Sans Mono", Consolas, monospace',
+        padding: '2px 4px',
+        transform: 'translateY(-1px)',
         transition: 'all 0.2s ease',
+        position: 'relative',
+        '&::before': {
+            content: '""',
+            position: 'absolute',
+            inset: '1px 1px auto 1px',
+            height: '35%',
+            borderRadius: '5px 5px 3px 3px',
+            background: 'linear-gradient(180deg, rgba(255,255,255,0.36), rgba(255,255,255,0.04))',
+            pointerEvents: 'none',
+        },
     }
     const keyboardKeyBoxSmallSx = {
         ...keyboardKeyBoxSx,
         width: 30,
         minWidth: 30,
         height: 24,
-        borderRadius: 4,
+        borderRadius: 5,
         fontSize: 10,
-        fontWeight: 800,
+        fontWeight: 900,
         letterSpacing: '0.08em',
         padding: '0 6px',
         whiteSpace: 'nowrap',
         overflow: 'hidden',
         textOverflow: 'ellipsis',
+        '&::before': {
+            content: '""',
+            position: 'absolute',
+            inset: '1px 1px auto 1px',
+            height: '38%',
+            borderRadius: '4px 4px 2px 2px',
+            background: 'linear-gradient(180deg, rgba(255,255,255,0.38), rgba(255,255,255,0.05))',
+            pointerEvents: 'none',
+        },
     }
     const disabledKeyboardKeyBoxSx = {
         ...keyboardKeyBoxSx,
@@ -75,8 +98,8 @@ export const NavButtonGroup = () => {
         borderColor: 'rgba(255,255,255,0.12)',
         color: 'rgba(230,232,236,0.52)',
         boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.04), inset 0 -3px 0 rgba(0,0,0,0.42), 0 0 0 rgba(0,0,0,0)',
-        opacity: 0.68,
-        filter: 'grayscale(0.7) saturate(0.5)',
+        opacity: 0.7,
+        filter: 'grayscale(0.75) saturate(0.55)',
     }
     const disabledKeyboardKeyBoxSmallSx = {
         ...keyboardKeyBoxSmallSx,
@@ -84,8 +107,8 @@ export const NavButtonGroup = () => {
         borderColor: 'rgba(255,255,255,0.12)',
         color: 'rgba(230,232,236,0.52)',
         boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.04), inset 0 -3px 0 rgba(0,0,0,0.42), 0 0 0 rgba(0,0,0,0)',
-        opacity: 0.68,
-        filter: 'grayscale(0.7) saturate(0.5)',
+        opacity: 0.7,
+        filter: 'grayscale(0.75) saturate(0.55)',
     }
     const styles = {
         grid: "grid w-full gap-2 max-sm:gap-4 sm:grid-cols-2 xl:grid-cols-4",
@@ -94,7 +117,7 @@ export const NavButtonGroup = () => {
 
     return (
         <div className={styles.grid}>
-            <Tooltip arrow placement="bottom-start" title="上一站 鍵盤快捷鍵: '←'">
+            <Tooltip arrow placement="bottom-start" title="快捷鍵: '←'">
                 <span className={styles.item}>
                     <Button
                         color="darkRed"
@@ -113,7 +136,7 @@ export const NavButtonGroup = () => {
                     </Button>
                 </span>
             </Tooltip>
-            <Tooltip arrow placement="bottom-start" title="下一站鍵盤快捷鍵: '→'">
+            <Tooltip arrow placement="bottom-start" title="快捷鍵: '→'">
                 <span className={styles.item}>
                     <Button
                         color="nextGreen"
@@ -132,7 +155,7 @@ export const NavButtonGroup = () => {
                     </Button>
                 </span>
             </Tooltip>
-            <Tooltip arrow placement="bottom-start" title="切換路線方向鍵盤快捷鍵: 'END'">
+            <Tooltip arrow placement="bottom-start" title="鍵盤快捷鍵: 'END'">
                 <span className={styles.item}>
                     <Button
                         color="directionPurple"
@@ -145,11 +168,11 @@ export const NavButtonGroup = () => {
                         onClick={() => dispatch(changeBoundThunk())}
                         disabled={(!isUserSelectedRoute || !routeHasTwoBound) || routeDetail?.service_type != 1}
                     >
-                        <Typography component="span" sx={switchBoundBtnStyle.buttonLabel}>切換行車方向</Typography>
+                        <Typography component="span" sx={switchBoundBtnStyle.buttonLabel}>切換方向</Typography>
                     </Button>
                 </span>
             </Tooltip>
-            <Tooltip arrow placement="bottom-start" title="重設至首站鍵盤快捷鍵: 'HOME'">
+            <Tooltip arrow placement="bottom-start" title="鍵盤快捷鍵: 'HOME'">
                 <span className={styles.item}>
                     <Button
                         color="ochre"

@@ -18,11 +18,18 @@ const styles = {
     ].join(" "),
     shellNight: "text-slate-200",
     shellLight: "text-slate-700",
-    linkNight: "text-slate-200 transition text-xs hover:text-cyan-200",
-    linkLight: "text-slate-700 transition text-xs hover:text-cyan-700",
-    buttonNight: "text-slate-300 underline transition hover:text-cyan-200 hover:cursor-pointer",
-    buttonLight: "text-slate-700 underline transition hover:text-cyan-700 hover:cursor-pointer",
-    actionRow: "flex items-center gap-4 self-end sm:self-auto",
+    linkNight: "underline hover:cursor-pointer text-slate-200 transition text-xs hover:text-cyan-200",
+    linkLight: "underline hover:cursor-pointer text-slate-700 transition text-xs hover:text-cyan-700",
+    actionRow: "flex flex-col items-end gap-1 self-end sm:self-auto",
+    shortcutRow: "flex flex-wrap items-center gap-2 text-[10px] leading-none opacity-80 sm:text-[11px] lg:text-[12px] max-sm:justify-center max-sm:gap-x-1.5 max-sm:gap-y-1.5 max-sm:max-w-[260px] max-sm:leading-tight",
+    shortcutLabel: "mr-1 font-medium tracking-[0.08em] text-[9px] opacity-90 sm:text-[10px] lg:text-[11px] max-sm:mr-0 max-sm:w-full max-sm:text-center",
+    shortcutKey: [
+        "inline-flex h-4 min-w-4 items-center justify-center rounded-[4px] border px-1 font-mono text-[9px] font-bold leading-none sm:h-5 sm:min-w-5 sm:px-1.5 sm:text-[10px] lg:h-5 lg:min-w-5 lg:text-[10px]",
+        "shadow-[inset_0_1px_0_rgba(255,255,255,0.25),inset_0_-2px_0_rgba(0,0,0,0.35),0_1px_0_rgba(0,0,0,0.22)]"
+    ].join(" "),
+    stackedShortcutPair: "flex items-center gap-1.5 sm:gap-2 max-sm:flex-col max-sm:items-start max-sm:gap-0.5 max-sm:mt-0.5",
+    shortcutKeyNight: "border-slate-400/35 bg-slate-800/90 text-slate-100",
+    shortcutKeyLight: "border-slate-300 bg-slate-100 text-slate-700",
     modeToggle: [
         "relative inline-flex items-center gap-1 rounded-full border p-1 transition-colors duration-150",
         "focus:outline-hidden focus-visible:ring-2 focus-visible:ring-cyan-400/60 hover:cursor-pointer"
@@ -39,7 +46,7 @@ export const Footer = ({ uiMode = "night" }) => {
     const isLightMode = uiMode === "light"
     const shellClassName = `${styles.shell} ${isLightMode ? styles.shellLight : styles.shellNight}`
     const linkClassName = isLightMode ? styles.linkLight : styles.linkNight
-    const buttonClassName = isLightMode ? styles.buttonLight : styles.buttonNight
+    const footerTextClassName = `${styles.shortcutLabel} ${isLightMode ? "text-slate-600" : "text-slate-300"}`
     const modeToggleClassName = `${styles.modeToggle} ${isLightMode ? styles.modeToggleLight : styles.modeToggleNight}`
     const lightIconColor = isLightMode ? "#f59e0b" : "#94a3b8"
     const darkIconColor = isLightMode ? "#64748b" : "#e2e8f0"
@@ -48,25 +55,68 @@ export const Footer = ({ uiMode = "night" }) => {
         <>
             <footer className={styles.footer}>
                 <div className={shellClassName}>
+                 <div className="flex flex-col gap-2 sm:items-center">
                     <p className="select-none">
                         <a
                             target="_blank"
                             rel="noreferrer"
-                            className={linkClassName}
+                            className={`${linkClassName} ${footerTextClassName}`}
                             href="https://github.com/silverfankw/kmb-dpip"
                         >
-                            silverfankw/kmb-dpip-v2 @ 2026
+                            silverfankw/kmb-dpip @ 2026
                         </a>
                     </p>
-                    <p className="select-none">This website is best viewed at 16:9 resolution.</p>
-                    <div className={styles.actionRow}>
                         <button
                             type="button"
-                            className={buttonClassName}
+                            className={`${linkClassName} ${footerTextClassName}`}
                             onClick={() => setVersionHistoryOpen(true)}
                         >
-                            Version History
+                            版本歷史
                         </button>
+                        </div>
+                    <div className="flex flex-col gap-2 sm:items-center">
+                        <Tooltip>
+                            <div className={`${styles.shortcutRow} ${isLightMode ? 'text-slate-600' : 'text-slate-300'}`}>
+                                <span className={footerTextClassName}>鍵盤快捷鍵</span>
+                                <span className={styles.stackedShortcutPair}>
+                                    <span className="flex items-center gap-1">
+                                        <span className={`${styles.shortcutKey} ${isLightMode ? styles.shortcutKeyLight : styles.shortcutKeyNight}`}>
+                                            ←
+                                        </span>
+                                        <span className={footerTextClassName}>上一站</span>
+                                    </span>
+                                    <span className="flex items-center gap-1">
+                                        <span className={`${styles.shortcutKey} ${isLightMode ? styles.shortcutKeyLight : styles.shortcutKeyNight}`}>
+                                            →
+                                        </span>
+                                        <span className={footerTextClassName}>下一站</span>
+                                    </span>
+                                </span>
+                                <span className={styles.stackedShortcutPair}>
+                                    <span className="flex items-center gap-1">
+                                        <span className={`${styles.shortcutKey} ${isLightMode ? styles.shortcutKeyLight : styles.shortcutKeyNight}`}>
+                                            END
+                                        </span>
+                                        <span className={footerTextClassName}>轉換路線方向</span>
+                                    </span>
+                                    <span className="flex items-center gap-1">
+                                        <span className={`${styles.shortcutKey} ${isLightMode ? styles.shortcutKeyLight : styles.shortcutKeyNight}`}>
+                                            HOME
+                                        </span>
+                                        <span className={footerTextClassName}>由首站開始</span>
+                                    </span>
+                                </span>
+                            </div>
+                        </Tooltip>
+                        <p className={`select-none ${footerTextClassName}`}>
+                            建議使用 16:9 螢幕瀏覽以獲得最佳體驗。
+                            本工具為非官方開發之娛樂項目，僅供個人體驗與參考。
+                        </p>
+                        <p className={`select-none ${footerTextClassName}`}>
+                            開發者不保證內容之準確性與服務穩定性，亦不對使用本工具所產生之任何損害承擔責任。
+                        </p>
+                    </div>
+                    <div className={styles.actionRow}>
                         <Tooltip title={uiMode === "light" ? "切換夜間模式" : "切換日間模式"}>
                             <button
                                 type="button"

@@ -6,7 +6,6 @@ import { setCustomizeDriverInfoToggle } from "@store/userPreferenceSlice"
 import { Button, Tooltip, Typography } from '@mui/material'
 import BadgeIcon from '@mui/icons-material/Badge'
 import FullscreenIcon from '@mui/icons-material/Fullscreen'
-import AspectRatioIcon from '@mui/icons-material/AspectRatio'
 
 
 export const FuncButtonGroup = ({ mainScreenTarget, secScreenTarget }) => {
@@ -18,12 +17,40 @@ export const FuncButtonGroup = ({ mainScreenTarget, secScreenTarget }) => {
     const styles = useButtonStyles("info")
     const buttonSx = {
         ...styles.button,
+        minHeight: 40,
+        height: 40,
+        minWidth: 0,
+        borderRadius: 2,
+        px: 1.1,
+        py: 0.75,
         justifyContent: 'center',
+        whiteSpace: 'nowrap',
+        '@media (min-width: 768px)': {
+            minHeight: 41,
+            height: 41,
+            px: 1.1,
+            py: 0.65,
+        },
+        '@media (min-width: 1280px)': {
+            minHeight: 41,
+            height: 41,
+            px: 1.2,
+            py: 0.7,
+        },
+        '@media (max-width: 640px)': {
+            minHeight: 46,
+            px: 0.85,
+            py: 0.65,
+        },
+        '&:focus-visible': {
+            outline: '3px solid rgba(255,255,255,0.9)',
+            outlineOffset: 2,
+        },
     }
     const groupStyles = {
-        grid: "grid w-full gap-2 max-sm:gap-1.5 sm:grid-cols-2 2xl:grid-cols-3",
-        item: "block w-full",
-        desktopOnly: "hidden w-full md:block",
+        grid: "grid w-full gap-1.5 sm:grid-cols-3 sm:gap-2",
+        item: "block w-full min-w-0",
+        desktopOnly: "block w-full min-w-0",
     }
 
     const fullscreenBtnAttr = [
@@ -39,11 +66,23 @@ export const FuncButtonGroup = ({ mainScreenTarget, secScreenTarget }) => {
         },
     ]
 
+    const driverInfoTooltip = "自定義車長資料顯示"
+    const fullscreenTooltip = '選擇路線後才能開啟全螢幕顯示功能'
+    const buttonLabelSx = {
+        ...styles.buttonLabel,
+        lineHeight: 1.2,
+        whiteSpace: 'nowrap',
+        fontSize: 'clamp(0.72rem, 1.9vw, 1rem)',
+        letterSpacing: '0.01em',
+    }
+
     return (
         <div className={groupStyles.grid}>
-            <Tooltip arrow placement="bottom-start" title="自定義車長資料顯示">
+            <Tooltip arrow placement="bottom-start" title={driverInfoTooltip}>
                 <span className={groupStyles.item}>
                     <Button
+                        fullWidth
+                        aria-label="Customize driver info"
                         sx={buttonSx}
                         color="ochre"
                         variant="contained"
@@ -54,45 +93,51 @@ export const FuncButtonGroup = ({ mainScreenTarget, secScreenTarget }) => {
                             )
                         }}
                     >
-                        <Typography component="span" sx={styles.buttonLabel}>更改車長資料</Typography>
+                        <Typography component="span" sx={buttonLabelSx}>更改車長資料</Typography>
                     </Button>
                 </span>
             </Tooltip >
-            <Tooltip arrow placement="bottom-start" title="調整主螢幕／輔螢幕尺寸（暫未實作）">
+            {/* <Tooltip arrow placement="bottom-start" title={monitorPresetTooltip}>
                 <span className={groupStyles.item}>
                     <Button
+                        fullWidth
+                        size="large"
+                        aria-label="Toggle monitor layout"
                         sx={buttonSx}
                         color="warning"
                         variant="contained"
                         startIcon={<AspectRatioIcon />}
-                        onClick={() => {
-                            // Placeholder only; resize logic will be added later.
-                        }}
+                        onClick={toggleMonitorStyle}
+                        disabled={true}
                     >
-                        <Typography component="span" sx={styles.buttonLabel}>調整顯示尺寸</Typography>
+                        <Typography component="span" sx={buttonLabelSx}>
+                            {mainMonitorStylePreset === 'wide' ? '切回主螢幕標準尺寸' : '切換主螢幕寬螢幕尺寸'}
+                        </Typography>
                     </Button>
                 </span>
-            </Tooltip>
+            </Tooltip> */}
             {
                 fullscreenBtnAttr.map(({ key, target, label }) => (
                     <Tooltip
                         key={key}
                         arrow
                         placement="bottom-start"
-                        title={`選擇路線後才能開啟全螢幕顯示功能`}
+                        title={!isUserSelectedRoute ? fullscreenTooltip : `${label}：開啟全螢幕`}
                     >
                         <span className={groupStyles.desktopOnly}>
                             <Button
+                                fullWidth
+                                aria-label={label}
                                 sx={buttonSx}
                                 color="info"
                                 variant="contained"
                                 disabled={!isUserSelectedRoute}
                                 startIcon={<FullscreenIcon />}
                                 onClick={() => {
-                                    target.current.requestFullscreen()
+                                    if (isUserSelectedRoute) target.current.requestFullscreen()
                                 }}
                             >
-                                <Typography component="span" sx={styles.buttonLabel}>{label}</Typography>
+                                <Typography component="span" sx={buttonLabelSx}>{label}</Typography>
                             </Button>
                         </span>
                     </Tooltip>
