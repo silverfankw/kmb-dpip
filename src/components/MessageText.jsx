@@ -1,10 +1,13 @@
 import PropTypes from 'prop-types'
 
+const defaultClassName = 'text-xs'
+
 export const MessageText = ({ message = "", style = {}, tailwindStyle = "" }) => {
     return (
-        <span style={style} className={`text-xs ${tailwindStyle}`}>
+        <span style={style} className={`${defaultClassName} ${tailwindStyle}`}>
             {message}
-        </span>)
+        </span>
+    )
 }
 
 MessageText.propTypes = {

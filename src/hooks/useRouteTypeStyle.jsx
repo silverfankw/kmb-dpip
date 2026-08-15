@@ -1,4 +1,4 @@
-import { useMemo } from 'react'
+import { useCallback } from 'react'
 import { useWindowSize } from "@hooks"
 import { useSelector } from 'react-redux'
 
@@ -68,62 +68,40 @@ const routeTypeRules = [
     { type: "awe", regex: /^X(33|36|40|43|47)$/i },
 ]
 
+const preserveOriginalLightTextTypes = new Set(["airport", "airportOvernight", "shuttle", "r8"])
+
 export const useRouteTypeStyle = () => {
     const { isMobile } = useWindowSize()
     const { uiMode } = useSelector(state => state.userPreference)
     const isLightMode = uiMode === "light"
 
-    const getSizeCategory = useMemo(() => {
-        if (isMobile) return 'mobile'
-        return 'desktop'
-    }, [isMobile])
+    return useCallback((route = '') => {
+        const sizeCategory = isMobile ? 'mobile' : 'desktop'
+        const cacheKey = `${route}-${sizeCategory}-${uiMode}`
 
-    const sharedStyle = useMemo(() => ({
-        display: "inline-block",
-        textAlign: "center",
-        width: isMobile ? "42px" : "52px",
-        borderRadius: "2px",
-        fontWeight: 700
-    }), [isMobile])
-
-    const routeTypeStyle = useMemo(() => ({
-        ...routeTypeColors,
-        regular: {
-            color: isLightMode ? "#000000" : "#FFFFFF",
-        },
-        shared: sharedStyle
-    }), [isLightMode, sharedStyle])
-
-    // Memoize the style cache
-    const styleCache = useMemo(() => new Map(), [])
-
-    // Memoize the getStyle function
-    const getStyle = useMemo(() => {
-        return (route) => {
-
-            const cacheKey = `${route}-${getSizeCategory}-${uiMode}`
-
-            if (styleCache.has(cacheKey)) {
-                return styleCache.get(cacheKey)
-            }
-
-            const styleResult = routeTypeRules.find(rule => rule.regex.test(route))
-            const routeType = styleResult?.type ?? "regular"
-            const style = {
-                ...routeTypeStyle.shared,
-                ...routeTypeStyle[routeType]
-            }
-
-            const preserveOriginalLightTextTypes = new Set(["airport", "airportOvernight", "shuttle", "r8"])
-
-            if (isLightMode && routeType !== "regular" && !preserveOriginalLightTextTypes.has(routeType)) {
-                style.color = "#FFFFFF"
-            }
-
-            styleCache.set(cacheKey, style)
-            return style
+        const styleCache = useRouteTypeStyle.cache ??= new Map()
+        if (styleCache.has(cacheKey)) {
+            return styleCache.get(cacheKey)
         }
-    }, [isLightMode, routeTypeStyle, styleCache, getSizeCategory, uiMode])
 
-    return getStyle
+        const styleResult = routeTypeRules.find(rule => rule.regex.test(route))
+        const routeType = styleResult?.type ?? 'regular'
+        const style = {
+            display: 'inline-block',
+            textAlign: 'center',
+            width: isMobile ? '42px' : '52px',
+            borderRadius: '2px',
+            fontWeight: 700,
+            ...(routeTypeColors[routeType] ?? {}),
+            ...(routeType === 'regular' ? { color: isLightMode ? '#000000' : '#FFFFFF' } : {}),
+        }
+
+        if (isLightMode && routeType !== 'regular' && !preserveOriginalLightTextTypes.has(routeType)) {
+            style.color = '#FFFFFF'
+        }
+
+        styleCache.set(cacheKey, style)
+        return style
+    }, [isLightMode, isMobile, uiMode])
 }
+

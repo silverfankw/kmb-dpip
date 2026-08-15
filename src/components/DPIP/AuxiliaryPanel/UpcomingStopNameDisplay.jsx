@@ -1,5 +1,5 @@
-import stringWidth from "string-width"
 import { useWindowSize } from '@hooks/useWindowSize'
+import { getUpcomingStopNameStyle } from './auxiliaryPanelConfig'
 
 const styles = {
     divider: [
@@ -53,59 +53,32 @@ const styles = {
     ].join(" ")
 }
 
-const getStopNameFontStyle = (text, lang, windowSize) => {
-    if (!text) return {}
-
-    const fontSizeConfig = {
-        zh: {
-            fontSize: `clamp(6.8cqw, ${Math.max(18 - stringWidth(text) * 0.5, 6.75)}cqw, 8.5cqw)`
-        },
-        en: (() => {
-            const textLength = text.length
-            if (textLength < 45) return {}
-
-            const baseSize = windowSize < 768 ? 4 : windowSize < 1280 ? 3.75 : 3.5
-            const scale = textLength >= 50 ? 0.8 : 1
-
-            return { fontSize: `${baseSize * scale}cqw` }
-        })()
-    }
-
-    return fontSizeConfig[lang] || {}
-}
-
 export const UpcomingStopNameDisplay = ({ stopZh = "", stopEn = "" }) => {
     const { width } = useWindowSize()
 
     return (
         <>
-            {/* Horizontal gray divider line */}
             <div className={styles.divider}></div>
 
-            {/* White circle stop indicator */}
             <div className={styles.stopIndicatorContainer}>
                 <div className={styles.stopIndicator}></div>
             </div>
 
-            {/* Stop name container */}
             <div className={styles.stopNameContainer}>
-
-                {/* Stop name content */}
                 <div className={styles.stopNameContent}>
                     <div
                         className={styles.zhStopName}
-                        style={getStopNameFontStyle(stopZh, "zh")}
+                        style={getUpcomingStopNameStyle(stopZh, "zh")}
                     >
                         {stopZh}
                     </div>
                     <span
                         className={styles.enStopName}
-                        style={getStopNameFontStyle(stopEn, "en", width)}
+                        style={getUpcomingStopNameStyle(stopEn, "en", width)}
                     >
                         {stopEn}
                     </span>
                 </div>
-
             </div>
         </>
     )

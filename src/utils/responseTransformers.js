@@ -1,11 +1,10 @@
-// Utility functions to transform API responses into a more usable format.
+import { routeUtilityConfig } from './routeUtilityConfig'
 
-// Regular expression to match stop ID pattern: (XX999) at the end of string
-const STOP_ID_REGEX = /\([A-Z]{2}\d{3}[A-Za-z]?\)$/
-
-// Helper to extract stop name without ID
 const extractNameWithoutId = (fullName) => {
-    return fullName?.replace(STOP_ID_REGEX, '')?.replace(/[,-]/g, ' ')?.trim()
+    return fullName
+        ?.replace(routeUtilityConfig.stopIdPattern, '')
+        ?.replace(routeUtilityConfig.stopNameCleanupPattern, ' ')
+        ?.trim()
 }
 
 export const transformStopDetail = (apiResponse) => {
@@ -15,20 +14,13 @@ export const transformStopDetail = (apiResponse) => {
     return {
         en: extractNameWithoutId(nameEn),
         zh: extractNameWithoutId(nameZh),
-        // stopId: extractStopId(nameEn)
     }
 }
 
-// Converts between KMB bound formats (I/O <-> 1/2)
 export const convertBound = (bound, toFormat = 'number') => {
     if (!bound) return bound
 
-    const conversions = {
-        'number': { 'O': '1', 'I': '2' },
-        'letter': { '1': 'O', '2': 'I' }
-    }
-
-    return conversions[toFormat]?.[bound] || bound
+    return routeUtilityConfig.boundConversions[toFormat]?.[bound] || bound
 }
 
-export const removeLeadingZero = str => str ? String(parseInt(str, 10)) : str
+export const removeLeadingZero = str => str ? String(Number.parseInt(str, 10)) : str

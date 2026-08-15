@@ -36,86 +36,84 @@ export const ToggleButtonGroup = () => {
         },
     })
 
+    const toggleButtons = [
+        {
+            key: 'stop-pressed',
+            sx: buttonSx(stopButtonStyles),
+            checked: stopPressed,
+            onChange: () => dispatch(setStopPressed(!stopPressed)),
+            name: 'stop pressed',
+            switchSx: stopButtonStyles.switch,
+            icon: <NotificationsIcon color="snowwhite" />,
+            label: stopPressed ? '解除按鐘' : '按鐘',
+            labelSx: stopButtonStyles.label,
+            labelWrapper: stopButtonStyles.labelWrapper,
+        },
+        {
+            key: 'handrail-notice',
+            sx: buttonSx(notiStyles),
+            checked: showHandrailNotice,
+            onChange: () => {
+                dispatch(
+                    setShowHandrailAndMindDoorNotice({
+                        showHandrailNotice: !showHandrailNotice,
+                        showMindDoorNotice: showMindDoorNotice && false,
+                    })
+                )
+            },
+            name: 'handrail notice',
+            switchSx: notiStyles.switch,
+            icon: <HandshakeIcon />,
+            label: '緊握扶手提示',
+            labelSx: notiStyles.label,
+            labelWrapper: notiStyles.labelWrapper,
+        },
+        {
+            key: 'mind-door-notice',
+            sx: buttonSx(notiStyles),
+            checked: showMindDoorNotice,
+            onChange: () => {
+                dispatch(
+                    setShowHandrailAndMindDoorNotice({
+                        showMindDoorNotice: !showMindDoorNotice,
+                        showHandrailNotice: showHandrailNotice && false,
+                    })
+                )
+            },
+            name: 'mind door notice',
+            switchSx: notiStyles.switch,
+            icon: <DoorSlidingIcon />,
+            label: '車門關上提示',
+            labelSx: notiStyles.label,
+            labelWrapper: notiStyles.labelWrapper,
+        },
+    ]
+
     return (
         <div className="grid w-full gap-2 max-sm:gap-4 sm:grid-cols-2 2xl:grid-cols-3">
-            {/* Stop Bell toggle */}
-            <SwitchButton
-                sx={buttonSx(stopButtonStyles)}
-                control={
-                    <Switch
-                        checked={stopPressed}
-                        onChange={() => dispatch(setStopPressed(!stopPressed))}
-                        name="stop pressed"
-                        sx={stopButtonStyles.switch}
-                    />
-                }
-                label={
-                    <span style={stopButtonStyles.labelWrapper}>
-                        <NotificationsIcon color="snowwhite" />
-                        <Typography
-                            variant="button"
-                            sx={stopButtonStyles.label}>
-                            {stopPressed ? `  解除按鐘` : ` 按鐘`}
-                        </Typography>
-                    </span>
-                }
-            />
-            <SwitchButton
-                sx={buttonSx(notiStyles)}
-                control={
-                    <Switch
-                        checked={showHandrailNotice}
-                        color="gold"
-                        onChange={() => {
-                            dispatch(
-                                setShowHandrailAndMindDoorNotice({
-                                    showHandrailNotice: !showHandrailNotice,
-                                    showMindDoorNotice: showMindDoorNotice && false
-                                })
-                            )
-                        }}
-                        name="handrail notice"
-                        sx={notiStyles.switch}
-                    />
-                }
-                label={
-                    <span style={notiStyles.labelWrapper}>
-                        <HandshakeIcon />
-                        <Typography sx={notiStyles.label} variant="button">
-                            緊握扶手提示
-                        </Typography>
-                    </span>
-                }
-            />
-
-            {/* Mind Door Notice toggle */}
-            <SwitchButton
-                sx={buttonSx(notiStyles)}
-                control={
-                    <Switch
-                        checked={showMindDoorNotice}
-                        color="gold"
-                        onChange={() => {
-                            dispatch(
-                                setShowHandrailAndMindDoorNotice({
-                                    showMindDoorNotice: !showMindDoorNotice,
-                                    showHandrailNotice: showHandrailNotice && false
-                                })
-                            )
-                        }}
-                        name="mind door notice"
-                        sx={notiStyles.switch}
-                    />
-                }
-                label={
-                    <span style={notiStyles.labelWrapper}>
-                        <DoorSlidingIcon />
-                        <Typography sx={notiStyles.label} variant="button">
-                            車門關上提示
-                        </Typography>
-                    </span>
-                }
-            />
+            {toggleButtons.map(({ key, sx, checked, onChange, name, switchSx, icon, label, labelSx, labelWrapper }) => (
+                <SwitchButton
+                    key={key}
+                    sx={sx}
+                    control={
+                        <Switch
+                            checked={checked}
+                            color={key === 'stop-pressed' ? undefined : 'gold'}
+                            onChange={onChange}
+                            name={name}
+                            sx={switchSx}
+                        />
+                    }
+                    label={
+                        <span style={labelWrapper}>
+                            {icon}
+                            <Typography sx={labelSx} variant="button">
+                                {label}
+                            </Typography>
+                        </span>
+                    }
+                />
+            ))}
         </div>
     )
 }

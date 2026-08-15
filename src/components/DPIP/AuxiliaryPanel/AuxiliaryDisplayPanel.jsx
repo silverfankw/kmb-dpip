@@ -9,14 +9,14 @@ import {
     UpcomingStopNameDisplay,
     CurrentStopIndicator
 } from '@components'
+import { AUXILIARY_GRID_COLS, AUXILIARY_GRID_ROWS } from './auxiliaryPanelConfig'
 
-// Tailwind Styles for the layout
 const styles = {
     parentGrid: [
         "select-none",
         "grid",
-        "grid-cols-[10fr_90fr]",
-        "grid-rows-[3.125fr_0.025fr_1.75fr_0.025fr_1.75fr]"
+        AUXILIARY_GRID_COLS,
+        AUXILIARY_GRID_ROWS,
     ].join(" "),
 
     arrowContainer: "@container text-center bg-[#FF0000]",
@@ -25,50 +25,57 @@ const styles = {
 }
 
 export const AuxiliaryDisplayPanel = memo(function AuxiliaryDisplayPanel({ monitorStyle, screenTarget }) {
-
     const { routeDetail, currentStopIndex } = useSelector(state => state.routeSelection)
     const { showMindDoorNotice, showHandrailNotice } = useSelector(state => state.userPreference)
 
     const stops = routeDetail?.stops
 
-    const upcomingStops = useMemo(() => [1, 2].map(offset => (
-        <UpcomingStopNameDisplay
-            key={offset}
-            stopZh={stops?.[currentStopIndex + offset]?.zh}
-            stopEn={stops?.[currentStopIndex + offset]?.en}
-        />
-    )), [currentStopIndex, stops])
+    const currentStop = useMemo(() => ({
+        stopZh: stops?.[currentStopIndex]?.zh ?? '',
+        stopEn: stops?.[currentStopIndex]?.en ?? '',
+    }), [currentStopIndex, stops])
+
+    const upcomingStops = useMemo(() => [1, 2].map(offset => ({
+        key: offset,
+        stopZh: stops?.[currentStopIndex + offset]?.zh ?? '',
+        stopEn: stops?.[currentStopIndex + offset]?.en ?? '',
+    })), [currentStopIndex, stops])
+
+    const currentStopContent = (
+        <>
+            <div className={styles.arrowContainer}>
+                <div className={styles.arrowIcon}>
+                    <CurrentStopIndicator />
+                </div>
+            </div>
+            <div className={styles.currentStopContainer}>
+                <CurrentStopNameDisplay
+                    stopZh={currentStop.stopZh}
+                    stopEn={currentStop.stopEn}
+                />
+            </div>
+        </>
+    )
+
+    const upcomingStopsContent = (
+        <>
+            {upcomingStops.map(({ key, stopZh, stopEn }) => (
+                <UpcomingStopNameDisplay
+                    key={key}
+                    stopZh={stopZh}
+                    stopEn={stopEn}
+                />
+            ))}
+        </>
+    )
 
     return (
         <div
             ref={screenTarget}
             className={`${styles.parentGrid} ${monitorStyle}`}
         >
-            {showMindDoorNotice ? (
-                <MindDoorNotice />
-            ) : (
-                <>
-                    <div className={styles.arrowContainer}>
-                        <div className={styles.arrowIcon}>
-                            <CurrentStopIndicator />
-                        </div>
-                    </div>
-                    <div className={styles.currentStopContainer}>
-                        <CurrentStopNameDisplay
-                            stopZh={stops?.[currentStopIndex]?.zh}
-                            stopEn={stops?.[currentStopIndex]?.en}
-                        />
-                    </div>
-                </>
-            )}
-
-            {showHandrailNotice ? (
-                <HoldHandrailNotice />
-            ) : (
-                <>
-                    {upcomingStops}
-                </>
-            )}
+            {showMindDoorNotice ? <MindDoorNotice /> : currentStopContent}
+            {showHandrailNotice ? <HoldHandrailNotice /> : upcomingStopsContent}
         </div>
     )
 })

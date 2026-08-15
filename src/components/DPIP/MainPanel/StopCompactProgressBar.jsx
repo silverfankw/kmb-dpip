@@ -1,8 +1,10 @@
 import "@styles/animation.css"
+import { useMemo } from "react"
 import { useSelector } from "react-redux"
 
-// Tailwind CSS classes for the component
-const styles = {
+const STOP_DISPLAY_OFFSETS = [0, 1, 2]
+
+const progressBarStyles = {
     refContainer: "compact-progress-bar h-full",
     stopNameContainer: "stop-name-container @container w-full h-full relative",
     stopInfoRow: "stopInfoRow flex gap-1 w-full relative top-[33%] mb-[12cqw] items-center justify-center",
@@ -46,10 +48,7 @@ const styles = {
     bulletSecond: "bulletSecond translate-x-[7cqw]",
     bulletThird: "bulletThird translate-x-[11cqw]",
     arrowContainer: "absolute -translate-x-[37.5cqw]",
-
-    arrowBase: [
-        "opacity-0"
-    ].join(" "),
+    arrowBase: "opacity-0",
 
     arrowFirst: [
         "absolute left-0",
@@ -79,7 +78,6 @@ const styles = {
     ].join(" "),
 
     endIndicator: "h-[1.75cqw] border-1 border-solid border-red-600 rounded-[1px]",
-
     endIndicatorContainer: [
         "absolute right-[-4%] top-1/2",
         "-translate-y-1/2",
@@ -88,40 +86,61 @@ const styles = {
     ].join(" ")
 }
 
+const styles = progressBarStyles
+
 export const StopCompactProgressBar = ({ progressBarRef }) => {
     const { routeDetail, currentStopIndex } = useSelector(state => state.routeSelection)
 
+    const stopEntries = useMemo(
+        () => STOP_DISPLAY_OFFSETS.map((offset) => {
+            const stop = routeDetail?.stops?.[currentStopIndex + offset]
+            return {
+                offset,
+                zh: stop?.zh ?? '',
+                en: stop?.en ?? '',
+            }
+        }),
+        [currentStopIndex, routeDetail?.stops]
+    )
+
+    const bulletClasses = useMemo(
+        () => STOP_DISPLAY_OFFSETS.map((idx) => ({
+            key: idx,
+            className: [
+                styles.bullet,
+                idx === 0 ? styles.bulletPulse : idx === 1 ? styles.bulletSecond : styles.bulletThird,
+            ].filter(Boolean).join(' '),
+        })),
+        []
+    )
+
     return (
         <div className={styles.refContainer} ref={progressBarRef}>
-
             <div className={styles.stopNameContainer}>
-                {/* Stop info above progress bar */}
                 <div className={styles.stopInfoRow}>
-                    {[0, 1, 2].map((offset) => {
-                        const stop = routeDetail?.stops?.[currentStopIndex + offset]
-                        return (
-                            <div className={styles.stopInfoCol} key={offset}>
-                                <div
-                                    className={[
-                                        styles.stopZh,
-                                        offset === 0 && styles.stopZhCurrent
-                                    ].filter(Boolean).join(" ")}>
-                                    {stop?.zh}
-                                </div>
-                                <div
-                                    className={[
-                                        styles.stopEn,
-                                        offset === 0 ? styles.stopEnCurrent : styles.stopEnOther
-                                    ].filter(Boolean).join(" ")}>
-                                    {stop?.en}
-                                </div>
+                    {stopEntries.map(({ offset, zh, en }) => (
+                        <div className={styles.stopInfoCol} key={offset}>
+                            <div
+                                className={[
+                                    styles.stopZh,
+                                    offset === 0 && styles.stopZhCurrent,
+                                ].filter(Boolean).join(" ")}
+                            >
+                                {zh}
                             </div>
-                        )
-                    })}
+                            <div
+                                className={[
+                                    styles.stopEn,
+                                    offset === 0 ? styles.stopEnCurrent : styles.stopEnOther,
+                                ].filter(Boolean).join(" ")}
+                            >
+                                {en}
+                            </div>
+                        </div>
+                    ))}
                 </div>
             </div>
 
-            {/* Progress Bar: Arrow, Line and bullet */}
             <div className={styles.progressBar}>
                 <div className={styles.arrowContainer}>
                     <div className={`${styles.arrowBase} ${styles.arrowFirst}`}></div>
@@ -129,16 +148,8 @@ export const StopCompactProgressBar = ({ progressBarRef }) => {
                     <div className={`${styles.arrowBase} ${styles.arrowThird}`}></div>
                 </div>
 
-                {[0, 1, 2].map((idx) => (
-                    <div
-                        key={idx}
-                        className={[
-                            styles.bullet,
-                            idx === 0 ? styles.bulletPulse :
-                                idx === 1 ? styles.bulletSecond :
-                                    styles.bulletThird
-                        ].filter(Boolean).join(" ")}>
-                    </div>
+                {bulletClasses.map(({ key, className }) => (
+                    <div key={key} className={className} />
                 ))}
 
                 <div className={styles.endIndicatorContainer}>
@@ -148,6 +159,5 @@ export const StopCompactProgressBar = ({ progressBarRef }) => {
                 </div>
             </div>
         </div>
-
     )
 }

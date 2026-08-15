@@ -1,7 +1,6 @@
 import '@styles/App.css'
 import { useCallback, useEffect, useLayoutEffect, useRef } from "react"
 import { useSelector } from "react-redux"
-import stringWidth from "string-width"
 import { useToggleDisplay } from "@hooks"
 
 import { LoadingSpinner } from '@components'
@@ -12,18 +11,14 @@ import {
     StopFullProgressBar,
     StopCompactProgressBar
 } from '@components/DPIP'
-
-// --- Constants ---
-const progressBarInterval = 11000
-const stopNameInterval = 4500
-const FIRST_STOP_WELCOME_ZH = "歡迎乘搭九龍巴士"
-const FIRST_STOP_WELCOME_EN = "WELCOME ABOARD"
-const STOP_NAME_ZH_SAFE_WIDTH_RATIO = 0.985
-
-const getStopNameZhBaseFontSize = (text) => {
-    const visualLength = Math.max(stringWidth(text || ""), 1)
-    return Math.max(10.25, Math.min(10.5, 13.5 - (Math.max(visualLength - 6, 0) * 0.3)))
-}
+import {
+    PROGRESS_BAR_INTERVAL,
+    STOP_NAME_INTERVAL,
+    FIRST_STOP_WELCOME_ZH,
+    FIRST_STOP_WELCOME_EN,
+    STOP_NAME_ZH_SAFE_WIDTH_RATIO,
+    getStopNameZhBaseFontSize,
+} from './mainPanelConfig'
 
 // --- Styles outside component ---
 const basestyles = {
@@ -176,8 +171,8 @@ export const MainDisplayPanel = ({ monitorStyle, screenTarget }) => {
     }, [])
 
     // Toggle progress bar and stop name display
-    useToggleDisplay(fullProgressBarRef, compactProgressBarRef, progressBarInterval, [routeDetail?.route, routeDetail?.bound, routeDetail?.service_type])
-    useToggleDisplay(zhStopNameRef, enStopNameRef, stopNameInterval, [routeDetail?.route, routeDetail?.bound, routeDetail?.service_type])
+    useToggleDisplay(fullProgressBarRef, compactProgressBarRef, PROGRESS_BAR_INTERVAL, [routeDetail?.route, routeDetail?.bound, routeDetail?.service_type])
+    useToggleDisplay(zhStopNameRef, enStopNameRef, STOP_NAME_INTERVAL, [routeDetail?.route, routeDetail?.bound, routeDetail?.service_type])
 
     // Reset stop name display when notice toggles change
     useEffect(() => {

@@ -18,32 +18,65 @@ export const ControlPanel = ({ mainScreenTarget, secScreenTarget, uiMode = "nigh
     const userPreference = useSelector(state => state.userPreference)
     const sectionClassName = `${styles.sectionBase} ${uiMode === "light" ? styles.sectionLight : styles.sectionNight}`
 
-    return (
-        <div className={styles.layout}>
-            <section className={sectionClassName}>
-                <NavButtonGroup />
-            </section>
+    const renderSection = (content, key) => (
+        <section key={key} className={sectionClassName}>
+            {content}
+        </section>
+    )
 
-            <div className={styles.utilitySection}>
-                <section className={sectionClassName}>
-                    <ToggleButtonGroup />
-                </section>
+    const utilitySections = [
+        {
+            key: 'toggle-button-group',
+            content: <ToggleButtonGroup />,
+        },
+        {
+            key: 'func-button-group',
+            content: (
+                <FuncButtonGroup
+                    mainScreenTarget={mainScreenTarget}
+                    secScreenTarget={secScreenTarget}
+                />
+            ),
+        },
+    ]
 
-                <section className={sectionClassName}>
-                    <FuncButtonGroup
-                        mainScreenTarget={mainScreenTarget}
-                        secScreenTarget={secScreenTarget}
-                    />
-                </section>
-            </div>
-
-            {userPreference.customizeDriverInfoToggle &&
-                <section className={sectionClassName}>
+    const panelSections = [
+        {
+            key: 'nav-button-group',
+            position: 'single',
+            content: <NavButtonGroup />,
+        },
+        {
+            key: 'utility-section',
+            position: 'group',
+            content: (
+                <div className={styles.utilitySection}>
+                    {utilitySections.map(({ key, content }) =>
+                        renderSection(content, key)
+                    )}
+                </div>
+            ),
+        },
+        ...(userPreference.customizeDriverInfoToggle
+            ? [{
+                key: 'driver-info-section',
+                position: 'single',
+                content: (
                     <div className={styles.driverInfoGrid}>
                         <DriverInfoInputGroup />
                     </div>
-                </section>
-            }
+                ),
+            }]
+            : []),
+    ]
+
+    return (
+        <div className={styles.layout}>
+            {panelSections.map(({ key, position, content }) => (
+                position === 'group'
+                    ? <div key={key}>{content}</div>
+                    : renderSection(content, key)
+            ))}
         </div>
     )
 }

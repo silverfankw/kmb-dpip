@@ -1,6 +1,8 @@
 import { Dialog, DialogContent, DialogActions, Button, Typography, List, ListItem, ListItemText, Divider } from '@mui/material'
 import StarIcon from '@mui/icons-material/Star'
 
+import { versionHistoryDialogConfig } from './sharedComponentConfig'
+
 export const VersionHistoryDialog = ({ open, onConfirm, versionHistory = [] }) => {
     return (
         <Dialog
@@ -21,9 +23,9 @@ export const VersionHistoryDialog = ({ open, onConfirm, versionHistory = [] }) =
         >
             <DialogContent sx={{ maxHeight: { xs: '80vh', sm: '60vh', md: '50vh' }, overflowY: 'auto', pb: 2 }}>
                 <Typography variant="h6" gutterBottom sx={{ color: 'inherit' }}>
-                    版本歷史
+                    {versionHistoryDialogConfig.title}
                 </Typography>
-                <hr/>
+                <hr />
                 {versionHistory.length > 0 ? (
                     <List disablePadding>
                         {versionHistory.map((entry, index) => (
@@ -54,13 +56,13 @@ export const VersionHistoryDialog = ({ open, onConfirm, versionHistory = [] }) =
                     </List>
                 ) : (
                     <Typography variant="body2" color="rgba(255,255,255,0.7)">
-                        No previous history available.
+                        {versionHistoryDialogConfig.empty}
                     </Typography>
                 )}
             </DialogContent>
             <DialogActions sx={{ p: 2, borderTop: '1px solid rgba(255,255,255,0.04)', bgcolor: 'transparent' }}>
                 <Button onClick={onConfirm} color="error" variant="contained">
-                    取消
+                    {versionHistoryDialogConfig.cancel}
                 </Button>
             </DialogActions>
         </Dialog>

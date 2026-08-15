@@ -1,31 +1,20 @@
-import { createSlice } from '@reduxjs/toolkit'
+import { createSelector, createSlice } from '@reduxjs/toolkit'
 import { compareRouteNumbers } from '@utils'
 
-const ROUTE_DATA_URL = 'https://raw.githubusercontent.com/silverfankw/kmb-route-stop/refs/heads/main/kmb_route_stop.json'
+import { routeStoreConfig, buildRouteKey, normalizeValue } from './storeConfig'
 
 let routesLoadPromise = null
 
-const initialState = {
-    routes: [],
-    routesByKey: {},
-    isLoading: false,
-    error: null,
-    isLoaded: false
-}
+const initialState = routeStoreConfig.routeDefaults
 
-const getRouteKey = route => `${route.route}-${route.bound}-${route.service_type}`
-
-const normalizeText = value => (value == null ? '' : String(value))
+const getRouteKey = route => buildRouteKey(route)
+const normalizeText = value => normalizeValue(value)
 
 const normalizeStopDetail = (stopId, stopLookup) => {
-    const stopDetail = stopLookup[stopId]
+    const stopDetail = stopLookup?.[stopId]
 
     if (!stopDetail) {
-        return {
-            id: stopId,
-            zh: stopId,
-            en: stopId,
-        }
+        return { id: stopId, zh: stopId, en: stopId }
     }
 
     return {
@@ -35,47 +24,69 @@ const normalizeStopDetail = (stopId, stopLookup) => {
     }
 }
 
+const normalizeRoute = (route, stopLookup) => {
+    const stopIDs = Array.isArray(route?.stops) ? route.stops : []
+    const normalizedStops = new Array(stopIDs.length)
+
+    for (let i = 0; i < stopIDs.length; i += 1) {
+        normalizedStops[i] = normalizeStopDetail(stopIDs[i], stopLookup)
+    }
+
+    return {
+        route: normalizeText(route.route),
+        bound: normalizeText(route.bound),
+        service_type: normalizeText(route.service_type),
+        orig_tc: normalizeText(route.orig_tc),
+        orig_en: normalizeText(route.orig_en),
+        dest_tc: normalizeText(route.dest_tc),
+        dest_en: normalizeText(route.dest_en),
+        specialRemark: normalizeText(route.special_remark_tc ?? route.special_remark_en ?? route.specialRemark ?? ''),
+        stops: normalizedStops,
+    }
+}
+
 const normalizeRoutes = rawData => {
     const stopLookup = rawData?.stops ?? {}
     const sourceRoutes = Array.isArray(rawData?.routes) ? rawData.routes : []
+    const sortedRoutes = sourceRoutes.slice().sort(compareRouteNumbers)
     const normalizedRoutes = []
     const seenRouteKeys = new Set()
-    const routesByKey = {}
+    const routesByKey = Object.create(null)
 
-    sourceRoutes
-        .slice()
-        .sort(compareRouteNumbers)
-        .forEach(route => {
-            const key = getRouteKey(route)
+    for (let i = 0; i < sortedRoutes.length; i += 1) {
+        const route = sortedRoutes[i]
+        const key = getRouteKey(route)
 
-            if (seenRouteKeys.has(key)) {
-                return
-            }
+        if (seenRouteKeys.has(key)) {
+            continue
+        }
 
-            seenRouteKeys.add(key)
+        seenRouteKeys.add(key)
 
-            const stopIDs = Array.isArray(route.stops) ? route.stops : []
-
-            const normalizedRoute = {
-                route: normalizeText(route.route),
-                bound: normalizeText(route.bound),
-                service_type: normalizeText(route.service_type),
-                orig_tc: normalizeText(route.orig_tc),
-                orig_en: normalizeText(route.orig_en),
-                dest_tc: normalizeText(route.dest_tc),
-                dest_en: normalizeText(route.dest_en),
-                specialRemark: normalizeText(route.special_remark_tc ?? route.special_remark_en ?? route.specialRemark ?? ''),
-                stops: stopIDs.map(stopID => normalizeStopDetail(stopID, stopLookup)),
-            }
-
-            normalizedRoutes.push(normalizedRoute)
-            routesByKey[key] = normalizedRoute
-        })
+        const normalizedRoute = normalizeRoute(route, stopLookup)
+        normalizedRoutes.push(normalizedRoute)
+        routesByKey[key] = normalizedRoute
+    }
 
     return { routes: normalizedRoutes, routesByKey }
 }
 
-export const selectRoutes = state => state.route.routes
+const selectRouteState = state => state.route
+
+export const selectRoutes = createSelector(
+    [selectRouteState],
+    routeState => routeState.routes
+)
+
+export const selectRoutesByKey = createSelector(
+    [selectRouteState],
+    routeState => routeState.routesByKey
+)
+
+export const selectRouteByKey = routeKey => createSelector(
+    [selectRoutesByKey],
+    routesByKey => routesByKey[routeKey] ?? null
+)
 
 export const getRoutesThunk = () => async (dispatch, getState) => {
     if (getState().route.isLoaded) {
@@ -91,7 +102,7 @@ export const getRoutesThunk = () => async (dispatch, getState) => {
 
     routesLoadPromise = (async () => {
         try {
-            const res = await fetch(ROUTE_DATA_URL)
+            const res = await fetch(routeStoreConfig.routeDataUrl)
 
             if (!res.ok) {
                 throw new Error(`HTTP error! status: ${res.status} ${res.statusText}`)
@@ -129,7 +140,7 @@ const routeSlice = createSlice({
         },
         setRouteSpecialRemark: (state, action) => {
             const { route, bound, service_type, specialRemark } = action.payload
-            const routeKey = `${route}-${bound}-${service_type}`
+            const routeKey = buildRouteKey({ route, bound, service_type })
             const targetRoute = state.routesByKey[routeKey] ?? state.routes.find(
                 routeItem =>
                     routeItem.route === route &&

@@ -9,4 +9,19 @@ export const store = configureStore({
         routeSelection: routeSelectionReducer,
         userPreference: userPreferenceReducer,
     },
+    middleware: getDefaultMiddleware => getDefaultMiddleware({
+        serializableCheck: {
+            ignoredPaths: [
+                'route.routes',
+                'route.routesByKey',
+                'routeSelection.routeDetail',
+            ],
+            ignoredActionPaths: [
+                'payload.routes',
+                'payload.routesByKey',
+                'payload.routeDetail',
+            ],
+            warnAfter: 200,
+        },
+    }),
 })

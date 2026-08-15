@@ -76,73 +76,55 @@ export const FuncButtonGroup = ({ mainScreenTarget, secScreenTarget }) => {
         letterSpacing: '0.01em',
     }
 
+    const actionButtons = [
+        {
+            key: 'driver-info',
+            type: 'driver-info',
+            tooltip: driverInfoTooltip,
+            wrapperClassName: groupStyles.item,
+            buttonProps: {
+                fullWidth: true,
+                'aria-label': 'Customize driver info',
+                sx: buttonSx,
+                color: 'ochre',
+                variant: 'contained',
+                startIcon: <BadgeIcon />,
+                onClick: () => {
+                    dispatch(setCustomizeDriverInfoToggle(!customizeDriverInfoToggle))
+                },
+                children: <Typography component="span" sx={buttonLabelSx}>更改車長資料</Typography>,
+            },
+        },
+        ...fullscreenBtnAttr.map(({ key, target, label }) => ({
+            key,
+            type: 'fullscreen',
+            tooltip: !isUserSelectedRoute ? fullscreenTooltip : `${label}：開啟全螢幕`,
+            wrapperClassName: groupStyles.desktopOnly,
+            buttonProps: {
+                fullWidth: true,
+                'aria-label': label,
+                sx: buttonSx,
+                color: 'info',
+                variant: 'contained',
+                disabled: !isUserSelectedRoute,
+                startIcon: <FullscreenIcon />,
+                onClick: () => {
+                    if (isUserSelectedRoute) target.current.requestFullscreen()
+                },
+                children: <Typography component="span" sx={buttonLabelSx}>{label}</Typography>,
+            },
+        })),
+    ]
+
     return (
         <div className={groupStyles.grid}>
-            <Tooltip arrow placement="bottom-start" title={driverInfoTooltip}>
-                <span className={groupStyles.item}>
-                    <Button
-                        fullWidth
-                        aria-label="Customize driver info"
-                        sx={buttonSx}
-                        color="ochre"
-                        variant="contained"
-                        startIcon={<BadgeIcon />}
-                        onClick={() => {
-                            dispatch(
-                                setCustomizeDriverInfoToggle(!customizeDriverInfoToggle)
-                            )
-                        }}
-                    >
-                        <Typography component="span" sx={buttonLabelSx}>更改車長資料</Typography>
-                    </Button>
-                </span>
-            </Tooltip >
-            {/* <Tooltip arrow placement="bottom-start" title={monitorPresetTooltip}>
-                <span className={groupStyles.item}>
-                    <Button
-                        fullWidth
-                        size="large"
-                        aria-label="Toggle monitor layout"
-                        sx={buttonSx}
-                        color="warning"
-                        variant="contained"
-                        startIcon={<AspectRatioIcon />}
-                        onClick={toggleMonitorStyle}
-                        disabled={true}
-                    >
-                        <Typography component="span" sx={buttonLabelSx}>
-                            {mainMonitorStylePreset === 'wide' ? '切回主螢幕標準尺寸' : '切換主螢幕寬螢幕尺寸'}
-                        </Typography>
-                    </Button>
-                </span>
-            </Tooltip> */}
-            {
-                fullscreenBtnAttr.map(({ key, target, label }) => (
-                    <Tooltip
-                        key={key}
-                        arrow
-                        placement="bottom-start"
-                        title={!isUserSelectedRoute ? fullscreenTooltip : `${label}：開啟全螢幕`}
-                    >
-                        <span className={groupStyles.desktopOnly}>
-                            <Button
-                                fullWidth
-                                aria-label={label}
-                                sx={buttonSx}
-                                color="info"
-                                variant="contained"
-                                disabled={!isUserSelectedRoute}
-                                startIcon={<FullscreenIcon />}
-                                onClick={() => {
-                                    if (isUserSelectedRoute) target.current.requestFullscreen()
-                                }}
-                            >
-                                <Typography component="span" sx={buttonLabelSx}>{label}</Typography>
-                            </Button>
-                        </span>
-                    </Tooltip>
-                ))
-            }
+            {actionButtons.map(({ key, tooltip, wrapperClassName, buttonProps }) => (
+                <Tooltip key={key} arrow placement="bottom-start" title={tooltip}>
+                    <span className={wrapperClassName}>
+                        <Button {...buttonProps} />
+                    </span>
+                </Tooltip>
+            ))}
         </div>
     )
 }

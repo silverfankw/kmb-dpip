@@ -1,10 +1,12 @@
-const isEmptyObject = obj => Object.keys(obj).length == 0
+import { routeUtilityConfig } from './routeUtilityConfig'
 
-const debounce = (func, delay = 250) => {
+const isEmptyObject = obj => Object.keys(obj).length === 0
+
+const debounce = (func, delay = routeUtilityConfig.debounceDelayMs) => {
     let timer = null
 
     return function (...args) {
-        let context = this
+        const context = this
 
         clearTimeout(timer)
         timer = setTimeout(() => {
@@ -16,7 +18,7 @@ const debounce = (func, delay = 250) => {
 const getRandomIntInclusive = (min, max) => {
     const minCeiled = Math.ceil(min)
     const maxFloored = Math.floor(max)
-    return Math.floor(Math.random() * (maxFloored - minCeiled + 1) + minCeiled) // The maximum is inclusive and the minimum is inclusive
+    return Math.floor(Math.random() * (maxFloored - minCeiled + 1) + minCeiled)
 }
 
 export { isEmptyObject, debounce, getRandomIntInclusive }

@@ -1,6 +1,12 @@
 import PropTypes from 'prop-types'
 import { MessageText } from './MessageText'
 
+const inputClassName = [
+    'block bg-white text-black text-xs w-full',
+    'rounded-lg border border-gray-500 py-3 pl-3 pr-10',
+    'placeholder:text-gray-400 placeholder:text-xs',
+].join(' ')
+
 export const Input = ({
     id,
     type = "text",
@@ -14,11 +20,7 @@ export const Input = ({
     maxLength,
     onChange,
     onInput,
-    // submitAction
 }) => {
-    // const inputRef = useRef()
-    // const handleSearch = event => { if (event.key === "Enter") submitAction?.(event.target.value) }
-
     return (
         <div>
             {placeholder && (
@@ -31,13 +33,9 @@ export const Input = ({
                 pattern={pattern}
                 minLength={minLength}
                 maxLength={maxLength}
-                className={`block bg-white text-black text-xs w-full 
-                    rounded-lg border border-gray-500 py-3 pl-3 pr-10 
-                    placeholder:text-gray-400 placeholder:text-xs
-                    ${style}`}
+                className={`${inputClassName} ${style}`}
                 onChange={e => onChange?.(e.target.value)}
                 onInput={onInput}
-            // onKeyUp={handleSearch}
             />
             {invalidMessage && !validInput && value.length > 0 && (
                 <MessageText message={invalidMessage} tailwindStyle="text-red-600" />

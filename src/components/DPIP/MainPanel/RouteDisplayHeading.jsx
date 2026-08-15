@@ -1,56 +1,12 @@
 import { useState, useEffect, useRef, useLayoutEffect, useCallback, useMemo } from "react"
 import { useSelector } from "react-redux"
 import { TripleArrow } from "@components"
-
-// Stage durations in ms: [bilingual, chinese-only, english-only]
-const STAGE_DURATIONS = [4500, 4500, 4500]
-const STAGE_INLINE_SAFE_WIDTH_RATIOS = {
-    default: {
-        1: 1,
-        2: 1,
-    },
-    firstStop: {
-        1: 0.8,
-        2: 0.95,
-    }
-}
-
-const getInlineSafeWidthRatio = (stage, isFirstStop) => {
-    const ratioGroup = isFirstStop
-        ? STAGE_INLINE_SAFE_WIDTH_RATIOS.firstStop
-        : STAGE_INLINE_SAFE_WIDTH_RATIOS.default
-
-    return ratioGroup[stage] ?? 1
-}
-
-const STAGE_Y_SCALE_RANGES = {
-    default: {
-        0: { min: 0.8, max: 1 },
-    },
-    firstStop: {
-        1: { min: 0.8, max: 0.92 },
-        2: { min: 0.86, max: 0.94 },
-    }
-}
-
-const getStageScaleYRange = (stage, isFirstStop) => {
-    const ratioGroup = isFirstStop
-        ? STAGE_Y_SCALE_RANGES.firstStop
-        : STAGE_Y_SCALE_RANGES.default
-
-    return ratioGroup?.[stage] ?? { min: 1, max: 1 }
-}
-
-const STAGE_X_SCALE_MAX = {
-    firstStop: {
-        1: 0.92,
-    }
-}
-
-const getStageScaleXMax = (stage, isFirstStop) => {
-    if (!isFirstStop) return 1
-    return STAGE_X_SCALE_MAX.firstStop?.[stage] ?? 1
-}
+import {
+    STAGE_DURATIONS,
+    getInlineSafeWidthRatio,
+    getStageScaleYRange,
+    getStageScaleXMax,
+} from './mainPanelConfig'
 
 
 // Tailwind CSS classes for the component

@@ -1,13 +1,25 @@
-import { createSlice } from '@reduxjs/toolkit'
+import { createSelector, createSlice } from '@reduxjs/toolkit'
 
-const initialState = {
-    stopPressed: false,
-    driverInfo: { nameZh: "九巴仔", nameEn: "KMB Boy", staffNo: "1933" },
-    customizeDriverInfoToggle: false,
-    showMindDoorNotice: false,
-    showHandrailNotice: false,
-    uiMode: "night",
-}
+import { routeStoreConfig } from './storeConfig'
+
+const initialState = routeStoreConfig.userPreferenceDefaults
+
+const selectUserPreference = state => state.userPreference
+
+export const selectUiMode = createSelector([selectUserPreference], userPreference => userPreference.uiMode)
+export const selectIsLightMode = createSelector([selectUiMode], uiMode => uiMode === routeStoreConfig.uiModes.light)
+export const selectNoticeVisibility = createSelector(
+    [selectUserPreference],
+    ({ showMindDoorNotice, showHandrailNotice }) => ({
+        showMindDoorNotice,
+        showHandrailNotice,
+    })
+)
+export const selectDriverInfo = createSelector([selectUserPreference], userPreference => userPreference.driverInfo)
+export const selectCustomizeDriverInfoToggle = createSelector(
+    [selectUserPreference],
+    userPreference => userPreference.customizeDriverInfoToggle
+)
 
 const userPreferenceSlice = createSlice({
     name: 'userPreference',
@@ -33,7 +45,7 @@ const userPreferenceSlice = createSlice({
             state.showMindDoorNotice = action.payload.showMindDoorNotice
         },
         setUiMode(state, action) {
-            state.uiMode = action.payload === "light" ? "light" : "night"
+            state.uiMode = action.payload === routeStoreConfig.uiModes.light ? routeStoreConfig.uiModes.light : routeStoreConfig.uiModes.night
         },
     },
 })

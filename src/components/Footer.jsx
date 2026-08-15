@@ -1,12 +1,12 @@
 import { useState } from "react"
 import { useDispatch } from "react-redux"
-import { Tooltip } from "@mui/material"
 import DarkModeIcon from '@mui/icons-material/DarkMode'
 import LightModeIcon from '@mui/icons-material/LightMode'
 
 import { VersionHistoryDialog } from "@components/VersionHistoryDialog"
 import { versionHistory } from '@utils/versionHistory'
 import { setUiMode } from "@store/userPreferenceSlice"
+import { footerConfig } from './sharedComponentConfig'
 
 const styles = {
     footer: "w-full px-4 pb-4 sm:px-5 lg:px-8 lg:pb-6 max-sm:px-2 max-sm:pb-2",
@@ -55,93 +55,88 @@ export const Footer = ({ uiMode = "night" }) => {
         <>
             <footer className={styles.footer}>
                 <div className={shellClassName}>
-                 <div className="flex flex-col gap-2 sm:items-center">
-                    <p className="select-none">
-                        <a
-                            target="_blank"
-                            rel="noreferrer"
-                            className={`${linkClassName} ${footerTextClassName}`}
-                            href="https://github.com/silverfankw/kmb-dpip"
-                        >
-                            silverfankw/kmb-dpip @ 2026
-                        </a>
-                    </p>
+                    <div className="flex flex-col gap-2 sm:items-center">
+                        <p className="select-none">
+                            <a
+                                target="_blank"
+                                rel="noreferrer"
+                                className={`${linkClassName} ${footerTextClassName}`}
+                                href={footerConfig.repoUrl}
+                            >
+                                {footerConfig.repoLabel}
+                            </a>
+                        </p>
                         <button
                             type="button"
                             className={`${linkClassName} ${footerTextClassName}`}
                             onClick={() => setVersionHistoryOpen(true)}
                         >
-                            版本歷史
+                            {footerConfig.versionHistoryLabel}
                         </button>
-                        </div>
+                    </div>
+
                     <div className="flex flex-col gap-2 sm:items-center">
-                        <Tooltip>
-                            <div className={`${styles.shortcutRow} ${isLightMode ? 'text-slate-600' : 'text-slate-300'}`}>
-                                <span className={footerTextClassName}>鍵盤快捷鍵</span>
-                                <span className={styles.stackedShortcutPair}>
-                                    <span className="flex items-center gap-1">
+                        <div className={`${styles.shortcutRow} ${isLightMode ? 'text-slate-600' : 'text-slate-300'}`}>
+                            <span className={footerTextClassName}>{footerConfig.keyboardShortcutLabel}</span>
+                            <span className={styles.stackedShortcutPair}>
+                                {footerConfig.shortcuts.slice(0, 2).map(({ keys, label }) => (
+                                    <span key={label} className="flex items-center gap-1">
                                         <span className={`${styles.shortcutKey} ${isLightMode ? styles.shortcutKeyLight : styles.shortcutKeyNight}`}>
-                                            ←
+                                            {keys[0]}
                                         </span>
-                                        <span className={footerTextClassName}>上一站</span>
+                                        <span className={footerTextClassName}>{label}</span>
                                     </span>
-                                    <span className="flex items-center gap-1">
+                                ))}
+                            </span>
+                            <span className={styles.stackedShortcutPair}>
+                                {footerConfig.shortcuts.slice(2).map(({ keys, label }) => (
+                                    <span key={label} className="flex items-center gap-1">
                                         <span className={`${styles.shortcutKey} ${isLightMode ? styles.shortcutKeyLight : styles.shortcutKeyNight}`}>
-                                            →
+                                            {keys[0]}
                                         </span>
-                                        <span className={footerTextClassName}>下一站</span>
+                                        <span className={footerTextClassName}>{label}</span>
                                     </span>
-                                </span>
-                                <span className={styles.stackedShortcutPair}>
-                                    <span className="flex items-center gap-1">
-                                        <span className={`${styles.shortcutKey} ${isLightMode ? styles.shortcutKeyLight : styles.shortcutKeyNight}`}>
-                                            END
-                                        </span>
-                                        <span className={footerTextClassName}>轉換路線方向</span>
-                                    </span>
-                                    <span className="flex items-center gap-1">
-                                        <span className={`${styles.shortcutKey} ${isLightMode ? styles.shortcutKeyLight : styles.shortcutKeyNight}`}>
-                                            HOME
-                                        </span>
-                                        <span className={footerTextClassName}>由首站開始</span>
-                                    </span>
-                                </span>
-                            </div>
-                        </Tooltip>
+                                ))}
+                            </span>
+                        </div>
+
                         <p className={`select-none ${footerTextClassName}`}>
-                            建議使用 16:9 螢幕瀏覽以獲得最佳體驗。
-                            本工具為非官方開發之娛樂項目，僅供個人體驗與參考。
+                            {footerConfig.note.split('\n').map((line, index) => (
+                                <span key={line + index} className="block">
+                                    {line}
+                                </span>
+                            ))}
                         </p>
                         <p className={`select-none ${footerTextClassName}`}>
-                            開發者不保證內容之準確性與服務穩定性，亦不對使用本工具所產生之任何損害承擔責任。
+                            {footerConfig.legal}
                         </p>
                     </div>
+
                     <div className={styles.actionRow}>
-                        <Tooltip title={uiMode === "light" ? "切換夜間模式" : "切換日間模式"}>
-                            <button
-                                type="button"
-                                className={modeToggleClassName}
-                                onClick={() => dispatch(setUiMode(uiMode === "light" ? "night" : "light"))}
-                                aria-label={uiMode === "light" ? "切換夜間模式" : "切換日間模式"}
-                            >
-                                <span
-                                    className={styles.modeToggleThumb}
-                                    style={{
-                                        left: isLightMode ? "4px" : "32px",
-                                        backgroundColor: isLightMode ? "rgba(255,255,255,0.98)" : "rgba(15,23,42,0.98)",
-                                        boxShadow: isLightMode
-                                            ? "0 2px 10px rgba(148,163,184,0.35)"
-                                            : "0 2px 12px rgba(2,6,23,0.55)",
-                                    }}
-                                />
-                                <span className={styles.modeToggleIcon} style={{ color: lightIconColor }}>
-                                    <LightModeIcon fontSize="small" />
-                                </span>
-                                <span className={styles.modeToggleIcon} style={{ color: darkIconColor }}>
-                                    <DarkModeIcon fontSize="small" />
-                                </span>
-                            </button>
-                        </Tooltip>
+                        <button
+                            type="button"
+                            className={modeToggleClassName}
+                            onClick={() => dispatch(setUiMode(uiMode === "light" ? "night" : "light"))}
+                            aria-label={uiMode === "light" ? footerConfig.modeToggle.light : footerConfig.modeToggle.night}
+                            title={uiMode === "light" ? footerConfig.modeToggle.light : footerConfig.modeToggle.night}
+                        >
+                            <span
+                                className={styles.modeToggleThumb}
+                                style={{
+                                    left: isLightMode ? "4px" : "32px",
+                                    backgroundColor: isLightMode ? "rgba(255,255,255,0.98)" : "rgba(15,23,42,0.98)",
+                                    boxShadow: isLightMode
+                                        ? "0 2px 10px rgba(148,163,184,0.35)"
+                                        : "0 2px 12px rgba(2,6,23,0.55)",
+                                }}
+                            />
+                            <span className={styles.modeToggleIcon} style={{ color: lightIconColor }}>
+                                <LightModeIcon fontSize="small" />
+                            </span>
+                            <span className={styles.modeToggleIcon} style={{ color: darkIconColor }}>
+                                <DarkModeIcon fontSize="small" />
+                            </span>
+                        </button>
                     </div>
                 </div>
             </footer>

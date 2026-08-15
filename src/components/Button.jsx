@@ -1,16 +1,22 @@
 import PropTypes from 'prop-types'
 
+const baseButtonClassName = [
+    'rounded-lg',
+    'font-medium text-sm text-center text-white',
+    'bg-linear-to-r hover:bg-linear-to-br',
+    'focus:ring-2 focus:outline-hidden',
+    'px-5 py-2.5 mr-2 mb-2',
+].join(' ')
+
 export const Button = ({ style, text, disabled, onClick }) => {
     return (
-        <button className={`rounded-lg 
-            font-medium text-sm text-center text-white 
-            bg-linear-to-r hover:bg-linear-to-br 
-            focus:ring-2 focus:outline-hidden
-         px-5 py-2.5 mr-2 mb-2
-        ${style}`}
+        <button
+            className={`${baseButtonClassName} ${style}`}
             onClick={() => onClick()}
             disabled={disabled}
-        >{text}</button>
+        >
+            {text}
+        </button>
     )
 }
 

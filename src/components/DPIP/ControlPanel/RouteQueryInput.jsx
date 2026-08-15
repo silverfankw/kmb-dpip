@@ -12,6 +12,28 @@ import { useWindowSize, useRouteTypeStyle } from "@hooks"
 import { RouteNumber, RouteDetails } from '@components'
 import { createRouteOption } from "@utils"
 
+const MAX_SEARCH_RESULTS = 50
+
+const buildSearchIndex = (routeOptions) => {
+    const index = new Map([['', routeOptions.slice(0, MAX_SEARCH_RESULTS)]])
+
+    routeOptions.forEach((option) => {
+        const routeNumber = option.detail.route.toUpperCase()
+
+        for (let i = 1; i <= routeNumber.length; i += 1) {
+            const prefix = routeNumber.slice(0, i)
+            const results = index.get(prefix) ?? []
+
+            if (results.length < MAX_SEARCH_RESULTS) {
+                results.push(option)
+                index.set(prefix, results)
+            }
+        }
+    })
+
+    return index
+}
+
 const RouteOptionContent = ({ componentType, data, compact = false, isMobile, getRouteStyle, ...props }) => {
     const {
         routeLabel,
@@ -78,25 +100,7 @@ export const RouteQueryInput = ({ compact = false, label = '', labelClassName = 
         [routes]
     )
 
-    const searchIndex = useMemo(() => {
-        const index = new Map([['', routeOptions.slice(0, 50)]])
-
-        routeOptions.forEach(option => {
-            const routeNumber = option.detail.route.toUpperCase()
-
-            for (let i = 1; i <= routeNumber.length; i += 1) {
-                const prefix = routeNumber.slice(0, i)
-                const results = index.get(prefix) ?? []
-
-                if (results.length < 50) {
-                    results.push(option)
-                    index.set(prefix, results)
-                }
-            }
-        })
-
-        return index
-    }, [routeOptions])
+    const searchIndex = useMemo(() => buildSearchIndex(routeOptions), [routeOptions])
 
     const defaultOptions = useMemo(() => {
         const selectedRouteKey = selectedOption?.detail?.route?.toUpperCase() ?? ''

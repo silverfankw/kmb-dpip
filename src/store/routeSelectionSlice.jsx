@@ -1,26 +1,64 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
+import { createSlice, createAsyncThunk, createSelector } from '@reduxjs/toolkit'
 
-const initialState = {
-    routeDetail: {},
-    currentStopIndex: 0,
-    lastStopIndex: 0,
-    isUserSelectedRoute: false,
-    routeHasTwoBound: false,
-    isLoading: false,
-    loadingError: null
-}
+import { routeStoreConfig, buildRouteSelectionKey } from './storeConfig'
 
-const getSelectedRouteKey = routeDetail => routeDetail
-    ? `${routeDetail.route}-${routeDetail.bound}-${routeDetail.service_type}`
-    : ""
+const initialState = routeStoreConfig.routeSelectionDefaults
+
+const getSelectedRouteKey = routeDetail => buildRouteSelectionKey(routeDetail)
 
 const hasBothBounds = (routes, route) =>
-    routes.some(r => r.bound === "I" && r.route === route) &&
-    routes.some(r => r.bound === "O" && r.route === route)
+    routes.some(r => r.bound === 'I' && r.route === route) &&
+    routes.some(r => r.bound === 'O' && r.route === route)
 
-export const selectIsPrevStopAvailable = state => state.routeSelection.currentStopIndex > 0
+const selectRouteSelection = state => state.routeSelection
+const selectCurrentStopIndex = createSelector(
+    [selectRouteSelection],
+    routeSelection => routeSelection.currentStopIndex
+)
+const selectLastStopIndex = createSelector(
+    [selectRouteSelection],
+    routeSelection => routeSelection.lastStopIndex
+)
+const selectRouteDetail = createSelector(
+    [selectRouteSelection],
+    routeSelection => routeSelection.routeDetail
+)
 
-export const selectIsNextStopAvailable = state => state.routeSelection.currentStopIndex < state.routeSelection.lastStopIndex
+export const selectNavigationState = createSelector(
+    [selectRouteSelection],
+    ({ currentStopIndex, lastStopIndex, routeDetail, isUserSelectedRoute, routeHasTwoBound }) => ({
+        currentStopIndex,
+        lastStopIndex,
+        routeDetail,
+        isUserSelectedRoute,
+        routeHasTwoBound,
+    })
+)
+
+export const selectIsPrevStopAvailable = createSelector(
+    [selectCurrentStopIndex],
+    currentStopIndex => currentStopIndex > 0
+)
+
+export const selectIsNextStopAvailable = createSelector(
+    [selectCurrentStopIndex, selectLastStopIndex],
+    (currentStopIndex, lastStopIndex) => currentStopIndex < lastStopIndex
+)
+
+export const selectIsBoundSwitchable = createSelector(
+    [selectNavigationState],
+    ({ isUserSelectedRoute, routeHasTwoBound, routeDetail }) =>
+        isUserSelectedRoute && (routeHasTwoBound || routeDetail?.service_type == 1)
+)
+
+export const selectCurrentStopMeta = createSelector(
+    [selectRouteDetail, selectCurrentStopIndex],
+    (routeDetail, currentStopIndex) => ({
+        stop: routeDetail?.stops?.[currentStopIndex] ?? null,
+        total: routeDetail?.stops?.length ?? 0,
+        index: currentStopIndex,
+    })
+)
 
 export const selectRouteThunk = createAsyncThunk(
     'routeSelection/selectRoute',
@@ -126,7 +164,7 @@ const routeSelectionSlice = createSlice({
 
             state.routeDetail = {
                 ...state.routeDetail,
-                specialRemark
+                specialRemark,
             }
         },
         setCurrentStopIndex(state, action) {
