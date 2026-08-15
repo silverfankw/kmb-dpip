@@ -1,6 +1,7 @@
 import { useButtonStyles } from "@styles/buttonStyle"
 
 import { useSelector, useDispatch } from 'react-redux'
+import { getAppTextConfig } from '@components/sharedComponentConfig'
 import { setCustomizeDriverInfoToggle } from "@store/userPreferenceSlice"
 
 import { Button, Tooltip, Typography } from '@mui/material'
@@ -11,7 +12,8 @@ import FullscreenIcon from '@mui/icons-material/Fullscreen'
 export const FuncButtonGroup = ({ mainScreenTarget, secScreenTarget }) => {
 
     const { isUserSelectedRoute } = useSelector(state => state.routeSelection)
-    const { customizeDriverInfoToggle } = useSelector(state => state.userPreference)
+    const { customizeDriverInfoToggle, language } = useSelector(state => state.userPreference)
+    const appText = getAppTextConfig(language)
 
     const dispatch = useDispatch()
     const styles = useButtonStyles("info")
@@ -57,23 +59,24 @@ export const FuncButtonGroup = ({ mainScreenTarget, secScreenTarget }) => {
         {
             key: 'main',
             target: mainScreenTarget,
-            label: '主螢幕：全螢幕顯示',
+            label: appText.fullscreenMain,
         },
         {
             key: 'sec',
             target: secScreenTarget,
-            label: '輔螢幕：全螢幕顯示',
+            label: appText.fullscreenSec,
         },
     ]
 
-    const driverInfoTooltip = "自定義車長資料顯示"
-    const fullscreenTooltip = '選擇路線後才能開啟全螢幕顯示功能'
+    const driverInfoTooltip = appText.driverInfoTooltip
+    const fullscreenTooltip = appText.fullscreenTooltip
     const buttonLabelSx = {
         ...styles.buttonLabel,
         lineHeight: 1.2,
         whiteSpace: 'nowrap',
         fontSize: 'clamp(0.72rem, 1.9vw, 1rem)',
         letterSpacing: '0.01em',
+        textTransform: 'none',
     }
 
     const actionButtons = [
@@ -92,13 +95,13 @@ export const FuncButtonGroup = ({ mainScreenTarget, secScreenTarget }) => {
                 onClick: () => {
                     dispatch(setCustomizeDriverInfoToggle(!customizeDriverInfoToggle))
                 },
-                children: <Typography component="span" sx={buttonLabelSx}>更改車長資料</Typography>,
+                children: <Typography component="span" sx={buttonLabelSx}>{appText.customizeDriverInfo}</Typography>,
             },
         },
         ...fullscreenBtnAttr.map(({ key, target, label }) => ({
             key,
             type: 'fullscreen',
-            tooltip: !isUserSelectedRoute ? fullscreenTooltip : `${label}：開啟全螢幕`,
+            tooltip: !isUserSelectedRoute ? fullscreenTooltip : `${label}：${appText.fullscreenLabel}`,
             wrapperClassName: groupStyles.desktopOnly,
             buttonProps: {
                 fullWidth: true,

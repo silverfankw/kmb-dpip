@@ -9,6 +9,7 @@ import { ClipLoader } from "react-spinners"
 import { useSelector, useDispatch } from 'react-redux'
 import { selectRouteThunk } from "@store/routeSelectionSlice"
 import { useWindowSize, useRouteTypeStyle } from "@hooks"
+import { getAppTextConfig } from '@components/sharedComponentConfig'
 import { RouteNumber, RouteDetails } from '@components'
 import { createRouteOption } from "@utils"
 
@@ -83,7 +84,8 @@ export const RouteQueryInput = ({ compact = false, label = '', labelClassName = 
     const dispatch = useDispatch()
     const { routes } = useSelector(state => state.route)
     const { routeDetail } = useSelector(state => state.routeSelection)
-    const { uiMode } = useSelector(state => state.userPreference)
+    const { uiMode, language } = useSelector(state => state.userPreference)
+    const appText = getAppTextConfig(language)
     const isLightMode = uiMode === "light"
 
     const [selectedOption, setSelectedOption] = useState(null)
@@ -195,39 +197,44 @@ export const RouteQueryInput = ({ compact = false, label = '', labelClassName = 
         control: (base, state) => ({
             ...base,
             background: isLightMode
-                ? "linear-gradient(135deg, rgba(255, 255, 255, 0.98), rgba(248, 250, 252, 0.96))"
-                : "linear-gradient(135deg, rgba(30, 41, 59, 0.90), rgba(51, 65, 85, 0.80))",
-            color: isLightMode ? "#0f172a" : "#fff",
+                ? "linear-gradient(180deg, rgba(255, 255, 255, 0.92), rgba(248, 250, 252, 0.94))"
+                : "linear-gradient(180deg, rgba(15, 23, 42, 0.72), rgba(30, 41, 59, 0.78))",
+            color: isLightMode ? "#0f172a" : "#f8fafc",
             boxShadow: state.isFocused
                 ? (isLightMode
-                    ? "0 0 0 2px rgba(14, 165, 233, 0.2), 0 16px 36px rgba(148, 163, 184, 0.22)"
-                    : "0 0 0 2px rgba(56, 189, 248, 0.22), 0 12px 28px rgba(15, 23, 42, 0.22)")
+                    ? "0 0 0 2px rgba(14, 165, 233, 0.12), 0 8px 18px rgba(148, 163, 184, 0.12)"
+                    : "0 0 0 2px rgba(56, 189, 248, 0.12), 0 10px 18px rgba(15, 23, 42, 0.2)")
                 : (isLightMode
-                    ? "0 12px 28px rgba(148, 163, 184, 0.18)"
-                    : "0 10px 24px rgba(15, 23, 42, 0.18)"),
-            height: isMobile ? 46 : 60,
-            minHeight: isMobile ? 46 : 60,
+                    ? "0 6px 16px rgba(148, 163, 184, 0.08)"
+                    : "0 8px 18px rgba(15, 23, 42, 0.12)"),
+            height: isMobile ? 42 : 48,
+            minHeight: isMobile ? 42 : 48,
             border: `1px solid ${state.isFocused
-                ? (isLightMode ? "rgba(14, 165, 233, 0.45)" : "rgba(56, 189, 248, 0.42)")
-                : (isLightMode ? "rgba(148, 163, 184, 0.45)" : "rgba(148, 163, 184, 0.34)")}`,
-            borderRadius: "20px",
-            transition: "border-color 0.18s ease, box-shadow 0.18s ease",
+                ? (isLightMode ? "rgba(14, 165, 233, 0.18)" : "rgba(34, 211, 238, 0.18)")
+                : (isLightMode ? "rgba(148, 163, 184, 0.2)" : "rgba(148, 163, 184, 0.12)")}`,
+            borderRadius: "12px",
+            transition: "all 0.18s ease",
+            paddingLeft: isMobile ? "2px" : "4px",
             "&:hover": {
-                border: `1px solid ${isLightMode ? "rgba(14, 165, 233, 0.35)" : "rgba(34, 211, 238, 0.4)"}`,
+                border: `1px solid ${isLightMode ? "rgba(148, 163, 184, 0.34)" : "rgba(148, 163, 184, 0.24)"}`,
+                boxShadow: isLightMode
+                    ? "0 8px 18px rgba(148, 163, 184, 0.1)"
+                    : "0 10px 18px rgba(15, 23, 42, 0.14)",
             }
         }),
         menu: base => ({
             ...base,
-            backgroundColor: isLightMode ? "rgba(255, 255, 255, 0.995)" : "rgba(30, 41, 59, 0.96)",
-            backdropFilter: "blur(18px)",
-            border: `1px solid ${isLightMode ? "rgba(203, 213, 225, 0.95)" : "rgba(148, 163, 184, 0.22)"}`,
-            borderRadius: "20px",
-            boxShadow: isLightMode ? "0 22px 50px rgba(148, 163, 184, 0.28)" : "0 18px 36px rgba(15, 23, 42, 0.28)",
-            color: isLightMode ? "#0f172a" : "#fff",
+            background: isLightMode
+                ? "linear-gradient(180deg, rgba(255,255,255,0.97), rgba(248,250,252,0.94))"
+                : "linear-gradient(180deg, rgba(15,23,42,0.86), rgba(15,23,42,0.92))",
+            backdropFilter: "blur(14px)",
+            border: `1px solid ${isLightMode ? "rgba(203, 213, 225, 0.82)" : "rgba(148, 163, 184, 0.18)"}`,
+            borderRadius: "14px",
+            boxShadow: isLightMode ? "0 12px 24px rgba(148, 163, 184, 0.12)" : "0 18px 32px rgba(2, 6, 23, 0.28)",
+            color: isLightMode ? "#0f172a" : "#f8fafc",
             zIndex: 99999,
             fontSize: isMobile ? "14px" : base.fontSize,
             overflow: "hidden",
-            transition: "none",
             width: "100%",
         }),
         menuPortal: base => ({
@@ -236,10 +243,10 @@ export const RouteQueryInput = ({ compact = false, label = '', labelClassName = 
         }),
         menuList: base => ({
             ...base,
-            maxHeight: isMobile ? "250px" : "500px",
+            maxHeight: isMobile ? "220px" : "420px",
             overflowX: "hidden",
             overflowY: "auto",
-            padding: "8px",
+            padding: "5px",
             "&::-webkit-scrollbar": {
                 width: "8px",
             },
@@ -248,7 +255,7 @@ export const RouteQueryInput = ({ compact = false, label = '', labelClassName = 
             },
             "&::-webkit-scrollbar-thumb": {
                 background: "rgba(148, 163, 184, 0.35)",
-                borderRadius: "4px",
+                borderRadius: "999px",
                 "&:hover": {
                     background: "rgba(148, 163, 184, 0.5)",
                 },
@@ -258,52 +265,55 @@ export const RouteQueryInput = ({ compact = false, label = '', labelClassName = 
             ...base,
             position: "relative",
             border: state.isSelected
-                ? `1px solid ${isLightMode ? "rgba(14, 165, 233, 0.45)" : "rgba(56, 189, 248, 0.55)"}`
+                ? `1px solid ${isLightMode ? "rgba(14, 165, 233, 0.52)" : "rgba(96, 165, 250, 0.56)"}`
                 : state.isFocused
-                    ? `1px solid ${isLightMode ? "rgba(14, 165, 233, 0.28)" : "rgba(56, 189, 248, 0.35)"}`
+                    ? `1px solid ${isLightMode ? "rgba(148, 163, 184, 0.2)" : "rgba(148, 163, 184, 0.14)"}`
                     : "1px solid transparent",
-            borderRadius: "16px",
+            borderRadius: "10px",
             backgroundColor: state.isSelected
-                ? (isLightMode ? "rgba(14, 165, 233, 0.12)" : "rgba(14, 165, 233, 0.2)")
+                ? (isLightMode ? "linear-gradient(135deg, rgba(224, 242, 254, 0.92), rgba(191, 219, 254, 0.78))" : "linear-gradient(135deg, rgba(30, 64, 175, 0.18), rgba(14, 116, 144, 0.2))")
                 : state.isFocused
-                    ? (isLightMode ? "rgba(248, 250, 252, 0.96)" : "rgba(15, 23, 42, 0.92)")
+                    ? (isLightMode ? "rgba(248, 250, 252, 0.94)" : "rgba(30, 41, 59, 0.8)")
                     : "transparent",
-            color: isLightMode ? "#0f172a" : (state.isSelected ? "#f8fafc" : "#e2e8f0"),
+            color: isLightMode ? "#0f172a" : (state.isSelected ? "#e0f2fe" : "#e2e8f0"),
             cursor: "pointer",
-            margin: 0,
-            padding: "10px 12px",
+            margin: "1px 0",
+            padding: "8px 10px",
             width: "auto",
             whiteSpace: "normal",
             wordWrap: "break-word",
-            transition: "none",
+            transition: "background-color 0.18s ease, border-color 0.18s ease",
             "&:hover": {
-                backgroundColor: isLightMode ? "rgba(186, 230, 253, 0.28)" : "rgba(14, 165, 233, 0.14)",
-                border: `1px solid ${isLightMode ? "rgba(14, 165, 233, 0.4)" : "rgba(56, 189, 248, 0.45)"}`,
-                transform: "translateX(2px)",
+                backgroundColor: isLightMode ? "rgba(186, 230, 253, 0.44)" : "rgba(59, 130, 246, 0.12)",
+                border: `1px solid ${isLightMode ? "rgba(14, 165, 233, 0.36)" : "rgba(96, 165, 250, 0.28)"}`,
             },
             "&:active": {
-                backgroundColor: isLightMode ? "rgba(186, 230, 253, 0.38)" : "rgba(14, 165, 233, 0.22)",
+                backgroundColor: isLightMode ? "rgba(186, 230, 253, 0.58)" : "rgba(59, 130, 246, 0.16)",
             }
         }),
         input: base => ({
             ...base,
-            color: isLightMode ? "#0f172a" : "#fff",
-            fontSize: isMobile ? "16px" : base.fontSize,
+            color: isLightMode ? "#0f172a" : "#f8fafc",
+            fontSize: isMobile ? "15px" : base.fontSize,
             margin: isMobile ? "0 2px" : "0 4px",
+            fontWeight: 500,
         }),
         placeholder: base => ({
             ...base,
-            color: isLightMode ? "rgba(71, 85, 105, 0.78)" : "rgba(203, 213, 225, 0.72)",
+            color: isLightMode ? "rgba(71, 85, 105, 0.72)" : "rgba(203, 213, 225, 0.7)",
             opacity: 1,
+            fontWeight: 500,
         }),
         singleValue: base => ({
             ...base,
-            color: isLightMode ? "#0f172a" : "#fff",
+            color: isLightMode ? "#0f172a" : "#f8fafc",
             margin: isMobile ? "0 2px" : "0 4px",
+            fontWeight: 500,
         }),
         valueContainer: base => ({
             ...base,
             padding: isMobile ? "1px 8px 1px 2px" : "2px 12px 2px 4px",
+            gap: "2px",
         }),
         indicatorsContainer: base => ({
             ...base,
@@ -315,10 +325,10 @@ export const RouteQueryInput = ({ compact = false, label = '', labelClassName = 
             ...base,
             backgroundColor: state.isFocused
                 ? (isLightMode ? "rgba(14, 165, 233, 0.45)" : "rgba(56, 189, 248, 0.42)")
-                : (isLightMode ? "rgba(148, 163, 184, 0.45)" : "rgba(148, 163, 184, 0.24)"),
+                : (isLightMode ? "rgba(148, 163, 184, 0.38)" : "rgba(148, 163, 184, 0.18)"),
             margin: "8px 0",
             width: "1px",
-            transition: "none",
+            transition: "background-color 0.18s ease",
         }),
         dropdownIndicator: (base, state) => ({
             ...base,
@@ -326,7 +336,7 @@ export const RouteQueryInput = ({ compact = false, label = '', labelClassName = 
                 ? (isLightMode ? "#0284c7" : "#67e8f9")
                 : (isLightMode ? "#64748b" : "#94a3b8"),
             padding: "6px",
-            transition: "none",
+            transition: "color 0.18s ease",
             "&:hover": {
                 color: isLightMode ? "#0284c7" : "#67e8f9",
             },
@@ -337,7 +347,7 @@ export const RouteQueryInput = ({ compact = false, label = '', labelClassName = 
                 ? (isLightMode ? "#0284c7" : "#67e8f9")
                 : (isLightMode ? "#64748b" : "#94a3b8"),
             padding: "6px",
-            transition: "none",
+            transition: "color 0.18s ease",
             "&:hover": {
                 color: isLightMode ? "#0284c7" : "#67e8f9",
             },
@@ -347,17 +357,19 @@ export const RouteQueryInput = ({ compact = false, label = '', labelClassName = 
             color: isLightMode ? "rgba(71, 85, 105, 0.82)" : "rgba(203, 213, 225, 0.72)",
             textAlign: "center",
             padding: "12px",
+            fontWeight: 500,
         }),
         loadingMessage: base => ({
             ...base,
             color: isLightMode ? "rgba(71, 85, 105, 0.82)" : "rgba(203, 213, 225, 0.72)",
             textAlign: "center",
             padding: "12px",
+            fontWeight: 500,
         }),
         multiValue: base => ({
             ...base,
             backgroundColor: "rgba(37, 99, 235, 0.15)",
-            borderRadius: "4px",
+            borderRadius: "6px",
         }),
         multiValueLabel: base => ({
             ...base,
@@ -397,7 +409,7 @@ export const RouteQueryInput = ({ compact = false, label = '', labelClassName = 
                 }}>
                     <ClipLoader color="#2563eb" size={25} />
                     <span>{"\u6b63\u5728\u540c\u6b65\u8def\u7dda\u6578\u64da..."}</span>
-                </div> : "\u8f38\u5165\u4e5d\u5df4\u8def\u7dda\u7de8\u865f\u3000Input KMB route."}
+                </div> : "\u8f38\u5165\u4e5d\u5df4\u8def\u7dda\u7de8\u865f\u3000Input KMB route"}
             loadingMessage={() => "\u641c\u5c0b\u8def\u7dda\u4e2d..."}
             isLoading={isRoutesLoading}
             filterOption={null}

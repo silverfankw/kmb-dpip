@@ -17,31 +17,31 @@ export const theme = createTheme({
     },
     palette: {
         darkRed: {
-            main: '#A81919',
-            light: '#EF4444',
-            dark: '#991212',
-            contrastText: '#FFF1F2',
+            main: '#B33B3B',
+            light: '#D96A6A',
+            dark: '#7E2323',
+            contrastText: '#FFF8F8',
         },
         nextGreen: {
-            main: '#089314',
-            light: '#147738',
-            dark: '#077F11',
-            contrastText: '#FFFFFF',
+            main: '#2F9E6F',
+            light: '#61C292',
+            dark: '#1F7A54',
+            contrastText: '#F4FFF9',
         },
         directionPurple: {
-            main: '#822093',
-            light: '#B983D6',
-            dark: '#701C7F',
-            contrastText: '#F3E8FF',
+            main: '#6B4FA2',
+            light: '#8A72BD',
+            dark: '#48396D',
+            contrastText: '#F9F5FF',
         },
         ochre: {
-            main: '#E3D026',
-            light: '#FFF176',
-            dark: '#C4B121',
-            contrastText: '#262A33',
+            main: '#C8B64D',
+            light: '#E2D178',
+            dark: '#A29236',
+            contrastText: '#1E2430',
         },
         snowwhite: {
-            main: "#FFFFFF",
+            main: '#F7F9FC',
         }
     },
 })

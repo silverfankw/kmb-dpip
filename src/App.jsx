@@ -7,6 +7,7 @@ import { useRef, useCallback, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { useKeyboardNavigation, useLocalStorageState} from "@hooks"
 
+import { getAppTextConfig } from '@components/sharedComponentConfig'
 import { getRoutesThunk } from "@store/routeSlice"
 import {
 	changeBoundThunk, selectRouteThunk,
@@ -57,11 +58,11 @@ const styles = {
 		"text-sm sm:text-base max-sm:text-xs",
 		"max-sm:gap-1"
 	].join(" "),
-	querySectionNight: "bg-[#13203a]/72 backdrop-blur-xl border border-slate-400/12 shadow-[0_12px_32px_rgba(8,15,32,0.24)] text-slate-100 hover:shadow-[0_14px_34px_rgba(56,189,248,0.10)]",
-	querySectionLight: "bg-white/92 backdrop-blur-xl border border-slate-200/90 shadow-[0_10px_24px_rgba(148,163,184,0.16)] text-slate-700 hover:shadow-[0_12px_28px_rgba(148,163,184,0.18)]",
-	queryStatusLabel: "max-xl:text-sm max-sm:text-xs font-medium",
-	queryStatusValue: "font-semibold",
-	queryStatusRouteValue: "font-semibold flex items-center min-w-0 w-1/2 basis-1/2 shrink-0 max-xl:w-3/5 max-xl:basis-3/5 max-sm:w-full max-sm:basis-full",
+	querySectionNight: "bg-[linear-gradient(180deg,rgba(15,23,42,0.82),rgba(18,29,46,0.74))] backdrop-blur-xl border border-slate-300/10 shadow-[0_12px_28px_rgba(2,6,23,0.22),inset_0_1px_0_rgba(255,255,255,0.04)] text-slate-100 hover:shadow-[0_14px_30px_rgba(14,165,233,0.06)]",
+	querySectionLight: "bg-[linear-gradient(180deg,rgba(255,255,255,0.98),rgba(248,250,252,0.9))] backdrop-blur-xl border border-slate-200/90 shadow-[0_10px_24px_rgba(148,163,184,0.12),inset_0_1px_0_rgba(255,255,255,0.8)] text-slate-700 hover:shadow-[0_12px_28px_rgba(148,163,184,0.16)]",
+	queryStatusLabel: "max-xl:text-sm max-sm:text-xs font-medium tracking-[0.04em] text-[0.72rem] sm:text-[0.8rem]",
+	queryStatusValue: "font-semibold tracking-[0.02em] leading-tight",
+	queryStatusRouteValue: "font-semibold tracking-[0.02em] leading-tight flex items-center min-w-0 w-1/2 basis-1/2 shrink-0 max-xl:w-3/5 max-xl:basis-3/5 max-sm:w-full max-sm:basis-full",
 	queryStatusRouteInputWrapper: "w-full",
 	controlPanelOrderSection: "order-2 max-sm:order-3 w-full",
 
@@ -73,10 +74,10 @@ const styles = {
 
 	monitorShell: [
 		"rounded-[2rem]",
-		"bg-white/[0.08]",
+		"bg-[linear-gradient(180deg,rgba(15,23,42,0.78),rgba(30,41,59,0.8))]",
 		"p-3 max-sm:p-1",
-		"shadow-[0_18px_48px_rgba(2,6,23,0.28)]",
-		"ring-1 ring-white/10"
+		"shadow-[0_18px_40px_rgba(2,6,23,0.24),inset_0_1px_0_rgba(255,255,255,0.04),inset_0_-1px_0_rgba(15,23,42,0.7)]",
+		"ring-1 ring-slate-300/8"
 	].join(" "),
 
 	monitorStyle: [
@@ -84,10 +85,10 @@ const styles = {
 		"max-xl:w-[700px] max-xl:h-[420px]",
 		"max-md:w-[600px] max-md:h-[360px]",
 		"max-sm:w-[400px] max-sm:h-[240px]",
-		"shadow-[0.5rem_0.5rem_1rem_0.25rem_#23272f]",
-		"border-[.375rem] max-md:border-[.25em] border-solid border-[#23272f]",
+		"shadow-[0_20px_36px_rgba(2,6,23,0.42),0_10px_22px_rgba(15,23,42,0.38)]",
+		"border-[.375rem] max-md:border-[.25em] border-solid border-[rgba(24,31,41,0.96)]",
 		"rounded-xl",
-		"outline outline-[0.875rem] max-sm:outline-[0.625rem] outline-[#000000]",
+		"outline outline-[0.8rem] max-sm:outline-[0.55rem] outline-[rgba(8,11,18,0.98)]",
 		"z-1",
 	].join(" "),
 }
@@ -98,7 +99,8 @@ const App = () => {
 	const { hasStoredData, storedData, saveToLocalStorage, saveToLocalStorageNow } = useLocalStorageState()
 	const { isUserSelectedRoute, loadingError, routeDetail, currentStopIndex } = useSelector(state => state.routeSelection)
 	const { routes } = useSelector(state => state.route)
-	const { uiMode } = useSelector(state => state.userPreference)
+	const { uiMode, language } = useSelector(state => state.userPreference)
+	const appText = getAppTextConfig(language)
 	const isLightMode = uiMode === "light"
 	const totalStops = routeDetail?.stops?.length ?? 0
 	const currentStopSummary = totalStops > 0
@@ -185,16 +187,16 @@ const App = () => {
 					<section className={querySection}>
 						<div className={queryStatusRouteValue}>
 							<div className={styles.queryStatusRouteInputWrapper}>
-								<RouteQueryInput label="路線" labelClassName={queryStatusLabel} />
+								<RouteQueryInput label={appText.routeLabel} labelClassName={queryStatusLabel} />
 							</div>
 						</div>
-						{isUserSelectedRoute && routeDetail?.stops?.[currentStopIndex]?.zh && (
+						{isUserSelectedRoute && routeDetail?.stops?.[currentStopIndex] && (
 							<>
-							<span className={queryStatusLabel}>站數</span>
+							<span className={queryStatusLabel}>{appText.stopCountLabel}</span>
 							<span className={queryStatusValue}>{currentStopSummary}</span>
 									<span className={queryStatusDivider}>|</span>
-									<span className={queryStatusLabel}>本站</span>
-									<span className={queryStatusValue}>{routeDetail.stops[currentStopIndex].zh}</span>
+									<span className={queryStatusLabel}>{appText.currentStopLabel}</span>
+									<span className={queryStatusValue}>{routeDetail.stops[currentStopIndex][language === 'en' ? 'en' : 'zh']}</span>
 							</>
 						)}
 					</section>

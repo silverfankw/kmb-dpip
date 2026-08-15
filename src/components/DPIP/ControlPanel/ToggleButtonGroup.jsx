@@ -1,5 +1,6 @@
 import { useButtonStyles } from "@styles/buttonStyle"
 import { useSelector, useDispatch } from "react-redux"
+import { getAppTextConfig } from '@components/sharedComponentConfig'
 import { setStopPressed, setShowHandrailAndMindDoorNotice } from "@store/userPreferenceSlice"
 import { SwitchButton } from '@components'
 
@@ -10,7 +11,8 @@ import DoorSlidingIcon from '@mui/icons-material/DoorSliding'
 import NotificationsIcon from '@mui/icons-material/Notifications'
 
 export const ToggleButtonGroup = () => {
-    const { stopPressed, showHandrailNotice, showMindDoorNotice } = useSelector(state => state.userPreference)
+    const { stopPressed, showHandrailNotice, showMindDoorNotice, language } = useSelector(state => state.userPreference)
+    const appText = getAppTextConfig(language)
     const dispatch = useDispatch()
 
     const stopButtonStyles = useButtonStyles('darkRed')
@@ -45,8 +47,8 @@ export const ToggleButtonGroup = () => {
             name: 'stop pressed',
             switchSx: stopButtonStyles.switch,
             icon: <NotificationsIcon color="snowwhite" />,
-            label: stopPressed ? '解除按鐘' : '按鐘',
-            labelSx: stopButtonStyles.label,
+            label: stopPressed ? appText.releaseStop : appText.pressStop,
+            labelSx: { ...stopButtonStyles.label, textTransform: 'none' },
             labelWrapper: stopButtonStyles.labelWrapper,
         },
         {
@@ -64,8 +66,8 @@ export const ToggleButtonGroup = () => {
             name: 'handrail notice',
             switchSx: notiStyles.switch,
             icon: <HandshakeIcon />,
-            label: '緊握扶手提示',
-            labelSx: notiStyles.label,
+            label: appText.handrailNotice,
+            labelSx: { ...notiStyles.label, textTransform: 'none' },
             labelWrapper: notiStyles.labelWrapper,
         },
         {
@@ -83,8 +85,8 @@ export const ToggleButtonGroup = () => {
             name: 'mind door notice',
             switchSx: notiStyles.switch,
             icon: <DoorSlidingIcon />,
-            label: '車門關上提示',
-            labelSx: notiStyles.label,
+            label: appText.mindDoorNotice,
+            labelSx: { ...notiStyles.label, textTransform: 'none' },
             labelWrapper: notiStyles.labelWrapper,
         },
     ]

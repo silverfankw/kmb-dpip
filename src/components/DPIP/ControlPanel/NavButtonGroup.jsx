@@ -1,5 +1,6 @@
 import { useMemo, useCallback } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
+import { getAppTextConfig } from '@components/sharedComponentConfig'
 import { useButtonStyles } from '@styles/buttonStyle'
 import {
     changeBoundThunk,
@@ -26,13 +27,13 @@ export const NavButtonGroup = () => {
     const {
         currentStopIndex,
         isUserSelectedRoute,
-        routeDetail,
-        routeHasTwoBound,
     } = useSelector(selectNavigationState)
 
     const isPrevStopAvailable = useSelector(selectIsPrevStopAvailable)
     const isNextStopAvailable = useSelector(selectIsNextStopAvailable)
     const isBoundSwitchable = useSelector(selectIsBoundSwitchable)
+    const { language } = useSelector(state => state.userPreference)
+    const appText = getAppTextConfig(language)
 
     const nextStopBtnStyle = useButtonStyles('nextGreen')
     const prevStopBtnStyle = useButtonStyles('darkRed')
@@ -148,7 +149,7 @@ export const NavButtonGroup = () => {
                         <KeyboardArrowLeftIcon fontSize="small" />
                     </span>
                 ),
-                label: '上一站',
+                label: appText.prevStop,
             },
             {
                 key: 'next-stop',
@@ -162,7 +163,7 @@ export const NavButtonGroup = () => {
                         <KeyboardArrowRightIcon fontSize="small" />
                     </span>
                 ),
-                label: '下一站',
+                label: appText.nextStop,
             },
             {
                 key: 'switch-bound',
@@ -179,7 +180,7 @@ export const NavButtonGroup = () => {
                         END
                     </span>
                 ),
-                label: '切換方向',
+                label: appText.switchDirection,
             },
             {
                 key: 'reset-first-stop',
@@ -196,7 +197,7 @@ export const NavButtonGroup = () => {
                         HOME
                     </span>
                 ),
-                label: '重設至首站',
+                label: appText.resetToFirstStop,
             },
         ]
     }, [
@@ -217,10 +218,14 @@ export const NavButtonGroup = () => {
         prevStopBtnStyle,
         resetStopBtnStyle,
         switchBoundBtnStyle,
+        appText.prevStop,
+        appText.nextStop,
+        appText.switchDirection,
+        appText.resetToFirstStop,
     ])
 
     const styles = {
-        grid: 'grid w-full gap-2 max-sm:gap-4 sm:grid-cols-2 xl:grid-cols-4',
+        grid: 'grid w-full gap-2.5 sm:gap-3 sm:grid-cols-2 xl:grid-cols-4',
         item: 'block w-full',
     }
 

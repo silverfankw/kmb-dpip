@@ -7,6 +7,7 @@ const initialState = routeStoreConfig.userPreferenceDefaults
 const selectUserPreference = state => state.userPreference
 
 export const selectUiMode = createSelector([selectUserPreference], userPreference => userPreference.uiMode)
+export const selectLanguage = createSelector([selectUserPreference], userPreference => userPreference.language)
 export const selectIsLightMode = createSelector([selectUiMode], uiMode => uiMode === routeStoreConfig.uiModes.light)
 export const selectNoticeVisibility = createSelector(
     [selectUserPreference],
@@ -47,6 +48,9 @@ const userPreferenceSlice = createSlice({
         setUiMode(state, action) {
             state.uiMode = action.payload === routeStoreConfig.uiModes.light ? routeStoreConfig.uiModes.light : routeStoreConfig.uiModes.night
         },
+        setLanguage(state, action) {
+            state.language = action.payload === routeStoreConfig.languages.en ? routeStoreConfig.languages.en : routeStoreConfig.languages.zh
+        },
     },
 })
 
@@ -57,7 +61,8 @@ export const {
     setShowMindDoorNotice,
     setShowHandrailNotice,
     setShowHandrailAndMindDoorNotice,
-    setUiMode
+    setUiMode,
+    setLanguage,
 } = userPreferenceSlice.actions
 
 export default userPreferenceSlice.reducer

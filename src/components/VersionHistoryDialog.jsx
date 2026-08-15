@@ -1,9 +1,13 @@
 import { Dialog, DialogContent, DialogActions, Button, Typography, List, ListItem, ListItemText, Divider } from '@mui/material'
 import StarIcon from '@mui/icons-material/Star'
+import { useSelector } from 'react-redux'
 
-import { versionHistoryDialogConfig } from './sharedComponentConfig'
+import { getVersionHistoryDialogConfig } from './sharedComponentConfig'
 
 export const VersionHistoryDialog = ({ open, onConfirm, versionHistory = [] }) => {
+    const { language } = useSelector(state => state.userPreference)
+    const config = getVersionHistoryDialogConfig(language)
+
     return (
         <Dialog
             sx={{ backdropFilter: 'blur(5px) sepia(5%)' }}
@@ -23,7 +27,7 @@ export const VersionHistoryDialog = ({ open, onConfirm, versionHistory = [] }) =
         >
             <DialogContent sx={{ maxHeight: { xs: '80vh', sm: '60vh', md: '50vh' }, overflowY: 'auto', pb: 2 }}>
                 <Typography variant="h6" gutterBottom sx={{ color: 'inherit' }}>
-                    {versionHistoryDialogConfig.title}
+                    {config.title}
                 </Typography>
                 <hr />
                 {versionHistory.length > 0 ? (
@@ -56,13 +60,13 @@ export const VersionHistoryDialog = ({ open, onConfirm, versionHistory = [] }) =
                     </List>
                 ) : (
                     <Typography variant="body2" color="rgba(255,255,255,0.7)">
-                        {versionHistoryDialogConfig.empty}
+                        {config.empty}
                     </Typography>
                 )}
             </DialogContent>
             <DialogActions sx={{ p: 2, borderTop: '1px solid rgba(255,255,255,0.04)', bgcolor: 'transparent' }}>
                 <Button onClick={onConfirm} color="error" variant="contained">
-                    {versionHistoryDialogConfig.cancel}
+                    {config.cancel}
                 </Button>
             </DialogActions>
         </Dialog>

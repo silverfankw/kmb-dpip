@@ -1,17 +1,19 @@
 import { useSelector, useDispatch } from "react-redux"
+import { getAppTextConfig } from '@components/sharedComponentConfig'
 import { setDriverInfo } from "@store/userPreferenceSlice"
 
 import { Input } from "@components"
 
 export const DriverInfoInputGroup = () => {
 
-	const { driverInfo } = useSelector(state => state.userPreference)
+	const { driverInfo, language } = useSelector(state => state.userPreference)
+	const appText = getAppTextConfig(language)
 	const dispatch = useDispatch()
 
 	return (
 		<>
 			<Input
-				placeholder="車長中文姓氏 (最多2字)"
+				placeholder={appText.driverInfoZhPlaceholder}
 				maxLength={2}
 				value={driverInfo?.nameZh}
 				defaultValue={driverInfo?.nameZh}
@@ -21,7 +23,7 @@ export const DriverInfoInputGroup = () => {
 			/>
 			<Input
 				style={"capitalize"}
-				placeholder="車長英文姓氏 (最多10字)"
+				placeholder={appText.driverInfoEnPlaceholder}
 				maxLength={10}
 				value={driverInfo?.nameEn}
 				defaultValue={driverInfo?.nameEn}
@@ -30,7 +32,7 @@ export const DriverInfoInputGroup = () => {
 				}}
 			/>
 
-			<Input placeholder="職員編號 (1位至6位數字)"
+			<Input placeholder={appText.staffNoPlaceholder}
 				type="number"
 				minLength={1}
 				maxLength={6}

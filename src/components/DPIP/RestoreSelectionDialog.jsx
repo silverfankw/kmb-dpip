@@ -1,8 +1,11 @@
 import { Dialog, DialogContent, DialogActions, Button, Typography } from '@mui/material'
-import { restoreSelectionDialogConfig, formatStoredRouteDetails } from './restoreSelectionDialogConfig'
+import { useSelector } from 'react-redux'
+import { restoreSelectionDialogConfig, formatStoredRouteDetails, getRestoreSelectionDialogConfig } from './restoreSelectionDialogConfig'
 
 export const RestoreSelectionDialog = ({ open, onConfirm, onDecline, storedData }) => {
-    const details = formatStoredRouteDetails(storedData)
+    const { language } = useSelector(state => state.userPreference)
+    const config = getRestoreSelectionDialogConfig(language)
+    const details = formatStoredRouteDetails(storedData, language)
 
     return (
         <Dialog
@@ -12,10 +15,10 @@ export const RestoreSelectionDialog = ({ open, onConfirm, onDecline, storedData 
         >
             <DialogContent>
                 <Typography variant="body1">
-                    {restoreSelectionDialogConfig.title}
+                    {config.title}
                 </Typography>
                 <Typography variant="body2" color="text.secondary">
-                    {restoreSelectionDialogConfig.subtitle}
+                    {config.subtitle}
                 </Typography>
                 {storedData && (
                     <>
@@ -29,7 +32,7 @@ export const RestoreSelectionDialog = ({ open, onConfirm, onDecline, storedData 
                         </Typography>
                         <Typography variant="caption">
                             <span>
-                                {restoreSelectionDialogConfig.recordedAtLabel} {new Date(storedData.timestamp)?.toString()}
+                                {config.recordedAtLabel} {new Date(storedData.timestamp)?.toString()}
                             </span>
                         </Typography>
                     </>
@@ -37,10 +40,10 @@ export const RestoreSelectionDialog = ({ open, onConfirm, onDecline, storedData 
             </DialogContent>
             <DialogActions sx={{ p: 2 }}>
                 <Button onClick={onDecline} color="secondary">
-                    {restoreSelectionDialogConfig.cancel}
+                    {config.cancel}
                 </Button>
                 <Button onClick={onConfirm} color="primary" variant="contained">
-                    {restoreSelectionDialogConfig.confirm}
+                    {config.confirm}
                 </Button>
             </DialogActions>
         </Dialog>

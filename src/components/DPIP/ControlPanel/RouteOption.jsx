@@ -1,5 +1,7 @@
 import { useMemo } from "react"
+import { useSelector } from 'react-redux'
 import { useWindowSize, useRouteTypeStyle } from "@hooks"
+import { getAppTextConfig } from '@components/sharedComponentConfig'
 import { toSeparator } from "@utils"
 
 const ItemSeparator = () => (
@@ -14,10 +16,12 @@ const ItemSeparator = () => (
 )
 
 export const RouteNumber = ({ route, isSpecial, componentType, isMobile: isMobileProp, getRouteStyle: getRouteStyleProp }) => {
+    const { language } = useSelector(state => state.userPreference)
     const { isMobile: responsiveIsMobile } = useWindowSize()
     const responsiveRouteStyle = useRouteTypeStyle()
     const isMobile = isMobileProp ?? responsiveIsMobile
     const getRouteStyle = getRouteStyleProp ?? responsiveRouteStyle
+    const appText = getAppTextConfig(language)
 
     const styles = useMemo(() => ({
         routeLabel: {
@@ -51,7 +55,7 @@ export const RouteNumber = ({ route, isSpecial, componentType, isMobile: isMobil
         <div style={styles.routeLabel}>
             <span style={getRouteStyle(route)}>{route}</span>
             {isSpecial && (
-                <span style={styles.specialTrip}>特別班</span>
+                <span style={styles.specialTrip}>{appText.specialTrip}</span>
             )}
         </div>
     )

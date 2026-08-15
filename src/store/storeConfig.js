@@ -17,6 +17,7 @@ export const routeStoreConfig = {
         showMindDoorNotice: false,
         showHandrailNotice: false,
         uiMode: 'night',
+        language: 'zh',
     },
     routeDefaults: {
         routes: [],
@@ -29,6 +30,10 @@ export const routeStoreConfig = {
     uiModes: {
         light: 'light',
         night: 'night',
+    },
+    languages: {
+        zh: 'zh',
+        en: 'en',
     },
 }
 
