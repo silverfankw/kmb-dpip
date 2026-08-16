@@ -15,7 +15,13 @@ const styles = {
     driverInfoGrid: "grid gap-2.5 md:grid-cols-3",
 }
 
-export const ControlPanel = ({ mainScreenTarget, secScreenTarget, uiMode = "night" }) => {
+export const ControlPanel = ({
+    mainScreenTarget,
+    secScreenTarget,
+    isMainMonitorWide,
+    onToggleMainMonitorStyle,
+    uiMode = "night",
+}) => {
     const userPreference = useSelector(state => state.userPreference)
     const sectionClassName = `${styles.sectionBase} ${uiMode === "light" ? styles.sectionLight : styles.sectionNight}`
 
@@ -36,6 +42,8 @@ export const ControlPanel = ({ mainScreenTarget, secScreenTarget, uiMode = "nigh
                 <FuncButtonGroup
                     mainScreenTarget={mainScreenTarget}
                     secScreenTarget={secScreenTarget}
+                    isMainMonitorWide={isMainMonitorWide}
+                    onToggleMainMonitorStyle={onToggleMainMonitorStyle}
                 />
             ),
         },

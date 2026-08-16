@@ -7,9 +7,15 @@ import { setCustomizeDriverInfoToggle } from "@store/userPreferenceSlice"
 import { Button, Tooltip, Typography } from '@mui/material'
 import BadgeIcon from '@mui/icons-material/Badge'
 import FullscreenIcon from '@mui/icons-material/Fullscreen'
+import AspectRatioIcon from '@mui/icons-material/AspectRatio'
 
 
-export const FuncButtonGroup = ({ mainScreenTarget, secScreenTarget }) => {
+export const FuncButtonGroup = ({
+    mainScreenTarget,
+    secScreenTarget,
+    isMainMonitorWide,
+    onToggleMainMonitorStyle,
+}) => {
 
     const { isUserSelectedRoute } = useSelector(state => state.routeSelection)
     const { customizeDriverInfoToggle, language } = useSelector(state => state.userPreference)
@@ -50,7 +56,7 @@ export const FuncButtonGroup = ({ mainScreenTarget, secScreenTarget }) => {
         },
     }
     const groupStyles = {
-        grid: "grid w-full gap-1.5 sm:grid-cols-3 sm:gap-2",
+        grid: "grid w-full gap-1.5 sm:grid-cols-2 xl:grid-cols-4 sm:gap-2",
         item: "block w-full min-w-0",
         desktopOnly: "block w-full min-w-0",
     }
@@ -96,6 +102,22 @@ export const FuncButtonGroup = ({ mainScreenTarget, secScreenTarget }) => {
                     dispatch(setCustomizeDriverInfoToggle(!customizeDriverInfoToggle))
                 },
                 children: <Typography component="span" sx={buttonLabelSx}>{appText.customizeDriverInfo}</Typography>,
+            },
+        },
+        {
+            key: 'main-display-aspect-ratio',
+            tooltip: appText.mainDisplayStyleTooltip,
+            wrapperClassName: groupStyles.item,
+            buttonProps: {
+                fullWidth: true,
+                'aria-label': appText.mainDisplayStyle,
+                'aria-pressed': isMainMonitorWide,
+                sx: buttonSx,
+                color: 'info',
+                variant: 'contained',
+                startIcon: <AspectRatioIcon />,
+                onClick: onToggleMainMonitorStyle,
+                children: <Typography component="span" sx={buttonLabelSx}>{appText.mainDisplayStyle}</Typography>,
             },
         },
         ...fullscreenBtnAttr.map(({ key, target, label }) => ({

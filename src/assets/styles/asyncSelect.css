@@ -1,5 +1,10 @@
 .routeInputSelect__input {
-    text-transform: uppercase;
+    text-transform: none !important;
+    font-family: 'Noto Sans HK', 'Microsoft JhengHei', 'PingFang HK', sans-serif;
+}
+
+.routeInputSelect__input::placeholder {
+    text-transform: none;
 }
 
 @media (max-width: 768px) {

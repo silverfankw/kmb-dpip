@@ -29,6 +29,13 @@ const basestyles = {
         "grid-rows-[0.5fr_1.85fr_0.0375fr_1fr_0.125fr]"
     ].join(" "),
 
+    parentGridWide: [
+        "select-none",
+        "grid",
+        "grid-cols-[0.25fr_1fr]",
+        "grid-rows-[0.5fr_1.85fr_0.125fr]"
+    ].join(" "),
+
     nextStopIndicatorGrid: [
         "@container",
         "col-start-1 col-end-2",
@@ -116,7 +123,7 @@ const basestyles = {
     noticeEnOverrideStyle: "!text-[3.75cqw]"
 }
 
-export const MainDisplayPanel = ({ monitorStyle, screenTarget }) => {
+export const MainDisplayPanel = ({ monitorStyle, screenTarget, isWide = false }) => {
 
     const {
         routeDetail,
@@ -217,9 +224,10 @@ export const MainDisplayPanel = ({ monitorStyle, screenTarget }) => {
     // Compose dynamic classes
     const styles = {
         ...basestyles,
-        parentGrid: `${basestyles.parentGrid} ${monitorStyle}`,
+        parentGrid: `${isWide ? basestyles.parentGridWide : basestyles.parentGrid} ${monitorStyle}`,
         nextStopIndicatorGrid: `${basestyles.nextStopIndicatorGrid} ${stopPressed ? "bg-[#FF0000] text-white" : "bg-[#FFFF00] text-black"}`,
         routeHeadingGrid: `${basestyles.routeHeadingGrid} ${isFirstStop ? basestyles.routeHeadingGridFirstStop : basestyles.routeHeadingGridDefault}`,
+        stopNameGrid: `${basestyles.stopNameGrid} ${isWide ? "hidden" : ""}`,
         driverInfoGrid: `${basestyles.driverInfoGrid} ${stopPressed ? "bg-[#FF0000]" : "bg-black"}`
     }
 

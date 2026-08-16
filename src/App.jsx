@@ -3,7 +3,7 @@ import {
 	ControlPanel, MainDisplayPanel, AuxiliaryDisplayPanel
 } from '@components'
 
-import { useRef, useCallback, useEffect } from 'react'
+import { useRef, useCallback, useEffect, useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { useKeyboardNavigation, useLocalStorageState} from "@hooks"
 
@@ -91,11 +91,23 @@ const styles = {
 		"outline outline-[0.8rem] max-sm:outline-[0.55rem] outline-[rgba(8,11,18,0.98)]",
 		"z-1",
 	].join(" "),
+	mainMonitorWideStyle: [
+		"w-[1200px] h-[400px]",
+		"max-xl:w-[1050px] max-xl:h-[350px]",
+		"max-md:w-[900px] max-md:h-[300px]",
+		"max-sm:w-[480px] max-sm:h-[160px]",
+		"shadow-[0_20px_36px_rgba(2,6,23,0.42),0_10px_22px_rgba(15,23,42,0.38)]",
+		"border-[.375rem] max-md:border-[.25em] border-solid border-[rgba(24,31,41,0.96)]",
+		"rounded-xl",
+		"outline outline-[0.8rem] max-sm:outline-[0.55rem] outline-[rgba(8,11,18,0.98)]",
+		"z-1",
+	].join(" "),
 }
 
 const App = () => {
 
 	const dispatch = useDispatch()
+	const [isMainMonitorWide, setIsMainMonitorWide] = useState(false)
 	const { hasStoredData, storedData, saveToLocalStorage, saveToLocalStorageNow } = useLocalStorageState()
 	const { isUserSelectedRoute, loadingError, routeDetail, currentStopIndex } = useSelector(state => state.routeSelection)
 	const { routes } = useSelector(state => state.route)
@@ -110,6 +122,7 @@ const App = () => {
 	const queryStatusValue = `${styles.queryStatusValue} ${isLightMode ? "text-slate-900" : "text-slate-100"}`
 	const queryStatusRouteValue = `${styles.queryStatusRouteValue} ${isLightMode ? "text-slate-900" : "text-slate-100"}`
 	const queryStatusDivider = `${styles.queryStatusDivider} ${isLightMode ? "text-slate-400" : "text-slate-500"}`
+	const mainMonitorStyle = isMainMonitorWide ? styles.mainMonitorWideStyle : styles.monitorStyle
 
 	// Load route data into Redux once on startup
 	useEffect(() => {
@@ -206,7 +219,9 @@ const App = () => {
 						<ControlPanel
 							uiMode={uiMode}
 							mainScreenTarget={mainScreenTarget}
-							secScreenTarget={secScreenTarget} />
+							secScreenTarget={secScreenTarget}
+							isMainMonitorWide={isMainMonitorWide}
+							onToggleMainMonitorStyle={() => setIsMainMonitorWide(isWide => !isWide)} />
 					</section>
 
 					{/* DPIP main screen with full details */}
@@ -215,7 +230,10 @@ const App = () => {
 							(<ErrorMessage error={loadingError} />) :
 							(<>
 								<div className={styles.monitorShell}>
-									<MainDisplayPanel monitorStyle={styles.monitorStyle} screenTarget={mainScreenTarget} />
+									<MainDisplayPanel
+										monitorStyle={mainMonitorStyle}
+										screenTarget={mainScreenTarget}
+										isWide={isMainMonitorWide} />
 								</div>
 								<div className={styles.monitorShell}>
 									<AuxiliaryDisplayPanel monitorStyle={styles.monitorStyle} screenTarget={secScreenTarget} />
