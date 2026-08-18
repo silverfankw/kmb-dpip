@@ -9,14 +9,13 @@ import {
     UpcomingStopNameDisplay,
     CurrentStopIndicator
 } from '@components'
-import { AUXILIARY_GRID_COLS, AUXILIARY_GRID_ROWS } from './auxiliaryPanelConfig'
 
 const styles = {
     parentGrid: [
         "select-none",
         "grid",
-        AUXILIARY_GRID_COLS,
-        AUXILIARY_GRID_ROWS,
+        "grid-cols-[10fr_90fr]",
+        "grid-rows-[3.125fr_0.025fr_1.75fr_0.025fr_1.75fr]",
     ].join(" "),
 
     arrowContainer: "@container text-center bg-[#FF0000]",

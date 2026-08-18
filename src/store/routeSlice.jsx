@@ -103,6 +103,7 @@ export const getRoutesThunk = () => async (dispatch, getState) => {
     routesLoadPromise = (async () => {
         try {
             const res = await fetch(routeStoreConfig.routeDataUrl)
+            console.log(res)
 
             if (!res.ok) {
                 throw new Error(`HTTP error! status: ${res.status} ${res.statusText}`)

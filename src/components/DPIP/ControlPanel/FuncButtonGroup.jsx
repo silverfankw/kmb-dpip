@@ -109,6 +109,7 @@ export const FuncButtonGroup = ({
             tooltip: appText.mainDisplayStyleTooltip,
             wrapperClassName: groupStyles.item,
             buttonProps: {
+                disabled: true,
                 fullWidth: true,
                 'aria-label': appText.mainDisplayStyle,
                 'aria-pressed': isMainMonitorWide,

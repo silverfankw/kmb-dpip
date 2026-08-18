@@ -9,11 +9,36 @@ import { ClipLoader } from "react-spinners"
 import { useSelector, useDispatch } from 'react-redux'
 import { selectRouteThunk } from "@store/routeSelectionSlice"
 import { useWindowSize, useRouteTypeStyle } from "@hooks"
-import { getAppTextConfig } from '@components/sharedComponentConfig'
 import { RouteNumber, RouteDetails } from '@components'
 import { createRouteOption } from "@utils"
 
 const MAX_SEARCH_RESULTS = 50
+
+const SELECT_THEME = {
+    light: {
+        text: "#0f172a",
+        icon: "#64748b",
+        focusedIcon: "#0284c7",
+        controlBackground: "linear-gradient(180deg, rgba(255, 255, 255, 0.92), rgba(248, 250, 252, 0.94))",
+        menuBackground: "linear-gradient(180deg, rgba(255,255,255,0.97), rgba(248,250,252,0.94))",
+    },
+    night: {
+        text: "#f8fafc",
+        icon: "#94a3b8",
+        focusedIcon: "#67e8f9",
+        controlBackground: "linear-gradient(180deg, rgba(15, 23, 42, 0.72), rgba(30, 41, 59, 0.78))",
+        menuBackground: "linear-gradient(180deg, rgba(15,23,42,0.86), rgba(15,23,42,0.92))",
+    },
+}
+
+const getOptionContentStyle = (isMobile) => ({
+    display: "flex",
+    gap: isMobile ? "2px" : "4px",
+    alignItems: "center",
+    fontSize: isMobile ? "14px" : "18px",
+    fontWeight: 600,
+    minWidth: 0,
+})
 
 const buildSearchIndex = (routeOptions) => {
     const index = new Map([['', routeOptions.slice(0, MAX_SEARCH_RESULTS)]])
@@ -46,14 +71,7 @@ const RouteOptionContent = ({ componentType, data, compact = false, isMobile, ge
 
     const WrappedComponent = componentType === 'Option' ? components.Option : components.SingleValue
 
-    const style = useMemo(() => ({
-        display: "flex",
-        gap: isMobile ? "2px" : "4px",
-        alignItems: "center",
-        fontSize: isMobile ? "14px" : "18px",
-        fontWeight: 600,
-        minWidth: 0,
-    }), [isMobile])
+    const style = getOptionContentStyle(isMobile)
 
     return (
         <WrappedComponent {...props} data={data}>
@@ -84,9 +102,9 @@ export const RouteQueryInput = ({ compact = false, label = '', labelClassName = 
     const dispatch = useDispatch()
     const { routes } = useSelector(state => state.route)
     const { routeDetail } = useSelector(state => state.routeSelection)
-    const { uiMode, language } = useSelector(state => state.userPreference)
-    const appText = getAppTextConfig(language)
+    const { uiMode } = useSelector(state => state.userPreference)
     const isLightMode = uiMode === "light"
+    const selectTheme = isLightMode ? SELECT_THEME.light : SELECT_THEME.night
 
     const [selectedOption, setSelectedOption] = useState(null)
     const isRoutesLoading = !routes || routes.length === 0
@@ -144,8 +162,8 @@ export const RouteQueryInput = ({ compact = false, label = '', labelClassName = 
             <SearchIcon
                 sx={{
                     color: props.isFocused
-                        ? (isLightMode ? "#0284c7" : "#67e8f9")
-                        : (isLightMode ? "#64748b" : "#8fdcff"),
+                        ? selectTheme.focusedIcon
+                        : selectTheme.icon,
                     fontSize: isMobile ? 20 : 24,
                     marginLeft: isMobile ? "10px" : "14px",
                     marginRight: isMobile ? "6px" : "8px",
@@ -166,7 +184,7 @@ export const RouteQueryInput = ({ compact = false, label = '', labelClassName = 
             )}
             {props.children}
         </components.Control>
-    ), [isLightMode, isMobile, label, labelClassName])
+    ), [isMobile, label, labelClassName, selectTheme])
 
     const Option = useCallback(
         props => (
@@ -196,10 +214,8 @@ export const RouteQueryInput = ({ compact = false, label = '', labelClassName = 
     const selectStyles = useMemo(() => ({
         control: (base, state) => ({
             ...base,
-            background: isLightMode
-                ? "linear-gradient(180deg, rgba(255, 255, 255, 0.92), rgba(248, 250, 252, 0.94))"
-                : "linear-gradient(180deg, rgba(15, 23, 42, 0.72), rgba(30, 41, 59, 0.78))",
-            color: isLightMode ? "#0f172a" : "#f8fafc",
+            background: selectTheme.controlBackground,
+            color: selectTheme.text,
             boxShadow: state.isFocused
                 ? (isLightMode
                     ? "0 0 0 2px rgba(14, 165, 233, 0.12), 0 8px 18px rgba(148, 163, 184, 0.12)"
@@ -224,14 +240,12 @@ export const RouteQueryInput = ({ compact = false, label = '', labelClassName = 
         }),
         menu: base => ({
             ...base,
-            background: isLightMode
-                ? "linear-gradient(180deg, rgba(255,255,255,0.97), rgba(248,250,252,0.94))"
-                : "linear-gradient(180deg, rgba(15,23,42,0.86), rgba(15,23,42,0.92))",
+            background: selectTheme.menuBackground,
             backdropFilter: "blur(14px)",
             border: `1px solid ${isLightMode ? "rgba(203, 213, 225, 0.82)" : "rgba(148, 163, 184, 0.18)"}`,
             borderRadius: "14px",
             boxShadow: isLightMode ? "0 12px 24px rgba(148, 163, 184, 0.12)" : "0 18px 32px rgba(2, 6, 23, 0.28)",
-            color: isLightMode ? "#0f172a" : "#f8fafc",
+            color: selectTheme.text,
             zIndex: 99999,
             fontSize: isMobile ? "14px" : base.fontSize,
             overflow: "hidden",
@@ -293,7 +307,7 @@ export const RouteQueryInput = ({ compact = false, label = '', labelClassName = 
         }),
         input: base => ({
             ...base,
-            color: isLightMode ? "#0f172a" : "#f8fafc",
+            color: selectTheme.text,
             fontSize: isMobile ? "15px" : base.fontSize,
             margin: isMobile ? "0 2px" : "0 4px",
             fontWeight: 500,
@@ -306,7 +320,7 @@ export const RouteQueryInput = ({ compact = false, label = '', labelClassName = 
         }),
         singleValue: base => ({
             ...base,
-            color: isLightMode ? "#0f172a" : "#f8fafc",
+            color: selectTheme.text,
             margin: isMobile ? "0 2px" : "0 4px",
             fontWeight: 500,
         }),
@@ -383,7 +397,7 @@ export const RouteQueryInput = ({ compact = false, label = '', labelClassName = 
                 color: "#fff",
             },
         }),
-    }), [isLightMode, isMobile])
+    }), [isLightMode, isMobile, selectTheme])
 
     return (
         <AsyncSelect

@@ -94,7 +94,7 @@ export const appTextConfig = {
         handrailNotice: 'Handrail',
         mindDoorNotice: 'Door-closing',
         customizeDriverInfo: 'Edit driver info',
-        mainDisplayStyle: 'Toggle main display ratio',
+        mainDisplayStyle: 'Toggle display ratio',
         mainDisplayStyleTooltip: 'Switch the main display between 5:3 and 5:2 ratios',
         fullscreenMain: 'Main display: fullscreen',
         fullscreenSec: 'Aux display: fullscreen',

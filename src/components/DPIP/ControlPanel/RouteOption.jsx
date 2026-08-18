@@ -50,10 +50,22 @@ export const RouteNumber = ({ route, isSpecial, componentType, isMobile: isMobil
         }
     }), [isMobile, componentType])
 
+    const routeBadgeStyle = {
+        ...getRouteStyle(route),
+        ...(componentType === 'SingleValue' && {
+            display: 'inline-flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            height: '26px',
+            width: '48px',
+            fontSize: "16px",
+            borderRadius: '4px',
+        }),
+    }
 
     return (
         <div style={styles.routeLabel}>
-            <span style={getRouteStyle(route)}>{route}</span>
+            <span style={routeBadgeStyle}>{route}</span>
             {isSpecial && (
                 <span style={styles.specialTrip}>{appText.specialTrip}</span>
             )}

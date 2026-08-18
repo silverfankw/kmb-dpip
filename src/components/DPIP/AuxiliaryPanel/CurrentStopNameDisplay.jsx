@@ -14,14 +14,13 @@ const styles = {
         "h-[12cqw]",
         "relative top-[3cqw]",
         "flex items-center",
-        "tracking-normal"
+        "tracking-wide"
     ].join(" "),
 
     enStopNameWrapper: [
         "relative top-[17.5%]",
         "flex",
         "items-center",
-        "justify-center",
         "h-[33%]",
         "w-full",
         "leading-tight"

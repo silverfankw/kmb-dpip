@@ -30,6 +30,6 @@ export default defineConfig({
     tailwindcss(),
     svgr()],
   server: {
-    open: true
+    open: true,
   }
 })

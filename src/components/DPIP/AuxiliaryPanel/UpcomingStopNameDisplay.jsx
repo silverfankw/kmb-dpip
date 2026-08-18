@@ -1,10 +1,9 @@
-import { useWindowSize } from '@hooks/useWindowSize'
 import { getUpcomingStopNameStyle } from './auxiliaryPanelConfig'
 
 const styles = {
     divider: [
         "col-start-1",
-        "col-end-5",
+        "col-end-3",
         "bg-[#f7f6f6c5]"
     ].join(" "),
 
@@ -25,36 +24,31 @@ const styles = {
         "@container",
         "relative",
         "flex flex-col",
+        "h-full self-stretch",
         "bg-white",
         "text-black",
     ].join(" "),
 
     stopNameContent: [
         "@container",
-        "relative left-[1.25%]",
-        "flex flex-col justify-center",
-        "h-[92.5%]",
+        "h-full w-full pl-[1.25%]",
+        "flex flex-col gap-0.5 justify-between",
         "whitespace-nowrap",
         "leading-tight"
     ].join(" "),
 
     zhStopName: [
         "relative",
-        "justify-center",
-        "max-md:top-[0.25cqw]",
-        "tracking-tight",
-        "leading-snug"
+        "tracking-[0.0125rem]",
+        "tracking-wide",
     ].join(" "),
 
     enStopName: [
-        "justify-center",
-        "text-[4.25cqw]",
-        "tracking-tighter",
+        "text-[4.625cqw] mb-[0.5cqw]",
     ].join(" ")
 }
 
 export const UpcomingStopNameDisplay = ({ stopZh = "", stopEn = "" }) => {
-    const { width } = useWindowSize()
 
     return (
         <>
@@ -74,7 +68,7 @@ export const UpcomingStopNameDisplay = ({ stopZh = "", stopEn = "" }) => {
                     </div>
                     <span
                         className={styles.enStopName}
-                        style={getUpcomingStopNameStyle(stopEn, "en", width)}
+                        style={getUpcomingStopNameStyle(stopEn, "en")}
                     >
                         {stopEn}
                     </span>
