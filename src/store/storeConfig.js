@@ -1,7 +1,6 @@
 export const routeStoreConfig = {
     routeKeySeparator: '-',
-    // routeDataUrl: 'https://raw.githubusercontent.com/silverfankw/kmb-route-stop/refs/heads/main/kmb_route_stop.json',
-    routeDataUrl: "https://cdn.jsdelivr.net/gh/silverfankw/kmb-route-stop@v2026.08.16/kmb_route_stop.json",
+    routeDataUrl: 'https://raw.githubusercontent.com/silverfankw/kmb-route-stop/refs/heads/main/kmb_route_stop.json',
     routeSelectionDefaults: {
         routeDetail: {},
         currentStopIndex: 0,

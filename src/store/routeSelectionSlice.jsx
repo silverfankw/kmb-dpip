@@ -8,7 +8,8 @@ const getSelectedRouteKey = routeDetail => buildRouteSelectionKey(routeDetail)
 
 const hasBothBounds = (routes, route) =>
     routes.some(r => r.bound === 'I' && r.route === route) &&
-    routes.some(r => r.bound === 'O' && r.route === route)
+    routes.some(r => r.bound === 'O' && r.route === route) &&
+    route.service_type === '1'
 
 const selectRouteSelection = state => state.routeSelection
 const selectCurrentStopIndex = createSelector(

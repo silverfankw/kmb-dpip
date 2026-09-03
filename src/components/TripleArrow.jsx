@@ -1,7 +1,7 @@
 const arrowTransforms = [
-    'translate(-714.021 -20.258)',
+    'translate(-719.021 -20.258)',
     'translate(-664.073 -19.578)',
-    'translate(-613.467 -18.898)',
+    'translate(-609.467 -18.898)',
 ]
 
 const arrowRectProps = {

@@ -8,7 +8,6 @@ import {
     getStageScaleXMax,
 } from './mainPanelConfig'
 
-
 // Tailwind CSS classes for the component
 const styles = {
     routeMarkerContainer: [
@@ -21,21 +20,19 @@ const styles = {
     ].join(" "),
 
     routeMarkerZh: [
-        "text-[3.5cqw]",
-        "tracking-tighter",
+        "text-[3.75cqw] max-sm:text-[4cqw]",
     ].join(" "),
 
     routeMarkerEn: [
-        "text-[3.25cqw]",
-        "tracking-tighter",
+        "text-[3.25cqw] max-sm:text-[3.5cqw]",
         "leading-none",
     ].join(" "),
 
     routeNumber: [
-        "basis-[17.5%]",
-        "text-[6.5cqw] max-sm:text-[6cqw]",
-        "text-center",
-        "scale-y-115 max-sm:scale-y-120",
+        "basis-[17.5%] pl-1 max-sm:pl-0",
+        "text-[7.5cqw]",
+        "text-center tracking-wide",
+        "scale-y-120 max-sm:scale-y-120",
     ].join(" "),
 
     routeNumberInline: [
@@ -58,12 +55,21 @@ const styles = {
         "max-sm:tracking-tight",
     ].join(" "),
 
+    routeNumberInlineFirstStopStage2: [
+        "text-[5cqw]",
+        "text-center",
+        "scale-y-110",
+        "shrink-0",
+        "self-center",
+        "ml-1 mr-1",
+        "max-sm:tracking-tight",
+    ].join(" "),
+
     arrowContainer: [
-        "flex",
-        "items-center",
-        "basis-[12%]",
-        "max-xl:basis-[4rem]",
-        "max-sm:basis-[2.5rem]",
+        "flex items-center pt-1 max-sm:pt-0.5",
+        "basis-[23.5%]",
+        "max-xl:basis-[5.75rem]",
+        "max-sm:basis-[4rem]",
         "justify-center"
     ].join(" "),
 
@@ -102,22 +108,24 @@ const styles = {
     ].join(" "),
 
     destContainer: [
-        "flex flex-col",
-        "mr-0.5",
+        "flex flex-col ",
+        "w-full",
+        "gap-0.5 mr-0.5 pt-1",
         "whitespace-nowrap",
         "overflow-hidden",
         "text-ellipsis",
     ].join(" "),
 
     destZh: [
-        "whitespace-nowrap",
-        "text-[4.375cqw] max-md:text-[4.375cqw] max-sm:text-[4.75cqw]",
-        "max-sm:tracking-normal",
+        "whitespace-nowrap leading-none",
+        "text-[5cqw] max-md:text-[4.375cqw] max-sm:text-[4.75cqw]",
+        "tracking-wide",
+        "scale-x-105 origin-left",
     ].join(" "),
 
     destEn: [
-        "mb-[2px]",
-        "text-[2.625cqw] max-sm:text-[2.75cqw]",
+        "text-[3.25cqw] max-sm:text-[3cqw]",
+        "scale-x-105 origin-left",
         "leading-tight",
     ].join(" "),
 
@@ -158,7 +166,7 @@ const styles = {
     ].join(" "),
 }
 
-export const RouteDisplayHeading = () => {
+export const RouteDisplayHeading = ({ onStageChange }) => {
 
     const { routeDetail, lastStopIndex, currentStopIndex } = useSelector(state => state.routeSelection)
     const [stage, setStage] = useState(0)
@@ -166,11 +174,16 @@ export const RouteDisplayHeading = () => {
     const stageWrapperRef = useRef(null)
     const isFirstStop = routeDetail?.stops?.length > 0 && currentStopIndex === 0
     const isFirstStopStage1 = isFirstStop && stage === 1
+    const isFirstStopStage2 = isFirstStop && stage === 2
     const stageSequence = useMemo(() => isFirstStop ? [1, 2] : [0, 1, 2], [isFirstStop])
 
     useEffect(() => {
         setStage(isFirstStop ? 1 : 0)
     }, [isFirstStop, routeDetail?.route, routeDetail?.bound, routeDetail?.service_type])
+
+    useEffect(() => {
+        onStageChange?.(stage)
+    }, [onStageChange, stage])
 
     useEffect(() => {
         const t = setTimeout(() => {
@@ -261,10 +274,14 @@ export const RouteDisplayHeading = () => {
     }, [isFirstStop, isFirstStopStage1, stage])
 
     useLayoutEffect(() => {
+        if (stage == 0) { return }
+
         applyScale()
     }, [stage, zh, en, route, applyScale])
 
     useEffect(() => {
+        if (stage == 0) { return }
+
         const container = stageWrapperRef.current?.parentElement ?? stageRef.current?.parentElement
         if (!container) return
         const ro = new ResizeObserver(applyScale)
@@ -275,7 +292,7 @@ export const RouteDisplayHeading = () => {
     return (
         <>
             {stage === 0 && (
-                <div ref={stageRef} className="flex-1 min-w-0 flex items-center gap-1">
+                <div ref={stageRef} className="flex-1 min-w-0 flex items-center gap-1.5">
                     <div className={styles.routeMarkerContainer}>
                         <div className={styles.routeMarkerZh}>路線</div>
                         <div className={styles.routeMarkerEn}>Route</div>
@@ -306,7 +323,7 @@ export const RouteDisplayHeading = () => {
                             {stage === 2 && (
                                 <>
                                     <div className={styles.markerEnInline}>Route</div>
-                                    <div className={styles.routeNumberInline}>{route}</div>
+                                    <div className={isFirstStopStage2 ? styles.routeNumberInlineFirstStopStage2 : styles.routeNumberInline}>{route}</div>
                                     <div className={styles.arrowContainerInline}><TripleArrow /></div>
                                     <div className={styles.destEnInline}>{en}</div>
                                 </>

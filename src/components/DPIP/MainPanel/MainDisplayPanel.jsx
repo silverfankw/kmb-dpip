@@ -1,5 +1,5 @@
 import '@styles/App.css'
-import { useCallback, useEffect, useLayoutEffect, useRef } from "react"
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react"
 import { useSelector } from "react-redux"
 import { useToggleDisplay } from "@hooks"
 
@@ -36,9 +36,15 @@ const basestyles = {
         "grid-rows-[0.5fr_1.85fr_0.125fr]"
     ].join(" "),
 
+    parentGridStageZero: [
+        "select-none",
+        "grid",
+        "grid-cols-[1fr_2fr]",
+        "grid-rows-[0.5fr_1.85fr_0.0375fr_1fr_0.125fr]"
+    ].join(" "),
+
     nextStopIndicatorGrid: [
         "@container",
-        "col-start-1 col-end-2",
         "h-full",
         "flex flex-col gap-2 max-sm:gap-1 items-center justify-center",
         "text-center",
@@ -53,10 +59,18 @@ const basestyles = {
         "text-[10cqw]",
     ].join(" "),
 
+    nextStopIndicatorZhStageZero: [
+        "text-[10cqw]",
+    ].join(" "),
+
+    nextStopIndicatorEnStageZero: [
+        "text-[6cqw]",
+    ].join(" "),
+
     routeHeadingGrid: [
         "@container",
         "flex items-center gap-1",
-        "pl-0.5",
+        "pl-1",
         "bg-black text-white"
     ].join(" "),
 
@@ -112,8 +126,7 @@ const basestyles = {
     ].join(" "),
 
     driverInfoText: [
-        "text-[2.05cqw]",
-        "max-sm:text-[2.15cqw]"
+        "text-[2cqw] max-sm:text-[2.25cqw]",
     ].join(" "),
 
     capitalize: "capitalize",
@@ -139,6 +152,8 @@ export const MainDisplayPanel = ({ monitorStyle, screenTarget, isWide = false })
     } = useSelector(state => state.userPreference)
 
     const isFirstStop = routeDetail?.stops?.length > 0 && currentStopIndex === 0
+    const [routeHeadingStage, setRouteHeadingStage] = useState(0)
+    const isStageZeroWithNextStop = !isFirstStop && routeHeadingStage === 0
     const stopNameZh = isFirstStop
         ? FIRST_STOP_WELCOME_ZH
         : routeDetail?.stops?.[currentStopIndex]?.zh
@@ -178,7 +193,8 @@ export const MainDisplayPanel = ({ monitorStyle, screenTarget, isWide = false })
     }, [])
 
     // Toggle progress bar and stop name display
-    useToggleDisplay(fullProgressBarRef, compactProgressBarRef, PROGRESS_BAR_INTERVAL, [routeDetail?.route, routeDetail?.bound, routeDetail?.service_type])
+    // useToggleDisplay(fullProgressBarRef, compactProgressBarRef, PROGRESS_BAR_INTERVAL, [routeDetail?.route, routeDetail?.bound, routeDetail?.service_type])
+    useToggleDisplay(compactProgressBarRef, fullProgressBarRef, PROGRESS_BAR_INTERVAL, [routeDetail?.route, routeDetail?.bound, routeDetail?.service_type])
     useToggleDisplay(zhStopNameRef, enStopNameRef, STOP_NAME_INTERVAL, [routeDetail?.route, routeDetail?.bound, routeDetail?.service_type])
 
     // Reset stop name display when notice toggles change
@@ -224,8 +240,10 @@ export const MainDisplayPanel = ({ monitorStyle, screenTarget, isWide = false })
     // Compose dynamic classes
     const styles = {
         ...basestyles,
-        parentGrid: `${isWide ? basestyles.parentGridWide : basestyles.parentGrid} ${monitorStyle}`,
-        nextStopIndicatorGrid: `${basestyles.nextStopIndicatorGrid} ${stopPressed ? "bg-[#FF0000] text-white" : "bg-[#FFFF00] text-black"}`,
+        parentGrid: `${isWide ? basestyles.parentGridWide : isStageZeroWithNextStop ? basestyles.parentGridStageZero : basestyles.parentGrid} ${monitorStyle}`,
+        nextStopIndicatorGrid: `${basestyles.nextStopIndicatorGrid} ${isStageZeroWithNextStop ? "" : "col-start-1 col-end-2"} ${stopPressed ? "bg-[#FF0000] text-white" : "bg-[#FFFF00] text-black"}`,
+        nextStopIndicatorZh: isStageZeroWithNextStop ? basestyles.nextStopIndicatorZhStageZero : basestyles.nextStopIndicatorZh,
+        nextStopIndicatorEn: isStageZeroWithNextStop ? basestyles.nextStopIndicatorEnStageZero : basestyles.nextStopIndicatorEn,
         routeHeadingGrid: `${basestyles.routeHeadingGrid} ${isFirstStop ? basestyles.routeHeadingGridFirstStop : basestyles.routeHeadingGridDefault}`,
         stopNameGrid: `${basestyles.stopNameGrid} ${isWide ? "hidden" : ""}`,
         driverInfoGrid: `${basestyles.driverInfoGrid} ${stopPressed ? "bg-[#FF0000]" : "bg-black"}`
@@ -247,7 +265,7 @@ export const MainDisplayPanel = ({ monitorStyle, screenTarget, isWide = false })
 
             {/* Route Number & Destination */}
             <div className={styles.routeHeadingGrid}>
-                <RouteDisplayHeading />
+                <RouteDisplayHeading onStageChange={setRouteHeadingStage} />
             </div>
 
             {/* Progress Bar (only if stops exist) */}
