@@ -11,7 +11,8 @@ import { getAppTextConfig } from '@components/sharedComponentConfig'
 import { getRoutesThunk } from "@store/routeSlice"
 import {
 	changeBoundThunk, selectRouteThunk,
-	setCurrentStopIndex, toPrevStop, toNextStop
+	setCurrentStopIndex, toPrevStop, toNextStop,
+	selectIsBoundSwitchable,
 } from '@store/routeSelectionSlice'
 
 const buildStoredSelection = (routeDetail, currentStopIndex, includeTimestamp = false) => {
@@ -112,6 +113,7 @@ const App = () => {
 	const { isUserSelectedRoute, loadingError, routeDetail, currentStopIndex } = useSelector(state => state.routeSelection)
 	const { routes } = useSelector(state => state.route)
 	const { uiMode, language } = useSelector(state => state.userPreference)
+	const isBoundSwitchable = useSelector(selectIsBoundSwitchable)
 	const appText = getAppTextConfig(language)
 	const isLightMode = uiMode === "light"
 	const totalStops = routeDetail?.stops?.length ?? 0
@@ -182,7 +184,7 @@ const App = () => {
 		onPrev: () => dispatch(toPrevStop()),
 		onNext: () => dispatch(toNextStop()),
 		onHome: () => dispatch(setCurrentStopIndex(0)),
-		onEnd: () => dispatch(changeBoundThunk()),
+		onEnd: isBoundSwitchable ? () => dispatch(changeBoundThunk()) : undefined,
 		isUserSelectedRoute,
 		debounceMs: 100,
 		isDisabled: false,

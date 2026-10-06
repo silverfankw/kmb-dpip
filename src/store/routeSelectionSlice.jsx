@@ -6,10 +6,16 @@ const initialState = routeStoreConfig.routeSelectionDefaults
 
 const getSelectedRouteKey = routeDetail => buildRouteSelectionKey(routeDetail)
 
-const hasBothBounds = (routes, route) =>
-    routes.some(r => r.bound === 'I' && r.route === route) &&
-    routes.some(r => r.bound === 'O' && r.route === route) &&
-    route.service_type === '1'
+const hasOppositeBound = (routes, { route, bound, service_type }) => {
+    const oppositeBound = bound === 'I' ? 'O' : bound === 'O' ? 'I' : null
+    if (!oppositeBound) return false
+
+    return routes.some(item =>
+        item.route === route &&
+        item.bound === oppositeBound &&
+        item.service_type === service_type
+    )
+}
 
 const selectRouteSelection = state => state.routeSelection
 const selectCurrentStopIndex = createSelector(
@@ -48,8 +54,8 @@ export const selectIsNextStopAvailable = createSelector(
 
 export const selectIsBoundSwitchable = createSelector(
     [selectNavigationState],
-    ({ isUserSelectedRoute, routeHasTwoBound, routeDetail }) =>
-        isUserSelectedRoute && (routeHasTwoBound || routeDetail?.service_type == 1)
+    ({ isUserSelectedRoute, routeHasTwoBound }) =>
+        isUserSelectedRoute && routeHasTwoBound
 )
 
 export const selectCurrentStopMeta = createSelector(
@@ -67,7 +73,7 @@ export const selectRouteThunk = createAsyncThunk(
         const requestedRouteKey = getSelectedRouteKey(routeDetail)
         const currentSelection = getState().routeSelection
         const currentRouteKey = getSelectedRouteKey(currentSelection.routeDetail)
-        const hasTwoBound = hasBothBounds(routes, routeDetail.route)
+        const hasTwoBound = hasOppositeBound(routes, routeDetail)
         const routeState = getState().route
         const selectedRoute = routeState.routesByKey?.[requestedRouteKey] ?? routes.find(
             route => getSelectedRouteKey(route) === requestedRouteKey
@@ -121,7 +127,7 @@ export const changeBoundThunk = createAsyncThunk(
 
         if (
             isUserSelectedRoute &&
-            (routeHasTwoBound || routeDetail?.service_type === "1")
+            routeHasTwoBound
         ) {
             const { bound, orig_tc, dest_tc, orig_en, dest_en } = routeDetail
             const newBound = bound === "I" ? "O" : "I"

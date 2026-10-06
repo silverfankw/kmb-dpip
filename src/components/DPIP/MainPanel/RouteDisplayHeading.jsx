@@ -3,10 +3,13 @@ import { useSelector } from "react-redux"
 import { TripleArrow } from "@components"
 import {
     STAGE_DURATIONS,
+    getStageZeroDestEnMaxScaleX,
     getInlineSafeWidthRatio,
     getStageScaleYRange,
     getStageScaleXMax,
 } from './mainPanelConfig'
+
+const STAGE_ZERO_DEST_EN_MIN_FONT_SCALE = 0.95
 
 // Tailwind CSS classes for the component
 const styles = {
@@ -124,9 +127,15 @@ const styles = {
     ].join(" "),
 
     destEn: [
+        "block",
         "text-[3.25cqw] max-sm:text-[3cqw]",
-        "scale-x-105 origin-left",
         "leading-tight",
+    ].join(" "),
+
+    destEnText: [
+        "inline-block",
+        "whitespace-nowrap",
+        "origin-left leading-tight",
     ].join(" "),
 
     // Inline (single-language) variants
@@ -172,6 +181,8 @@ export const RouteDisplayHeading = ({ onStageChange }) => {
     const [stage, setStage] = useState(0)
     const stageRef = useRef(null)
     const stageWrapperRef = useRef(null)
+    const destEnContainerRef = useRef(null)
+    const destEnTextRef = useRef(null)
     const isFirstStop = routeDetail?.stops?.length > 0 && currentStopIndex === 0
     const isFirstStopStage1 = isFirstStop && stage === 1
     const isFirstStopStage2 = isFirstStop && stage === 2
@@ -199,6 +210,30 @@ export const RouteDisplayHeading = ({ onStageChange }) => {
     const zh = routeDetail?.stops?.[lastStopIndex]?.zh
     const en = routeDetail?.stops?.[lastStopIndex]?.en
     const route = routeDetail.route
+
+    const applyStageZeroDestEnScale = useCallback(() => {
+        const container = destEnContainerRef.current
+        const text = destEnTextRef.current
+        if (!container || !text || !container.clientWidth) return
+
+        text.style.transform = ""
+
+        const textWidth = Math.max(
+            text.scrollWidth,
+            text.getBoundingClientRect().width
+        )
+        if (!textWidth) return
+
+        const fitScale = container.clientWidth / textWidth
+        const fontScale = fitScale < STAGE_ZERO_DEST_EN_MIN_FONT_SCALE
+            ? STAGE_ZERO_DEST_EN_MIN_FONT_SCALE
+            : 1
+        const scaleX = fitScale > 1
+            ? Math.min(fitScale, getStageZeroDestEnMaxScaleX(en))
+            : fitScale / fontScale
+
+        text.style.transform = `scale(${fontScale}) scaleX(${scaleX})`
+    }, [en])
 
     const applyScale = useCallback(() => {
         const el = stageRef.current
@@ -279,6 +314,12 @@ export const RouteDisplayHeading = ({ onStageChange }) => {
         applyScale()
     }, [stage, zh, en, route, applyScale])
 
+    useLayoutEffect(() => {
+        if (stage !== 0) return
+
+        applyStageZeroDestEnScale()
+    }, [stage, en, applyStageZeroDestEnScale])
+
     useEffect(() => {
         if (stage == 0) { return }
 
@@ -288,6 +329,17 @@ export const RouteDisplayHeading = ({ onStageChange }) => {
         ro.observe(container)
         return () => ro.disconnect()
     }, [stage, applyScale])
+
+    useEffect(() => {
+        if (stage !== 0) return
+
+        const container = destEnContainerRef.current
+        if (!container) return
+
+        const ro = new ResizeObserver(applyStageZeroDestEnScale)
+        ro.observe(container)
+        return () => ro.disconnect()
+    }, [stage, applyStageZeroDestEnScale])
 
     return (
         <>
@@ -301,7 +353,9 @@ export const RouteDisplayHeading = ({ onStageChange }) => {
                     <div className={styles.arrowContainer}><TripleArrow /></div>
                     <div className={styles.destContainer}>
                         <div className={styles.destZh}>{zh}</div>
-                        <div className={styles.destEn}>{en}</div>
+                        <div ref={destEnContainerRef} className={styles.destEn}>
+                            <span ref={destEnTextRef} className={styles.destEnText}>{en}</span>
+                        </div>
                     </div>
                 </div>
             )}

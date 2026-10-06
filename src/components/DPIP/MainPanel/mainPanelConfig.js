@@ -7,6 +7,16 @@ export const FIRST_STOP_WELCOME_EN = "WELCOME ABOARD"
 export const STOP_NAME_ZH_SAFE_WIDTH_RATIO = 0.985
 
 export const STAGE_DURATIONS = [4500, 4500, 4500]
+export const STAGE_ZERO_DEST_EN_MAX_SCALE_X = 1.35
+
+export const getStageZeroDestEnMaxScaleX = (text) => {
+    const visualLength = Math.max(stringWidth(text || ""), 1)
+
+    return Math.min(
+        STAGE_ZERO_DEST_EN_MAX_SCALE_X,
+        1.05 + (Math.max(visualLength - 12, 0) * 0.02)
+    )
+}
 
 export const STAGE_INLINE_SAFE_WIDTH_RATIOS = {
     default: {
