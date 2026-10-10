@@ -18,7 +18,7 @@ const styles = {
         "grid-rows-[3.125fr_0.025fr_1.75fr_0.025fr_1.75fr]",
     ].join(" "),
 
-    arrowContainer: "@container text-center bg-[#FF0000]",
+    arrowContainer: "@container text-center bg-[#EE0000]",
     arrowIcon: "mt-[0.5rem] justify-center",
     currentStopContainer: "flex flex-col bg-white text-black"
 }

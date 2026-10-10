@@ -29,6 +29,7 @@ const styles = {
     enStopName: [
         "text-[5.5cqw]",
         "leading-[1.2]",
+        "tracking-[0.00075rem]",
         "w-full"
     ].join(" "),
 }

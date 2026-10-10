@@ -56,7 +56,7 @@ const styles = {
     ].join(" "),
 
     endLineBar: [
-        "bg-[#FF0000]",
+        "bg-[#EA0000]",
         "w-[.2cqw] h-[2.5cqw]",
         "max-md:w-[.375cqw] max-md:h-[3.5cqw]"
     ].join(" "),
@@ -143,7 +143,7 @@ export const StopFullProgressBar = ({ progressBarRef }) => {
                 {/* Progress Bar */}
                 <div
                     style={{
-                        background: `linear-gradient(to right, gray 0%, gray ${stopProgressPercentage}%, red ${stopProgressPercentage}%)`,
+                        background: `linear-gradient(to right, gray 0%, gray ${stopProgressPercentage}%, #EE0000 ${stopProgressPercentage}%)`,
                     }}
                     className={styles.progressBar}
                 >

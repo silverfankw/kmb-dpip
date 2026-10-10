@@ -10,7 +10,7 @@ const styles = {
     stopIndicatorContainer: [
         "@container",
         "flex flex-col justify-center items-center",
-        "bg-[#FF0000]"
+        "bg-[#EE0000]"
     ].join(" "),
 
     stopIndicator: [
@@ -45,6 +45,7 @@ const styles = {
 
     enStopName: [
         "text-[4.625cqw] mb-[0.5cqw]",
+        "tracking-tight"
     ].join(" ")
 }
 

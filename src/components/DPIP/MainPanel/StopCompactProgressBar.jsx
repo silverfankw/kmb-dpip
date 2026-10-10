@@ -19,7 +19,7 @@ const progressBarStyles = {
         "progress-bar",
         "line",
         "flex justify-around",
-        "bg-[#FF0000]",
+        "bg-[#EE0000]",
         "w-[87.5%] h-[1.5cqw]",
         "relative top-[-7cqw]",
         "z-0"

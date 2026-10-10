@@ -241,12 +241,12 @@ export const MainDisplayPanel = ({ monitorStyle, screenTarget, isWide = false })
     const styles = {
         ...basestyles,
         parentGrid: `${isWide ? basestyles.parentGridWide : isStageZeroWithNextStop ? basestyles.parentGridStageZero : basestyles.parentGrid} ${monitorStyle}`,
-        nextStopIndicatorGrid: `${basestyles.nextStopIndicatorGrid} ${isStageZeroWithNextStop ? "" : "col-start-1 col-end-2"} ${stopPressed ? "bg-[#FF0000] text-white" : "bg-[#FFFF00] text-black"}`,
+        nextStopIndicatorGrid: `${basestyles.nextStopIndicatorGrid} ${isStageZeroWithNextStop ? "" : "col-start-1 col-end-2"} ${stopPressed ? "bg-[#EE0000] text-white" : "bg-[#FFFF00] text-black"}`,
         nextStopIndicatorZh: isStageZeroWithNextStop ? basestyles.nextStopIndicatorZhStageZero : basestyles.nextStopIndicatorZh,
         nextStopIndicatorEn: isStageZeroWithNextStop ? basestyles.nextStopIndicatorEnStageZero : basestyles.nextStopIndicatorEn,
         routeHeadingGrid: `${basestyles.routeHeadingGrid} ${isFirstStop ? basestyles.routeHeadingGridFirstStop : basestyles.routeHeadingGridDefault}`,
         stopNameGrid: `${basestyles.stopNameGrid} ${isWide ? "hidden" : ""}`,
-        driverInfoGrid: `${basestyles.driverInfoGrid} ${stopPressed ? "bg-[#FF0000]" : "bg-black"}`
+        driverInfoGrid: `${basestyles.driverInfoGrid} ${stopPressed ? "bg-[#EE0000]" : "bg-black"}`
     }
 
     return (
