@@ -4,7 +4,13 @@ const styles = {
     divider: [
         "col-start-1",
         "col-end-3",
-        "bg-[#f7f6f6c5]"
+        "bg-[#000000c5]"
+    ].join(" "),
+
+    secondDivider: [
+        "col-start-1",
+        "col-end-3",
+        "bg-[#FFFFFF]"
     ].join(" "),
 
     stopIndicatorContainer: [
@@ -17,7 +23,7 @@ const styles = {
         "inline-block",
         "rounded-[50%]",
         "bg-white",
-        "w-[65cqw] h-[65cqw]"
+        "w-[55cqw] h-[55cqw]"
     ].join(" "),
 
     stopNameContainer: [
@@ -41,19 +47,21 @@ const styles = {
         "relative",
         "tracking-[0.0125rem]",
         "tracking-wide",
+        "font-[450]"
     ].join(" "),
 
     enStopName: [
         "text-[4.625cqw] mb-[0.5cqw]",
-        "tracking-tight"
+        // "tracking-tight",
+        "font-[450]",
     ].join(" ")
 }
 
-export const UpcomingStopNameDisplay = ({ stopZh = "", stopEn = "" }) => {
+export const UpcomingStopNameDisplay = ({ stopZh = "", stopEn = "", isSecondUpcomingStop = false }) => {
 
     return (
         <>
-            <div className={styles.divider}></div>
+            <div className={isSecondUpcomingStop ? styles.secondDivider : styles.divider}></div>
 
             <div className={styles.stopIndicatorContainer}>
                 <div className={styles.stopIndicator}></div>

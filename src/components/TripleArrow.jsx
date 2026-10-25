@@ -1,15 +1,8 @@
-const arrowTransforms = [
-    'translate(-719.021 -20.258)',
-    'translate(-664.073 -19.578)',
-    'translate(-609.467 -18.898)',
+const chevronPaths = [
+    "M12 10H36L70 50L36 90H12L46 50Z",
+    "M65 10H89L123 50L89 90H65L99 50Z",
+    "M118 10H142L176 50L142 90H118L152 50Z",
 ]
-
-const arrowRectProps = {
-    width: 100.287,
-    height: 40.115,
-    rx: 0,
-    ry: 0,
-}
 
 export const TripleArrow = (props) => (
     <svg
@@ -19,21 +12,12 @@ export const TripleArrow = (props) => (
         xmlns="http://www.w3.org/2000/svg"
         shapeRendering="geometricPrecision"
         textRendering="geometricPrecision"
-        viewBox="0 0 200 130"
+        viewBox="0 0 180 100"
         {...props}
     >
         <g fill="#fff">
-            {arrowTransforms.map((transform) => (
-                <g key={transform} transform={transform}>
-                    <rect
-                        {...arrowRectProps}
-                        transform="matrix(.48535 -.48535 .62202 0 727.59 131.579)"
-                    />
-                    <rect
-                        {...arrowRectProps}
-                        transform="matrix(.49848 .49848 -.62202 0 751.225 32.957)"
-                    />
-                </g>
+            {chevronPaths.map((path) => (
+                <path key={path} d={path} />
             ))}
         </g>
     </svg>

@@ -11,6 +11,7 @@ const styles = {
     ].join(" "),
 
     zhStopName: [
+        "font-[450]",
         "h-[12cqw]",
         "relative top-[3cqw]",
         "flex items-center",
@@ -27,6 +28,7 @@ const styles = {
     ].join(" "),
 
     enStopName: [
+        "font-[450]",
         "text-[5.5cqw]",
         "leading-[1.2]",
         "tracking-[0.00075rem]",

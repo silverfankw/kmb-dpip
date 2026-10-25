@@ -54,7 +54,7 @@ const styles = {
 		"order-1 max-sm:order-2",
 		"flex flex-wrap items-center gap-4 w-full relative z-20",
 		"rounded-[1.75rem]",
-		"overflow-hidden",
+		"overflow-visible",
 		"p-4 max-md:p-2 max-sm:p-1.5",
 		"text-sm sm:text-base max-sm:text-xs",
 		"max-sm:gap-1"

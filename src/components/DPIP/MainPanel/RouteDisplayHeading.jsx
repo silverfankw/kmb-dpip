@@ -24,18 +24,21 @@ const styles = {
 
     routeMarkerZh: [
         "text-[3.75cqw] max-sm:text-[4cqw]",
+        "font-[600]"
     ].join(" "),
 
     routeMarkerEn: [
-        "text-[3.25cqw] max-sm:text-[3.5cqw]",
-        "leading-none",
+        "text-[3.5cqw] max-sm:text-[3.5cqw]",
+        "font-[550]",
+        "tracking-tight",
+        "leading-[0.8]",
     ].join(" "),
 
     routeNumber: [
-        "basis-[17.5%] pl-1 max-sm:pl-0",
-        "text-[7.5cqw]",
-        "text-center tracking-wide",
-        "scale-y-120 max-sm:scale-y-120",
+        "basis-[15%] pl-1 max-sm:pl-0",
+        "text-[7.5cqw]", 
+        "text-center ",
+        "scale-y-110 max-sm:scale-y-110",
     ].join(" "),
 
     routeNumberInline: [
@@ -70,9 +73,7 @@ const styles = {
 
     arrowContainer: [
         "flex items-center pt-1 max-sm:pt-0.5",
-        "basis-[23.5%]",
-        "max-xl:basis-[5.75rem]",
-        "max-sm:basis-[4rem]",
+        "basis-[13.5%]",
         "justify-center"
     ].join(" "),
 
@@ -112,11 +113,10 @@ const styles = {
 
     destContainer: [
         "flex flex-col ",
-        "w-full",
+        "w-fit-content",
         "gap-0.5 mr-0.5 pt-1",
         "whitespace-nowrap",
-        "overflow-hidden",
-        "text-ellipsis",
+        "overflow-visible",
     ].join(" "),
 
     destZh: [
@@ -186,13 +186,16 @@ export const RouteDisplayHeading = ({ onStageChange }) => {
     const isFirstStop = routeDetail?.stops?.length > 0 && currentStopIndex === 0
     const isFirstStopStage1 = isFirstStop && stage === 1
     const isFirstStopStage2 = isFirstStop && stage === 2
-    const stageSequence = useMemo(() => isFirstStop ? [1, 2] : [0, 1, 2], [isFirstStop])
+    const stageSequence = useMemo(
+        () => isFirstStop ? [1, 2] : [0, 1, 2],
+        [isFirstStop]
+    )
 
-    useEffect(() => {
+    useLayoutEffect(() => {
         setStage(isFirstStop ? 1 : 0)
     }, [isFirstStop, routeDetail?.route, routeDetail?.bound, routeDetail?.service_type])
 
-    useEffect(() => {
+    useLayoutEffect(() => {
         onStageChange?.(stage)
     }, [onStageChange, stage])
 
@@ -344,7 +347,7 @@ export const RouteDisplayHeading = ({ onStageChange }) => {
     return (
         <>
             {stage === 0 && (
-                <div ref={stageRef} className="flex-1 min-w-0 flex items-center gap-1.5">
+                <div ref={stageRef} className="min-w-0 flex items-center justify-center gap-1.5">
                     <div className={styles.routeMarkerContainer}>
                         <div className={styles.routeMarkerZh}>路線</div>
                         <div className={styles.routeMarkerEn}>Route</div>

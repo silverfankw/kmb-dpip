@@ -9,7 +9,8 @@ import {
     HoldHandrailNotice,
     MindDoorNotice,
     StopFullProgressBar,
-    StopCompactProgressBar
+    StopCompactProgressBar,
+    RouteDisplayHeadingWIP,
 } from '@components/DPIP'
 import {
     PROGRESS_BAR_INTERVAL,
@@ -69,8 +70,8 @@ const basestyles = {
 
     routeHeadingGrid: [
         "@container",
-        "flex items-center gap-1",
-        "pl-1",
+        "flex items-center justify-center gap-1",
+        // "px-1",
         "bg-black text-white"
     ].join(" "),
 
@@ -102,12 +103,13 @@ const basestyles = {
         "bg-white",
         "text-black",
         "flex justify-center items-center",
+        "font-[450]",
     ].join(" "),
 
     stopNameZh: [
         "inline-block",
         "shrink-0",
-        "whitespace-nowrap"
+        "whitespace-nowrap",
     ].join(" "),
 
     stopNameEn: [
@@ -266,6 +268,8 @@ export const MainDisplayPanel = ({ monitorStyle, screenTarget, isWide = false })
             {/* Route Number & Destination */}
             <div className={styles.routeHeadingGrid}>
                 <RouteDisplayHeading onStageChange={setRouteHeadingStage} />
+                {/* <RouteDisplayHeadingWIP onStageChange={setRouteHeadingStage} /> */}
+
             </div>
 
             {/* Progress Bar (only if stops exist) */}

@@ -308,7 +308,7 @@ export const RouteQueryInput = ({ compact = false, label = '', labelClassName = 
         input: base => ({
             ...base,
             color: selectTheme.text,
-            fontSize: isMobile ? "15px" : base.fontSize,
+            fontSize: isMobile ? "16px" : base.fontSize,
             margin: isMobile ? "0 2px" : "0 4px",
             fontWeight: 500,
         }),
@@ -407,8 +407,8 @@ export const RouteQueryInput = ({ compact = false, label = '', labelClassName = 
                 SingleValue
             }}
             classNamePrefix="routeInputSelect"
-            menuPortalTarget={document.body}
-            menuPosition="fixed"
+            menuPortalTarget={isMobile ? undefined : document.body}
+            menuPosition={isMobile ? "absolute" : "fixed"}
             styles={selectStyles}
             isDisabled={isRoutesLoading}
             isClearable
