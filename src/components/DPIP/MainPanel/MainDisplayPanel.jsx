@@ -8,9 +8,8 @@ import {
     RouteDisplayHeading,
     HoldHandrailNotice,
     MindDoorNotice,
-    StopFullProgressBar,
-    StopCompactProgressBar,
-    RouteDisplayHeadingWIP,
+    FullStopProgress,
+    ThreeStopProgress,
 } from '@components/DPIP'
 import {
     PROGRESS_BAR_INTERVAL,
@@ -19,7 +18,10 @@ import {
     FIRST_STOP_WELCOME_EN,
     STOP_NAME_ZH_SAFE_WIDTH_RATIO,
     getStopNameZhBaseFontSize,
+    getStopProgressPage,
 } from './mainPanelConfig'
+
+const STOP_PROGRESS_WINDOW_SIZE = 35
 
 // --- Styles outside component ---
 const basestyles = {
@@ -153,7 +155,13 @@ export const MainDisplayPanel = ({ monitorStyle, screenTarget, isWide = false })
         driverInfo
     } = useSelector(state => state.userPreference)
 
-    const isFirstStop = routeDetail?.stops?.length > 0 && currentStopIndex === 0
+    const stopCount = routeDetail?.stops?.length ?? 0
+    const { start: windowStart, end: windowEnd, leadingCount, trailingCount } = getStopProgressPage(
+        stopCount, currentStopIndex, STOP_PROGRESS_WINDOW_SIZE
+    )
+    const visibleStops = routeDetail?.stops?.slice(windowStart, windowEnd) ?? []
+
+    const isFirstStop = stopCount > 0 && currentStopIndex === 0
     const [routeHeadingStage, setRouteHeadingStage] = useState(0)
     const isStageZeroWithNextStop = !isFirstStop && routeHeadingStage === 0
     const stopNameZh = isFirstStop
@@ -195,8 +203,7 @@ export const MainDisplayPanel = ({ monitorStyle, screenTarget, isWide = false })
     }, [])
 
     // Toggle progress bar and stop name display
-    // useToggleDisplay(fullProgressBarRef, compactProgressBarRef, PROGRESS_BAR_INTERVAL, [routeDetail?.route, routeDetail?.bound, routeDetail?.service_type])
-    useToggleDisplay(compactProgressBarRef, fullProgressBarRef, PROGRESS_BAR_INTERVAL, [routeDetail?.route, routeDetail?.bound, routeDetail?.service_type])
+    useToggleDisplay(fullProgressBarRef, compactProgressBarRef, PROGRESS_BAR_INTERVAL, [routeDetail?.route, routeDetail?.bound, routeDetail?.service_type, isLoading, stopCount])
     useToggleDisplay(zhStopNameRef, enStopNameRef, STOP_NAME_INTERVAL, [routeDetail?.route, routeDetail?.bound, routeDetail?.service_type])
 
     // Reset stop name display when notice toggles change
@@ -277,8 +284,39 @@ export const MainDisplayPanel = ({ monitorStyle, screenTarget, isWide = false })
                 {isLoading ? (<LoadingSpinner />) :
                     routeDetail?.stops?.length > 0 && (
                         <div className={styles.stopProgressBarContainer}>
-                            <StopFullProgressBar progressBarRef={fullProgressBarRef} />
-                            <StopCompactProgressBar progressBarRef={compactProgressBarRef} />
+
+                            <ThreeStopProgress
+                                progressBarRef={compactProgressBarRef}
+                                currentStop={routeDetail.stops[currentStopIndex]}
+                                nextStop={routeDetail.stops[currentStopIndex + 1]}
+                                followingStop={routeDetail.stops[currentStopIndex + 2]}
+                            />
+
+                            <div ref={fullProgressBarRef} className="stop-progress-display">
+                                <div
+                                    className="stop-progress-row"
+                                    role="list"
+                                    aria-label="Route stops"
+                                    style={{ "--stop-count": leadingCount + visibleStops.length + trailingCount }}
+                                >
+                                    {Array.from({ length: leadingCount }, (_, index) => (
+                                        <FullStopProgress key={`previous-${index}`} continuation="previous" />
+                                    ))}
+                                    {visibleStops.map((stop, index) => (
+                                        <FullStopProgress
+                                            key={`${routeDetail.route}-${routeDetail.bound}-${routeDetail.service_type}-${windowStart + index}`}
+                                            stop={stop}
+                                            stopIndex={windowStart + index}
+                                            currentStopIndex={currentStopIndex}
+                                            stopCount={stopCount}
+                                        />
+                                    ))}
+                                    {Array.from({ length: trailingCount }, (_, index) => (
+                                        <FullStopProgress key={`next-${index}`} continuation="next" />
+                                    ))}
+                                </div>
+                            </div>
+
                         </div>
                     )}
             </div>

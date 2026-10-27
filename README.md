@@ -9,7 +9,6 @@
 
 This project is developed by React + Vite, Redux, tailwindCSS v4 & Material UI.
 
-
 ## Versions
 <ins>**Version 2</ins>🆕✨**
 - Added features:

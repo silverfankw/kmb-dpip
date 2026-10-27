@@ -1,0 +1,175 @@
+.three-stop-progress-temp {
+    container-type: inline-size;
+    width: 100%;
+    height: 100%;
+    min-height: 120px;
+    background: #ffffff;
+    color: #000000;
+}
+
+.three-stop-progress-temp__row {
+    --temp-line-size: 1.8cqw;
+    --temp-marker-size: 1.8cqw;
+    --temp-line-position: 70%;
+    display: grid;
+    grid-template-columns: 33% 33% 33%;
+    width: 100%;
+    height: 100%;
+    min-height: inherit;
+    margin-inline: 0;
+}
+
+.three-stop-progress-temp__stop {
+    position: relative;
+    min-width: 0;
+    --temp-marker-left: 50%;
+}
+
+.three-stop-progress-temp__stop:first-child {
+    --temp-marker-left: 50%;
+}
+
+.three-stop-progress-temp__stop:last-child {
+    --temp-marker-left: 50%;
+}
+
+.three-stop-progress-temp__names {
+    position: absolute;
+    inset-inline: 2%;
+    bottom: calc(100% - var(--temp-line-position) + var(--temp-line-size) / 2 + 2.75cqw);
+    text-align: center;
+    line-height: 1.45;
+}
+
+.three-stop-progress-temp__names--multiline {
+    line-height: 1.2;
+}
+
+.three-stop-progress-temp__stop:first-child .three-stop-progress-temp__names {
+    transform: translateY(0.25cqw);
+}
+
+.three-stop-progress-temp__names > div {
+    display: flex;
+    justify-content: center;
+}
+
+.three-stop-progress-temp__names span {
+    display: inline-block;
+    flex-shrink: 0;
+    white-space: nowrap;
+    transform-origin: center bottom;
+}
+
+.three-stop-progress-temp__zh {
+    font-family: "Noto Sans TC", "Noto Sans HK", "Microsoft JhengHei", sans-serif;
+    font-size: 3.75cqw;
+    font-weight: 450;
+}
+
+.three-stop-progress-temp__en {
+    margin-top: 0.8cqw;
+    font-stretch: condensed;
+    font-size: 2.4cqw;
+    font-weight: 450;
+}
+
+.three-stop-progress-temp__stop--current .three-stop-progress-temp__zh {
+    font-size: 4.75cqw;
+    font-weight: 450;
+}
+
+.three-stop-progress-temp__stop--current .three-stop-progress-temp__en {
+    font-size: 2.85cqw;
+    font-weight: 450;
+}
+
+.three-stop-progress-temp__line {
+    position: absolute;
+    inset-inline: 0;
+    top: var(--temp-line-position);
+    height: var(--temp-line-size);
+    background: #e60012;
+    transform: translateY(-50%);
+}
+
+.three-stop-progress-temp__arrows {
+    position: absolute;
+    left: 4cqw;
+    top: var(--temp-line-position);
+    display: flex;
+    align-items: center;
+    gap: 1cqw;
+    height: var(--temp-line-size);
+    transform: translateY(-50%);
+}
+
+.three-stop-progress-temp__arrows span {
+    box-sizing: border-box;
+    width: calc(var(--temp-line-size) * 0.75);
+    height: calc(var(--temp-line-size) * 0.75);
+    border-top: 0.4cqw solid #ffffff;
+    border-right: 0.4cqw solid #ffffff;
+    transform: rotate(45deg);
+    opacity: 0;
+}
+
+.three-stop-progress-temp__marker {
+    position: absolute;
+    left: var(--temp-marker-left);
+    top: var(--temp-line-position);
+    width: var(--temp-marker-size);
+    height: var(--temp-marker-size);
+    transform: translate(-50%, -50%);
+    fill: #ffffff;
+}
+
+.three-stop-progress-temp__stop--current .three-stop-progress-temp__marker {
+    width: 2.6cqw;
+    height: 2.6cqw;
+}
+
+.three-stop-progress-temp__ring-white {
+    fill: #ffffff;
+}
+
+.three-stop-progress-temp__ring-red {
+    fill: #e30613;
+}
+
+.three-stop-progress-temp__centre {
+    fill: #ffff00;
+}
+
+.three-stop-progress-temp__stop:last-child .three-stop-progress-temp__line {
+    right: 41.666667%;
+}
+
+.three-stop-progress-temp__terminal {
+    position: absolute;
+    left: 60%;
+    top: var(--temp-line-position);
+    display: flex;
+    align-items: center;
+    gap: 0.18cqw;
+    transform: translateY(-50%);
+}
+
+.three-stop-progress-temp__terminal span {
+    box-sizing: border-box;
+    width: 0.5cqw;
+    height: var(--temp-line-size);
+    border: 0.08cqw solid #e30613;
+    background: #ffffff;
+}
+
+.three-stop-progress-temp__terminal span:last-child {
+    width: 1cqw;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .three-stop-progress-temp__arrows span {
+        animation: none;
+        opacity: 1;
+    }
+}

@@ -88,7 +88,7 @@ const progressBarStyles = {
 
 const styles = progressBarStyles
 
-export const StopCompactProgressBar = ({ progressBarRef }) => {
+export const ThreeStopProgress_legacy = ({ progressBarRef }) => {
     const { routeDetail, currentStopIndex } = useSelector(state => state.routeSelection)
 
     const stopEntries = useMemo(

@@ -70,3 +70,20 @@ export const getStopNameZhBaseFontSize = (text) => {
     const visualLength = Math.max(stringWidth(text || ""), 1)
     return Math.max(10.25, Math.min(10.5, 13.5 - (Math.max(visualLength - 6, 0) * 0.3)))
 }
+
+export const getStopProgressPage = (stopCount, currentStopIndex, windowSize) => {
+    let start = 0
+
+    do {
+        const leadingCount = start > 0 ? 3 : 0
+        const available = windowSize - leadingCount
+        const trailingCount = stopCount - start > available ? 3 : 0
+        const end = Math.min(stopCount, start + available - trailingCount)
+
+        if (currentStopIndex < end || end === stopCount) {
+            return { start, end, leadingCount, trailingCount }
+        }
+
+        start = end
+    } while (start < stopCount)
+}
