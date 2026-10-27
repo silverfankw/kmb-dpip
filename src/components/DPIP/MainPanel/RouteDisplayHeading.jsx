@@ -1,6 +1,7 @@
-import { useState, useEffect, useRef, useLayoutEffect, useCallback, useMemo } from "react"
+import { memo, useState, useEffect, useRef, useLayoutEffect, useMemo } from "react"
 import { useSelector } from "react-redux"
 import { TripleArrow } from "@components"
+import "@styles/routeDisplayHeading.css"
 import {
     STAGE_DURATIONS,
     getStageZeroDestEnMaxScaleX,
@@ -11,183 +12,21 @@ import {
 
 const STAGE_ZERO_DEST_EN_MIN_FONT_SCALE = 0.95
 
-// Tailwind CSS classes for the component
-const styles = {
-    routeMarkerContainer: [
-        "flex flex-col",
-        "basis-[10%]",
-        "text-center",
-        "items-center",
-        "min-w-max",
-        "shrink-0",
-    ].join(" "),
+export const RouteDisplayHeading = memo(function RouteDisplayHeading({ onStageChange }) {
 
-    routeMarkerZh: [
-        "text-[3.75cqw] max-sm:text-[4cqw]",
-        "font-[600]"
-    ].join(" "),
-
-    routeMarkerEn: [
-        "text-[3.5cqw] max-sm:text-[3.5cqw]",
-        "font-[550]",
-        "tracking-tight",
-        "leading-[0.8]",
-    ].join(" "),
-
-    routeNumber: [
-        "basis-[15%] pl-1 max-sm:pl-0",
-        "text-[7.5cqw]", 
-        "text-center ",
-        "scale-y-110 max-sm:scale-y-110",
-    ].join(" "),
-
-    routeNumberInline: [
-        "text-[6cqw]",
-        "text-center",
-        "scale-y-120",
-        "shrink-0",
-        "self-center",
-        "ml-1 mr-1",
-        "max-sm:tracking-tight",
-    ].join(" "),
-
-    routeNumberInlineFirstStopStage1: [
-        "text-[5cqw]",
-        "text-center",
-        "scale-y-110",
-        "shrink-0",
-        "self-center",
-        "ml-1 mr-1",
-        "max-sm:tracking-tight",
-    ].join(" "),
-
-    routeNumberInlineFirstStopStage2: [
-        "text-[5cqw]",
-        "text-center",
-        "scale-y-110",
-        "shrink-0",
-        "self-center",
-        "ml-1 mr-1",
-        "max-sm:tracking-tight",
-    ].join(" "),
-
-    arrowContainer: [
-        "flex items-center pt-1 max-sm:pt-0.5",
-        "basis-[13.5%]",
-        "justify-center"
-    ].join(" "),
-
-    arrowContainerSm: [
-        "flex",
-        "items-center",
-        "basis-[6%]",
-        "max-xl:basis-[2rem]",
-        "max-sm:basis-[1.5rem]",
-        "justify-center"
-    ].join(" "),
-
-    arrowContainerInline: [
-        "flex",
-        "items-center",
-        "w-[9cqw]",
-        "shrink-0",
-        "justify-center",
-    ].join(" "),
-
-    arrowContainerSmInline: [
-        "flex",
-        "items-center",
-        "w-[8cqw]",
-        "shrink-0",
-        "justify-center",
-        "ml-1",
-    ].join(" "),
-
-    arrowContainerSmInlineFirstStopStage1: [
-        "flex",
-        "items-center",
-        "w-[9cqw] max-sm:w-[8cqw]",
-        "shrink-0",
-        "justify-center",
-    ].join(" "),
-
-    destContainer: [
-        "flex flex-col ",
-        "w-fit-content",
-        "gap-0.5 mr-0.5 pt-1",
-        "whitespace-nowrap",
-        "overflow-visible",
-    ].join(" "),
-
-    destZh: [
-        "whitespace-nowrap leading-none",
-        "text-[5cqw] max-md:text-[4.375cqw] max-sm:text-[4.75cqw]",
-        "tracking-wide",
-        "scale-x-105 origin-left",
-    ].join(" "),
-
-    destEn: [
-        "block",
-        "text-[3.25cqw] max-sm:text-[3cqw]",
-        "leading-tight",
-    ].join(" "),
-
-    destEnText: [
-        "inline-block",
-        "whitespace-nowrap",
-        "origin-left leading-tight",
-    ].join(" "),
-
-    // Inline (single-language) variants
-    markerZhInline: [
-        "tracking-tighter",
-        "text-[4cqw] max-md:text-[4.25cqw]",
-        "shrink-0",
-        "mr-1"
-    ].join(" "),
-
-    markerZhInlineFirstStopStage1: [
-        "tracking-tighter",
-        "text-[3.5cqw] max-md:text-[3.75cqw]",
-        "shrink-0",
-        "mr-1"
-    ].join(" "),
-
-    markerEnInline: [
-        "tracking-tighter",
-        "text-[4cqw] max-sm:text-[4.5cqw]",
-        "shrink-0",
-    ].join(" "),
-
-    destZhInline: [
-        "whitespace-nowrap",
-        "text-[5.5cqw] max-sm:text-[5.25cqw]",
-    ].join(" "),
-
-    destZhInlineFirstStopStage1: [
-        "whitespace-nowrap",
-        "text-[5cqw] max-sm:text-[4.8cqw]",
-    ].join(" "),
-
-    destEnInline: [
-        "whitespace-nowrap",
-        "text-[4.5cqw] max-sm:text-[3.75cqw]",
-    ].join(" "),
-}
-
-export const RouteDisplayHeading = ({ onStageChange }) => {
-
-    const { routeDetail, lastStopIndex, currentStopIndex } = useSelector(state => state.routeSelection)
+    const routeDetail = useSelector(state => state.routeSelection.routeDetail)
+    const lastStopIndex = useSelector(state => state.routeSelection.lastStopIndex)
+    const atFirstStop = useSelector(state => state.routeSelection.currentStopIndex === 0)
     const [stage, setStage] = useState(0)
     const stageRef = useRef(null)
     const stageWrapperRef = useRef(null)
-    const destEnContainerRef = useRef(null)
     const destEnTextRef = useRef(null)
-    const isFirstStop = routeDetail?.stops?.length > 0 && currentStopIndex === 0
-    const isFirstStopStage1 = isFirstStop && stage === 1
-    const isFirstStopStage2 = isFirstStop && stage === 2
+    const destZhTextRef = useRef(null)
+    const routeNumberRef = useRef(null)
+    const isFirstStop = routeDetail?.stops?.length > 0 && atFirstStop
     const stageSequence = useMemo(
         () => isFirstStop ? [1, 2] : [0, 1, 2],
+        // () => [0],
         [isFirstStop]
     )
 
@@ -214,175 +53,111 @@ export const RouteDisplayHeading = ({ onStageChange }) => {
     const en = routeDetail?.stops?.[lastStopIndex]?.en
     const route = routeDetail.route
 
-    const applyStageZeroDestEnScale = useCallback(() => {
-        const container = destEnContainerRef.current
-        const text = destEnTextRef.current
-        if (!container || !text || !container.clientWidth) return
-
-        text.style.transform = ""
-
-        const textWidth = Math.max(
-            text.scrollWidth,
-            text.getBoundingClientRect().width
-        )
-        if (!textWidth) return
-
-        const fitScale = container.clientWidth / textWidth
-        const fontScale = fitScale < STAGE_ZERO_DEST_EN_MIN_FONT_SCALE
-            ? STAGE_ZERO_DEST_EN_MIN_FONT_SCALE
-            : 1
-        const scaleX = fitScale > 1
-            ? Math.min(fitScale, getStageZeroDestEnMaxScaleX(en))
-            : fitScale / fontScale
-
-        text.style.transform = `scale(${fontScale}) scaleX(${scaleX})`
-    }, [en])
-
-    const applyScale = useCallback(() => {
-        const el = stageRef.current
-        if (!el) return
-
+    useLayoutEffect(() => {
+        const element = stageRef.current
         const wrapper = stageWrapperRef.current
-        const container = wrapper?.parentElement ?? el.parentElement
-        if (!container || !container.clientWidth) return
+        const container = stage === 0 ? element : wrapper?.parentElement
+        if (!element || !container) return
 
-        const previousTransform = el.style.transform
-        const previousWrapperWidth = wrapper?.style.width ?? ""
+        const fit = () => {
+            if (!container.clientWidth) return
 
-        if (wrapper && previousWrapperWidth) {
-            wrapper.style.width = ""
-        }
-        if (previousTransform) {
-            el.style.transform = "scale(1)"
-        }
+            if (stage === 0) {
+                for (const ref of [routeNumberRef, destZhTextRef, destEnTextRef]) {
+                    const text = ref.current
+                    const availableWidth = text?.parentElement?.clientWidth
+                    if (!availableWidth) continue
 
-        const elementStyle = window.getComputedStyle(el)
-        const contentGap = parseFloat(elementStyle.columnGap || elementStyle.gap || '0')
-        const children = Array.from(el.children)
-        const contentWidth = children.length > 0
-            ? Math.max(
-                el.scrollWidth,
-                children.reduce((sum, child) => {
-                    const childStyle = window.getComputedStyle(child)
-                    const horizontalMargins =
-                        parseFloat(childStyle.marginLeft || '0') +
-                        parseFloat(childStyle.marginRight || '0')
+                    text.style.transform = ""
+                    const textWidth = Math.max(text.scrollWidth, text.getBoundingClientRect().width)
+                    if (!textWidth) continue
 
-                    return sum + Math.max(child.scrollWidth, child.offsetWidth) + horizontalMargins
-                }, 0) + (contentGap * Math.max(children.length - 1, 0))
+                    const isEnglish = ref === destEnTextRef
+                    const fitScale = availableWidth / textWidth
+                    const fontScale = isEnglish && fitScale < STAGE_ZERO_DEST_EN_MIN_FONT_SCALE
+                        ? STAGE_ZERO_DEST_EN_MIN_FONT_SCALE
+                        : 1
+                    const maxScaleX = isEnglish ? getStageZeroDestEnMaxScaleX(en) : 1
+                    text.style.transform = `scale(${fontScale}) scaleX(${Math.min(fitScale, maxScaleX) / fontScale})`
+                }
+                return
+            }
+
+            const contentWidth = Math.max(element.scrollWidth, element.offsetWidth)
+            if (!contentWidth) return
+
+            const { paddingLeft, paddingRight } = window.getComputedStyle(container)
+            const availableWidth = Math.max(
+                (container.clientWidth - parseFloat(paddingLeft) - parseFloat(paddingRight)) *
+                getInlineSafeWidthRatio(stage, isFirstStop),
+                0
             )
-            : Math.max(el.scrollWidth, el.offsetWidth)
-        if (!contentWidth) {
-            if (wrapper && wrapper.style.width !== previousWrapperWidth) {
-                wrapper.style.width = previousWrapperWidth
-            }
-            if (el.style.transform !== previousTransform) {
-                el.style.transform = previousTransform
-            }
-            return
-        }
-        const containerStyle = window.getComputedStyle(container)
-        const horizontalPadding =
-            parseFloat(containerStyle.paddingLeft || '0') +
-            parseFloat(containerStyle.paddingRight || '0')
-        const safeWidthRatio = stage === 0 ? 1 : getInlineSafeWidthRatio(stage, isFirstStop)
-        const availableWidth = Math.max(
-            (container.clientWidth - horizontalPadding) * safeWidthRatio,
-            0
-        )
-        const scaleX = Math.min(1, availableWidth / contentWidth, getStageScaleXMax(stage, isFirstStop))
-        const { min: minScaleY, max: maxScaleY } = getStageScaleYRange(stage, isFirstStop)
-        const scaleY = stage === 0
-            ? Math.max(minScaleY, Math.min(maxScaleY, scaleX))
-            : isFirstStopStage1
+            const scaleX = Math.min(1, availableWidth / contentWidth, getStageScaleXMax(stage, isFirstStop))
+            const { min: minScaleY, max: maxScaleY } = getStageScaleYRange(stage, isFirstStop)
+            const scaleY = isFirstStop && stage === 1
                 ? Math.max(minScaleY, Math.min(maxScaleY, scaleX))
-            : minScaleY + ((maxScaleY - minScaleY) * scaleX)
+                : minScaleY + ((maxScaleY - minScaleY) * scaleX)
 
-        if (wrapper) {
-            const nextWidth = `${Math.max(contentWidth * scaleX, 0)}px`
-            if (wrapper.style.width !== nextWidth) {
-                wrapper.style.width = nextWidth
-            }
+            const width = `${contentWidth * scaleX}px`
+            const transform = `scale(${scaleX}, ${scaleY})`
+            if (wrapper.style.width !== width) wrapper.style.width = width
+            if (element.style.transform !== transform) element.style.transform = transform
         }
 
-        const nextTransform = `scale(${scaleX}, ${scaleY})`
-        if (el.style.transform !== nextTransform) {
-            el.style.transform = nextTransform
-        }
-    }, [isFirstStop, isFirstStopStage1, stage])
-
-    useLayoutEffect(() => {
-        if (stage == 0) { return }
-
-        applyScale()
-    }, [stage, zh, en, route, applyScale])
-
-    useLayoutEffect(() => {
-        if (stage !== 0) return
-
-        applyStageZeroDestEnScale()
-    }, [stage, en, applyStageZeroDestEnScale])
-
-    useEffect(() => {
-        if (stage == 0) { return }
-
-        const container = stageWrapperRef.current?.parentElement ?? stageRef.current?.parentElement
-        if (!container) return
-        const ro = new ResizeObserver(applyScale)
-        ro.observe(container)
-        return () => ro.disconnect()
-    }, [stage, applyScale])
-
-    useEffect(() => {
-        if (stage !== 0) return
-
-        const container = destEnContainerRef.current
-        if (!container) return
-
-        const ro = new ResizeObserver(applyStageZeroDestEnScale)
-        ro.observe(container)
-        return () => ro.disconnect()
-    }, [stage, applyStageZeroDestEnScale])
+        fit()
+        const observer = new ResizeObserver(fit)
+        observer.observe(container)
+        return () => observer.disconnect()
+    }, [stage, isFirstStop, zh, en, route])
 
     return (
         <>
             {stage === 0 && (
-                <div ref={stageRef} className="min-w-0 flex items-center justify-center gap-1.5">
-                    <div className={styles.routeMarkerContainer}>
-                        <div className={styles.routeMarkerZh}>路線</div>
-                        <div className={styles.routeMarkerEn}>Route</div>
+                <div ref={stageRef} className="route-heading-board">
+                    <div className="route-heading-board__label">
+                        <div className="route-heading-board__label-zh">路線</div>
+                        <div className="route-heading-board__label-en">Route</div>
                     </div>
-                    <div className={styles.routeNumber}>{route}</div>
-                    <div className={styles.arrowContainer}><TripleArrow /></div>
-                    <div className={styles.destContainer}>
-                        <div className={styles.destZh}>{zh}</div>
-                        <div ref={destEnContainerRef} className={styles.destEn}>
-                            <span ref={destEnTextRef} className={styles.destEnText}>{en}</span>
+                    <div className="route-heading-board__number">
+                        <span ref={routeNumberRef}>{route}</span>
+                    </div>
+                    <div className="route-heading-board__arrows">
+                        <TripleArrow
+                            viewBox="0 10 180 80"
+                            preserveAspectRatio="none"
+                        />
+                    </div>
+                    <div className="route-heading-board__destination">
+                        <div className="route-heading-board__destination-zh">
+                            <span ref={destZhTextRef}>{zh}</span>
+                        </div>
+                        <div className="route-heading-board__destination-en">
+                            <span ref={destEnTextRef}>{en}</span>
                         </div>
                     </div>
                 </div>
             )}
 
             {(stage === 1 || stage === 2) && (
-                <div className={`flex-1 min-w-0 h-full flex items-center justify-center overflow-hidden ${stage === 2 && !isFirstStop ? "px-2" : ""}`}>
-                    <div ref={stageWrapperRef} className="flex justify-center">
-                        <div ref={stageRef} className="inline-flex shrink-0 items-center gap-2">
+                <div className={`route-heading-inline${isFirstStop ? " route-heading-inline--first-stop" : ""}${stage === 2 ? " route-heading-inline--english" : ""}`}>
+                    <div ref={stageWrapperRef} className="route-heading-inline__wrapper">
+                        <div ref={stageRef} className="route-heading-inline__content">
 
                             {stage === 1 && (
                                 <>
-                                    <div className={isFirstStopStage1 ? styles.markerZhInlineFirstStopStage1 : styles.markerZhInline}>路線</div>
-                                    <div className={isFirstStopStage1 ? styles.routeNumberInlineFirstStopStage1 : styles.routeNumberInline}>{route}</div>
-                                    <div className={isFirstStopStage1 ? styles.arrowContainerSmInlineFirstStopStage1 : styles.arrowContainerSmInline}><TripleArrow /></div>
-                                    <div className={isFirstStopStage1 ? styles.destZhInlineFirstStopStage1 : styles.destZhInline}>{zh}</div>
+                                    <div className="route-heading-inline__label">路線</div>
+                                    <div className="route-heading-inline__number">{route}</div>
+                                    <div className="route-heading-inline__arrows"><TripleArrow /></div>
+                                    <div className="route-heading-inline__destination">{zh}</div>
                                 </>
                             )}
 
                             {stage === 2 && (
                                 <>
-                                    <div className={styles.markerEnInline}>Route</div>
-                                    <div className={isFirstStopStage2 ? styles.routeNumberInlineFirstStopStage2 : styles.routeNumberInline}>{route}</div>
-                                    <div className={styles.arrowContainerInline}><TripleArrow /></div>
-                                    <div className={styles.destEnInline}>{en}</div>
+                                    <div className="route-heading-inline__label">Route</div>
+                                    <div className="route-heading-inline__number">{route}</div>
+                                    <div className="route-heading-inline__arrows"><TripleArrow /></div>
+                                    <div className="route-heading-inline__destination">{en}</div>
                                 </>
                             )}
 
@@ -392,4 +167,4 @@ export const RouteDisplayHeading = ({ onStageChange }) => {
             )}
         </>
     )
-}
+})

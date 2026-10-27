@@ -110,6 +110,7 @@ const App = () => {
 	const dispatch = useDispatch()
 	const [isMainMonitorWide, setIsMainMonitorWide] = useState(false)
 	const { hasStoredData, storedData, saveToLocalStorage, saveToLocalStorageNow } = useLocalStorageState()
+	const hasRestoredSelectionRef = useRef(false)
 	const { isUserSelectedRoute, loadingError, routeDetail, currentStopIndex } = useSelector(state => state.routeSelection)
 	const { routes } = useSelector(state => state.route)
 	const { uiMode, language } = useSelector(state => state.userPreference)
@@ -144,10 +145,14 @@ const App = () => {
 	}, [dispatch, storedData, routes])
 
 	useEffect(() => {
-		if (hasStoredData && routes.length > 0) {
+		if (hasRestoredSelectionRef.current || !hasStoredData || routes.length === 0) return
+
+		// Saving progress updates storedData too; only restore it during startup.
+		hasRestoredSelectionRef.current = true
+		if (!isUserSelectedRoute) {
 			handleRestoreSelection()
 		}
-	}, [hasStoredData, routes, handleRestoreSelection])
+	}, [hasStoredData, routes, handleRestoreSelection, isUserSelectedRoute])
 
 	useEffect(() => {
 		if (isUserSelectedRoute && routeDetail && Object.keys(routeDetail).length > 0) {

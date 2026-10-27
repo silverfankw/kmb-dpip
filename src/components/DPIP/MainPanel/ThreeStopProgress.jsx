@@ -1,4 +1,4 @@
-import { useLayoutEffect, useRef } from "react"
+import { memo, useLayoutEffect, useRef } from "react"
 import "@styles/animation.css"
 import "@styles/threeStopProgress.css"
 
@@ -16,7 +16,7 @@ const getEnglishLines = (name) => {
     return [name.slice(0, splitIndex).trimEnd(), name.slice(splitIndex).trimStart()]
 }
 
-const StopNames = ({ stop }) => {
+const StopNames = memo(function StopNames({ stop }) {
     const namesRef = useRef(null)
     const englishLines = getEnglishLines(stop.en)
     const isMultilineEnglish = englishLines.length === 2
@@ -27,13 +27,16 @@ const StopNames = ({ stop }) => {
             const availableWidth = names.getBoundingClientRect().width
             if (!availableWidth) return
 
-            for (const line of names.children) {
+            const measurements = Array.from(names.children, line => {
                 const text = line.firstElementChild
-                text.style.transform = "none"
-                const width = text.getBoundingClientRect().width
+                const width = text.offsetWidth
                 const scaleX = width ? Math.min(1, availableWidth / width) : 1
                 const scaleY = line.lang === "en" ? (isMultilineEnglish ? 0.75 : Math.max(0.9, scaleX)) : 1
-                text.style.transform = `scale(${scaleX}, ${scaleY})`
+                return { text, transform: `scale(${scaleX}, ${scaleY})` }
+            })
+
+            for (const { text, transform } of measurements) {
+                if (text.style.transform !== transform) text.style.transform = transform
             }
         }
 
@@ -58,9 +61,9 @@ const StopNames = ({ stop }) => {
             </div>
         </div>
     )
-}
+})
 
-export const ThreeStopProgress = ({ currentStop, nextStop, followingStop, progressBarRef }) => {
+export const ThreeStopProgress = memo(function ThreeStopProgress({ currentStop, nextStop, followingStop, progressBarRef, isLastStopVisible = false }) {
     const stops = [currentStop, nextStop, followingStop].filter(Boolean)
 
     return <div className="three-stop-progress-temp" ref={progressBarRef}>
@@ -91,14 +94,17 @@ export const ThreeStopProgress = ({ currentStop, nextStop, followingStop, progre
                         ) : <circle cx="50" cy="50" r="49" />}
                     </svg>
                     {index === stops.length - 1 && (
-                        <div className="three-stop-progress-temp__terminal" aria-hidden="true">
+                        <div
+                            className={`three-stop-progress-temp__terminal${isLastStopVisible ? " three-stop-progress-temp__terminal--end" : ""}`}
+                            aria-hidden="true"
+                        >
                             <span />
                             <span />
-                            <span />
+                            {!isLastStopVisible && <span />}
                         </div>
                     )}
                 </div>
             ))}
         </div>
     </div>
-}
+})

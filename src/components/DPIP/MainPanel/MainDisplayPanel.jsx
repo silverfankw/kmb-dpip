@@ -290,6 +290,7 @@ export const MainDisplayPanel = ({ monitorStyle, screenTarget, isWide = false })
                                 currentStop={routeDetail.stops[currentStopIndex]}
                                 nextStop={routeDetail.stops[currentStopIndex + 1]}
                                 followingStop={routeDetail.stops[currentStopIndex + 2]}
+                                isLastStopVisible={currentStopIndex + 3 >= stopCount}
                             />
 
                             <div ref={fullProgressBarRef} className="stop-progress-display">

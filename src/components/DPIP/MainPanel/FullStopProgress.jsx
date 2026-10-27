@@ -1,5 +1,5 @@
 import { memo } from "react"
-import "@styles/stopFullProgress.css"
+import "@styles/fullStopProgress.css"
 
 export const FullStopProgress = memo(function FullStopProgress({ stop, stopIndex, currentStopIndex, stopCount, continuation }) {
     const showContinuationDot = Boolean(continuation)
@@ -34,7 +34,7 @@ export const FullStopProgress = memo(function FullStopProgress({ stop, stopIndex
                     <circle cx="50" cy="50" r={isCurrentStop ? 46 : 50} />
                 </svg>
                 <span
-                    className={`stop-name absolute ${isPastStop && !showContinuationDot ? "text-[#878787]" : "text-black"} text-[1.75cqw] max-sm:text-[2cqw] left-1/2 ${showContinuationDot ? "top-[-4cqw] max-md:top-[-4.5cqw] -translate-x-1/2" : "top-[-2.5cqw] max-md:top-[-3cqw] -translate-x-[5%] -rotate-[65deg] origin-left"} whitespace-nowrap max-md:text-[2cqw] ${isCurrentStop ? "font-black" : "font-medium"}`}
+                    className={`stop-name absolute ${isPastStop && !showContinuationDot ? "text-[#878787]" : "text-black"} left-1/2 ${showContinuationDot ? "top-[-4cqw] max-md:top-[-4.5cqw] -translate-x-1/2" : "top-[-2.5cqw] max-md:top-[-3cqw] -translate-x-[5%] -rotate-[65deg] origin-left"} whitespace-nowrap ${isCurrentStop ? "text-[2cqw] max-md:text-[2.25cqw] font-black" : "text-[1.75cqw] max-md:text-[2cqw] font-medium"}`}
                     aria-label={showContinuationDot ? (continuation === "previous" ? "Previous stops" : "More stops") : undefined}
                 >
                     {showContinuationDot ? "\u2022" : stop.zh}
@@ -42,4 +42,13 @@ export const FullStopProgress = memo(function FullStopProgress({ stop, stopIndex
             </div>
         </div>
     )
-})
+}, (previous, next) =>
+    previous.stop === next.stop &&
+    previous.stopIndex === next.stopIndex &&
+    previous.stopCount === next.stopCount &&
+    previous.continuation === next.continuation &&
+    (Boolean(next.continuation) || (
+        (previous.stopIndex === previous.currentStopIndex) === (next.stopIndex === next.currentStopIndex) &&
+        (previous.stopIndex < previous.currentStopIndex) === (next.stopIndex < next.currentStopIndex)
+    ))
+)

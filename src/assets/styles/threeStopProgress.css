@@ -42,7 +42,7 @@
 }
 
 .three-stop-progress-temp__names--multiline {
-    line-height: 1.2;
+    line-height: 1;
 }
 
 .three-stop-progress-temp__stop:first-child .three-stop-progress-temp__names {
@@ -163,8 +163,21 @@
     background: #ffffff;
 }
 
-.three-stop-progress-temp__terminal span:last-child {
+.three-stop-progress-temp__terminal:not(.three-stop-progress-temp__terminal--end) span:last-child {
     width: 1cqw;
+}
+
+.three-stop-progress-temp__terminal--end {
+    top: calc(var(--temp-line-position) - var(--temp-line-size) / 2);
+    gap: calc(var(--temp-line-size) * 0.15);
+    transform: none;
+}
+
+.three-stop-progress-temp__terminal--end span {
+    width: calc(var(--temp-line-size) * 0.2);
+    height: calc(var(--temp-line-size) * 2.5);
+    border: 0;
+    background: #e60012;
 }
 
 @media (prefers-reduced-motion: reduce) {
