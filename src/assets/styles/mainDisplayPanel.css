@@ -1,0 +1,260 @@
+/* Panel layout. Monitor dimensions and frame styling are supplied by App.jsx. */
+.main-display-panel {
+    display: grid;
+    grid-template-columns: 0.25fr 1fr;
+    grid-template-rows: 0.5fr 1.85fr 0.0375fr 1fr 0.125fr;
+    user-select: none;
+}
+
+.main-display-panel--stage-zero {
+    grid-template-columns: 1fr 2fr;
+}
+
+.main-display-panel__next-stop {
+    container-type: inline-size;
+    grid-column: 1;
+    grid-row: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    height: 100%;
+    background: #ffff00;
+    color: #000000;
+    text-align: center;
+    line-height: 1;
+}
+
+.main-display-panel__next-stop-zh {
+    font-size: 18cqw;
+}
+
+.main-display-panel__next-stop-en {
+    font-size: 10cqw;
+}
+
+.main-display-panel--stage-zero .main-display-panel__next-stop-zh {
+    font-size: 10cqw;
+}
+
+.main-display-panel--stage-zero .main-display-panel__next-stop-en {
+    font-size: 6cqw;
+}
+
+.main-display-panel__heading {
+    container-type: inline-size;
+    grid-column: 2 / -1;
+    grid-row: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.25rem;
+    background: #000000;
+    color: #ffffff;
+}
+
+.main-display-panel--first-stop .main-display-panel__heading {
+    grid-column: 1 / -1;
+}
+
+.main-display-panel__progress {
+    container-type: inline-size;
+    grid-column: 1 / -1;
+    grid-row: 2;
+    background: #ffffff;
+}
+
+.main-display-panel__progress-content {
+    height: 100%;
+    font-weight: 600;
+    text-align: center;
+    letter-spacing: -0.025em;
+}
+
+.main-display-panel__divider {
+    grid-column: 1 / -1;
+    grid-row: 3;
+    background: #000000;
+}
+
+.main-display-panel__stop-name {
+    container-type: inline-size;
+    grid-column: 1 / -1;
+    grid-row: 4;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #ffffff;
+    color: #000000;
+    font-weight: 450;
+}
+
+.main-display-panel__stop-name-zh {
+    display: inline-block;
+    flex-shrink: 0;
+    white-space: nowrap;
+    font-size: var(--stop-name-zh-font-size);
+    transform-origin: center;
+}
+
+.main-display-panel__stop-name-en {
+    display: none;
+    text-align: center;
+    font-size: 5cqw;
+}
+
+.main-display-panel__driver-info {
+    container-type: inline-size;
+    grid-column: 1 / -1;
+    grid-row: 5;
+    display: flex;
+    justify-content: center;
+    padding: 0.125rem;
+    background: #000000;
+    color: #ffffff;
+    letter-spacing: -0.025em;
+}
+
+.main-display-panel__driver-info > span {
+    font-size: 2cqw;
+}
+
+.main-display-panel__driver-name-en {
+    text-transform: capitalize;
+}
+
+.main-display-panel--stop-pressed .main-display-panel__next-stop {
+    background: #ee0000;
+    color: #ffffff;
+}
+
+.main-display-panel--stop-pressed .main-display-panel__driver-info {
+    background: #e60012;
+}
+
+/* These classes override the notice components' shared text sizes. */
+.main-display-panel .main-display-panel__notice-zh {
+    font-size: 8cqw;
+}
+
+.main-display-panel .main-display-panel__notice-en {
+    font-size: 3.75cqw;
+}
+
+@media (width < 640px) {
+    .main-display-panel__next-stop {
+        gap: 0.25rem;
+    }
+
+    .main-display-panel__stop-name-en {
+        font-size: 4cqw;
+    }
+
+    .main-display-panel__driver-info > span {
+        font-size: 2.25cqw;
+    }
+}
+
+/* Wide mode retains the latest layout proportions and progress scaling. */
+.main-display-panel--wide {
+    grid-template-columns: 20% 80%;
+    grid-template-rows: minmax(0, 0.8fr) minmax(0, 2.2fr) minmax(0, 0.4fr);
+}
+
+.main-display-panel--wide > div {
+    min-width: 0;
+    min-height: 0;
+}
+
+.main-display-panel--wide .main-display-panel__heading {
+    container-type: size;
+}
+
+
+.main-display-panel--wide .main-display-panel__next-stop {
+    container-type: size;
+    gap: 0.25cqw;
+}
+
+/* Scale with the wider indicator, capped by the heading height so both
+   language lines remain visible, including when the stop bell is pressed. */
+.main-display-panel--wide .main-display-panel__next-stop-zh {
+    font-size: min(18cqw, 50cqh);
+}
+
+.main-display-panel--wide .main-display-panel__next-stop-en {
+    font-size: min(10cqw, 28cqh);
+}
+
+.main-display-panel--wide .main-display-panel__driver-info {
+    grid-row: 3;
+    align-items: center;
+    padding: 0;
+    white-space: nowrap;
+    line-height: 1;
+}
+
+.main-display-panel--wide .main-display-panel__driver-info > span {
+    font-size: 1.5cqw;
+}
+
+/* The monitor is twice as wide, not twice as tall. Keep the compact
+   progress view's text and markers proportional to the available height. */
+.main-display-panel--wide .three-stop-progress-temp {
+    min-height: 0;
+}
+
+.main-display-panel--wide .three-stop-progress-temp__row {
+    --temp-line-size: 0.9cqw;
+    --temp-marker-size: 0.9cqw;
+    --temp-line-position: 76%;
+}
+
+.main-display-panel--wide .three-stop-progress-temp__names {
+    bottom: calc(100% - var(--temp-line-position) + var(--temp-line-size) / 2 + 1.375cqw);
+}
+
+.main-display-panel--wide .three-stop-progress-temp__zh {
+    font-size: 1.875cqw;
+}
+
+.main-display-panel--wide .three-stop-progress-temp__en {
+    margin-top: 0.4cqw;
+    font-size: 1.2cqw;
+}
+
+.main-display-panel--wide .three-stop-progress-temp__stop--current .three-stop-progress-temp__zh {
+    font-size: 2.375cqw;
+}
+
+.main-display-panel--wide .three-stop-progress-temp__stop--current .three-stop-progress-temp__en {
+    font-size: 1.425cqw;
+}
+
+.main-display-panel--wide .three-stop-progress-temp__stop--current .three-stop-progress-temp__marker {
+    width: 1.3cqw;
+    height: 1.3cqw;
+}
+
+.main-display-panel--wide .three-stop-progress-temp__arrows {
+    left: 2cqw;
+    gap: 0.5cqw;
+}
+
+.main-display-panel--wide .three-stop-progress-temp__arrows span {
+    border-width: 0.2cqw 0.2cqw 0 0;
+}
+
+.main-display-panel--wide .three-stop-progress-temp__terminal:not(.three-stop-progress-temp__terminal--end) {
+    gap: 0.09cqw;
+}
+
+.main-display-panel--wide .three-stop-progress-temp__terminal:not(.three-stop-progress-temp__terminal--end) span {
+    width: 0.25cqw;
+    border-width: 0.04cqw;
+}
+
+.main-display-panel--wide .three-stop-progress-temp__terminal:not(.three-stop-progress-temp__terminal--end) span:last-child {
+    width: 0.5cqw;
+}

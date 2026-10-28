@@ -109,7 +109,6 @@ export const FuncButtonGroup = ({
             tooltip: appText.mainDisplayStyleTooltip,
             wrapperClassName: groupStyles.item,
             buttonProps: {
-                disabled: true,
                 fullWidth: true,
                 'aria-label': appText.mainDisplayStyle,
                 'aria-pressed': isMainMonitorWide,
@@ -118,7 +117,7 @@ export const FuncButtonGroup = ({
                 variant: 'contained',
                 startIcon: <AspectRatioIcon />,
                 onClick: onToggleMainMonitorStyle,
-                children: <Typography component="span" sx={buttonLabelSx}>{appText.mainDisplayStyle}</Typography>,
+                children: <Typography component="span" sx={buttonLabelSx}>{isMainMonitorWide ? appText.wideDisplayMode : appText.normalDisplayMode}</Typography>,
             },
         },
         ...fullscreenBtnAttr.map(({ key, target, label }) => ({

@@ -93,10 +93,9 @@ const styles = {
 		"z-1",
 	].join(" "),
 	mainMonitorWideStyle: [
-		"w-[1200px] h-[400px]",
-		"max-xl:w-[1050px] max-xl:h-[350px]",
-		"max-md:w-[900px] max-md:h-[300px]",
-		"max-sm:w-[480px] max-sm:h-[160px]",
+		"w-[1600px] aspect-[4/1]",
+		"max-w-[calc(100vw-10rem)]",
+		"max-xl:max-w-[calc(100vw-7rem)] max-sm:max-w-[calc(100vw-2.5rem)]",
 		"shadow-[0_20px_36px_rgba(2,6,23,0.42),0_10px_22px_rgba(15,23,42,0.38)]",
 		"border-[.375rem] max-md:border-[.25em] border-solid border-[rgba(24,31,41,0.96)]",
 		"rounded-xl",

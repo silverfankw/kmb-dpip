@@ -1,14 +1,14 @@
 import { memo } from "react"
 import "@styles/fullStopProgress.css"
 
-export const FullStopProgress = memo(function FullStopProgress({ stop, stopIndex, currentStopIndex, stopCount, continuation }) {
+export const FullStopProgress = memo(function FullStopProgress({ stop, stopIndex, currentStopIndex, stopCount, continuation, isWide = false }) {
     const showContinuationDot = Boolean(continuation)
     const isCurrentStop = !showContinuationDot && stopIndex === currentStopIndex
     const isPastStop = continuation === "previous" || (!showContinuationDot && stopIndex < currentStopIndex)
     const isLastStop = !showContinuationDot && stopIndex === stopCount - 1
 
     return (
-        <div className="stop-progress" role="listitem" aria-current={isCurrentStop ? "step" : undefined}>
+        <div className={`stop-progress${isWide ? " stop-progress--wide" : ""}`} role="listitem" aria-current={isCurrentStop ? "step" : undefined}>
             <div
                 className={`stop-progress__line${isPastStop ? " stop-progress__line--past" : ""}${isCurrentStop && stopIndex > 0 ? " stop-progress__line--current" : ""}`}
                 aria-hidden="true"
@@ -47,6 +47,7 @@ export const FullStopProgress = memo(function FullStopProgress({ stop, stopIndex
     previous.stopIndex === next.stopIndex &&
     previous.stopCount === next.stopCount &&
     previous.continuation === next.continuation &&
+    previous.isWide === next.isWide &&
     (Boolean(next.continuation) || (
         (previous.stopIndex === previous.currentStopIndex) === (next.stopIndex === next.currentStopIndex) &&
         (previous.stopIndex < previous.currentStopIndex) === (next.stopIndex < next.currentStopIndex)

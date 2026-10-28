@@ -119,6 +119,33 @@
     background: #e60012;
 }
 
+.main-display-panel--wide .stop-progress-row {
+    --stop-line-size: 0.9cqw;
+}
+
+.stop-progress--wide .stop-name {
+    top: -1.25cqw;
+    font-size: 0.95cqw;
+}
+
+.stop-progress--wide[aria-current="step"] .stop-name {
+    font-size: 1.1cqw;
+}
+
+.stop-progress--wide .stop-name[aria-label] {
+    top: -2cqw;
+}
+
+@media (width < 1280px) {
+    .stop-progress--wide .stop-name {
+        font-size: 1.1cqw;
+    }
+
+    .stop-progress--wide[aria-current="step"] .stop-name {
+        font-size: 1.25cqw;
+    }
+}
+
 @keyframes stop-progress-pulse {
     0%, 100% {
         transform: scale(1.25);

@@ -224,3 +224,104 @@
         font-size: 3.75cqw;
     }
 }
+
+/* Wide headings use height-based units so the increased monitor width
+   does not make the text taller than the heading row. */
+.route-heading-board--wide {
+    grid-template-columns: 7% minmax(0, auto) 8% minmax(0, auto) minmax(0, auto);
+    justify-content: center;
+    transform: none;
+}
+
+.route-heading-board--wide > div {
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    height: 100%;
+    min-width: 0;
+    padding-inline: 0.5cqw;
+    transform: none;
+}
+
+.route-heading-board--wide .route-heading-board__label {
+    flex-direction: column;
+    justify-content: center;
+}
+
+.route-heading-board--wide .route-heading-board__number--short {
+    min-width: 8cqw;
+}
+
+.route-heading-board--wide .route-heading-board__arrows {
+    padding: 0;
+}
+
+.route-heading-board--wide .route-heading-board__destination-zh {
+    font-size: 60cqh;
+    line-height: 1;
+}
+
+.route-heading-board--wide .route-heading-board__destination-zh span {
+    translate: 0 var(--wide-destination-zh-offset, 0px);
+}
+
+/* Zero-size inline marker exposes the text baseline for glyph alignment. */
+.route-heading-board__baseline {
+    display: inline-block;
+    width: 0;
+    height: 0;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    vertical-align: baseline;
+}
+
+.route-heading-board--wide .route-heading-board__destination-en {
+    font-size: 50cqh;
+    transform: scaleY(1.1);
+    line-height: 1;
+}
+
+.route-heading-inline--wide {
+    justify-content: center;
+    text-align: center;
+}
+
+.route-heading-inline--wide .route-heading-inline__wrapper {
+    flex: 0 0 auto;
+    margin-inline: auto;
+}
+
+.route-heading-inline--wide .route-heading-inline__content {
+    justify-content: center;
+    gap: 1cqh;
+    transform-origin: center;
+}
+
+.route-heading-inline--wide .route-heading-inline__label {
+    margin-right: 12cqh;
+    font-size: 48cqh;
+}
+
+.route-heading-inline--wide .route-heading-inline__number {
+    min-width: 8cqw;
+    font-size: 60cqh;
+}
+
+.route-heading-inline--wide .route-heading-inline__arrows {
+    width: 85cqh;
+}
+
+.route-heading-inline--wide:not(.route-heading-inline--first-stop) .route-heading-inline__arrows {
+    width: 110cqh;
+}
+
+.route-heading-inline--wide .route-heading-inline__destination {
+    margin-left: 12cqh;
+    font-size: 65cqh;
+}
+
+.route-heading-inline--wide.route-heading-inline--english .route-heading-inline__destination {
+    font-size: 55cqh;
+    transform: scaleY(1.1);
+}
