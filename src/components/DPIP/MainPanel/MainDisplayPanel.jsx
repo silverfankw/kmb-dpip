@@ -17,6 +17,7 @@ import {
     FIRST_STOP_WELCOME_ZH,
     FIRST_STOP_WELCOME_EN,
     STOP_NAME_ZH_SAFE_WIDTH_RATIO,
+    STOP_NAME_EN_SAFE_SIZE_RATIO,
     getStopNameZhBaseFontSize,
     getStopProgressPage,
 } from './mainPanelConfig'
@@ -73,7 +74,6 @@ const basestyles = {
     routeHeadingGrid: [
         "@container",
         "flex items-center justify-center gap-1",
-        // "px-1",
         "bg-black text-white"
     ].join(" "),
 
@@ -202,6 +202,27 @@ export const MainDisplayPanel = ({ monitorStyle, screenTarget, isWide = false })
         }
     }, [])
 
+    const applyStopNameEnSize = useCallback(() => {
+        const container = stopNameGridRef.current
+        const el = enStopNameRef.current
+        if (!container?.clientWidth || !container.clientHeight || !el || el.style.display === "none") return
+
+        // Measure at the responsive CSS size so longer names keep their wrapping.
+        el.style.fontSize = ""
+        const containerStyle = window.getComputedStyle(container)
+        const textStyle = window.getComputedStyle(el)
+        const availableWidth = (container.clientWidth -
+            parseFloat(containerStyle.paddingLeft) - parseFloat(containerStyle.paddingRight)) * STOP_NAME_EN_SAFE_SIZE_RATIO
+        const availableHeight = (container.clientHeight -
+            parseFloat(containerStyle.paddingTop) - parseFloat(containerStyle.paddingBottom)) * STOP_NAME_EN_SAFE_SIZE_RATIO
+        const width = el.scrollWidth
+        const height = el.getBoundingClientRect().height
+        if (!width || !height || height > parseFloat(textStyle.lineHeight) + 1) return
+
+        const scale = Math.min(availableWidth / width, availableHeight / height)
+        if (scale > 1) el.style.fontSize = `${parseFloat(textStyle.fontSize) * scale}px`
+    }, [])
+
     // Toggle progress bar and stop name display
     useToggleDisplay(fullProgressBarRef, compactProgressBarRef, PROGRESS_BAR_INTERVAL, [routeDetail?.route, routeDetail?.bound, routeDetail?.service_type, isLoading, stopCount])
     useToggleDisplay(zhStopNameRef, enStopNameRef, STOP_NAME_INTERVAL, [routeDetail?.route, routeDetail?.bound, routeDetail?.service_type])
@@ -237,6 +258,21 @@ export const MainDisplayPanel = ({ monitorStyle, screenTarget, isWide = false })
         applyStopNameZhScale()
     }, [applyStopNameZhScale, stopNameZh])
 
+    useLayoutEffect(() => {
+        applyStopNameEnSize()
+    }, [applyStopNameEnSize, stopNameEn, isFirstStop, showHandrailNotice, showMindDoorNotice])
+
+    useEffect(() => {
+        const container = stopNameGridRef.current
+        const text = enStopNameRef.current
+        if (!container || !text) return
+
+        const observer = new ResizeObserver(applyStopNameEnSize)
+        observer.observe(container)
+        observer.observe(text)
+        return () => observer.disconnect()
+    }, [applyStopNameEnSize, isFirstStop, showHandrailNotice, showMindDoorNotice])
+
     useEffect(() => {
         const container = stopNameGridRef.current
         if (!container) return
@@ -255,7 +291,7 @@ export const MainDisplayPanel = ({ monitorStyle, screenTarget, isWide = false })
         nextStopIndicatorEn: isStageZeroWithNextStop ? basestyles.nextStopIndicatorEnStageZero : basestyles.nextStopIndicatorEn,
         routeHeadingGrid: `${basestyles.routeHeadingGrid} ${isFirstStop ? basestyles.routeHeadingGridFirstStop : basestyles.routeHeadingGridDefault}`,
         stopNameGrid: `${basestyles.stopNameGrid} ${isWide ? "hidden" : ""}`,
-        driverInfoGrid: `${basestyles.driverInfoGrid} ${stopPressed ? "bg-[#EE0000]" : "bg-black"}`
+        driverInfoGrid: `${basestyles.driverInfoGrid} ${stopPressed ? "bg-[#E60012]" : "bg-black"}`
     }
 
     return (

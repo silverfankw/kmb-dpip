@@ -5,6 +5,7 @@ export const STOP_NAME_INTERVAL = 4500
 export const FIRST_STOP_WELCOME_ZH = "歡迎乘搭九龍巴士"
 export const FIRST_STOP_WELCOME_EN = "WELCOME ABOARD"
 export const STOP_NAME_ZH_SAFE_WIDTH_RATIO = 0.985
+export const STOP_NAME_EN_SAFE_SIZE_RATIO = 0.985
 
 export const STAGE_DURATIONS = [4500, 4500, 4500]
 export const STAGE_ZERO_DEST_EN_MAX_SCALE_X = 1.35
