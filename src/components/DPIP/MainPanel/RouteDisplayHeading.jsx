@@ -3,11 +3,9 @@ import { useSelector } from "react-redux"
 import { TripleArrow } from "@components"
 import "@styles/routeDisplayHeading.css"
 import {
-    STAGE_DURATIONS,
+    HEADING_STAGE_INTERVAL,
     getStageZeroDestEnMaxScaleX,
-    getInlineSafeWidthRatio,
-    getStageScaleYRange,
-    getStageScaleXMax,
+    getInlineStageConfig,
 } from './mainPanelConfig'
 
 const STAGE_ZERO_DEST_EN_MIN_FONT_SCALE = 0.95
@@ -27,7 +25,6 @@ export const RouteDisplayHeading = memo(function RouteDisplayHeading({ onStageCh
     const isFirstStop = routeDetail?.stops?.length > 0 && atFirstStop
     const stageSequence = useMemo(
         () => isFirstStop ? [1, 2] : [0, 1, 2],
-        // () => [0],
         [isFirstStop]
     )
 
@@ -46,7 +43,7 @@ export const RouteDisplayHeading = memo(function RouteDisplayHeading({ onStageCh
                 const nextIndex = currentIndex === -1 ? 0 : (currentIndex + 1) % stageSequence.length
                 return stageSequence[nextIndex]
             })
-        }, STAGE_DURATIONS[stage])
+        }, HEADING_STAGE_INTERVAL)
         return () => clearTimeout(t)
     }, [stage, stageSequence])
 
@@ -116,13 +113,13 @@ export const RouteDisplayHeading = memo(function RouteDisplayHeading({ onStageCh
             if (!contentWidth) return
 
             const { paddingLeft, paddingRight } = window.getComputedStyle(container)
+            const { safeWidthRatio, maxScaleX, minScaleY, maxScaleY } = getInlineStageConfig(stage, isFirstStop)
             const availableWidth = Math.max(
                 (container.clientWidth - parseFloat(paddingLeft) - parseFloat(paddingRight)) *
-                getInlineSafeWidthRatio(stage, isFirstStop),
+                safeWidthRatio,
                 0
             )
-            const scaleX = Math.min(1, availableWidth / contentWidth, getStageScaleXMax(stage, isFirstStop))
-            const { min: minScaleY, max: maxScaleY } = getStageScaleYRange(stage, isFirstStop)
+            const scaleX = Math.min(1, availableWidth / contentWidth, maxScaleX)
             const scaleY = isFirstStop && stage === 1
                 ? Math.max(minScaleY, Math.min(maxScaleY, scaleX))
                 : minScaleY + ((maxScaleY - minScaleY) * scaleX)

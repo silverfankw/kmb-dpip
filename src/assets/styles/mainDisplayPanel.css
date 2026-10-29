@@ -201,60 +201,56 @@
 
 /* The monitor is twice as wide, not twice as tall. Keep the compact
    progress view's text and markers proportional to the available height. */
-.main-display-panel--wide .three-stop-progress-temp {
+.main-display-panel--wide .compact-stop-progress {
     min-height: 0;
 }
 
-.main-display-panel--wide .three-stop-progress-temp__row {
+.main-display-panel--wide .compact-stop-progress__row {
     --temp-line-size: 0.9cqw;
     --temp-marker-size: 0.9cqw;
-    --temp-line-position: 76%;
+    --temp-line-position: 70%;
 }
 
-.main-display-panel--wide .three-stop-progress-temp__names {
+.main-display-panel--wide .compact-stop-progress__names {
     bottom: calc(100% - var(--temp-line-position) + var(--temp-line-size) / 2 + 1.375cqw);
 }
 
-.main-display-panel--wide .three-stop-progress-temp__zh {
+.main-display-panel--wide .compact-stop-progress__zh {
     font-size: 1.875cqw;
 }
 
-.main-display-panel--wide .three-stop-progress-temp__en {
+.main-display-panel--wide .compact-stop-progress__en {
     margin-top: 0.4cqw;
     font-size: 1.2cqw;
 }
 
-.main-display-panel--wide .three-stop-progress-temp__stop--current .three-stop-progress-temp__zh {
+.main-display-panel--wide .compact-stop-progress__stop--current .compact-stop-progress__zh {
     font-size: 2.375cqw;
 }
 
-.main-display-panel--wide .three-stop-progress-temp__stop--current .three-stop-progress-temp__en {
+.main-display-panel--wide .compact-stop-progress__stop--current .compact-stop-progress__en {
     font-size: 1.425cqw;
 }
 
-.main-display-panel--wide .three-stop-progress-temp__stop--current .three-stop-progress-temp__marker {
+.main-display-panel--wide .compact-stop-progress__stop--current .compact-stop-progress__marker {
     width: 1.3cqw;
     height: 1.3cqw;
 }
 
-.main-display-panel--wide .three-stop-progress-temp__arrows {
+.main-display-panel--wide .compact-stop-progress__arrows {
     left: 2cqw;
     gap: 0.5cqw;
 }
 
-.main-display-panel--wide .three-stop-progress-temp__arrows span {
-    border-width: 0.2cqw 0.2cqw 0 0;
-}
-
-.main-display-panel--wide .three-stop-progress-temp__terminal:not(.three-stop-progress-temp__terminal--end) {
+.main-display-panel--wide .compact-stop-progress__terminal:not(.compact-stop-progress__terminal--end) {
     gap: 0.09cqw;
 }
 
-.main-display-panel--wide .three-stop-progress-temp__terminal:not(.three-stop-progress-temp__terminal--end) span {
+.main-display-panel--wide .compact-stop-progress__terminal:not(.compact-stop-progress__terminal--end) span {
     width: 0.25cqw;
     border-width: 0.04cqw;
 }
 
-.main-display-panel--wide .three-stop-progress-temp__terminal:not(.three-stop-progress-temp__terminal--end) span:last-child {
+.main-display-panel--wide .compact-stop-progress__terminal:not(.compact-stop-progress__terminal--end) span:last-child {
     width: 0.5cqw;
 }

@@ -13,6 +13,7 @@ export const DriverInfoInputGroup = () => {
 	return (
 		<>
 			<Input
+				id="driver-name-zh"
 				placeholder={appText.driverInfoZhPlaceholder}
 				maxLength={2}
 				value={driverInfo?.nameZh}
@@ -22,6 +23,7 @@ export const DriverInfoInputGroup = () => {
 				}}
 			/>
 			<Input
+				id="driver-name-en"
 				style={"capitalize"}
 				placeholder={appText.driverInfoEnPlaceholder}
 				maxLength={10}
@@ -32,7 +34,7 @@ export const DriverInfoInputGroup = () => {
 				}}
 			/>
 
-			<Input placeholder={appText.staffNoPlaceholder}
+			<Input id="driver-staff-number" placeholder={appText.staffNoPlaceholder}
 				type="number"
 				minLength={1}
 				maxLength={6}

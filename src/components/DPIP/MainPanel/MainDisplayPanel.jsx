@@ -1,16 +1,15 @@
 import '@styles/mainDisplayPanel.css'
-import { useMemo, useRef, useState } from "react"
+import { useEffect, useMemo, useRef, useState } from "react"
 import { shallowEqual, useSelector } from "react-redux"
-import { useToggleDisplay } from "@hooks"
 
 import { LoadingSpinner } from '@components'
 import {
     RouteDisplayHeading,
     FullStopProgress,
-    ThreeStopProgress,
+    CompactStopProgress,
 } from '@components/DPIP'
 import { MainStopNameDisplay } from './MainStopNameDisplay'
-import { PROGRESS_BAR_INTERVAL, getStopProgressPage } from './mainPanelConfig'
+import { DISPLAY_STAGE_INTERVAL, getStopProgressPage } from './mainPanelConfig'
 
 const STOP_PROGRESS_WINDOW_SIZE = 35
 const WIDE_STOP_PROGRESS_WINDOW_SIZE = 52
@@ -34,7 +33,26 @@ export const MainDisplayPanel = ({ monitorStyle, screenTarget, isWide = false })
     const isFirstStop = stopCount > 0 && currentStopIndex === 0
     const routeKey = `${routeDetail?.route}-${routeDetail?.bound}-${routeDetail?.service_type}`
     const [routeHeadingStage, setRouteHeadingStage] = useState(0)
+    const [displayStage, setDisplayStage] = useState(0)
+    const firstStopRef = useRef(isFirstStop)
+    const activeDisplayStage = isFirstStop && displayStage === 2 ? 0 : displayStage
+    const displayLanguage = activeDisplayStage === 1 ? 'en' : 'zh'
     const isStageZeroWithNextStop = !isWide && !isFirstStop && routeHeadingStage === 0
+
+    useEffect(() => {
+        firstStopRef.current = isFirstStop
+        if (isFirstStop) setDisplayStage(stage => stage === 2 ? 0 : stage)
+    }, [isFirstStop])
+
+    useEffect(() => {
+        setDisplayStage(0)
+        if (isLoading || !stopCount) return
+
+        const timer = setInterval(() => {
+            setDisplayStage(stage => (stage + 1) % (firstStopRef.current ? 2 : 3))
+        }, DISPLAY_STAGE_INTERVAL)
+        return () => clearInterval(timer)
+    }, [routeKey, isLoading, stopCount])
 
     const { start: windowStart, end: windowEnd, leadingCount, trailingCount } = getStopProgressPage(
         stopCount, currentStopIndex, isWide ? WIDE_STOP_PROGRESS_WINDOW_SIZE : STOP_PROGRESS_WINDOW_SIZE
@@ -43,10 +61,6 @@ export const MainDisplayPanel = ({ monitorStyle, screenTarget, isWide = false })
         () => stops.slice(windowStart, windowEnd),
         [stops, windowStart, windowEnd]
     )
-
-    const fullProgressBarRef = useRef(null)
-    const compactProgressBarRef = useRef(null)
-    useToggleDisplay(fullProgressBarRef, compactProgressBarRef, PROGRESS_BAR_INTERVAL, [routeKey, isLoading, stopCount])
 
     const panelClassName = [
         "main-display-panel",
@@ -58,7 +72,7 @@ export const MainDisplayPanel = ({ monitorStyle, screenTarget, isWide = false })
     ].filter(Boolean).join(" ")
 
     return (
-        <div ref={screenTarget} className={panelClassName}>
+        <div ref={screenTarget} className={panelClassName} data-display-stage={activeDisplayStage}>
             {!isFirstStop && (
                 <div className="main-display-panel__next-stop">
                     <div className="main-display-panel__next-stop-zh">
@@ -77,34 +91,35 @@ export const MainDisplayPanel = ({ monitorStyle, screenTarget, isWide = false })
             <div className="main-display-panel__progress">
                 {isLoading ? <LoadingSpinner /> : stopCount > 0 && (
                     <div className="main-display-panel__progress-content">
-                        <ThreeStopProgress
-                            progressBarRef={compactProgressBarRef}
-                            currentStop={stops[currentStopIndex]}
-                            nextStop={stops[currentStopIndex + 1]}
-                            followingStop={stops[currentStopIndex + 2]}
-                            isLastStopVisible={currentStopIndex + 3 >= stopCount}
-                        />
-
-                        <div ref={fullProgressBarRef} className="stop-progress-display">
-                            <div className="stop-progress-row" role="list" aria-label="Route stops">
-                                {Array.from({ length: leadingCount }, (_, index) => (
-                                    <FullStopProgress key={`previous-${index}`} continuation="previous" isWide={isWide} />
-                                ))}
-                                {visibleStops.map((stop, index) => (
-                                    <FullStopProgress
-                                        key={`${routeKey}-${windowStart + index}`}
-                                        stop={stop}
-                                        stopIndex={windowStart + index}
-                                        currentStopIndex={currentStopIndex}
-                                        stopCount={stopCount}
-                                        isWide={isWide}
-                                    />
-                                ))}
-                                {Array.from({ length: trailingCount }, (_, index) => (
-                                    <FullStopProgress key={`next-${index}`} continuation="next" isWide={isWide} />
-                                ))}
+                        {activeDisplayStage === 2 ? (
+                            <CompactStopProgress
+                                stops={stops}
+                                currentStopIndex={currentStopIndex}
+                                isWide={isWide}
+                            />
+                        ) : (
+                            <div className="stop-progress-display">
+                                <div className="stop-progress-row" role="list" aria-label="Route stops">
+                                    {Array.from({ length: leadingCount }, (_, index) => (
+                                        <FullStopProgress key={`previous-${index}`} continuation="previous" isWide={isWide} />
+                                    ))}
+                                    {visibleStops.map((stop, index) => (
+                                        <FullStopProgress
+                                            key={`${routeKey}-${windowStart + index}`}
+                                            stop={stop}
+                                            stopIndex={windowStart + index}
+                                            currentStopIndex={currentStopIndex}
+                                            stopCount={stopCount}
+                                            isWide={isWide}
+                                            language={displayLanguage}
+                                        />
+                                    ))}
+                                    {Array.from({ length: trailingCount }, (_, index) => (
+                                        <FullStopProgress key={`next-${index}`} continuation="next" isWide={isWide} />
+                                    ))}
+                                </div>
                             </div>
-                        </div>
+                        )}
                     </div>
                 )}
             </div>
@@ -115,7 +130,7 @@ export const MainDisplayPanel = ({ monitorStyle, screenTarget, isWide = false })
                     <MainStopNameDisplay
                         stop={stops[currentStopIndex]}
                         isFirstStop={isFirstStop}
-                        routeKey={routeKey}
+                        language={displayLanguage}
                         showHandrailNotice={showHandrailNotice}
                         showMindDoorNotice={showMindDoorNotice}
                     />

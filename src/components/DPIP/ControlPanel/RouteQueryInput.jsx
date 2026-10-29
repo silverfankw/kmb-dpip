@@ -1,16 +1,17 @@
 import "@styles/asyncSelect.css"
 import SearchIcon from '@mui/icons-material/Search'
+import CloseIcon from '@mui/icons-material/Close'
 
-import { useCallback, useMemo, useState, useEffect } from "react"
+import { useCallback, useId, useMemo, useRef, useState, useEffect } from "react"
 import AsyncSelect from 'react-select/async'
 import { components } from 'react-select'
-import { ClipLoader } from "react-spinners"
 
 import { useSelector, useDispatch } from 'react-redux'
 import { selectRouteThunk } from "@store/routeSelectionSlice"
 import { useWindowSize, useRouteTypeStyle } from "@hooks"
-import { RouteNumber, RouteDetails } from '@components'
+import { RouteNumber, RouteDetails, RouteSearchKeypad } from '@components'
 import { createRouteOption } from "@utils"
+import { getAppTextConfig } from '@components/sharedComponentConfig'
 
 const MAX_SEARCH_RESULTS = 50
 
@@ -19,14 +20,14 @@ const SELECT_THEME = {
         text: "#0f172a",
         icon: "#64748b",
         focusedIcon: "#0284c7",
-        controlBackground: "linear-gradient(180deg, rgba(255, 255, 255, 0.92), rgba(248, 250, 252, 0.94))",
+        controlBackground: "#f6f8fb",
         menuBackground: "linear-gradient(180deg, rgba(255,255,255,0.97), rgba(248,250,252,0.94))",
     },
     night: {
         text: "#f8fafc",
         icon: "#94a3b8",
         focusedIcon: "#67e8f9",
-        controlBackground: "linear-gradient(180deg, rgba(15, 23, 42, 0.72), rgba(30, 41, 59, 0.78))",
+        controlBackground: "rgba(2, 6, 23, 0.32)",
         menuBackground: "linear-gradient(180deg, rgba(15,23,42,0.86), rgba(15,23,42,0.92))",
     },
 }
@@ -88,7 +89,6 @@ const RouteOptionContent = ({ componentType, data, compact = false, isMobile, ge
                         origin={originLabel}
                         destination={destinationLabel}
                         remark={specialRemarkLabel}
-                        isMobile={isMobile}
                     />
                 )}
             </div>
@@ -100,13 +100,18 @@ export const RouteQueryInput = ({ compact = false, label = '', labelClassName = 
     const { isMobile } = useWindowSize()
     const getRouteStyle = useRouteTypeStyle()
     const dispatch = useDispatch()
+    const selectRef = useRef(null)
+    const inputId = useId()
+    const hintId = `${inputId}-hint`
     const { routes } = useSelector(state => state.route)
     const { routeDetail } = useSelector(state => state.routeSelection)
-    const { uiMode } = useSelector(state => state.userPreference)
+    const { uiMode, language } = useSelector(state => state.userPreference)
+    const appText = getAppTextConfig(language)
     const isLightMode = uiMode === "light"
     const selectTheme = isLightMode ? SELECT_THEME.light : SELECT_THEME.night
 
     const [selectedOption, setSelectedOption] = useState(null)
+    const [isKeypadOpen, setIsKeypadOpen] = useState(false)
     const isRoutesLoading = !routes || routes.length === 0
 
     useEffect(() => {
@@ -114,6 +119,10 @@ export const RouteQueryInput = ({ compact = false, label = '', labelClassName = 
             setSelectedOption(createRouteOption(routeDetail))
         }
     }, [routeDetail])
+
+    useEffect(() => {
+        if (!isMobile) setIsKeypadOpen(false)
+    }, [isMobile])
 
     const routeOptions = useMemo(
         () => routes?.map(createRouteOption) ?? [],
@@ -164,27 +173,37 @@ export const RouteQueryInput = ({ compact = false, label = '', labelClassName = 
                     color: props.isFocused
                         ? selectTheme.focusedIcon
                         : selectTheme.icon,
-                    fontSize: isMobile ? 20 : 24,
-                    marginLeft: isMobile ? "10px" : "14px",
-                    marginRight: isMobile ? "6px" : "8px",
+                    fontSize: 20,
+                    marginLeft: "12px",
+                    marginRight: "8px",
                     flexShrink: 0,
                 }}
             />
-            {label && (
-                <span
-                    className={labelClassName}
-                    style={{
-                        marginRight: isMobile ? "6px" : "8px",
-                        whiteSpace: "nowrap",
-                        flexShrink: 0,
-                    }}
-                >
-                    {label}
-                </span>
-            )}
             {props.children}
         </components.Control>
-    ), [isMobile, label, labelClassName, selectTheme])
+    ), [selectTheme])
+
+    const ClearIndicator = useCallback(({ clearValue }) => (
+        <button
+            type="button"
+            className="route-query__clear"
+            aria-label={appText.clearRouteSearch}
+            title={appText.clearRouteSearch}
+            onMouseDown={event => {
+                event.preventDefault()
+                event.stopPropagation()
+            }}
+            onTouchEnd={event => event.stopPropagation()}
+            onKeyDown={event => event.stopPropagation()}
+            onClick={event => {
+                event.stopPropagation()
+                clearValue()
+                selectRef.current?.focus()
+            }}
+        >
+            <CloseIcon fontSize="small" />
+        </button>
+    ), [appText.clearRouteSearch])
 
     const Option = useCallback(
         props => (
@@ -211,6 +230,17 @@ export const RouteQueryInput = ({ compact = false, label = '', labelClassName = 
         [compact, getRouteStyle, isMobile]
     )
 
+    const Input = useCallback(props => (
+        <components.Input
+            {...props}
+            aria-describedby={[props['aria-describedby'], hintId].filter(Boolean).join(' ')}
+        />
+    ), [hintId])
+
+    const selectComponents = useMemo(() => ({
+        Control, Option, SingleValue, Input, ClearIndicator, IndicatorSeparator: null,
+    }), [Control, Option, SingleValue, Input, ClearIndicator])
+
     const selectStyles = useMemo(() => ({
         control: (base, state) => ({
             ...base,
@@ -218,24 +248,20 @@ export const RouteQueryInput = ({ compact = false, label = '', labelClassName = 
             color: selectTheme.text,
             boxShadow: state.isFocused
                 ? (isLightMode
-                    ? "0 0 0 2px rgba(14, 165, 233, 0.12), 0 8px 18px rgba(148, 163, 184, 0.12)"
-                    : "0 0 0 2px rgba(56, 189, 248, 0.12), 0 10px 18px rgba(15, 23, 42, 0.2)")
-                : (isLightMode
-                    ? "0 6px 16px rgba(148, 163, 184, 0.08)"
-                    : "0 8px 18px rgba(15, 23, 42, 0.12)"),
-            height: isMobile ? 42 : 48,
-            minHeight: isMobile ? 42 : 48,
+                    ? "0 0 0 3px rgba(14, 165, 233, 0.12)"
+                    : "0 0 0 3px rgba(56, 189, 248, 0.16)")
+                : "none",
+            minHeight: 52,
             border: `1px solid ${state.isFocused
-                ? (isLightMode ? "rgba(14, 165, 233, 0.18)" : "rgba(34, 211, 238, 0.18)")
-                : (isLightMode ? "rgba(148, 163, 184, 0.2)" : "rgba(148, 163, 184, 0.12)")}`,
+                ? (isLightMode ? "#0284c7" : "#38bdf8")
+                : (isLightMode ? "#dce3ec" : "rgba(148, 163, 184, 0.22)")}`,
             borderRadius: "12px",
-            transition: "all 0.18s ease",
-            paddingLeft: isMobile ? "2px" : "4px",
+            transition: "border-color 0.16s ease, box-shadow 0.16s ease",
+            cursor: state.isDisabled ? "wait" : "text",
             "&:hover": {
-                border: `1px solid ${isLightMode ? "rgba(148, 163, 184, 0.34)" : "rgba(148, 163, 184, 0.24)"}`,
-                boxShadow: isLightMode
-                    ? "0 8px 18px rgba(148, 163, 184, 0.1)"
-                    : "0 10px 18px rgba(15, 23, 42, 0.14)",
+                borderColor: state.isFocused
+                    ? selectTheme.focusedIcon
+                    : (isLightMode ? "#94a3b8" : "#64748b"),
             }
         }),
         menu: base => ({
@@ -308,8 +334,8 @@ export const RouteQueryInput = ({ compact = false, label = '', labelClassName = 
         input: base => ({
             ...base,
             color: selectTheme.text,
-            fontSize: isMobile ? "16px" : base.fontSize,
-            margin: isMobile ? "0 2px" : "0 4px",
+            fontSize: "16px",
+            margin: 0,
             fontWeight: 500,
         }),
         placeholder: base => ({
@@ -317,50 +343,33 @@ export const RouteQueryInput = ({ compact = false, label = '', labelClassName = 
             color: isLightMode ? "rgba(71, 85, 105, 0.72)" : "rgba(203, 213, 225, 0.7)",
             opacity: 1,
             fontWeight: 500,
+            fontSize: "14px",
         }),
         singleValue: base => ({
             ...base,
             color: selectTheme.text,
-            margin: isMobile ? "0 2px" : "0 4px",
+            margin: 0,
             fontWeight: 500,
+            whiteSpace: "normal",
+            textOverflow: "clip",
         }),
         valueContainer: base => ({
             ...base,
-            padding: isMobile ? "1px 8px 1px 2px" : "2px 12px 2px 4px",
+            padding: "6px 4px 6px 0",
             gap: "2px",
         }),
         indicatorsContainer: base => ({
             ...base,
-            "> div": {
-                padding: isMobile ? "4px" : "6px",
-            },
-        }),
-        indicatorSeparator: (base, state) => ({
-            ...base,
-            backgroundColor: state.isFocused
-                ? (isLightMode ? "rgba(14, 165, 233, 0.45)" : "rgba(56, 189, 248, 0.42)")
-                : (isLightMode ? "rgba(148, 163, 184, 0.38)" : "rgba(148, 163, 184, 0.18)"),
-            margin: "8px 0",
-            width: "1px",
-            transition: "background-color 0.18s ease",
+            alignSelf: "center",
         }),
         dropdownIndicator: (base, state) => ({
             ...base,
             color: state.isFocused
                 ? (isLightMode ? "#0284c7" : "#67e8f9")
                 : (isLightMode ? "#64748b" : "#94a3b8"),
-            padding: "6px",
-            transition: "color 0.18s ease",
-            "&:hover": {
-                color: isLightMode ? "#0284c7" : "#67e8f9",
-            },
-        }),
-        clearIndicator: (base, state) => ({
-            ...base,
-            color: state.isFocused
-                ? (isLightMode ? "#0284c7" : "#67e8f9")
-                : (isLightMode ? "#64748b" : "#94a3b8"),
-            padding: "6px",
+            width: 44,
+            height: 44,
+            padding: "12px",
             transition: "color 0.18s ease",
             "&:hover": {
                 color: isLightMode ? "#0284c7" : "#67e8f9",
@@ -380,56 +389,91 @@ export const RouteQueryInput = ({ compact = false, label = '', labelClassName = 
             padding: "12px",
             fontWeight: 500,
         }),
-        multiValue: base => ({
-            ...base,
-            backgroundColor: "rgba(37, 99, 235, 0.15)",
-            borderRadius: "6px",
-        }),
-        multiValueLabel: base => ({
-            ...base,
-            color: "#fff",
-        }),
-        multiValueRemove: base => ({
-            ...base,
-            color: "#777",
-            "&:hover": {
-                backgroundColor: "rgba(37, 99, 235, 0.3)",
-                color: "#fff",
-            },
-        }),
     }), [isLightMode, isMobile, selectTheme])
 
+    // Search navigation must not reach the simulator's window-level stop shortcuts.
     return (
-        <AsyncSelect
-            components={{
-                Control,
-                Option,
-                SingleValue
-            }}
-            classNamePrefix="routeInputSelect"
-            menuPortalTarget={isMobile ? undefined : document.body}
-            menuPosition={isMobile ? "absolute" : "fixed"}
-            styles={selectStyles}
-            isDisabled={isRoutesLoading}
-            isClearable
-            cacheOptions
-            defaultOptions={defaultOptions}
-            placeholder={isRoutesLoading ?
-                <div style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: isMobile ? ".5rem" : "1rem",
-                    zIndex: 10
-                }}>
-                    <ClipLoader color="#2563eb" size={25} />
-                    <span>{"\u6b63\u5728\u540c\u6b65\u8def\u7dda\u6578\u64da..."}</span>
-                </div> : "\u8f38\u5165\u4e5d\u5df4\u8def\u7dda\u7de8\u865f\u3000Input KMB route"}
-            loadingMessage={() => "\u641c\u5c0b\u8def\u7dda\u4e2d..."}
-            isLoading={isRoutesLoading}
-            filterOption={null}
-            loadOptions={handleSearch}
-            value={selectedOption}
-            onChange={handleSelect}
-        />
+        <div className="route-query" data-theme={uiMode} onKeyDown={event => event.stopPropagation()}>
+            <div className="route-query__header">
+                <label htmlFor={inputId} className={`route-query__label ${labelClassName}`}>
+                    {label || appText.routeLabel}
+                </label>
+                <p id={hintId} className="route-query__hint">
+                    {language === 'en' ? '(' : '（'}
+                    {selectedOption ? appText.routeChangeHint : appText.routeSearchHint}
+                    {language === 'en' ? ')' : '）'}
+                </p>
+            </div>
+            {isMobile ? (
+                <>
+                    <button
+                        id={inputId}
+                        type="button"
+                        className="route-query__mobile-trigger"
+                        aria-haspopup="dialog"
+                        aria-expanded={isKeypadOpen}
+                        aria-describedby={hintId}
+                        disabled={isRoutesLoading}
+                        onClick={() => setIsKeypadOpen(true)}
+                    >
+                        <SearchIcon aria-hidden="true" />
+                        {selectedOption ? (
+                            <>
+                                <RouteNumber
+                                    route={selectedOption.routeLabel}
+                                    isSpecial={selectedOption.isSpecial}
+                                    componentType="SingleValue"
+                                    isMobile
+                                    getRouteStyle={getRouteStyle}
+                                />
+                                {!compact && (
+                                    <RouteDetails
+                                        origin={selectedOption.originLabel}
+                                        destination={selectedOption.destinationLabel}
+                                        remark={selectedOption.specialRemarkLabel}
+                                    />
+                                )}
+                            </>
+                        ) : (
+                            <span>{isRoutesLoading ? appText.loadingRoutes : appText.routeInputPlaceholder}</span>
+                        )}
+                    </button>
+                    {isKeypadOpen && (
+                        <RouteSearchKeypad
+                            options={routeOptions}
+                            language={language}
+                            uiMode={uiMode}
+                            onClose={() => setIsKeypadOpen(false)}
+                            onSelect={option => {
+                                handleSelect(option)
+                                setIsKeypadOpen(false)
+                            }}
+                        />
+                    )}
+                </>
+            ) : <AsyncSelect
+                ref={selectRef}
+                inputId={inputId}
+                instanceId={inputId}
+                components={selectComponents}
+                classNamePrefix="routeInputSelect"
+                menuPortalTarget={isMobile ? undefined : document.body}
+                menuPosition={isMobile ? "absolute" : "fixed"}
+                styles={selectStyles}
+                isDisabled={isRoutesLoading}
+                isClearable
+                blurInputOnSelect
+                cacheOptions
+                defaultOptions={defaultOptions}
+                placeholder={isRoutesLoading ? appText.loadingRoutes : appText.routeInputPlaceholder}
+                loadingMessage={() => appText.searchRoutes}
+                noOptionsMessage={() => appText.routeSearchNoResults}
+                isLoading={isRoutesLoading}
+                filterOption={null}
+                loadOptions={handleSearch}
+                value={selectedOption}
+                onChange={handleSelect}
+            />}
+        </div>
     )
 }

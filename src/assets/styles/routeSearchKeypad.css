@@ -1,0 +1,192 @@
+html:has(.route-search-keypad[open]) {
+    overflow: hidden;
+}
+
+.route-search-keypad {
+    --keypad-bg: #0f172a;
+    --keypad-button: #1e293b;
+    --keypad-border: #475569;
+    --keypad-text: #f1f5f9;
+    position: fixed;
+    inset: auto 0 0;
+    display: flex;
+    flex-direction: column;
+    width: 100vw;
+    max-width: 100vw;
+    height: min(620px, 94dvh);
+    max-height: 94dvh;
+    margin: 0;
+    padding: 0 0 env(safe-area-inset-bottom);
+    border: 0;
+    border-top: 1px solid var(--keypad-border);
+    border-radius: 18px 18px 0 0;
+    background: var(--keypad-bg);
+    color: var(--keypad-text);
+    font-family: 'Noto Sans HK', 'Microsoft JhengHei', 'PingFang HK', sans-serif;
+    overflow: hidden;
+}
+
+.route-search-keypad[data-theme="light"] {
+    --keypad-bg: #ffffff;
+    --keypad-button: #f1f5f9;
+    --keypad-border: #cbd5e1;
+    --keypad-text: #0f172a;
+}
+
+.route-search-keypad::backdrop {
+    background: rgba(2, 6, 23, 0.6);
+}
+
+.route-search-keypad button {
+    min-width: 0;
+    min-height: 44px;
+    padding: 8px;
+    border: 1px solid var(--keypad-border);
+    border-radius: 10px;
+    background: var(--keypad-button);
+    color: inherit;
+    font: inherit;
+    cursor: pointer;
+    touch-action: manipulation;
+}
+
+.route-search-keypad button:focus-visible,
+.route-search-keypad input:focus-visible {
+    outline: 2px solid #38bdf8;
+    outline-offset: -2px;
+}
+
+.route-search-keypad button:active {
+    background: #0369a1;
+    color: #fff;
+}
+
+.route-search-keypad button:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+.route-search-keypad__header,
+.route-search-keypad__query {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+    padding: 8px 12px;
+}
+
+.route-search-keypad__header h2 {
+    flex: 1;
+    margin: 0;
+    font-size: 16px;
+    font-weight: 700;
+}
+
+.route-search-keypad__query {
+    padding-top: 0;
+}
+
+.route-search-keypad__query input {
+    width: 0;
+    min-width: 0;
+    flex: 1;
+    height: 44px;
+    padding: 8px;
+    border: 1px solid var(--keypad-border);
+    border-radius: 8px;
+    background: var(--keypad-bg);
+    color: inherit;
+    font: inherit;
+    font-size: 18px;
+}
+
+.route-search-keypad__results {
+    flex: 1;
+    min-height: 44px;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    padding: 0 12px 8px;
+}
+
+.route-search-keypad .route-search-keypad__result {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    width: 100%;
+    margin-bottom: 6px;
+    text-align: left;
+}
+
+.route-search-keypad__keys {
+    display: grid;
+    grid-template-columns: 65% 35%;
+    flex-shrink: 0;
+    border-top: 1px solid var(--keypad-border);
+}
+
+.route-search-keypad__numbers {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 6px;
+    padding: 10px;
+}
+
+.route-search-keypad__numbers button,
+.route-search-keypad__letters button {
+    height: 56px;
+    padding: 4px;
+    font-size: 22px;
+    font-weight: 650;
+    line-height: 1.2;
+}
+
+.route-search-keypad__numbers .route-search-keypad__clear {
+    font-size: 14px;
+}
+
+.route-search-keypad__letters {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    max-height: 262px;
+    padding: 10px 10px 10px 0;
+}
+
+.route-search-keypad__letters > div {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 6px;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+}
+
+@media (max-height: 420px) {
+    .route-search-keypad {
+        height: 100dvh;
+        max-height: 100dvh;
+    }
+
+    .route-search-keypad__header,
+    .route-search-keypad__query {
+        padding-block: 0;
+    }
+
+    .route-search-keypad__numbers {
+        gap: 2px;
+        padding-block: 2px;
+    }
+
+    .route-search-keypad__numbers button,
+    .route-search-keypad__letters button {
+        height: 44px;
+    }
+
+    .route-search-keypad__letters {
+        max-height: 186px;
+        padding-block: 2px;
+    }
+
+    .route-search-keypad__results {
+        min-height: 0;
+    }
+}

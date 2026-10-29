@@ -6,6 +6,8 @@ import {
 import { useRef, useCallback, useEffect, useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { useKeyboardNavigation, useLocalStorageState} from "@hooks"
+import PlaceOutlinedIcon from '@mui/icons-material/PlaceOutlined'
+import '@styles/routeQuerySection.css'
 
 import { getAppTextConfig } from '@components/sharedComponentConfig'
 import { getRoutesThunk } from "@store/routeSlice"
@@ -39,41 +41,40 @@ const buildStoredSelection = (routeDetail, currentStopIndex, includeTimestamp = 
 	return data
 }
 
-// Tailwind classes for layout
+// Layout classes; query section styles are defined in routeQuerySection.css.
 const styles = {
-	rootContainer: "min-h-screen flex flex-col items-center",
+	rootContainer: "app-layout min-h-screen flex flex-col items-center",
 
 	contentContainer: [
+		"w-full min-w-0",
 		"select-none focus:outline-hidden",
 		"px-16 py-[2rem] max-xl:px-10 max-sm:p-1.5",
 		"flex flex-1 flex-col gap-3 ",
 		"max-sm:gap-1"
 	].join(" "),
 
-	querySection: [
-		"order-1 max-sm:order-2",
-		"flex flex-wrap items-center gap-4 w-full relative z-20",
-		"rounded-[1.75rem]",
-		"overflow-visible",
-		"p-4 max-md:p-2 max-sm:p-1.5",
-		"text-sm sm:text-base max-sm:text-xs",
-		"max-sm:gap-1"
-	].join(" "),
-	querySectionNight: "bg-[linear-gradient(180deg,rgba(15,23,42,0.82),rgba(18,29,46,0.74))] backdrop-blur-xl border border-slate-300/10 shadow-[0_12px_28px_rgba(2,6,23,0.22),inset_0_1px_0_rgba(255,255,255,0.04)] text-slate-100 hover:shadow-[0_14px_30px_rgba(14,165,233,0.06)]",
-	querySectionLight: "bg-[linear-gradient(180deg,rgba(255,255,255,0.98),rgba(248,250,252,0.9))] backdrop-blur-xl border border-slate-200/90 shadow-[0_10px_24px_rgba(148,163,184,0.12),inset_0_1px_0_rgba(255,255,255,0.8)] text-slate-700 hover:shadow-[0_12px_28px_rgba(148,163,184,0.16)]",
-	queryStatusLabel: "max-xl:text-sm max-sm:text-xs font-medium tracking-[0.04em] text-[0.72rem] sm:text-[0.8rem]",
-	queryStatusValue: "font-semibold tracking-[0.02em] leading-tight",
-	queryStatusRouteValue: "font-semibold tracking-[0.02em] leading-tight flex items-center min-w-0 w-1/2 basis-1/2 shrink-0 max-xl:w-3/5 max-xl:basis-3/5 max-sm:w-full max-sm:basis-full",
-	queryStatusRouteInputWrapper: "w-full",
+	querySection: "query-section",
+	queryStatusLabel: "query-section__label",
+	queryStatusValue: "query-section__value",
+	queryStatusRouteValue: "query-section__route",
+	queryStatusRouteInputWrapper: "query-section__route-input",
+	queryStatusSummary: "query-section__summary",
+	queryStatusProgress: "query-section__progress",
+	queryStatusProgressBar: "query-section__progress-bar",
+	queryStatusCurrent: "query-section__current",
+	queryStatusStopName: "query-section__value query-section__stop-name",
+	queryStatusEmpty: "query-section__empty",
 	controlPanelOrderSection: "order-2 max-sm:order-3 w-full",
 
 	screenPanelSection: [
+		"app-monitors",
 		"order-3 max-sm:order-1",
 		"flex flex-wrap items-center justify-center",
 		"gap-8 py-3 max-xl:gap-8 max-sm:gap-3 max-sm:py-1"
 	].join(" "),
 
 	monitorShell: [
+		"app-monitor-shell",
 		"rounded-[2rem]",
 		"bg-[linear-gradient(180deg,rgba(15,23,42,0.78),rgba(30,41,59,0.8))]",
 		"p-3 max-sm:p-1",
@@ -82,6 +83,7 @@ const styles = {
 	].join(" "),
 
 	monitorStyle: [
+		"app-monitor app-monitor--normal",
 		"w-[800px] h-[480px]",
 		"max-xl:w-[700px] max-xl:h-[420px]",
 		"max-md:w-[600px] max-md:h-[360px]",
@@ -93,6 +95,7 @@ const styles = {
 		"z-1",
 	].join(" "),
 	mainMonitorWideStyle: [
+		"app-monitor app-monitor--wide",
 		"w-[1600px] aspect-[4/1]",
 		"max-w-[calc(100vw-10rem)]",
 		"max-xl:max-w-[calc(100vw-7rem)] max-sm:max-w-[calc(100vw-2.5rem)]",
@@ -115,15 +118,10 @@ const App = () => {
 	const { uiMode, language } = useSelector(state => state.userPreference)
 	const isBoundSwitchable = useSelector(selectIsBoundSwitchable)
 	const appText = getAppTextConfig(language)
-	const isLightMode = uiMode === "light"
 	const totalStops = routeDetail?.stops?.length ?? 0
+	const currentStop = routeDetail?.stops?.[currentStopIndex]
 	const currentStopSummary = totalStops > 0
 		? `${currentStopIndex + 1} / ${totalStops}` : '-'
-	const querySection = `${styles.querySection} ${isLightMode ? styles.querySectionLight : styles.querySectionNight}`
-	const queryStatusLabel = `${styles.queryStatusLabel} ${isLightMode ? "text-slate-600" : "text-slate-400"}`
-	const queryStatusValue = `${styles.queryStatusValue} ${isLightMode ? "text-slate-900" : "text-slate-100"}`
-	const queryStatusRouteValue = `${styles.queryStatusRouteValue} ${isLightMode ? "text-slate-900" : "text-slate-100"}`
-	const queryStatusDivider = `${styles.queryStatusDivider} ${isLightMode ? "text-slate-400" : "text-slate-500"}`
 	const mainMonitorStyle = isMainMonitorWide ? styles.mainMonitorWideStyle : styles.monitorStyle
 
 	// Load route data into Redux once on startup
@@ -203,20 +201,34 @@ const App = () => {
 				<div className={styles.contentContainer} tabIndex={1}>
 
 					{/* Query section for route input and selection */}
-					<section className={querySection}>
-						<div className={queryStatusRouteValue}>
+					<section className={styles.querySection} data-theme={uiMode} aria-label={appText.routeQuerySectionLabel}>
+						<div className={styles.queryStatusRouteValue}>
 							<div className={styles.queryStatusRouteInputWrapper}>
-								<RouteQueryInput label={appText.routeLabel} labelClassName={queryStatusLabel} />
+								<RouteQueryInput label={appText.routeLabel} labelClassName={styles.queryStatusLabel} />
 							</div>
 						</div>
-						{isUserSelectedRoute && routeDetail?.stops?.[currentStopIndex] && (
-							<>
-							<span className={queryStatusLabel}>{appText.stopCountLabel}</span>
-							<span className={queryStatusValue}>{currentStopSummary}</span>
-									<span className={queryStatusDivider}>|</span>
-									<span className={queryStatusLabel}>{appText.currentStopLabel}</span>
-									<span className={queryStatusValue}>{routeDetail.stops[currentStopIndex][language === 'en' ? 'en' : 'zh']}</span>
-							</>
+						{isUserSelectedRoute && currentStop ? (
+							<div className={styles.queryStatusSummary} aria-live="polite" aria-atomic="true">
+								<div className={styles.queryStatusProgress}>
+									<span className={styles.queryStatusLabel}>{appText.stopCountLabel}</span>
+									<span className={styles.queryStatusValue}>{currentStopSummary}</span>
+									<progress
+										className={styles.queryStatusProgressBar}
+										max={totalStops}
+										value={currentStopIndex + 1}
+										aria-label={appText.routeProgressLabel}
+									/>
+								</div>
+								<div className={styles.queryStatusCurrent}>
+									<span className={styles.queryStatusLabel}><PlaceOutlinedIcon />{appText.currentStopLabel}</span>
+									<span className={styles.queryStatusStopName}>{currentStop[language === 'en' ? 'en' : 'zh']}</span>
+								</div>
+							</div>
+						) : (
+							<div className={styles.queryStatusEmpty}>
+								<PlaceOutlinedIcon />
+								<p>{appText.routeSearchEmpty}</p>
+							</div>
 						)}
 					</section>
 

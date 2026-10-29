@@ -47,12 +47,12 @@ const styles = {
         "relative",
         "tracking-[0.0125rem]",
         "tracking-wide",
-        "font-[480]"
+        "font-[450]"
     ].join(" "),
 
     enStopName: [
         "text-[4.625cqw] mb-[0.5cqw]",
-        "font-[480]",
+        "font-[450]",
     ].join(" ")
 }
 

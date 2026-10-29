@@ -1,155 +1,85 @@
-import { useButtonStyles } from "@styles/buttonStyle"
-
-import { useSelector, useDispatch } from 'react-redux'
+import { useState } from 'react'
+import { shallowEqual, useSelector, useDispatch } from 'react-redux'
 import { getAppTextConfig } from '@components/sharedComponentConfig'
-import { setCustomizeDriverInfoToggle } from "@store/userPreferenceSlice"
-
-import { Button, Tooltip, Typography } from '@mui/material'
-import BadgeIcon from '@mui/icons-material/Badge'
+import { setCustomizeDriverInfoToggle } from '@store/userPreferenceSlice'
+import BadgeOutlinedIcon from '@mui/icons-material/BadgeOutlined'
 import FullscreenIcon from '@mui/icons-material/Fullscreen'
 import AspectRatioIcon from '@mui/icons-material/AspectRatio'
-
+import { ControlButton } from './ControlButton'
+import { getControlPanelText } from './controlPanelConfig'
 
 export const FuncButtonGroup = ({
-    mainScreenTarget,
-    secScreenTarget,
-    isMainMonitorWide,
-    onToggleMainMonitorStyle,
+    mainScreenTarget, secScreenTarget, isMainMonitorWide, onToggleMainMonitorStyle,
 }) => {
-
-    const { isUserSelectedRoute } = useSelector(state => state.routeSelection)
-    const { customizeDriverInfoToggle, language } = useSelector(state => state.userPreference)
+    const isUserSelectedRoute = useSelector(state => state.routeSelection.isUserSelectedRoute)
+    const { customizeDriverInfoToggle, language } = useSelector(state => ({
+        customizeDriverInfoToggle: state.userPreference.customizeDriverInfoToggle,
+        language: state.userPreference.language,
+    }), shallowEqual)
     const appText = getAppTextConfig(language)
-
+    const text = getControlPanelText(language)
     const dispatch = useDispatch()
-    const styles = useButtonStyles("info")
-    const buttonSx = {
-        ...styles.button,
-        minHeight: 40,
-        height: 40,
-        minWidth: 0,
-        borderRadius: 2,
-        px: 1.1,
-        py: 0.75,
-        justifyContent: 'center',
-        whiteSpace: 'nowrap',
-        '@media (min-width: 768px)': {
-            minHeight: 41,
-            height: 41,
-            px: 1.1,
-            py: 0.65,
-        },
-        '@media (min-width: 1280px)': {
-            minHeight: 41,
-            height: 41,
-            px: 1.2,
-            py: 0.7,
-        },
-        '@media (max-width: 640px)': {
-            minHeight: 46,
-            px: 0.85,
-            py: 0.65,
-        },
-        '&:focus-visible': {
-            outline: '3px solid rgba(255,255,255,0.9)',
-            outlineOffset: 2,
-        },
-    }
-    const groupStyles = {
-        grid: "grid w-full gap-1.5 sm:grid-cols-2 xl:grid-cols-4 sm:gap-2",
-        item: "block w-full min-w-0",
-        desktopOnly: "block w-full min-w-0",
-    }
+    const [fullscreenFailed, setFullscreenFailed] = useState(false)
+    const supportsFullscreen = typeof document !== 'undefined' && Boolean(document.fullscreenEnabled)
+    const fullscreenDisabled = !isUserSelectedRoute || !supportsFullscreen
+    const fullscreenDisabledReason = !supportsFullscreen ? text.fullscreenUnsupported : appText.fullscreenTooltip
+    const mainFullscreenDisabled = fullscreenDisabled || isMainMonitorWide
 
-    const fullscreenBtnAttr = [
-        {
-            key: 'main',
-            target: mainScreenTarget,
-            label: appText.fullscreenMain,
-        },
-        {
-            key: 'sec',
-            target: secScreenTarget,
-            label: appText.fullscreenSec,
-        },
-    ]
-
-    const driverInfoTooltip = appText.driverInfoTooltip
-    const fullscreenTooltip = appText.fullscreenTooltip
-    const buttonLabelSx = {
-        ...styles.buttonLabel,
-        lineHeight: 1.2,
-        whiteSpace: 'nowrap',
-        fontSize: 'clamp(0.72rem, 1.9vw, 1rem)',
-        letterSpacing: '0.01em',
-        textTransform: 'none',
+    const openFullscreen = async (target) => {
+        if (fullscreenDisabled || (isMainMonitorWide && target === mainScreenTarget) || !target.current) return
+        setFullscreenFailed(false)
+        try {
+            await target.current.requestFullscreen()
+        } catch {
+            setFullscreenFailed(true)
+        }
     }
-
-    const actionButtons = [
-        {
-            key: 'driver-info',
-            type: 'driver-info',
-            tooltip: driverInfoTooltip,
-            wrapperClassName: groupStyles.item,
-            buttonProps: {
-                fullWidth: true,
-                'aria-label': 'Customize driver info',
-                sx: buttonSx,
-                color: 'ochre',
-                variant: 'contained',
-                startIcon: <BadgeIcon />,
-                onClick: () => {
-                    dispatch(setCustomizeDriverInfoToggle(!customizeDriverInfoToggle))
-                },
-                children: <Typography component="span" sx={buttonLabelSx}>{appText.customizeDriverInfo}</Typography>,
-            },
-        },
-        {
-            key: 'main-display-aspect-ratio',
-            tooltip: appText.mainDisplayStyleTooltip,
-            wrapperClassName: groupStyles.item,
-            buttonProps: {
-                fullWidth: true,
-                'aria-label': appText.mainDisplayStyle,
-                'aria-pressed': isMainMonitorWide,
-                sx: buttonSx,
-                color: 'info',
-                variant: 'contained',
-                startIcon: <AspectRatioIcon />,
-                onClick: onToggleMainMonitorStyle,
-                children: <Typography component="span" sx={buttonLabelSx}>{isMainMonitorWide ? appText.wideDisplayMode : appText.normalDisplayMode}</Typography>,
-            },
-        },
-        ...fullscreenBtnAttr.map(({ key, target, label }) => ({
-            key,
-            type: 'fullscreen',
-            tooltip: !isUserSelectedRoute ? fullscreenTooltip : `${label}：${appText.fullscreenLabel}`,
-            wrapperClassName: groupStyles.desktopOnly,
-            buttonProps: {
-                fullWidth: true,
-                'aria-label': label,
-                sx: buttonSx,
-                color: 'info',
-                variant: 'contained',
-                disabled: !isUserSelectedRoute,
-                startIcon: <FullscreenIcon />,
-                onClick: () => {
-                    if (isUserSelectedRoute) target.current.requestFullscreen()
-                },
-                children: <Typography component="span" sx={buttonLabelSx}>{label}</Typography>,
-            },
-        })),
-    ]
 
     return (
-        <div className={groupStyles.grid}>
-            {actionButtons.map(({ key, tooltip, wrapperClassName, buttonProps }) => (
-                <Tooltip key={key} arrow placement="bottom-start" title={tooltip}>
-                    <span className={wrapperClassName}>
-                        <Button {...buttonProps} />
-                    </span>
-                </Tooltip>
-            ))}
-        </div>
+        <>
+            <div className="control-panel__tools">
+                <ControlButton
+                    tone="display"
+                    icon={<AspectRatioIcon />}
+                    label={isMainMonitorWide ? text.returnToNormal : text.tryWide}
+                    supportingText={isMainMonitorWide ? text.wideDescription : text.normalDescription}
+                    accessibleLabel={appText.mainDisplayStyle}
+                    tooltip={`${isMainMonitorWide ? appText.wideDisplayMode : appText.normalDisplayMode} · ${appText.mainDisplayStyleTooltip}`}
+                    pressed={isMainMonitorWide}
+                    onClick={onToggleMainMonitorStyle}
+                />
+                <ControlButton
+                    tile
+                    icon={<FullscreenIcon />}
+                    label={text.mainScreen}
+                    supportingText={isMainMonitorWide ? text.fullscreenWideDisabled : undefined}
+                    accessibleLabel={isMainMonitorWide ? `${appText.fullscreenMain} · ${text.fullscreenWideDisabled}` : appText.fullscreenMain}
+                    tooltip={isMainMonitorWide ? text.fullscreenWideDisabled : fullscreenDisabled ? fullscreenDisabledReason : appText.fullscreenMain}
+                    disabled={mainFullscreenDisabled}
+                    onClick={() => openFullscreen(mainScreenTarget)}
+                />
+                <ControlButton
+                    tile
+                    icon={<FullscreenIcon />}
+                    label={text.auxiliaryScreen}
+                    accessibleLabel={appText.fullscreenSec}
+                    tooltip={fullscreenDisabled ? fullscreenDisabledReason : appText.fullscreenSec}
+                    disabled={fullscreenDisabled}
+                    onClick={() => openFullscreen(secScreenTarget)}
+                />
+                <ControlButton
+                    tile
+                    icon={<BadgeOutlinedIcon />}
+                    label={text.driver}
+                    accessibleLabel={appText.customizeDriverInfo}
+                    tooltip={appText.driverInfoTooltip}
+                    active={customizeDriverInfoToggle}
+                    aria-expanded={customizeDriverInfoToggle}
+                    aria-controls={customizeDriverInfoToggle ? 'control-driver-details' : undefined}
+                    onClick={() => dispatch(setCustomizeDriverInfoToggle(!customizeDriverInfoToggle))}
+                />
+            </div>
+            {fullscreenFailed && <p className="control-panel__error" role="alert">{text.fullscreenError}</p>}
+        </>
     )
 }

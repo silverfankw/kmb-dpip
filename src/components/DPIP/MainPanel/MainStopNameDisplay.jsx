@@ -1,7 +1,6 @@
 import { memo, useCallback, useEffect, useLayoutEffect, useRef } from "react"
 import { HoldHandrailNotice, MindDoorNotice } from '@components/DPIP'
 import {
-    STOP_NAME_INTERVAL,
     FIRST_STOP_WELCOME_ZH,
     FIRST_STOP_WELCOME_EN,
     STOP_NAME_ZH_SAFE_WIDTH_RATIO,
@@ -9,10 +8,9 @@ import {
     getStopNameZhBaseFontSize,
 } from './mainPanelConfig'
 
-// Kept separate so heading-stage updates do not rerender or remeasure names.
-// Wide mode does not mount this component, so it needs no timer or observers.
+// Heading-only stage changes do not need to remeasure stop names.
 export const MainStopNameDisplay = memo(function MainStopNameDisplay({
-    stop, isFirstStop, routeKey, showHandrailNotice, showMindDoorNotice,
+    stop, isFirstStop, language = 'zh', showHandrailNotice, showMindDoorNotice,
 }) {
     const containerRef = useRef(null)
     const zhRef = useRef(null)
@@ -63,7 +61,7 @@ export const MainStopNameDisplay = memo(function MainStopNameDisplay({
 
     useLayoutEffect(() => {
         fitNames()
-    }, [fitNames, zh, en, Notice])
+    }, [fitNames, zh, en, Notice, language])
 
     useEffect(() => {
         if (Notice) return
@@ -75,25 +73,6 @@ export const MainStopNameDisplay = memo(function MainStopNameDisplay({
         }
         return () => observer.disconnect()
     }, [fitNames, Notice])
-
-    useEffect(() => {
-        if (Notice) return
-
-        let showChinese = true
-        const updateDisplay = () => {
-            if (!zhRef.current || !enRef.current) return
-            zhRef.current.style.display = showChinese ? "block" : "none"
-            enRef.current.style.display = showChinese ? "none" : "block"
-            fitNames()
-        }
-
-        updateDisplay()
-        const timer = setInterval(() => {
-            showChinese = !showChinese
-            updateDisplay()
-        }, STOP_NAME_INTERVAL)
-        return () => clearInterval(timer)
-    }, [routeKey, isFirstStop, Notice, fitNames])
 
     return (
         <div ref={containerRef} className="main-display-panel__stop-name">
@@ -107,11 +86,20 @@ export const MainStopNameDisplay = memo(function MainStopNameDisplay({
                     <span
                         ref={zhRef}
                         className="main-display-panel__stop-name-zh"
-                        style={{ "--stop-name-zh-font-size": `${getStopNameZhBaseFontSize(zh)}cqw` }}
+                        lang="zh-Hant"
+                        style={{
+                            "--stop-name-zh-font-size": `${getStopNameZhBaseFontSize(zh)}cqw`,
+                            display: language === 'zh' ? 'block' : 'none',
+                        }}
                     >
                         {zh}
                     </span>
-                    <span ref={enRef} className="main-display-panel__stop-name-en">
+                    <span
+                        ref={enRef}
+                        className="main-display-panel__stop-name-en"
+                        lang="en"
+                        style={{ display: language === 'en' ? 'block' : 'none' }}
+                    >
                         {en}
                     </span>
                 </>

@@ -1,20 +1,7 @@
 import { memo, useLayoutEffect, useRef } from "react"
 import "@styles/animation.css"
-import "@styles/threeStopProgress.css"
-
-const getEnglishLines = (name) => {
-    if (!name || name.length <= 36) return [name]
-
-    const midpoint = Math.floor(name.length / 2)
-    const spaces = [...name.matchAll(/\s+/g)]
-    const splitIndex = spaces.length
-        ? spaces.reduce((closest, space) =>
-            Math.abs(space.index - midpoint) < Math.abs(closest.index - midpoint) ? space : closest
-        ).index
-        : midpoint
-
-    return [name.slice(0, splitIndex).trimEnd(), name.slice(splitIndex).trimStart()]
-}
+import "@styles/compactStopProgress.css"
+import { getEnglishLines } from './mainPanelConfig'
 
 const StopNames = memo(function StopNames({ stop }) {
     const namesRef = useRef(null)
@@ -49,11 +36,11 @@ const StopNames = memo(function StopNames({ stop }) {
 
     return (
         <div
-            className={`three-stop-progress-temp__names${isMultilineEnglish ? " three-stop-progress-temp__names--multiline" : ""}`}
+            className={`compact-stop-progress__names${isMultilineEnglish ? " compact-stop-progress__names--multiline" : ""}`}
             ref={namesRef}
         >
-            <div className="three-stop-progress-temp__zh" lang="zh-Hant"><span>{stop.zh}</span></div>
-            <div className="three-stop-progress-temp__en" lang="en">
+            <div className="compact-stop-progress__zh" lang="zh-Hant"><span>{stop.zh}</span></div>
+            <div className="compact-stop-progress__en" lang="en">
                 <span>
                     {englishLines[0]}
                     {isMultilineEnglish && <><br />{englishLines[1]}</>}
@@ -63,39 +50,41 @@ const StopNames = memo(function StopNames({ stop }) {
     )
 })
 
-export const ThreeStopProgress = memo(function ThreeStopProgress({ currentStop, nextStop, followingStop, progressBarRef, isLastStopVisible = false }) {
-    const stops = [currentStop, nextStop, followingStop].filter(Boolean)
+export const CompactStopProgress = memo(function CompactStopProgress({ stops, currentStopIndex, progressBarRef, isWide = false }) {
+    const segmentCount = isWide ? 5 : 3
+    const visibleStops = stops.slice(currentStopIndex, currentStopIndex + segmentCount).filter(Boolean)
+    const isLastStopVisible = currentStopIndex + segmentCount >= stops.length
 
-    return <div className="three-stop-progress-temp" ref={progressBarRef}>
-        <div className="three-stop-progress-temp__row" role="list" aria-label="Current and upcoming stops">
-            {stops.map((stop, index) => (
+    return <div className={`compact-stop-progress${isWide ? " compact-stop-progress--wide" : ""}`} ref={progressBarRef}>
+        <div className="compact-stop-progress__row" role="list" aria-label="Current and upcoming stops">
+            {visibleStops.map((stop, index) => (
                 <div
-                    className={`three-stop-progress-temp__stop${index === 0 ? " three-stop-progress-temp__stop--current" : ""}`}
+                    className={`compact-stop-progress__stop${index === 0 ? " compact-stop-progress__stop--current" : ""}`}
                     role="listitem"
                     aria-current={index === 0 ? "step" : undefined}
                     key={index}
                 >
                     <StopNames stop={stop} />
-                    <div className="three-stop-progress-temp__line" aria-hidden="true" />
+                    <div className="compact-stop-progress__line" aria-hidden="true" />
                     {index === 0 && (
-                        <div className="three-stop-progress-temp__arrows" aria-hidden="true">
+                        <div className="compact-stop-progress__arrows" aria-hidden="true">
                             <span className="animate-compact-arrow-first" />
                             <span className="animate-compact-arrow-second" />
                             <span className="animate-compact-arrow-third" />
                         </div>
                     )}
-                    <svg className="three-stop-progress-temp__marker" viewBox="0 0 100 100" aria-hidden="true">
+                    <svg className="compact-stop-progress__marker" viewBox="0 0 100 100" aria-hidden="true">
                         {index === 0 ? (
                             <>
-                                <circle className="three-stop-progress-temp__ring-white" cx="50" cy="50" r="49" />
-                                <circle className="three-stop-progress-temp__ring-red" cx="50" cy="50" r="42" />
-                                <circle className="three-stop-progress-temp__centre" cx="50" cy="50" r="33" />
+                                <circle className="compact-stop-progress__ring-white" cx="50" cy="50" r="49" />
+                                <circle className="compact-stop-progress__ring-red" cx="50" cy="50" r="42" />
+                                <circle className="compact-stop-progress__centre" cx="50" cy="50" r="33" />
                             </>
                         ) : <circle cx="50" cy="50" r="49" />}
                     </svg>
-                    {index === stops.length - 1 && (
+                    {index === visibleStops.length - 1 && (
                         <div
-                            className={`three-stop-progress-temp__terminal${isLastStopVisible ? " three-stop-progress-temp__terminal--end" : ""}`}
+                            className={`compact-stop-progress__terminal${isLastStopVisible ? " compact-stop-progress__terminal--end" : ""}`}
                             aria-hidden="true"
                         >
                             <span />

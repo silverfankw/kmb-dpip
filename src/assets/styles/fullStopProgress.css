@@ -67,6 +67,17 @@
     stroke: none;
 }
 
+.stop-progress__name {
+    bottom: calc(100% + 0.7cqw);
+    transform: rotate(-65deg);
+    transform-origin: left bottom;
+    line-height: 1.15;
+}
+
+.stop-progress--wide .stop-progress__name {
+    bottom: calc(100% + 0.35cqw);
+}
+
 .stop-progress__marker--current {
     fill: #ffff00;
     stroke: #e60012;
@@ -124,7 +135,6 @@
 }
 
 .stop-progress--wide .stop-name {
-    top: -1.25cqw;
     font-size: 0.95cqw;
 }
 
@@ -153,6 +163,30 @@
     50% {
         transform: scale(1.55);
     }
+}
+
+.stop-progress .stop-name[lang="en"] {
+    top: -2cqw;
+    font-size: calc(1.4cqw * var(--stop-name-en-scale));
+    line-height: 1.15;
+}
+
+.stop-progress__english-wrapped {
+    display: inline-block;
+    transform: scaleY(0.66);
+}
+
+.stop-progress[aria-current="step"] .stop-name[lang="en"] {
+    font-size: calc(1.6cqw * var(--stop-name-en-scale));
+}
+
+.stop-progress--wide .stop-name[lang="en"] {
+    top: -1cqw;
+    font-size: calc(0.85cqw * var(--stop-name-en-scale));
+}
+
+.stop-progress--wide[aria-current="step"] .stop-name[lang="en"] {
+    font-size: calc(0.95cqw * var(--stop-name-en-scale));
 }
 
 @media (prefers-reduced-motion: reduce) {
