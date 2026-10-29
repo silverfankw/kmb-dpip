@@ -1,0 +1,191 @@
+.compact-stop-progress {
+    container-type: inline-size;
+    width: 100%;
+    height: 100%;
+    min-height: 120px;
+    background: #ffffff;
+    color: #000000;
+}
+
+.compact-stop-progress__row {
+    --temp-line-size: 1.8cqw;
+    --temp-marker-size: 1.8cqw;
+    --temp-line-position: 70%;
+    display: grid;
+    grid-template-columns: 33% 33% 33%;
+    width: 100%;
+    height: 100%;
+    min-height: inherit;
+    margin-inline: 0;
+}
+
+.compact-stop-progress--wide .compact-stop-progress__row {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+}
+
+.compact-stop-progress__stop {
+    position: relative;
+    min-width: 0;
+    --temp-marker-left: 50%;
+}
+
+.compact-stop-progress__stop:first-child {
+    --temp-marker-left: 50%;
+}
+
+.compact-stop-progress__stop:last-child {
+    --temp-marker-left: 50%;
+}
+
+.compact-stop-progress__names {
+    position: absolute;
+    inset-inline: 2%;
+    bottom: calc(100% - var(--temp-line-position) + var(--temp-line-size) / 2 + 2.75cqw);
+    text-align: center;
+    line-height: 1.45;
+}
+
+.compact-stop-progress__names--multiline {
+    line-height: 1;
+}
+
+.compact-stop-progress__stop:first-child .compact-stop-progress__names {
+    transform: translateY(0.25cqw);
+}
+
+.compact-stop-progress__names > div {
+    display: flex;
+    justify-content: center;
+}
+
+.compact-stop-progress__names span {
+    display: inline-block;
+    flex-shrink: 0;
+    white-space: nowrap;
+    transform-origin: center bottom;
+}
+
+.compact-stop-progress__zh {
+    font-family: "Noto Sans TC", "Noto Sans HK", "Microsoft JhengHei", sans-serif;
+    font-size: 3.75cqw;
+    font-weight: 450;
+}
+
+.compact-stop-progress__en {
+    margin-top: 0.8cqw;
+    font-stretch: condensed;
+    font-size: 2.4cqw;
+    font-weight: 450;
+}
+
+.compact-stop-progress__stop--current .compact-stop-progress__zh {
+    font-size: 4.75cqw;
+    font-weight: 450;
+}
+
+.compact-stop-progress__stop--current .compact-stop-progress__en {
+    font-size: 2.85cqw;
+    font-weight: 450;
+}
+
+.compact-stop-progress__line {
+    position: absolute;
+    inset-inline: 0;
+    top: var(--temp-line-position);
+    height: var(--temp-line-size);
+    background: #e60012;
+    transform: translateY(-50%);
+}
+
+.compact-stop-progress__arrows {
+    position: absolute;
+    left: 4cqw;
+    top: var(--temp-line-position);
+    display: flex;
+    align-items: center;
+    gap: 1cqw;
+    height: var(--temp-line-size);
+    transform: translateY(-50%);
+}
+
+.compact-stop-progress__arrows span {
+    box-sizing: border-box;
+    width: calc(var(--temp-line-size) * 0.75);
+    height: var(--temp-line-size);
+    background: #ffffff;
+    clip-path: polygon(0 0, 40% 0, 100% 50%, 40% 100%, 0 100%, 60% 50%);
+    opacity: 0;
+}
+
+.compact-stop-progress__marker {
+    position: absolute;
+    left: var(--temp-marker-left);
+    top: var(--temp-line-position);
+    width: var(--temp-marker-size);
+    height: var(--temp-marker-size);
+    transform: translate(-50%, -50%);
+    fill: #ffffff;
+}
+
+.compact-stop-progress__stop--current .compact-stop-progress__marker {
+    width: 2.6cqw;
+    height: 2.6cqw;
+}
+
+.compact-stop-progress__ring-white {
+    fill: #ffffff;
+}
+
+.compact-stop-progress__ring-red {
+    fill: #e30613;
+}
+
+.compact-stop-progress__centre {
+    fill: #ffff00;
+}
+
+.compact-stop-progress__stop:last-child .compact-stop-progress__line {
+    right: 41.666667%;
+}
+
+.compact-stop-progress__terminal {
+    position: absolute;
+    left: 60%;
+    top: var(--temp-line-position);
+    display: flex;
+    align-items: center;
+    gap: 0.18cqw;
+    transform: translateY(-50%);
+}
+
+.compact-stop-progress__terminal span {
+    box-sizing: border-box;
+    width: 0.5cqw;
+    height: var(--temp-line-size);
+    border: 0.08cqw solid #e30613;
+    background: #ffffff;
+}
+
+.compact-stop-progress__terminal:not(.compact-stop-progress__terminal--end) span:last-child {
+    width: 1cqw;
+}
+
+.compact-stop-progress__terminal--end {
+    top: calc(var(--temp-line-position) - var(--temp-line-size) / 2);
+    gap: calc(var(--temp-line-size) * 0.15);
+    transform: none;
+}
+
+.compact-stop-progress__terminal--end span {
+    width: calc(var(--temp-line-size) * 0.2);
+    height: calc(var(--temp-line-size) * 2.5);
+    border: 0;
+    background: #e60012;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .compact-stop-progress__arrows span {
+        animation: none;
+        opacity: 1;
+    }
+}

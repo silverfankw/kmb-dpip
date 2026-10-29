@@ -1,91 +1,82 @@
-import { useSelector } from 'react-redux'
-
+import { useRef, useState } from 'react'
+import { shallowEqual, useSelector } from 'react-redux'
+import AspectRatioIcon from '@mui/icons-material/AspectRatio'
+import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone'
 import { NavButtonGroup, ToggleButtonGroup, FuncButtonGroup, DriverInfoInputGroup } from '@components'
-
-const styles = {
-    layout: "grid w-full gap-2.5 sm:gap-3",
-    sectionBase: [
-        "rounded-[1rem]",
-        "p-2.5 md:p-3",
-        "border",
-    ].join(" "),
-    sectionNight: "border-slate-300/12 bg-[linear-gradient(180deg,rgba(15,23,42,0.82),rgba(15,23,42,0.71))] shadow-[inset_0_1px_0_rgba(255,255,255,0.04),inset_0_-1px_0_rgba(15,23,42,0.76),0_10px_24px_rgba(2,6,23,0.2)]",
-    sectionLight: "border-slate-200/90 bg-[linear-gradient(180deg,rgba(255,255,255,0.98),rgba(248,250,252,0.92))] shadow-[inset_0_1px_0_rgba(255,255,255,0.95),0_10px_24px_rgba(148,163,184,0.12)]",
-    utilitySection: "grid gap-2.5 xl:grid-cols-2",
-    driverInfoGrid: "grid gap-2.5 md:grid-cols-3",
-}
+import { ControlButton } from './ControlButton'
+import { getControlPanelText } from './controlPanelConfig'
+import '@styles/controlPanel.css'
 
 export const ControlPanel = ({
     mainScreenTarget,
     secScreenTarget,
     isMainMonitorWide,
     onToggleMainMonitorStyle,
-    uiMode = "night",
+    uiMode = 'night',
 }) => {
-    const userPreference = useSelector(state => state.userPreference)
-    const sectionClassName = `${styles.sectionBase} ${uiMode === "light" ? styles.sectionLight : styles.sectionNight}`
+    const { customizeDriverInfoToggle, language } = useSelector(state => ({
+        customizeDriverInfoToggle: state.userPreference.customizeDriverInfoToggle,
+        language: state.userPreference.language,
+    }), shallowEqual)
+    const text = getControlPanelText(language)
+    const [mobileSection, setMobileSection] = useState(null)
+    const mobileTabsRef = useRef(null)
 
-    const renderSection = (content, key) => (
-        <section key={key} className={sectionClassName}>
-            {content}
-        </section>
-    )
+    const toggleSection = (section) => setMobileSection(current => current === section ? null : section)
+    const closeOnEscape = (event) => {
+        if (event.key !== 'Escape' || !mobileSection) return
+        mobileTabsRef.current?.querySelector(`[aria-controls="control-${mobileSection}-section"]`)?.focus()
+        setMobileSection(null)
+    }
 
-    const utilitySections = [
-        {
-            key: 'toggle-button-group',
-            content: <ToggleButtonGroup />,
-        },
-        {
-            key: 'func-button-group',
-            content: (
+    return (
+        <div className="control-panel" data-theme={uiMode} data-mobile-section={mobileSection || ''} onKeyDown={closeOnEscape}>
+            <section className="control-panel__section control-panel__section--navigation" aria-labelledby="control-navigation-title">
+                <h2 id="control-navigation-title" className="control-panel__heading">{text.navigation}</h2>
+                <NavButtonGroup />
+            </section>
+
+            <section id="control-display-section" className="control-panel__section control-panel__section--display" aria-labelledby="control-display-title">
+                <h2 id="control-display-title" className="control-panel__heading">{text.display}</h2>
                 <FuncButtonGroup
                     mainScreenTarget={mainScreenTarget}
                     secScreenTarget={secScreenTarget}
                     isMainMonitorWide={isMainMonitorWide}
                     onToggleMainMonitorStyle={onToggleMainMonitorStyle}
                 />
-            ),
-        },
-    ]
+                {customizeDriverInfoToggle && (
+                    <section id="control-driver-details" className="control-panel__driver-editor" aria-labelledby="control-driver-title">
+                        <h2 id="control-driver-title" className="control-panel__heading">{text.driverDetails}</h2>
+                        <div className="control-panel__driver-fields">
+                            <DriverInfoInputGroup />
+                        </div>
+                    </section>
+                )}
+            </section>
 
-    const panelSections = [
-        {
-            key: 'nav-button-group',
-            position: 'single',
-            content: <NavButtonGroup />,
-        },
-        {
-            key: 'utility-section',
-            position: 'group',
-            content: (
-                <div className={styles.utilitySection}>
-                    {utilitySections.map(({ key, content }) =>
-                        renderSection(content, key)
-                    )}
-                </div>
-            ),
-        },
-        ...(userPreference.customizeDriverInfoToggle
-            ? [{
-                key: 'driver-info-section',
-                position: 'single',
-                content: (
-                    <div className={styles.driverInfoGrid}>
-                        <DriverInfoInputGroup />
-                    </div>
-                ),
-            }]
-            : []),
-    ]
+            <section id="control-alerts-section" className="control-panel__section control-panel__section--alerts" aria-labelledby="control-alerts-title">
+                <h2 id="control-alerts-title" className="control-panel__heading">{text.alerts}</h2>
+                <ToggleButtonGroup />
+            </section>
 
-    return (
-        <div className={styles.layout}>
-            {panelSections.map(({ key, position, content }) => (
-                position === 'group'
-                    ? <div key={key}>{content}</div>
-                    : renderSection(content, key)
-            ))}
+            <div className="control-panel__mobile-tabs" ref={mobileTabsRef}>
+                <ControlButton
+                    icon={<AspectRatioIcon />}
+                    label={text.display}
+                    active={mobileSection === 'display'}
+                    aria-expanded={mobileSection === 'display'}
+                    aria-controls="control-display-section"
+                    onClick={() => toggleSection('display')}
+                />
+                <ControlButton
+                    icon={<NotificationsNoneIcon />}
+                    label={text.alerts}
+                    active={mobileSection === 'alerts'}
+                    aria-expanded={mobileSection === 'alerts'}
+                    aria-controls="control-alerts-section"
+                    onClick={() => toggleSection('alerts')}
+                />
+            </div>
         </div>
     )
 }

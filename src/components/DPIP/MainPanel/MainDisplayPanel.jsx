@@ -1,353 +1,150 @@
-import '@styles/App.css'
-import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react"
-import { useSelector } from "react-redux"
-import { useToggleDisplay } from "@hooks"
+import '@styles/mainDisplayPanel.css'
+import { useEffect, useMemo, useRef, useState } from "react"
+import { shallowEqual, useSelector } from "react-redux"
 
 import { LoadingSpinner } from '@components'
 import {
     RouteDisplayHeading,
-    HoldHandrailNotice,
-    MindDoorNotice,
-    StopFullProgressBar,
-    StopCompactProgressBar,
-    RouteDisplayHeadingWIP,
+    FullStopProgress,
+    CompactStopProgress,
 } from '@components/DPIP'
-import {
-    PROGRESS_BAR_INTERVAL,
-    STOP_NAME_INTERVAL,
-    FIRST_STOP_WELCOME_ZH,
-    FIRST_STOP_WELCOME_EN,
-    STOP_NAME_ZH_SAFE_WIDTH_RATIO,
-    getStopNameZhBaseFontSize,
-} from './mainPanelConfig'
+import { MainStopNameDisplay } from './MainStopNameDisplay'
+import { DISPLAY_STAGE_INTERVAL, getStopProgressPage } from './mainPanelConfig'
 
-// --- Styles outside component ---
-const basestyles = {
-    parentGrid: [
-        "select-none",
-        "grid",
-        "grid-cols-[0.25fr_1fr]",
-        "grid-rows-[0.5fr_1.85fr_0.0375fr_1fr_0.125fr]"
-    ].join(" "),
-
-    parentGridWide: [
-        "select-none",
-        "grid",
-        "grid-cols-[0.25fr_1fr]",
-        "grid-rows-[0.5fr_1.85fr_0.125fr]"
-    ].join(" "),
-
-    parentGridStageZero: [
-        "select-none",
-        "grid",
-        "grid-cols-[1fr_2fr]",
-        "grid-rows-[0.5fr_1.85fr_0.0375fr_1fr_0.125fr]"
-    ].join(" "),
-
-    nextStopIndicatorGrid: [
-        "@container",
-        "h-full",
-        "flex flex-col gap-2 max-sm:gap-1 items-center justify-center",
-        "text-center",
-        "leading-none",
-    ].join(" "),
-
-    nextStopIndicatorZh: [
-        "text-[18cqw]",
-    ].join(" "),
-
-    nextStopIndicatorEn: [
-        "text-[10cqw]",
-    ].join(" "),
-
-    nextStopIndicatorZhStageZero: [
-        "text-[10cqw]",
-    ].join(" "),
-
-    nextStopIndicatorEnStageZero: [
-        "text-[6cqw]",
-    ].join(" "),
-
-    routeHeadingGrid: [
-        "@container",
-        "flex items-center justify-center gap-1",
-        // "px-1",
-        "bg-black text-white"
-    ].join(" "),
-
-    routeHeadingGridDefault: "col-start-2 col-end-5",
-
-    routeHeadingGridFirstStop: "col-start-1 col-end-3",
-
-    stopProgressBarGrid: [
-        "@container",
-        "col-start-1 col-end-5",
-        "bg-white"
-    ].join(" "),
-
-    stopProgressBarContainer: [
-        "h-full",
-        "font-semibold",
-        "text-center",
-        "tracking-tight"
-    ].join(" "),
-
-    dividerGrid: [
-        "col-start-1 col-end-5",
-        "bg-black"
-    ].join(" "),
-
-    stopNameGrid: [
-        "@container",
-        "col-start-1 col-end-5",
-        "bg-white",
-        "text-black",
-        "flex justify-center items-center",
-        "font-[450]",
-    ].join(" "),
-
-    stopNameZh: [
-        "inline-block",
-        "shrink-0",
-        "whitespace-nowrap",
-    ].join(" "),
-
-    stopNameEn: [
-        "text-center",
-        "text-[5cqw]",
-        "max-sm:text-[4cqw]",
-        "max-md:text-[5cqw]",
-    ].join(" "),
-
-    driverInfoGrid: [
-        "@container",
-        "flex justify-center",
-        "col-start-1 col-end-5",
-        "text-white tracking-tight",
-        "p-0.5"
-    ].join(" "),
-
-    driverInfoText: [
-        "text-[2cqw] max-sm:text-[2.25cqw]",
-    ].join(" "),
-
-    capitalize: "capitalize",
-
-    noticeZhOverrideStyle: "!text-[8cqw]",
-
-    noticeEnOverrideStyle: "!text-[3.75cqw]"
-}
+const STOP_PROGRESS_WINDOW_SIZE = 35
+const WIDE_STOP_PROGRESS_WINDOW_SIZE = 52
+const EMPTY_STOPS = []
 
 export const MainDisplayPanel = ({ monitorStyle, screenTarget, isWide = false }) => {
+    const { routeDetail, currentStopIndex, isLoading } = useSelector(state => ({
+        routeDetail: state.routeSelection.routeDetail,
+        currentStopIndex: state.routeSelection.currentStopIndex,
+        isLoading: state.routeSelection.isLoading,
+    }), shallowEqual)
+    const { showHandrailNotice, showMindDoorNotice, stopPressed, driverInfo } = useSelector(state => ({
+        showHandrailNotice: state.userPreference.showHandrailNotice,
+        showMindDoorNotice: state.userPreference.showMindDoorNotice,
+        stopPressed: state.userPreference.stopPressed,
+        driverInfo: state.userPreference.driverInfo,
+    }), shallowEqual)
 
-    const {
-        routeDetail,
-        currentStopIndex,
-        isLoading,
-    } = useSelector(state => state.routeSelection)
-
-    const {
-        showHandrailNotice,
-        showMindDoorNotice,
-        stopPressed,
-        driverInfo
-    } = useSelector(state => state.userPreference)
-
-    const isFirstStop = routeDetail?.stops?.length > 0 && currentStopIndex === 0
+    const stops = routeDetail?.stops ?? EMPTY_STOPS
+    const stopCount = stops.length
+    const isFirstStop = stopCount > 0 && currentStopIndex === 0
+    const routeKey = `${routeDetail?.route}-${routeDetail?.bound}-${routeDetail?.service_type}`
     const [routeHeadingStage, setRouteHeadingStage] = useState(0)
-    const isStageZeroWithNextStop = !isFirstStop && routeHeadingStage === 0
-    const stopNameZh = isFirstStop
-        ? FIRST_STOP_WELCOME_ZH
-        : routeDetail?.stops?.[currentStopIndex]?.zh
-    const stopNameEn = isFirstStop
-        ? FIRST_STOP_WELCOME_EN
-        : routeDetail?.stops?.[currentStopIndex]?.en
-
-    const fullProgressBarRef = useRef(null)
-    const compactProgressBarRef = useRef(null)
-    const stopNameGridRef = useRef(null)
-    const zhStopNameRef = useRef(null)
-    const enStopNameRef = useRef(null)
-
-    const applyStopNameZhScale = useCallback(() => {
-        const container = stopNameGridRef.current
-        const el = zhStopNameRef.current
-
-        if (!container || !el || el.style.display === "none") return
-
-        const contentWidth = el.scrollWidth
-        if (!contentWidth) return
-
-        const containerStyle = window.getComputedStyle(container)
-        const horizontalPadding =
-            parseFloat(containerStyle.paddingLeft || "0") +
-            parseFloat(containerStyle.paddingRight || "0")
-        const availableWidth = Math.max(
-            ((container.clientWidth - horizontalPadding) * STOP_NAME_ZH_SAFE_WIDTH_RATIO),
-            0
-        )
-        const scaleX = Math.min(1, availableWidth / contentWidth)
-
-        const nextTransform = `scaleX(${scaleX})`
-        if (el.style.transform !== nextTransform) {
-            el.style.transform = nextTransform
-        }
-    }, [])
-
-    // Toggle progress bar and stop name display
-    // useToggleDisplay(fullProgressBarRef, compactProgressBarRef, PROGRESS_BAR_INTERVAL, [routeDetail?.route, routeDetail?.bound, routeDetail?.service_type])
-    useToggleDisplay(compactProgressBarRef, fullProgressBarRef, PROGRESS_BAR_INTERVAL, [routeDetail?.route, routeDetail?.bound, routeDetail?.service_type])
-    useToggleDisplay(zhStopNameRef, enStopNameRef, STOP_NAME_INTERVAL, [routeDetail?.route, routeDetail?.bound, routeDetail?.service_type])
-
-    // Reset stop name display when notice toggles change
-    useEffect(() => {
-        let animationFrameId = null
-
-        if (isFirstStop) {
-            zhStopNameRef.current && (zhStopNameRef.current.style.display = "block")
-            enStopNameRef.current && (enStopNameRef.current.style.display = "none")
-            animationFrameId = window.requestAnimationFrame(applyStopNameZhScale)
-            return () => window.cancelAnimationFrame(animationFrameId)
-        }
-
-        if (showHandrailNotice || showMindDoorNotice) {
-            zhStopNameRef.current && (zhStopNameRef.current.style.display = "none")
-            enStopNameRef.current && (enStopNameRef.current.style.display = "none")
-        } else {
-            zhStopNameRef.current && (zhStopNameRef.current.style.display = "block")
-            enStopNameRef.current && (enStopNameRef.current.style.display = "none")
-            animationFrameId = window.requestAnimationFrame(applyStopNameZhScale)
-        }
-
-        return () => {
-            if (animationFrameId !== null) {
-                window.cancelAnimationFrame(animationFrameId)
-            }
-        }
-    }, [applyStopNameZhScale, isFirstStop, showHandrailNotice, showMindDoorNotice])
-
-    useLayoutEffect(() => {
-        applyStopNameZhScale()
-    }, [applyStopNameZhScale, stopNameZh])
+    const [displayStage, setDisplayStage] = useState(0)
+    const firstStopRef = useRef(isFirstStop)
+    const activeDisplayStage = isFirstStop && displayStage === 2 ? 0 : displayStage
+    const displayLanguage = activeDisplayStage === 1 ? 'en' : 'zh'
+    const isStageZeroWithNextStop = !isWide && !isFirstStop && routeHeadingStage === 0
 
     useEffect(() => {
-        const container = stopNameGridRef.current
-        if (!container) return
+        firstStopRef.current = isFirstStop
+        if (isFirstStop) setDisplayStage(stage => stage === 2 ? 0 : stage)
+    }, [isFirstStop])
 
-        const ro = new ResizeObserver(applyStopNameZhScale)
-        ro.observe(container)
-        return () => ro.disconnect()
-    }, [applyStopNameZhScale])
+    useEffect(() => {
+        setDisplayStage(0)
+        if (isLoading || !stopCount) return
 
-    // Compose dynamic classes
-    const styles = {
-        ...basestyles,
-        parentGrid: `${isWide ? basestyles.parentGridWide : isStageZeroWithNextStop ? basestyles.parentGridStageZero : basestyles.parentGrid} ${monitorStyle}`,
-        nextStopIndicatorGrid: `${basestyles.nextStopIndicatorGrid} ${isStageZeroWithNextStop ? "" : "col-start-1 col-end-2"} ${stopPressed ? "bg-[#EE0000] text-white" : "bg-[#FFFF00] text-black"}`,
-        nextStopIndicatorZh: isStageZeroWithNextStop ? basestyles.nextStopIndicatorZhStageZero : basestyles.nextStopIndicatorZh,
-        nextStopIndicatorEn: isStageZeroWithNextStop ? basestyles.nextStopIndicatorEnStageZero : basestyles.nextStopIndicatorEn,
-        routeHeadingGrid: `${basestyles.routeHeadingGrid} ${isFirstStop ? basestyles.routeHeadingGridFirstStop : basestyles.routeHeadingGridDefault}`,
-        stopNameGrid: `${basestyles.stopNameGrid} ${isWide ? "hidden" : ""}`,
-        driverInfoGrid: `${basestyles.driverInfoGrid} ${stopPressed ? "bg-[#EE0000]" : "bg-black"}`
-    }
+        const timer = setInterval(() => {
+            setDisplayStage(stage => (stage + 1) % (firstStopRef.current ? 2 : 3))
+        }, DISPLAY_STAGE_INTERVAL)
+        return () => clearInterval(timer)
+    }, [routeKey, isLoading, stopCount])
+
+    const { start: windowStart, end: windowEnd, leadingCount, trailingCount } = getStopProgressPage(
+        stopCount, currentStopIndex, isWide ? WIDE_STOP_PROGRESS_WINDOW_SIZE : STOP_PROGRESS_WINDOW_SIZE
+    )
+    const visibleStops = useMemo(
+        () => stops.slice(windowStart, windowEnd),
+        [stops, windowStart, windowEnd]
+    )
+
+    const panelClassName = [
+        "main-display-panel",
+        isWide && "main-display-panel--wide",
+        isFirstStop && "main-display-panel--first-stop",
+        isStageZeroWithNextStop && "main-display-panel--stage-zero",
+        stopPressed && "main-display-panel--stop-pressed",
+        monitorStyle,
+    ].filter(Boolean).join(" ")
 
     return (
-        <div ref={screenTarget} className={styles.parentGrid}>
-            {/* Next stop Indicator */}
+        <div ref={screenTarget} className={panelClassName} data-display-stage={activeDisplayStage}>
             {!isFirstStop && (
-                <div className={styles.nextStopIndicatorGrid}>
-                    <div className={styles.nextStopIndicatorZh}>
-                        下一站{stopPressed && `停於`}
+                <div className="main-display-panel__next-stop">
+                    <div className="main-display-panel__next-stop-zh">
+                        下一站{stopPressed && "停於"}
                     </div>
-                    <div className={styles.nextStopIndicatorEn}>
-                        Next {stopPressed ? `Stopping at` : `Stop`}
+                    <div className="main-display-panel__next-stop-en">
+                        Next {stopPressed ? "Stopping at" : "Stop"}
                     </div>
                 </div>
             )}
 
-            {/* Route Number & Destination */}
-            <div className={styles.routeHeadingGrid}>
-                <RouteDisplayHeading onStageChange={setRouteHeadingStage} />
-                {/* <RouteDisplayHeadingWIP onStageChange={setRouteHeadingStage} /> */}
-
+            <div className="main-display-panel__heading">
+                <RouteDisplayHeading onStageChange={setRouteHeadingStage} isWide={isWide} />
             </div>
 
-            {/* Progress Bar (only if stops exist) */}
-            <div className={styles.stopProgressBarGrid}>
-                {isLoading ? (<LoadingSpinner />) :
-                    routeDetail?.stops?.length > 0 && (
-                        <div className={styles.stopProgressBarContainer}>
-                            <StopFullProgressBar progressBarRef={fullProgressBarRef} />
-                            <StopCompactProgressBar progressBarRef={compactProgressBarRef} />
-                        </div>
-                    )}
-            </div>
-
-            {/* Divider */}
-            <div className={styles.dividerGrid}></div>
-
-            {/* Big next stop name */}
-            <div ref={stopNameGridRef} className={styles.stopNameGrid}>
-                {isFirstStop ? (
-                    <>
-                        <span
-                            ref={zhStopNameRef}
-                            className={styles.stopNameZh}
-                            style={{
-                                fontSize: `${getStopNameZhBaseFontSize(stopNameZh)}cqw`,
-                                transformOrigin: "center center"
-                            }}
-                        >
-                            {stopNameZh}
-                        </span>
-                        <span
-                            ref={enStopNameRef}
-                            className={styles.stopNameEn}
-                        >
-                            {stopNameEn}
-                        </span>
-                    </>
-                ) : showHandrailNotice ? (
-                    <HoldHandrailNotice
-                        zhNameOverrideStyle={styles.noticeZhOverrideStyle}
-                        enNameOverrideStyle={styles.noticeEnOverrideStyle}
-                    />
-                ) : showMindDoorNotice ? (
-                    <MindDoorNotice
-                        zhNameOverrideStyle={styles.noticeZhOverrideStyle}
-                        enNameOverrideStyle={styles.noticeEnOverrideStyle}
-                    />
-                ) : (
-                    <>
-                        <span
-                            ref={zhStopNameRef}
-                            className={styles.stopNameZh}
-                            style={{
-                                fontSize: `${getStopNameZhBaseFontSize(stopNameZh)}cqw`,
-                                transformOrigin: "center center"
-                            }}
-                        >
-                            {stopNameZh}
-                        </span>
-                        <span
-                            ref={enStopNameRef}
-                            className={styles.stopNameEn}
-                        >
-                            {stopNameEn}
-                        </span>
-                    </>
+            <div className="main-display-panel__progress">
+                {isLoading ? <LoadingSpinner /> : stopCount > 0 && (
+                    <div className="main-display-panel__progress-content">
+                        {activeDisplayStage === 2 ? (
+                            <CompactStopProgress
+                                stops={stops}
+                                currentStopIndex={currentStopIndex}
+                                isWide={isWide}
+                            />
+                        ) : (
+                            <div className="stop-progress-display">
+                                <div className="stop-progress-row" role="list" aria-label="Route stops">
+                                    {Array.from({ length: leadingCount }, (_, index) => (
+                                        <FullStopProgress key={`previous-${index}`} continuation="previous" isWide={isWide} />
+                                    ))}
+                                    {visibleStops.map((stop, index) => (
+                                        <FullStopProgress
+                                            key={`${routeKey}-${windowStart + index}`}
+                                            stop={stop}
+                                            stopIndex={windowStart + index}
+                                            currentStopIndex={currentStopIndex}
+                                            stopCount={stopCount}
+                                            isWide={isWide}
+                                            language={displayLanguage}
+                                        />
+                                    ))}
+                                    {Array.from({ length: trailingCount }, (_, index) => (
+                                        <FullStopProgress key={`next-${index}`} continuation="next" isWide={isWide} />
+                                    ))}
+                                </div>
+                            </div>
+                        )}
+                    </div>
                 )}
             </div>
 
-            {/* Driver Info */}
-            <div className={styles.driverInfoGrid}>
-                <span className={styles.driverInfoText}>
+            {!isWide && (
+                <>
+                    <div className="main-display-panel__divider" />
+                    <MainStopNameDisplay
+                        stop={stops[currentStopIndex]}
+                        isFirstStop={isFirstStop}
+                        language={displayLanguage}
+                        showHandrailNotice={showHandrailNotice}
+                        showMindDoorNotice={showMindDoorNotice}
+                    />
+                </>
+            )}
+
+            <div className="main-display-panel__driver-info">
+                <span>
                     {driverInfo?.nameZh}車長正為您服務 &nbsp; Bus Captain&nbsp;
                 </span>
-                <span className={`${styles.driverInfoText} ${styles.capitalize}`}>
+                <span className="main-display-panel__driver-name-en">
                     {driverInfo?.nameEn}&nbsp;
                 </span>
-                <span className={styles.driverInfoText}>
+                <span>
                     is serving you &nbsp;&nbsp;員工編號 &nbsp;Staff No.: {driverInfo?.staffNo}
                 </span>
             </div>

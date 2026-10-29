@@ -1,0 +1,196 @@
+.stop-progress-display {
+    container-type: inline-size;
+    height: 100%;
+}
+
+.stop-progress-row {
+    --stop-line-size: 1.8cqw;
+    --stop-line-position: 85%;
+    --stop-start-width: calc(var(--stop-line-size) * 0.85);
+    display: flex;
+    height: 100%;
+    width: 95%;
+    background: #ffffff;
+}
+
+.stop-progress-row:has(.stop-progress__terminal--start) {
+    box-sizing: border-box;
+    padding-left: var(--stop-start-width);
+}
+
+.stop-progress-row:has(.stop-progress__terminal--end) {
+    box-sizing: border-box;
+    padding-right: var(--stop-start-width);
+}
+
+.stop-progress {
+    position: relative;
+    flex: 1 1 0;
+    min-width: 0;
+    height: 100%;
+}
+
+.stop-progress__line {
+    position: absolute;
+    inset-inline: 0;
+    top: var(--stop-line-position);
+    height: var(--stop-line-size);
+    transform: translateY(-50%);
+    background: #e60012;
+}
+
+.stop-progress__line--past {
+    background: #878787;
+}
+
+.stop-progress__line--current::before {
+    content: "";
+    position: absolute;
+    inset: 0 50% 0 0;
+    background: #878787;
+}
+
+.stop-progress__marker-position {
+    position: absolute;
+    left: 50%;
+    top: var(--stop-line-position);
+    width: calc(var(--stop-line-size) * 0.875);
+    height: calc(var(--stop-line-size) * 0.875);
+    transform: translate(-50%, -50%);
+}
+
+.stop-progress__marker {
+    display: block;
+    width: 100%;
+    height: 100%;
+    fill: #ffffff;
+    stroke: none;
+}
+
+.stop-progress__name {
+    bottom: calc(100% + 0.7cqw);
+    transform: rotate(-65deg);
+    transform-origin: left bottom;
+    line-height: 1.15;
+}
+
+.stop-progress--wide .stop-progress__name {
+    bottom: calc(100% + 0.35cqw);
+}
+
+.stop-progress__marker--current {
+    fill: #ffff00;
+    stroke: #e60012;
+    stroke-width: 14;
+    animation: stop-progress-pulse 1.25s step-start infinite;
+}
+
+.stop-progress__terminal {
+    position: absolute;
+    top: var(--stop-line-position);
+    display: flex;
+    gap: calc(var(--stop-line-size) * 0.25);
+    transform: translateY(-50%);
+}
+
+.stop-progress__terminal span {
+    display: block;
+    flex-shrink: 0;
+    background: #ffffff;
+}
+
+.stop-progress__terminal--start,
+.stop-progress__terminal--end {
+    top: calc(var(--stop-line-position) - var(--stop-line-size) / 2);
+    gap: calc(var(--stop-line-size) * 0.15);
+    transform: none;
+}
+
+.stop-progress__terminal--start {
+    padding-left: 2px;
+    left: calc(0px - var(--stop-start-width));
+}
+
+.stop-progress__terminal--start span,
+.stop-progress__terminal--end span {
+    box-sizing: border-box;
+    width: calc(var(--stop-line-size) * 0.2);
+    height: calc(var(--stop-line-size) * 2.5);
+}
+
+.stop-progress__terminal--start span {
+    border: min(1px, 0.1cqw) solid #7f8793;
+}
+
+.stop-progress__terminal--end {
+    right: calc(2px - var(--stop-start-width));
+}
+
+.stop-progress__terminal--end span {
+    background: #e60012;
+}
+
+.main-display-panel--wide .stop-progress-row {
+    --stop-line-size: 0.9cqw;
+}
+
+.stop-progress--wide .stop-name {
+    font-size: 0.95cqw;
+}
+
+.stop-progress--wide[aria-current="step"] .stop-name {
+    font-size: 1.1cqw;
+}
+
+.stop-progress--wide .stop-name[aria-label] {
+    top: -2cqw;
+}
+
+@media (width < 1280px) {
+    .stop-progress--wide .stop-name {
+        font-size: 1.1cqw;
+    }
+
+    .stop-progress--wide[aria-current="step"] .stop-name {
+        font-size: 1.25cqw;
+    }
+}
+
+@keyframes stop-progress-pulse {
+    0%, 100% {
+        transform: scale(1.25);
+    }
+    50% {
+        transform: scale(1.55);
+    }
+}
+
+.stop-progress .stop-name[lang="en"] {
+    top: -2cqw;
+    font-size: calc(1.4cqw * var(--stop-name-en-scale));
+    line-height: 1.15;
+}
+
+.stop-progress__english-wrapped {
+    display: inline-block;
+    transform: scaleY(0.66);
+}
+
+.stop-progress[aria-current="step"] .stop-name[lang="en"] {
+    font-size: calc(1.6cqw * var(--stop-name-en-scale));
+}
+
+.stop-progress--wide .stop-name[lang="en"] {
+    top: -1cqw;
+    font-size: calc(0.85cqw * var(--stop-name-en-scale));
+}
+
+.stop-progress--wide[aria-current="step"] .stop-name[lang="en"] {
+    font-size: calc(0.95cqw * var(--stop-name-en-scale));
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .stop-progress__marker--current {
+        animation: none;
+    }
+}

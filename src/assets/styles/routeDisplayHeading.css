@@ -1,0 +1,327 @@
+.route-heading-board {
+    container-type: size;
+    display: grid;
+    grid-template-columns: 13% 20% 16% 49.6%;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    min-width: 0;
+    min-height: 0;
+    background: #000000;
+    color: #fffde8;
+    font-weight: 500;
+}
+
+.route-heading-board > div {
+    transform: translateY(6cqh);
+}
+
+.route-heading-board__label {
+    text-align: center;
+    line-height: 1;
+}
+
+.route-heading-board__label-zh {
+    font-size: 36cqh;
+    line-height: 0.95;
+}
+
+.route-heading-board__label-en {
+    font-size: 31cqh;
+    line-height: 1.2;
+    letter-spacing: -0.035em;
+}
+
+.route-heading-board__number {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    min-width: 0;
+    text-align: center;
+    font-size: 60cqh;
+    letter-spacing: -0.025em;
+    scale: 1 1.1;
+}
+
+.route-heading-board__arrows {
+    display: flex;
+    align-items: center;
+    height: 100%;
+    font-size: 70cqh;
+    padding-right: 1.25cqw;
+}
+
+.route-heading-board__arrows svg {
+    height: 1cap;
+    max-width: none;
+}
+
+.route-heading-board__arrows g {
+    fill: currentColor;
+}
+
+.route-heading-board__destination {
+    min-width: 0;
+    padding-right: 0.5cqw;
+}
+
+.route-heading-board__destination-zh {
+    font-size: 44cqh;
+    font-weight: 480;
+    line-height: 0.9;
+    letter-spacing: -0.025em;
+}
+
+.route-heading-board__destination-en {
+    font-size: 28cqh;
+    font-weight: 480;
+    line-height: 1.5;
+}
+
+.route-heading-board__number span,
+.route-heading-board__destination span {
+    display: inline-block;
+    white-space: nowrap;
+    transform-origin: left center;
+}
+
+.route-heading-board__number span {
+    transform-origin: center;
+    text-box: trim-both cap alphabetic;
+}
+
+.route-heading-inline {
+    display: flex;
+    flex: 1;
+    align-items: center;
+    justify-content: center;
+    min-width: 0;
+    height: 100%;
+    overflow: hidden;
+}
+
+.route-heading-inline--english:not(.route-heading-inline--first-stop) {
+    padding-inline: 0.5rem;
+}
+
+.route-heading-inline__wrapper {
+    display: flex;
+    justify-content: center;
+}
+
+.route-heading-inline__content {
+    display: inline-flex;
+    /* Measure natural content width independently of the scaled wrapper. */
+    width: max-content;
+    flex-shrink: 0;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.route-heading-inline__label {
+    flex-shrink: 0;
+    margin-right: 0.25rem;
+    font-size: 4cqw;
+    letter-spacing: -0.05em;
+}
+
+.route-heading-inline--first-stop .route-heading-inline__label {
+    font-size: 3.5cqw;
+}
+
+.route-heading-inline__number {
+    flex-shrink: 0;
+    align-self: center;
+    margin-inline: 0.25rem;
+    font-size: 6cqw;
+    text-align: center;
+    scale: 1 1.2;
+}
+
+.route-heading-inline--first-stop .route-heading-inline__number {
+    font-size: 5cqw;
+    scale: 1 1.1;
+}
+
+.route-heading-inline__arrows {
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    width: 8cqw;
+    margin-left: 0.25rem;
+}
+
+.route-heading-inline--first-stop .route-heading-inline__arrows {
+    width: 9cqw;
+    margin-left: 0;
+}
+
+.route-heading-inline__destination {
+    font-size: 5.5cqw;
+    white-space: nowrap;
+}
+
+.route-heading-inline--first-stop .route-heading-inline__destination {
+    font-size: 5cqw;
+}
+
+.route-heading-inline--english .route-heading-inline__label {
+    margin-right: 0;
+    font-size: 4cqw;
+}
+
+.route-heading-inline--english .route-heading-inline__arrows {
+    width: 9cqw;
+    margin-left: 0;
+}
+
+.route-heading-inline--english .route-heading-inline__destination {
+    font-size: 4.5cqw;
+}
+
+@media (width < 48rem) {
+    .route-heading-inline__label {
+        font-size: 4.25cqw;
+    }
+
+    .route-heading-inline--first-stop .route-heading-inline__label {
+        font-size: 3.75cqw;
+    }
+
+    .route-heading-inline--english .route-heading-inline__label {
+        font-size: 4cqw;
+    }
+}
+
+@media (width < 40rem) {
+    .route-heading-inline__number {
+        letter-spacing: -0.025em;
+    }
+
+    .route-heading-inline--first-stop .route-heading-inline__arrows {
+        width: 8cqw;
+    }
+
+    .route-heading-inline__destination {
+        font-size: 5.25cqw;
+    }
+
+    .route-heading-inline--first-stop .route-heading-inline__destination {
+        font-size: 4.8cqw;
+    }
+
+    .route-heading-inline--english .route-heading-inline__label {
+        font-size: 4.5cqw;
+    }
+
+    .route-heading-inline--english .route-heading-inline__arrows {
+        width: 9cqw;
+    }
+
+    .route-heading-inline--english .route-heading-inline__destination {
+        font-size: 3.75cqw;
+    }
+}
+
+/* Wide headings use height-based units so the increased monitor width
+   does not make the text taller than the heading row. */
+.route-heading-board--wide {
+    grid-template-columns: 7% minmax(0, auto) 8% minmax(0, auto) minmax(0, auto);
+    justify-content: center;
+    transform: none;
+}
+
+.route-heading-board--wide > div {
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    height: 100%;
+    min-width: 0;
+    padding-inline: 0.5cqw;
+    transform: none;
+}
+
+.route-heading-board--wide .route-heading-board__label {
+    flex-direction: column;
+    justify-content: center;
+}
+
+.route-heading-board--wide .route-heading-board__number--short {
+    min-width: 8cqw;
+}
+
+.route-heading-board--wide .route-heading-board__arrows {
+    padding: 0;
+}
+
+.route-heading-board--wide .route-heading-board__destination-zh {
+    font-size: 60cqh;
+    line-height: 1;
+}
+
+.route-heading-board--wide .route-heading-board__destination-zh span {
+    translate: 0 var(--wide-destination-zh-offset, 0px);
+}
+
+/* Zero-size inline marker exposes the text baseline for glyph alignment. */
+.route-heading-board__baseline {
+    display: inline-block;
+    width: 0;
+    height: 0;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    vertical-align: baseline;
+}
+
+.route-heading-board--wide .route-heading-board__destination-en {
+    font-size: 50cqh;
+    transform: scaleY(1.1);
+    line-height: 1;
+}
+
+.route-heading-inline--wide {
+    justify-content: center;
+    text-align: center;
+}
+
+.route-heading-inline--wide .route-heading-inline__wrapper {
+    flex: 0 0 auto;
+    margin-inline: auto;
+}
+
+.route-heading-inline--wide .route-heading-inline__content {
+    justify-content: center;
+    gap: 1cqh;
+    transform-origin: center;
+}
+
+.route-heading-inline--wide .route-heading-inline__label {
+    margin-right: 12cqh;
+    font-size: 48cqh;
+}
+
+.route-heading-inline--wide .route-heading-inline__number {
+    min-width: 8cqw;
+    font-size: 60cqh;
+}
+
+.route-heading-inline--wide .route-heading-inline__arrows {
+    width: 85cqh;
+}
+
+.route-heading-inline--wide:not(.route-heading-inline--first-stop) .route-heading-inline__arrows {
+    width: 110cqh;
+}
+
+.route-heading-inline--wide .route-heading-inline__destination {
+    margin-left: 12cqh;
+    font-size: 65cqh;
+}
+
+.route-heading-inline--wide.route-heading-inline--english .route-heading-inline__destination {
+    font-size: 55cqh;
+    transform: scaleY(1.1);
+}

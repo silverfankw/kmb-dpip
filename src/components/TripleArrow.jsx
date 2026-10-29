@@ -4,11 +4,11 @@ const chevronPaths = [
     "M118 10H142L176 50L142 90H118L152 50Z",
 ]
 
-export const TripleArrow = (props) => (
+export const TripleArrow = ({ className = "", ...props }) => (
     <svg
         width="100%"
         height="100%"
-        style={{ display: "block", maxWidth: "200px", height: "auto" }}
+        className={`triple-arrow ${className}`.trim()}
         xmlns="http://www.w3.org/2000/svg"
         shapeRendering="geometricPrecision"
         textRendering="geometricPrecision"
@@ -22,3 +22,4 @@ export const TripleArrow = (props) => (
         </g>
     </svg>
 )
+import "@styles/tripleArrow.css"

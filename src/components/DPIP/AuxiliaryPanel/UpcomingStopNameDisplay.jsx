@@ -52,7 +52,6 @@ const styles = {
 
     enStopName: [
         "text-[4.625cqw] mb-[0.5cqw]",
-        // "tracking-tight",
         "font-[450]",
     ].join(" ")
 }
