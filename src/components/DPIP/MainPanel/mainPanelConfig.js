@@ -2,6 +2,8 @@ import stringWidth from "string-width"
 
 export const DISPLAY_STAGE_INTERVAL = 10000
 export const HEADING_STAGE_INTERVAL = 4500
+export const STOP_PROGRESS_WINDOW_SIZE = 35
+export const WIDE_STOP_PROGRESS_WINDOW_SIZE = 52
 export const FIRST_STOP_WELCOME_ZH = "歡迎乘搭九龍巴士"
 export const FIRST_STOP_WELCOME_EN = "WELCOME ABOARD"
 export const STOP_NAME_ZH_SAFE_WIDTH_RATIO = 0.985

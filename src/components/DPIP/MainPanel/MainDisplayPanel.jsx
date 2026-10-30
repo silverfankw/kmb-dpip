@@ -9,10 +9,13 @@ import {
     CompactStopProgress,
 } from '@components/DPIP'
 import { MainStopNameDisplay } from './MainStopNameDisplay'
-import { DISPLAY_STAGE_INTERVAL, getStopProgressPage } from './mainPanelConfig'
+import {
+    DISPLAY_STAGE_INTERVAL,
+    STOP_PROGRESS_WINDOW_SIZE,
+    WIDE_STOP_PROGRESS_WINDOW_SIZE,
+    getStopProgressPage,
+} from './mainPanelConfig'
 
-const STOP_PROGRESS_WINDOW_SIZE = 35
-const WIDE_STOP_PROGRESS_WINDOW_SIZE = 52
 const EMPTY_STOPS = []
 
 export const MainDisplayPanel = ({ monitorStyle, screenTarget, isWide = false }) => {

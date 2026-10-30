@@ -179,6 +179,7 @@
 
 .route-heading-inline--english .route-heading-inline__destination {
     font-size: 4.5cqw;
+    transform: scaleY(1.2);
 }
 
 @media (width < 48rem) {
@@ -278,7 +279,7 @@
 
 .route-heading-board--wide .route-heading-board__destination-en {
     font-size: 50cqh;
-    transform: scaleY(1.1);
+    transform: scaleY(1.2);
     line-height: 1;
 }
 
@@ -323,5 +324,5 @@
 
 .route-heading-inline--wide.route-heading-inline--english .route-heading-inline__destination {
     font-size: 55cqh;
-    transform: scaleY(1.1);
+    transform: scaleY(1.2);
 }
