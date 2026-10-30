@@ -1,4 +1,4 @@
-import '@styles/mainDisplayPanel.css'
+import '@styles/mainPanel/mainDisplayPanel.css'
 import { useEffect, useMemo, useRef, useState } from "react"
 import { shallowEqual, useSelector } from "react-redux"
 

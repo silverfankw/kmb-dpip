@@ -1,6 +1,6 @@
 import { memo, useLayoutEffect, useRef } from "react"
-import "@styles/animation.css"
-import "@styles/compactStopProgress.css"
+import "@styles/shared/animation.css"
+import "@styles/mainPanel/compactStopProgress.css"
 import { getEnglishLines } from './mainPanelConfig'
 
 const StopNames = memo(function StopNames({ stop }) {

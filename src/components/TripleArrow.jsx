@@ -22,4 +22,4 @@ export const TripleArrow = ({ className = "", ...props }) => (
         </g>
     </svg>
 )
-import "@styles/tripleArrow.css"
+import "@styles/shared/tripleArrow.css"

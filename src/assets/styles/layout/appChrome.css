@@ -1,0 +1,282 @@
+.app-toolbar,
+.app-footer {
+    --chrome-text: #e2e8f0;
+    --chrome-muted: #cbd5e1;
+    --chrome-border: #475569;
+    --chrome-hover: #1e293b;
+    --chrome-focus: #7dd3fc;
+    color: var(--chrome-text);
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+.app-toolbar[data-theme="light"],
+.app-footer[data-theme="light"] {
+    --chrome-text: #1e293b;
+    --chrome-muted: #475569;
+    --chrome-border: #94a3b8;
+    --chrome-hover: #e2e8f0;
+    --chrome-focus: #0369a1;
+}
+
+.app-toolbar {
+    order: 0;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    width: 100%;
+}
+
+.app-toolbar__brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-width: 0;
+}
+
+.app-toolbar__brand-mark {
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+    width: 42px;
+    height: 42px;
+    border: 1px solid #ff6b76;
+    border-radius: 12px 12px 12px 3px;
+    background: #d90018;
+    color: #ffffff;
+}
+
+.app-toolbar__brand-mark svg {
+    flex-shrink: 0;
+    width: 24px;
+    height: 26px;
+}
+
+.app-toolbar__brand-mark .app-toolbar__stop-sign {
+    width: 10px;
+    margin-left: -2px;
+}
+
+.app-toolbar__brand-copy {
+    min-width: 0;
+}
+
+.app-toolbar__title {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    margin: 0;
+    font-family: 'Bahnschrift', 'DIN Alternate', 'Segoe UI Variable Display', 'Segoe UI', sans-serif;
+    font-size: 23px;
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: 0.015em;
+    white-space: nowrap;
+}
+
+.app-toolbar__title span {
+    padding-left: 9px;
+    border-left: 1px solid var(--chrome-border);
+    color: var(--chrome-muted);
+    font-weight: 500;
+    letter-spacing: 0.08em;
+}
+
+.app-toolbar__subtitle {
+    margin: 3px 0 0;
+    color: var(--chrome-muted);
+    font-size: 12px;
+    line-height: 1.4;
+}
+
+.app-toolbar__preferences,
+.app-footer__links {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+}
+
+.app-chrome-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    min-height: 44px;
+    padding: 8px 12px;
+    border: 1px solid var(--chrome-border);
+    border-radius: 10px;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    cursor: pointer;
+    touch-action: manipulation;
+}
+
+.app-chrome-button svg {
+    width: 18px;
+    height: 18px;
+}
+
+.app-toolbar__settings {
+    display: none;
+}
+
+.app-toolbar button:focus-visible,
+.app-footer :is(a, button, summary):focus-visible {
+    outline: 2px solid var(--chrome-focus);
+    outline-offset: 3px;
+}
+
+.app-footer {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px 24px;
+    width: 100%;
+    padding: 12px 64px 24px;
+    color: var(--chrome-muted);
+}
+
+.app-footer__links > a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    text-underline-offset: 3px;
+}
+
+.app-footer__help {
+    max-width: 640px;
+}
+
+.app-footer__help summary {
+    min-height: 44px;
+    padding: 12px 4px;
+    cursor: pointer;
+}
+
+.app-footer__help-content {
+    padding: 12px 0;
+    border-top: 1px solid var(--chrome-border);
+}
+
+.app-footer__help-content h2 {
+    margin: 0 0 8px;
+    color: var(--chrome-text);
+    font-size: 13px;
+    font-weight: 650;
+}
+
+.app-footer__help-content p {
+    margin: 12px 0 0;
+}
+
+.app-footer__shortcuts {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px 20px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.app-footer__shortcuts li {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.app-footer__shortcuts kbd {
+    min-width: 24px;
+    padding: 2px 6px;
+    border: 1px solid var(--chrome-border);
+    border-radius: 4px;
+    color: var(--chrome-text);
+    font-size: 12px;
+    text-align: center;
+}
+
+@media (hover: hover) {
+    .app-chrome-button:hover,
+    .app-footer__help summary:hover {
+        background: var(--chrome-hover);
+    }
+}
+
+@media (width < 1280px) {
+    .app-footer {
+        padding-inline: 40px;
+    }
+}
+
+@media (width < 640px) {
+    .app-toolbar {
+        padding: 6px;
+    }
+
+    .app-toolbar__brand {
+        gap: 8px;
+    }
+
+    .app-toolbar__brand-mark {
+        width: 34px;
+        height: 34px;
+        border-radius: 10px 10px 10px 3px;
+    }
+
+    .app-toolbar__brand-mark svg {
+        width: 19px;
+        height: 22px;
+    }
+
+    .app-toolbar__brand-mark .app-toolbar__stop-sign {
+        width: 8px;
+    }
+
+    .app-toolbar__title {
+        gap: 6px;
+        font-size: 18px;
+    }
+
+    .app-toolbar__title span {
+        padding-left: 7px;
+    }
+
+    .app-toolbar__subtitle {
+        display: none;
+    }
+
+    .app-toolbar__preferences {
+        display: none;
+        flex-basis: 100%;
+        justify-content: flex-end;
+        gap: 6px;
+    }
+
+    .app-toolbar__preferences[data-open="true"] {
+        display: flex;
+    }
+
+    .app-toolbar__settings {
+        display: inline-flex;
+    }
+
+    .app-footer {
+        flex-direction: column;
+        gap: 4px;
+        padding: 12px;
+    }
+
+    .app-footer__help {
+        width: 100%;
+    }
+
+    .app-layout {
+        padding-bottom: calc(var(--mobile-controls-height, 140px) + 16px);
+    }
+}

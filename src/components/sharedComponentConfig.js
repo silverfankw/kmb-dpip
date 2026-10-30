@@ -4,6 +4,7 @@ export const footerConfig = {
         repoUrl: 'https://github.com/silverfankw/kmb-dpip',
         versionHistoryLabel: '版本歷史',
         keyboardShortcutLabel: '鍵盤快捷鍵',
+        helpLabel: '使用說明與快捷鍵',
         note: '建議使用 16:9 螢幕瀏覽以獲得最佳體驗。 本工具為非官方開發之娛樂項目，僅供個人體驗與參考。',
         legal: '開發者不保證內容之準確性與服務穩定性，亦不對使用本工具所產生之任何損害承擔責任。',
         shortcuts: [
@@ -30,6 +31,7 @@ export const footerConfig = {
         repoUrl: 'https://github.com/silverfankw/kmb-dpip',
         versionHistoryLabel: 'Version history',
         keyboardShortcutLabel: 'Keyboard shortcuts',
+        helpLabel: 'Help / Shortcuts',
         note: 'Optimized for 16:9 displays. An independent, non-commercial tool for personal entertainment only.',
         legal: 'Provided "as is" without warranty of accuracy or availability. The developer accepts no liability for any damages arising from use.',
         shortcuts: [
@@ -57,6 +59,11 @@ export const getFooterConfig = (language = 'zh') => footerConfig[language === 'e
 
 export const appTextConfig = {
     zh: {
+        preferences: '語言與外觀設定',
+        appSubtitle: '動態乘客資訊顯示屏模擬器',
+        settings: '設定',
+        dayMode: '日間模式',
+        nightMode: '夜間模式',
         routeLabel: '路線',
         stopCountLabel: '站數',
         currentStopLabel: '本站',
@@ -94,6 +101,11 @@ export const appTextConfig = {
         routeProgressLabel: '站點進度',
     },
     en: {
+        preferences: 'Language and appearance',
+        appSubtitle: 'Passenger information simulator',
+        settings: 'Settings',
+        dayMode: 'Day mode',
+        nightMode: 'Night mode',
         routeLabel: 'Route',
         stopCountLabel: 'Stops',
         currentStopLabel: 'Current stop',

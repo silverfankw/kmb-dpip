@@ -23,7 +23,13 @@
 }
 
 .route-option__label[data-option="true"][data-mobile="true"] {
-    width: 36px;
+    flex-shrink: 0;
+    width: 64px;
+    min-width: max-content;
+}
+
+.route-option__label[data-option="true"][data-mobile="true"] .route-option__special-trip {
+    white-space: nowrap;
 }
 
 .route-option__special-trip {
@@ -40,7 +46,7 @@
 
 .route-option__label[data-mobile="true"] .route-option__special-trip {
     padding: 1px 4px;
-    font-size: 10px;
+    font-size: 12px;
 }
 
 .route-option__separator {

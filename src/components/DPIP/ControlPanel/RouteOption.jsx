@@ -1,4 +1,4 @@
-import "@styles/routeOption.css"
+import "@styles/routeSearch/routeOption.css"
 import { useSelector } from 'react-redux'
 import { useWindowSize, useRouteTypeStyle } from "@hooks"
 import { getAppTextConfig } from '@components/sharedComponentConfig'

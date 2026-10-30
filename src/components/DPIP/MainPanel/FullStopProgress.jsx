@@ -1,5 +1,5 @@
 import { memo } from "react"
-import "@styles/fullStopProgress.css"
+import "@styles/mainPanel/fullStopProgress.css"
 import { getEnglishLines } from './mainPanelConfig'
 
 export const FullStopProgress = memo(function FullStopProgress({ stop, stopIndex, currentStopIndex, stopCount, continuation, isWide = false, language = 'zh' }) {

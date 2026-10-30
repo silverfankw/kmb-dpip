@@ -25,7 +25,7 @@ export const ToggleButtonGroup = () => {
                 tile
                 icon={stopPressed ? <NotificationsActiveIcon /> : <NotificationsNoneIcon />}
                 label={stopPressed ? text.bellActive : text.bell}
-                accessibleLabel={stopPressed ? appText.releaseStop : appText.pressStop}
+                accessibleLabel={stopPressed ? `${text.bellActive} · ${appText.releaseStop}` : appText.pressStop}
                 tone="danger"
                 pressed={stopPressed}
                 onClick={() => dispatch(setStopPressed(!stopPressed))}
@@ -33,8 +33,8 @@ export const ToggleButtonGroup = () => {
             <ControlButton
                 tile
                 icon={<HandshakeOutlinedIcon />}
-                label={text.handrail}
-                accessibleLabel={appText.handrailNotice}
+                label={showHandrailNotice ? text.handrailActive : text.handrail}
+                accessibleLabel={showHandrailNotice ? text.handrailActive : appText.handrailNotice}
                 tone="notice"
                 pressed={showHandrailNotice}
                 onClick={() => dispatch(setShowHandrailAndMindDoorNotice({
@@ -45,8 +45,8 @@ export const ToggleButtonGroup = () => {
             <ControlButton
                 tile
                 icon={<DoorSlidingOutlinedIcon />}
-                label={text.door}
-                accessibleLabel={appText.mindDoorNotice}
+                label={showMindDoorNotice ? text.doorActive : text.door}
+                accessibleLabel={showMindDoorNotice ? text.doorActive : appText.mindDoorNotice}
                 tone="notice"
                 pressed={showMindDoorNotice}
                 onClick={() => dispatch(setShowHandrailAndMindDoorNotice({

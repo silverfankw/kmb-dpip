@@ -1,7 +1,8 @@
 import { useEffect, useId, useMemo, useRef, useState } from 'react'
+import BackspaceOutlinedIcon from '@mui/icons-material/BackspaceOutlined'
 import { RouteNumber, RouteDetails } from './DPIP/ControlPanel/RouteOption'
 import { getAppTextConfig } from './sharedComponentConfig'
-import '@styles/routeSearchKeypad.css'
+import '@styles/routeSearch/routeSearchKeypad.css'
 
 const digits = ['1', '2', '3', '4', '5', '6', '7', '8', '9']
 
@@ -24,14 +25,18 @@ export const RouteSearchKeypad = ({ options, language, uiMode, onSelect, onClose
     const [query, setQuery] = useState('')
     const text = keypadText[language === 'en' ? 'en' : 'zh']
     const appText = getAppTextConfig(language)
-    const { matches, letters } = useMemo(() => {
+    const { matches, letters, nextCharacters } = useMemo(() => {
         const matchingOptions = options.filter(option => option.detail.route.toUpperCase().startsWith(query))
-        const nextLetters = new Set()
+        const nextCharacters = new Set()
         matchingOptions.forEach(option => {
             const next = option.detail.route.toUpperCase()[query.length]
-            if (next && /^[A-Z]$/.test(next)) nextLetters.add(next)
+            if (next) nextCharacters.add(next)
         })
-        return { matches: matchingOptions.slice(0, 50), letters: [...nextLetters].sort() }
+        return {
+            matches: matchingOptions.slice(0, 50),
+            letters: [...nextCharacters].filter(character => /^[A-Z]$/.test(character)).sort(),
+            nextCharacters,
+        }
     }, [options, query])
 
     const updateQuery = value => {
@@ -67,7 +72,8 @@ export const RouteSearchKeypad = ({ options, language, uiMode, onSelect, onClose
                 if (event.ctrlKey || event.metaKey || event.altKey) return
                 if (/^[0-9a-z]$/i.test(event.key)) {
                     event.preventDefault()
-                    updateQuery(value => value + event.key.toUpperCase())
+                    const character = event.key.toUpperCase()
+                    if (nextCharacters.has(character)) updateQuery(value => value + character)
                 } else if (event.key === 'Backspace') {
                     event.preventDefault()
                     updateQuery(value => value.slice(0, -1))
@@ -111,6 +117,7 @@ export const RouteSearchKeypad = ({ options, language, uiMode, onSelect, onClose
                         <button
                             key={digit}
                             type="button"
+                            disabled={!nextCharacters.has(digit)}
                             onClick={() => updateQuery(value => value + digit)}
                         >{digit}</button>
                     ))}
@@ -120,13 +127,18 @@ export const RouteSearchKeypad = ({ options, language, uiMode, onSelect, onClose
                         disabled={!query}
                         onClick={() => updateQuery('')}
                     >{text.clear}</button>
-                    <button type="button" onClick={() => updateQuery(value => value + '0')}>0</button>
                     <button
                         type="button"
+                        disabled={!nextCharacters.has('0')}
+                        onClick={() => updateQuery(value => value + '0')}
+                    >0</button>
+                    <button
+                        type="button"
+                        className="route-search-keypad__backspace"
                         aria-label={text.backspace}
                         disabled={!query}
                         onClick={() => updateQuery(value => value.slice(0, -1))}
-                    >⌫</button>
+                    ><BackspaceOutlinedIcon /></button>
                 </div>
                 <div className="route-search-keypad__letters" role="group" aria-label={text.letters}>
                     <div>
