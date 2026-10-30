@@ -1,4 +1,4 @@
-import '@styles/App.css'
+import '@styles/layout/App.css'
 import { memo, useMemo } from 'react'
 import { useSelector } from 'react-redux'
 

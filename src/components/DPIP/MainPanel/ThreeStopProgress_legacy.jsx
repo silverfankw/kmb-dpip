@@ -1,4 +1,4 @@
-import "@styles/animation.css"
+import "@styles/shared/animation.css"
 import { useMemo } from "react"
 import { useSelector } from "react-redux"
 

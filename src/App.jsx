@@ -1,5 +1,5 @@
 import {
-	Background, Footer, RouteQueryInput, ErrorMessage,
+	AppToolbar, Background, Footer, RouteQueryInput, ErrorMessage,
 	ControlPanel, MainDisplayPanel, AuxiliaryDisplayPanel
 } from '@components'
 
@@ -7,7 +7,7 @@ import { useRef, useCallback, useEffect, useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { useKeyboardNavigation, useLocalStorageState} from "@hooks"
 import PlaceOutlinedIcon from '@mui/icons-material/PlaceOutlined'
-import '@styles/routeQuerySection.css'
+import '@styles/routeSearch/routeQuerySection.css'
 
 import { getAppTextConfig } from '@components/sharedComponentConfig'
 import { getRoutesThunk } from "@store/routeSlice"
@@ -60,6 +60,7 @@ const styles = {
 	queryStatusRouteInputWrapper: "query-section__route-input",
 	queryStatusSummary: "query-section__summary",
 	queryStatusProgress: "query-section__progress",
+	queryStatusProgressMetric: "query-section__progress-metric",
 	queryStatusProgressBar: "query-section__progress-bar",
 	queryStatusCurrent: "query-section__current",
 	queryStatusStopName: "query-section__value query-section__stop-name",
@@ -68,7 +69,7 @@ const styles = {
 
 	screenPanelSection: [
 		"app-monitors",
-		"order-3 max-sm:order-1",
+		"order-3 max-sm:order-2",
 		"flex flex-wrap items-center justify-center",
 		"gap-8 py-3 max-xl:gap-8 max-sm:gap-3 max-sm:py-1"
 	].join(" "),
@@ -199,6 +200,7 @@ const App = () => {
 			{/* rootContainer to footer to stick at bottom */}
 			<div className={styles.rootContainer}>
 				<div className={styles.contentContainer} tabIndex={1}>
+					<AppToolbar />
 
 					{/* Query section for route input and selection */}
 					<section className={styles.querySection} data-theme={uiMode} aria-label={appText.routeQuerySectionLabel}>
@@ -211,13 +213,18 @@ const App = () => {
 							<div className={styles.queryStatusSummary} aria-live="polite" aria-atomic="true">
 								<div className={styles.queryStatusProgress}>
 									<span className={styles.queryStatusLabel}>{appText.stopCountLabel}</span>
-									<span className={styles.queryStatusValue}>{currentStopSummary}</span>
-									<progress
-										className={styles.queryStatusProgressBar}
-										max={totalStops}
-										value={currentStopIndex + 1}
-										aria-label={appText.routeProgressLabel}
-									/>
+									<div className={styles.queryStatusProgressMetric}>
+										<span
+											className={styles.queryStatusValue}
+											style={{ minWidth: `${String(totalStops).length * 2 + 3}ch` }}
+										>{currentStopSummary}</span>
+										<progress
+											className={styles.queryStatusProgressBar}
+											max={totalStops}
+											value={currentStopIndex + 1}
+											aria-label={appText.routeProgressLabel}
+										/>
+									</div>
 								</div>
 								<div className={styles.queryStatusCurrent}>
 									<span className={styles.queryStatusLabel}><PlaceOutlinedIcon />{appText.currentStopLabel}</span>

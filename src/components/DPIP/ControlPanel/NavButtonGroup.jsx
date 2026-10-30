@@ -29,6 +29,7 @@ export const NavButtonGroup = () => {
 
     return (
         <div className="control-panel__navigation">
+            <div className="control-panel__step-actions">
             <ControlButton
                 icon={<ArrowBackIcon />}
                 label={text.previous}
@@ -49,6 +50,8 @@ export const NavButtonGroup = () => {
                 shortcutLabel="→"
                 onClick={() => dispatch(toNextStop())}
             />
+            </div>
+            <div className="control-panel__route-actions" role="group" aria-label={text.routeActions}>
             <ControlButton
                 icon={<SwapHorizIcon />}
                 accessibleLabel={appText.switchDirection}
@@ -65,6 +68,7 @@ export const NavButtonGroup = () => {
                 shortcutLabel="Home"
                 onClick={() => dispatch(resetToFirstStop())}
             />
+            </div>
         </div>
     )
 }

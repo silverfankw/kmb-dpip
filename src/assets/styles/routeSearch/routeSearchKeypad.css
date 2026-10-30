@@ -56,7 +56,7 @@ html:has(.route-search-keypad[open]) {
     outline-offset: -2px;
 }
 
-.route-search-keypad button:active {
+.route-search-keypad button:enabled:active {
     background: #0369a1;
     color: #fff;
 }
@@ -142,6 +142,20 @@ html:has(.route-search-keypad[open]) {
 
 .route-search-keypad__numbers .route-search-keypad__clear {
     font-size: 14px;
+}
+
+.route-search-keypad__numbers .route-search-keypad__backspace {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.route-search-keypad__backspace svg {
+    width: 1em;
+    height: 1em;
+    max-width: 100%;
+    max-height: 100%;
+    font-size: inherit;
 }
 
 .route-search-keypad__letters {

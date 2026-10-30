@@ -1,7 +1,7 @@
 import { memo, useState, useEffect, useRef, useLayoutEffect, useMemo } from "react"
 import { useSelector } from "react-redux"
 import { TripleArrow } from "@components"
-import "@styles/routeDisplayHeading.css"
+import "@styles/mainPanel/routeDisplayHeading.css"
 import {
     HEADING_STAGE_INTERVAL,
     getStageZeroDestEnMaxScaleX,

@@ -1,6 +1,7 @@
 export * from './DPIP'
 
 export { Background } from "./Background"
+export { AppToolbar } from './AppToolbar'
 export { Button } from './Button'
 export { ErrorMessage } from './ErrorMessage'
 export { Footer } from './Footer'
