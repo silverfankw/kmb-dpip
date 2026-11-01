@@ -1,20 +1,18 @@
 import { createSlice, createAsyncThunk, createSelector } from '@reduxjs/toolkit'
 
-import { routeStoreConfig, buildRouteSelectionKey } from './storeConfig'
+import { routeStoreConfig, buildRouteSelectionKey, getRouteOperator } from './storeConfig'
 
 const initialState = routeStoreConfig.routeSelectionDefaults
 
 const getSelectedRouteKey = routeDetail => buildRouteSelectionKey(routeDetail)
 
-const hasOppositeBound = (routes, { route, bound, service_type }) => {
+const hasOppositeBound = (routes, routeDetail) => {
+    const { bound } = routeDetail
     const oppositeBound = bound === 'I' ? 'O' : bound === 'O' ? 'I' : null
     if (!oppositeBound) return false
 
-    return routes.some(item =>
-        item.route === route &&
-        item.bound === oppositeBound &&
-        item.service_type === service_type
-    )
+    const oppositeKey = getSelectedRouteKey({ ...routeDetail, bound: oppositeBound })
+    return routes.some(item => getSelectedRouteKey(item) === oppositeKey)
 }
 
 const selectRouteSelection = state => state.routeSelection
@@ -69,36 +67,43 @@ export const selectCurrentStopMeta = createSelector(
 
 export const selectRouteThunk = createAsyncThunk(
     'routeSelection/selectRoute',
-    async ({ routeDetail, routes }, { dispatch, getState }) => {
-        const requestedRouteKey = getSelectedRouteKey(routeDetail)
-        const currentSelection = getState().routeSelection
-        const currentRouteKey = getSelectedRouteKey(currentSelection.routeDetail)
-        const hasTwoBound = hasOppositeBound(routes, routeDetail)
-        const routeState = getState().route
-        const selectedRoute = routeState.routesByKey?.[requestedRouteKey] ?? routes.find(
-            route => getSelectedRouteKey(route) === requestedRouteKey
-        ) ?? routeDetail
-
-        dispatch(setRouteHasTwoBound(hasTwoBound))
+    async ({ routeDetail, routes }, { dispatch, getState, rejectWithValue }) => {
         dispatch(setLoadingError(null))
-
-        if (requestedRouteKey === currentRouteKey && currentSelection.routeDetail?.stops?.length > 0) {
-            dispatch(setCurrentStopIndex(0))
-            dispatch(setIsUserSelectedRoute(true))
-            return
-        }
-
         dispatch(setIsLoading(true))
 
         try {
+            if (getRouteOperator(routeDetail) !== routeStoreConfig.defaultOperator) {
+                throw new Error(`Route operator ${getRouteOperator(routeDetail)} is not enabled for selection.`)
+            }
+
+            const requestedRouteKey = getSelectedRouteKey(routeDetail)
+            const currentSelection = getState().routeSelection
+            const currentRouteKey = getSelectedRouteKey(currentSelection.routeDetail)
+            const routeState = getState().route
+            const selectedRoute = routeState.routesByKey?.[requestedRouteKey] ?? routes.find(
+                route => getSelectedRouteKey(route) === requestedRouteKey
+            )
+
+            if (!selectedRoute?.stops?.length) {
+                throw new Error(`Route ${requestedRouteKey} is unavailable or has no stops.`)
+            }
+
+            dispatch(setRouteHasTwoBound(hasOppositeBound(routes, selectedRoute)))
+
+            if (requestedRouteKey === currentRouteKey && currentSelection.routeDetail?.stops?.length > 0) {
+                dispatch(setCurrentStopIndex(0))
+                dispatch(setIsUserSelectedRoute(true))
+                return selectedRoute
+            }
+
             const { route, bound, service_type, orig_tc, orig_en, dest_tc, dest_en, specialRemark } = selectedRoute
-            const routeAllStops = selectedRoute?.stops ?? []
 
             dispatch(setCurrentStopIndex(0))
             dispatch(setRouteDetail({
+                operator: getRouteOperator(selectedRoute),
                 route,
                 bound,
-                stops: routeAllStops,
+                stops: selectedRoute.stops,
                 orig_tc,
                 orig_en,
                 dest_tc,
@@ -107,9 +112,11 @@ export const selectRouteThunk = createAsyncThunk(
                 specialRemark: specialRemark ?? "",
             }))
             dispatch(setIsUserSelectedRoute(true))
+            return selectedRoute
         }
         catch (error) {
             dispatch(setLoadingError(error.message))
+            return rejectWithValue(error.message)
         }
         finally {
             dispatch(setIsLoading(false))
@@ -158,12 +165,10 @@ const routeSelectionSlice = createSlice({
             state.lastStopIndex = (action.payload.stops?.length ?? 1) - 1
         },
         setRouteDetailSpecialRemark(state, action) {
-            const { route, bound, service_type, specialRemark } = action.payload
+            const { specialRemark } = action.payload
 
             if (
-                state.routeDetail.route !== route ||
-                state.routeDetail.bound !== bound ||
-                state.routeDetail.service_type !== service_type ||
+                getSelectedRouteKey(state.routeDetail) !== getSelectedRouteKey(action.payload) ||
                 state.routeDetail.specialRemark === specialRemark
             ) {
                 return

@@ -1,6 +1,7 @@
 import { memo, useState, useEffect, useRef, useLayoutEffect, useMemo } from "react"
 import { useSelector } from "react-redux"
 import { TripleArrow } from "@components"
+import { buildRouteSelectionKey } from '@store/storeConfig'
 import "@styles/mainPanel/routeDisplayHeading.css"
 import {
     HEADING_STAGE_INTERVAL,
@@ -23,6 +24,7 @@ export const RouteDisplayHeading = memo(function RouteDisplayHeading({ onStageCh
     const destZhBaselineRef = useRef(null)
     const routeNumberRef = useRef(null)
     const isFirstStop = routeDetail?.stops?.length > 0 && atFirstStop
+    const routeKey = buildRouteSelectionKey(routeDetail)
     const stageSequence = useMemo(
         () => isFirstStop ? [1, 2] : [0, 1, 2],
         [isFirstStop]
@@ -30,7 +32,7 @@ export const RouteDisplayHeading = memo(function RouteDisplayHeading({ onStageCh
 
     useLayoutEffect(() => {
         setStage(isFirstStop ? 1 : 0)
-    }, [isFirstStop, routeDetail?.route, routeDetail?.bound, routeDetail?.service_type])
+    }, [isFirstStop, routeKey])
 
     useLayoutEffect(() => {
         onStageChange?.(stage)

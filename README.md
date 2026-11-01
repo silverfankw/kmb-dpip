@@ -9,6 +9,32 @@
 
 This project is developed by React + Vite, Redux, tailwindCSS v4 & Material UI.
 
+## Route data
+
+Routes are loaded from [route_stop.json](https://raw.githubusercontent.com/silverfankw/hk-bus-route-stop/refs/heads/main/route_stop.json). The source groups route arrays and stop dictionaries by operator:
+
+```text
+routes.kmb / stops.kmb
+routes.ctb / stops.ctb
+```
+
+The app currently loads and displays **KMB only**. The reusable [route data adapter](./src/utils/routeDataAdapters.js) also supports CTB for future development:
+
+```js
+import { normalizeRouteData } from './src/utils/routeDataAdapters.js'
+
+const kmbRoutes = normalizeRouteData(payload) // Default operator: kmb
+const ctbRoutes = normalizeRouteData(payload, 'ctb')
+```
+
+Both return routes with `operator`, `route`, `bound`, `service_type`, `orig_tc`, `orig_en`, `dest_tc`, `dest_en`, `specialRemark`, and ordered `stops: [{ id, zh, en }]`. CTB's `orig_zh`/`dest_zh` map to the canonical Chinese endpoint fields. Stop IDs stay strings, including leading zeroes. Route keys include the operator; existing saved selections without an operator are treated as KMB.
+
+CTB has no source `service_type`, so its canonical value is `''` and it is not labeled as a KMB special trip. CTB routes with empty stop arrays are retained; future displays must handle a no-stops state. **CTB displays and an operator selector are not implemented yet.**
+
+Malformed requested data and missing referenced stop names produce an explicit loading error. Only the requested operator and referenced stops are validated. All routes must provide a `stops` array. The KMB source uses `ORIG_EN` for R960's English origin; this alias is accepted only when `orig_en` is absent and does not hide an invalid standard field. The previous flat JSON format is no longer supported.
+
+Build with `npm run build`.
+
 ## Versions
 <ins>**Version 2</ins>🆕✨**
 - Added features:
