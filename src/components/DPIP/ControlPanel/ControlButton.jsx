@@ -1,9 +1,11 @@
 import Tooltip from '@mui/material/Tooltip'
+import { useWindowSize } from '@hooks'
 
 export const ControlButton = ({
     icon, label, supportingText, accessibleLabel, tooltip, tone = 'neutral', tile = false,
     pressed, active = pressed, shortcut, shortcutLabel, disabled = false, ...props
 }) => {
+    const { isMobile } = useWindowSize()
     const className = [
         'control-button',
         `control-button--${tone}`,
@@ -17,7 +19,10 @@ export const ControlButton = ({
         <Tooltip
             arrow
             describeChild
-            title={shortcutLabel ? `${description} · ${shortcutLabel}` : description}
+            title={isMobile ? '' : shortcutLabel ? `${description} · ${shortcutLabel}` : description}
+            disableHoverListener={isMobile}
+            disableFocusListener={isMobile}
+            disableTouchListener={isMobile}
             enterTouchDelay={350}
         >
             <span className="control-button-wrap">

@@ -85,7 +85,7 @@
 
 .compact-stop-progress__stop--current .compact-stop-progress__en {
     font-size: 2.85cqw;
-    font-weight: 450;
+    /* font-weight: 450; */
 }
 
 .compact-stop-progress__line {

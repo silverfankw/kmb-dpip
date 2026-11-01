@@ -1,6 +1,6 @@
 import { memo } from "react"
 import "@styles/mainPanel/fullStopProgress.css"
-import { getEnglishLines } from './mainPanelConfig'
+import { getEnglishLines, getWideStopNameEnScaleX } from './mainPanelConfig'
 
 export const FullStopProgress = memo(function FullStopProgress({ stop, stopIndex, currentStopIndex, stopCount, continuation, isWide = false, language = 'zh' }) {
     const showContinuationDot = Boolean(continuation)
@@ -9,7 +9,6 @@ export const FullStopProgress = memo(function FullStopProgress({ stop, stopIndex
     const isLastStop = !showContinuationDot && stopIndex === stopCount - 1
     const englishLines = !showContinuationDot && language === 'en' ? getEnglishLines(stop.en, 38) : []
     const englishLineLength = Math.max(1, ...englishLines.map(line => line.length))
-    const isLongCurrentEnglish = isCurrentStop && englishLines.length === 1 && englishLineLength > 28
 
     return (
         <div className={`stop-progress${isWide ? " stop-progress--wide" : ""}`} role="listitem" aria-current={isCurrentStop ? "step" : undefined}>
@@ -40,9 +39,10 @@ export const FullStopProgress = memo(function FullStopProgress({ stop, stopIndex
                 <span
                     lang={showContinuationDot ? undefined : language === 'en' ? 'en' : 'zh-Hant'}
                     style={!showContinuationDot && language === 'en' ? {
-                        '--stop-name-en-scale': Math.min(1, (isWide ? 28 : 36) / englishLineLength) * (isLongCurrentEnglish ? 0.85 : 1),
+                        '--stop-name-en-scale': Math.min(1, (isWide ? 30 : 32) / englishLineLength),
+                        '--stop-name-en-scale-x': isWide ? getWideStopNameEnScaleX(englishLineLength) : 1,
                     } : undefined}
-                    className={`stop-name absolute ${isPastStop && !showContinuationDot ? "text-[#878787]" : "text-black"} left-1/2 ${showContinuationDot ? "top-[-4cqw] max-md:top-[-4.5cqw] -translate-x-1/2" : language === 'en' ? "top-[-2.5cqw] max-md:top-[-3cqw] -rotate-[65deg] origin-left" : "stop-progress__name"} whitespace-nowrap ${isCurrentStop ? "text-[2cqw] max-md:text-[2.25cqw] font-black" : "text-[1.75cqw] max-md:text-[2cqw] font-medium"}`}
+                    className={`stop-name absolute ${isPastStop && !showContinuationDot ? "text-[#878787]" : "text-black"} left-1/2 ${showContinuationDot ? "top-[-4cqw] max-md:top-[-4.5cqw] -translate-x-1/2" : language === 'en' ? "top-[-2.5cqw] max-md:top-[-3cqw] -rotate-[65deg] origin-left" : "stop-progress__name"} whitespace-nowrap text-[1.75cqw] max-md:text-[2cqw] ${isCurrentStop ? "font-black" : "font-medium"}`}
                     aria-label={showContinuationDot ? (continuation === "previous" ? "Previous stops" : "More stops") : undefined}
                 >
                     {showContinuationDot ? "\u2022" : language === 'en' ? (

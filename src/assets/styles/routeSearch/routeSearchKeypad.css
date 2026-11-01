@@ -13,7 +13,7 @@ html:has(.route-search-keypad[open]) {
     flex-direction: column;
     width: 100vw;
     max-width: 100vw;
-    height: min(620px, 94dvh);
+    height: min(860px, 94dvh);
     max-height: 94dvh;
     margin: 0;
     padding: 0 0 env(safe-area-inset-bottom);

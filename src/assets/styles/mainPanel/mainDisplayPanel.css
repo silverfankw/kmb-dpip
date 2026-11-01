@@ -95,6 +95,7 @@
     flex-shrink: 0;
     white-space: nowrap;
     font-size: var(--stop-name-zh-font-size);
+    letter-spacing: 0.04em;
     transform-origin: center;
 }
 
@@ -159,7 +160,7 @@
 /* Wide mode retains the latest layout proportions and progress scaling. */
 .main-display-panel--wide {
     grid-template-columns: 20% 80%;
-    grid-template-rows: minmax(0, 0.8fr) minmax(0, 2.2fr) minmax(0, 0.4fr);
+    grid-template-rows: minmax(0, 0.7fr) minmax(0, 2.3fr) minmax(0, 0.4fr);
 }
 
 .main-display-panel--wide > div {
@@ -206,51 +207,51 @@
 }
 
 .main-display-panel--wide .compact-stop-progress__row {
-    --temp-line-size: 0.9cqw;
-    --temp-marker-size: 0.9cqw;
+    --temp-line-size: 1.35cqw;
+    --temp-marker-size: 1.35cqw;
     --temp-line-position: 70%;
 }
 
 .main-display-panel--wide .compact-stop-progress__names {
-    bottom: calc(100% - var(--temp-line-position) + var(--temp-line-size) / 2 + 1.375cqw);
+    bottom: calc(100% - var(--temp-line-position) + var(--temp-line-size) / 2 + 1.65cqw);
 }
 
 .main-display-panel--wide .compact-stop-progress__zh {
-    font-size: 1.875cqw;
+    font-size: 2.25cqw;
 }
 
 .main-display-panel--wide .compact-stop-progress__en {
-    margin-top: 0.4cqw;
-    font-size: 1.2cqw;
+    margin-top: 0.48cqw;
+    font-size: 1.44cqw;
 }
 
 .main-display-panel--wide .compact-stop-progress__stop--current .compact-stop-progress__zh {
-    font-size: 2.375cqw;
+    font-size: 2.85cqw;
 }
 
 .main-display-panel--wide .compact-stop-progress__stop--current .compact-stop-progress__en {
-    font-size: 1.425cqw;
+    font-size: 1.71cqw;
 }
 
 .main-display-panel--wide .compact-stop-progress__stop--current .compact-stop-progress__marker {
-    width: 1.3cqw;
-    height: 1.3cqw;
+    width: 1.56cqw;
+    height: 1.56cqw;
 }
 
 .main-display-panel--wide .compact-stop-progress__arrows {
-    left: 2cqw;
-    gap: 0.5cqw;
+    left: 2.4cqw;
+    gap: 0.6cqw;
 }
 
 .main-display-panel--wide .compact-stop-progress__terminal:not(.compact-stop-progress__terminal--end) {
-    gap: 0.09cqw;
+    gap: 0.108cqw;
 }
 
 .main-display-panel--wide .compact-stop-progress__terminal:not(.compact-stop-progress__terminal--end) span {
-    width: 0.25cqw;
-    border-width: 0.04cqw;
+    width: 0.3cqw;
+    border-width: 0.048cqw;
 }
 
 .main-display-panel--wide .compact-stop-progress__terminal:not(.compact-stop-progress__terminal--end) span:last-child {
-    width: 0.5cqw;
+    width: 0.6cqw;
 }

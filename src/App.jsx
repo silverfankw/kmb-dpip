@@ -97,7 +97,7 @@ const styles = {
 	].join(" "),
 	mainMonitorWideStyle: [
 		"app-monitor app-monitor--wide",
-		"w-[1600px] aspect-[4/1]",
+		"w-[1600px] aspect-[80/21]",
 		"max-w-[calc(100vw-10rem)]",
 		"max-xl:max-w-[calc(100vw-7rem)] max-sm:max-w-[calc(100vw-2.5rem)]",
 		"shadow-[0_20px_36px_rgba(2,6,23,0.42),0_10px_22px_rgba(15,23,42,0.38)]",
