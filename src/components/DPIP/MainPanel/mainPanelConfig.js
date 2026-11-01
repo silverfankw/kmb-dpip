@@ -31,7 +31,7 @@ export const getStopNameZhBaseFontSize = (text) => {
 }
 
 export const getWideStopNameEnScaleX = (lineLength) =>
-    Math.max(0.75, Math.min(1, 25 / lineLength))
+    lineLength > 25 ? 0.9 : 1
 
 export const getEnglishLines = (name, threshold = 36) => {
     if (!name || name.length <= threshold) return [name]

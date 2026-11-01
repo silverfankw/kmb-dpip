@@ -277,6 +277,6 @@
     }
 
     .app-layout {
-        padding-bottom: calc(var(--mobile-controls-height, 140px) + 16px);
+        padding-bottom: calc(var(--mobile-controls-height, 160px) + 32px);
     }
 }

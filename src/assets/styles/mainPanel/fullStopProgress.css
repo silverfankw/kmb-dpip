@@ -6,10 +6,10 @@
 .stop-progress-row {
     --stop-line-size: 1.8cqw;
     --stop-line-position: 85%;
-    --stop-start-width: calc(var(--stop-line-size) * 0.85);
+    --stop-start-width: calc(var(--stop-line-size) * 0.8);
     display: flex;
     height: 100%;
-    width: 95%;
+    width: 94%;
     background: #ffffff;
 }
 
@@ -75,7 +75,7 @@
 }
 
 .stop-progress--wide .stop-progress__name {
-    bottom: calc(100% + 0.35cqw);
+    bottom: calc(100% + 0.42cqw);
 }
 
 .stop-progress__marker--current {
@@ -131,29 +131,22 @@
 }
 
 .main-display-panel--wide .stop-progress-row {
-    --stop-line-size: 0.9cqw;
+    --stop-line-size: 1.08cqw;
 }
 
 .stop-progress--wide .stop-name {
-    font-size: 0.95cqw;
-}
-
-.stop-progress--wide[aria-current="step"] .stop-name {
-    font-size: 1.1cqw;
+    font-size: 1.045cqw;
 }
 
 .stop-progress--wide .stop-name[aria-label] {
-    top: -2cqw;
+    top: -2.4cqw;
 }
 
 @media (width < 1280px) {
     .stop-progress--wide .stop-name {
-        font-size: 1.1cqw;
+        font-size: 1.21cqw;
     }
 
-    .stop-progress--wide[aria-current="step"] .stop-name {
-        font-size: 1.25cqw;
-    }
 }
 
 @keyframes stop-progress-pulse {
@@ -181,22 +174,14 @@
     top: -2.5cqw;
 }
 
-.stop-progress[aria-current="step"] .stop-name[lang="en"] {
-    font-size: calc(1.6cqw * var(--stop-name-en-scale));
-}
-
 .stop-progress--wide .stop-name[lang="en"] {
-    top: -1cqw;
-    font-size: calc(0.85cqw * var(--stop-name-en-scale));
+    top: -1.2cqw;
+    font-size: calc(0.91cqw * var(--stop-name-en-scale));
     transform: scaleX(var(--stop-name-en-scale-x));
 }
 
 .stop-progress--wide .stop-name[lang="en"]:has(.stop-progress__english-wrapped) {
-    top: -1.5cqw;
-}
-
-.stop-progress--wide[aria-current="step"] .stop-name[lang="en"] {
-    font-size: calc(0.95cqw * var(--stop-name-en-scale));
+    top: -1.8cqw;
 }
 
 @media (prefers-reduced-motion: reduce) {
