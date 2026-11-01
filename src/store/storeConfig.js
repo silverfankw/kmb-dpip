@@ -1,6 +1,7 @@
 export const routeStoreConfig = {
     routeKeySeparator: '-',
-    routeDataUrl: 'https://raw.githubusercontent.com/silverfankw/kmb-route-stop/refs/heads/main/kmb_route_stop.json',
+    routeDataUrl: 'https://raw.githubusercontent.com/silverfankw/hk-bus-route-stop/refs/heads/main/route_stop.json',
+    defaultOperator: 'kmb',
     routeSelectionDefaults: {
         routeDetail: {},
         currentStopIndex: 0,
@@ -37,9 +38,12 @@ export const routeStoreConfig = {
     },
 }
 
-export const buildRouteKey = ({ route, bound, service_type }) => {
+export const getRouteOperator = route => route?.operator ?? routeStoreConfig.defaultOperator
+
+export const buildRouteKey = (routeDetail) => {
+    const { route, bound, service_type } = routeDetail
     const separator = routeStoreConfig.routeKeySeparator
-    return [route, bound, service_type].filter(Boolean).join(separator)
+    return [getRouteOperator(routeDetail), route, bound, service_type].filter(Boolean).join(separator)
 }
 
 export const buildRouteSelectionKey = (routeDetail) => {

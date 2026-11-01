@@ -1,74 +1,22 @@
 import { createSelector, createSlice } from '@reduxjs/toolkit'
 import { compareRouteNumbers } from '@utils'
+import { normalizeRouteData } from '../utils/routeDataAdapters.js'
 
-import { routeStoreConfig, buildRouteKey, normalizeValue } from './storeConfig'
+import { routeStoreConfig, buildRouteKey } from './storeConfig'
 
 let routesLoadPromise = null
 
 const initialState = routeStoreConfig.routeDefaults
 
-const getRouteKey = route => buildRouteKey(route)
-const normalizeText = value => normalizeValue(value)
-
-const normalizeStopDetail = (stopId, stopLookup) => {
-    const stopDetail = stopLookup?.[stopId]
-
-    if (!stopDetail) {
-        return { id: stopId, zh: stopId, en: stopId }
-    }
-
-    return {
-        id: stopId,
-        zh: normalizeText(stopDetail.stop_name_zh ?? stopDetail.name_tc ?? stopId),
-        en: normalizeText(stopDetail.stop_name_en ?? stopDetail.name_en ?? stopId),
-    }
-}
-
-const normalizeRoute = (route, stopLookup) => {
-    const stopIDs = Array.isArray(route?.stops) ? route.stops : []
-    const normalizedStops = new Array(stopIDs.length)
-
-    for (let i = 0; i < stopIDs.length; i += 1) {
-        normalizedStops[i] = normalizeStopDetail(stopIDs[i], stopLookup)
-    }
-
-    return {
-        route: normalizeText(route.route),
-        bound: normalizeText(route.bound),
-        service_type: normalizeText(route.service_type),
-        orig_tc: normalizeText(route.orig_tc),
-        orig_en: normalizeText(route.orig_en),
-        dest_tc: normalizeText(route.dest_tc),
-        dest_en: normalizeText(route.dest_en),
-        specialRemark: normalizeText(route.special_remark_tc ?? route.special_remark_en ?? route.specialRemark ?? ''),
-        stops: normalizedStops,
-    }
-}
-
 const normalizeRoutes = rawData => {
-    const stopLookup = rawData?.stops ?? {}
-    const sourceRoutes = Array.isArray(rawData?.routes) ? rawData.routes : []
-    const sortedRoutes = sourceRoutes.slice().sort(compareRouteNumbers)
-    const normalizedRoutes = []
-    const seenRouteKeys = new Set()
+    const routes = normalizeRouteData(rawData).sort(compareRouteNumbers)
     const routesByKey = Object.create(null)
 
-    for (let i = 0; i < sortedRoutes.length; i += 1) {
-        const route = sortedRoutes[i]
-        const key = getRouteKey(route)
+    routes.forEach(route => {
+        routesByKey[buildRouteKey(route)] = route
+    })
 
-        if (seenRouteKeys.has(key)) {
-            continue
-        }
-
-        seenRouteKeys.add(key)
-
-        const normalizedRoute = normalizeRoute(route, stopLookup)
-        normalizedRoutes.push(normalizedRoute)
-        routesByKey[key] = normalizedRoute
-    }
-
-    return { routes: normalizedRoutes, routesByKey }
+    return { routes, routesByKey }
 }
 
 const selectRouteState = state => state.route
@@ -139,13 +87,10 @@ const routeSlice = createSlice({
             state.isLoaded = true
         },
         setRouteSpecialRemark: (state, action) => {
-            const { route, bound, service_type, specialRemark } = action.payload
-            const routeKey = buildRouteKey({ route, bound, service_type })
+            const { specialRemark } = action.payload
+            const routeKey = buildRouteKey(action.payload)
             const targetRoute = state.routesByKey[routeKey] ?? state.routes.find(
-                routeItem =>
-                    routeItem.route === route &&
-                    routeItem.bound === bound &&
-                    routeItem.service_type === service_type
+                routeItem => buildRouteKey(routeItem) === routeKey
             )
 
             if (!targetRoute || targetRoute.specialRemark === specialRemark) {

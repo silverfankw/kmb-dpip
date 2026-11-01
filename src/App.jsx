@@ -11,6 +11,7 @@ import '@styles/routeSearch/routeQuerySection.css'
 
 import { getAppTextConfig } from '@components/sharedComponentConfig'
 import { getRoutesThunk } from "@store/routeSlice"
+import { getRouteOperator } from '@store/storeConfig'
 import {
 	changeBoundThunk, selectRouteThunk,
 	setCurrentStopIndex, toPrevStop, toNextStop,
@@ -23,6 +24,7 @@ const buildStoredSelection = (routeDetail, currentStopIndex, includeTimestamp = 
 	}
 
 	const data = {
+		operator: getRouteOperator(routeDetail),
 		route: routeDetail.route,
 		bound: routeDetail.bound,
 		service_type: routeDetail.service_type,
@@ -115,7 +117,7 @@ const App = () => {
 	const { hasStoredData, storedData, saveToLocalStorage, saveToLocalStorageNow } = useLocalStorageState()
 	const hasRestoredSelectionRef = useRef(false)
 	const { isUserSelectedRoute, loadingError, routeDetail, currentStopIndex } = useSelector(state => state.routeSelection)
-	const { routes } = useSelector(state => state.route)
+	const { routes, error: routeLoadError } = useSelector(state => state.route)
 	const { uiMode, language } = useSelector(state => state.userPreference)
 	const isBoundSwitchable = useSelector(selectIsBoundSwitchable)
 	const appText = getAppTextConfig(language)
@@ -127,15 +129,19 @@ const App = () => {
 
 	// Load route data into Redux once on startup
 	useEffect(() => {
-		dispatch(getRoutesThunk())
+		dispatch(getRoutesThunk()).catch(error => {
+			console.error('Error loading routes:', error)
+		})
 	}, [dispatch])
 
 	// Check if stored data in localStorage
 	const handleRestoreSelection = useCallback(async () => {
 		if (storedData && routes.length > 0) {
 			try {
-				dispatch(selectRouteThunk({ routeDetail: storedData, routes }))
-				dispatch(setCurrentStopIndex(storedData.currentStopIndex || 0))
+				const selectedRoute = await dispatch(selectRouteThunk({ routeDetail: storedData, routes })).unwrap()
+				const restoredIndex = Number.isInteger(storedData.currentStopIndex)
+					? Math.max(0, Math.min(storedData.currentStopIndex, selectedRoute.stops.length - 1)) : 0
+				dispatch(setCurrentStopIndex(restoredIndex))
 			} catch (error) {
 				console.error('Error restoring selection:', error)
 			}
@@ -251,8 +257,8 @@ const App = () => {
 
 					{/* DPIP main screen with full details */}
 					<section className={styles.screenPanelSection}>
-						{loadingError ?
-							(<ErrorMessage error={loadingError} />) :
+						{routeLoadError || loadingError ?
+							(<ErrorMessage error={routeLoadError || loadingError} />) :
 							(<>
 								<div className={styles.monitorShell}>
 									<MainDisplayPanel

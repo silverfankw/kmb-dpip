@@ -3,6 +3,7 @@ import { useEffect, useMemo, useRef, useState } from "react"
 import { shallowEqual, useSelector } from "react-redux"
 
 import { LoadingSpinner } from '@components'
+import { buildRouteSelectionKey } from '@store/storeConfig'
 import {
     RouteDisplayHeading,
     FullStopProgress,
@@ -34,7 +35,7 @@ export const MainDisplayPanel = ({ monitorStyle, screenTarget, isWide = false })
     const stops = routeDetail?.stops ?? EMPTY_STOPS
     const stopCount = stops.length
     const isFirstStop = stopCount > 0 && currentStopIndex === 0
-    const routeKey = `${routeDetail?.route}-${routeDetail?.bound}-${routeDetail?.service_type}`
+    const routeKey = buildRouteSelectionKey(routeDetail)
     const [routeHeadingStage, setRouteHeadingStage] = useState(0)
     const [displayStage, setDisplayStage] = useState(0)
     const firstStopRef = useRef(isFirstStop)

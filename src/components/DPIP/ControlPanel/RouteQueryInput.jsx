@@ -103,7 +103,7 @@ export const RouteQueryInput = ({ compact = false, label = '', labelClassName = 
     const selectRef = useRef(null)
     const inputId = useId()
     const hintId = `${inputId}-hint`
-    const { routes } = useSelector(state => state.route)
+    const { routes, isLoading: isRoutesLoading } = useSelector(state => state.route)
     const { routeDetail } = useSelector(state => state.routeSelection)
     const { uiMode, language } = useSelector(state => state.userPreference)
     const appText = getAppTextConfig(language)
@@ -112,7 +112,6 @@ export const RouteQueryInput = ({ compact = false, label = '', labelClassName = 
 
     const [selectedOption, setSelectedOption] = useState(null)
     const [isKeypadOpen, setIsKeypadOpen] = useState(false)
-    const isRoutesLoading = !routes || routes.length === 0
 
     useEffect(() => {
         if (routeDetail && Object.keys(routeDetail).length > 0) {

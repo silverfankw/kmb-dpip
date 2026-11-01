@@ -1,4 +1,5 @@
 import { routeUtilityConfig, parseRouteNumber } from './routeUtilityConfig'
+import { buildRouteKey, getRouteOperator } from '../store/storeConfig.js'
 
 export const itemSeparator = routeUtilityConfig.label.itemSeparator
 export const toSeparator = routeUtilityConfig.label.directionSeparator
@@ -8,7 +9,7 @@ export const formatRouteLabel = (route) => ({
     routeNumber: route.route,
     origin: route.orig_tc,
     destination: route.dest_tc,
-    isSpecial: route.service_type !== '1',
+    isSpecial: getRouteOperator(route) === 'kmb' && route.service_type !== '1',
     remark: route.specialRemark,
 })
 
@@ -22,7 +23,7 @@ export const createRouteOption = (route) => {
             isSpecial ? specialTripKey : '',
             remark || '',
         ].join(itemSeparator),
-        value: `${route.route}-${route.bound}-${route.service_type}`,
+        value: buildRouteKey(route),
         detail: route,
         routeLabel: routeNumber,
         originLabel: origin,
