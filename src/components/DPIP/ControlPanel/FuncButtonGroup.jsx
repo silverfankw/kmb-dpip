@@ -7,10 +7,35 @@ import FullscreenIcon from '@mui/icons-material/Fullscreen'
 import AspectRatioIcon from '@mui/icons-material/AspectRatio'
 import { ControlButton } from './ControlButton'
 import { getControlPanelText } from './controlPanelConfig'
+import { useWindowSize } from '@hooks'
+
+export const MonitorModeButton = ({ isMainMonitorWide, onToggleMainMonitorStyle }) => {
+    const { isDesktop } = useWindowSize()
+    const language = useSelector(state => state.userPreference.language)
+    const appText = getAppTextConfig(language)
+    const text = getControlPanelText(language)
+
+    return (
+        <ControlButton
+            tone="display"
+            icon={<AspectRatioIcon />}
+            label={isDesktop
+                ? isMainMonitorWide ? text.normal : text.wide
+                : isMainMonitorWide ? text.returnToNormal : text.tryWide}
+            supportingText={isDesktop ? undefined : isMainMonitorWide ? text.wideDescription : text.normalDescription}
+            accessibleLabel={appText.mainDisplayStyle}
+            tooltip={`${isMainMonitorWide ? appText.wideDisplayMode : appText.normalDisplayMode} · ${appText.mainDisplayStyleTooltip}`}
+            pressed={isMainMonitorWide}
+            onClick={onToggleMainMonitorStyle}
+        />
+    )
+}
 
 export const FuncButtonGroup = ({
     mainScreenTarget, secScreenTarget, isMainMonitorWide, onToggleMainMonitorStyle,
+    includeMode = true,
 }) => {
+    const { isDesktop } = useWindowSize()
     const isUserSelectedRoute = useSelector(state => state.routeSelection.isUserSelectedRoute)
     const { customizeDriverInfoToggle, language } = useSelector(state => ({
         customizeDriverInfoToggle: state.userPreference.customizeDriverInfoToggle,
@@ -38,21 +63,17 @@ export const FuncButtonGroup = ({
     return (
         <>
             <div className="control-panel__tools">
-                <ControlButton
-                    tone="display"
-                    icon={<AspectRatioIcon />}
-                    label={isMainMonitorWide ? text.returnToNormal : text.tryWide}
-                    supportingText={isMainMonitorWide ? text.wideDescription : text.normalDescription}
-                    accessibleLabel={appText.mainDisplayStyle}
-                    tooltip={`${isMainMonitorWide ? appText.wideDisplayMode : appText.normalDisplayMode} · ${appText.mainDisplayStyleTooltip}`}
-                    pressed={isMainMonitorWide}
-                    onClick={onToggleMainMonitorStyle}
-                />
+                {includeMode && (
+                    <MonitorModeButton
+                        isMainMonitorWide={isMainMonitorWide}
+                        onToggleMainMonitorStyle={onToggleMainMonitorStyle}
+                    />
+                )}
                 <ControlButton
                     tile
                     icon={<FullscreenIcon />}
-                    label={text.mainScreen}
-                    supportingText={isMainMonitorWide ? text.fullscreenWideDisabled : undefined}
+                    label={isDesktop ? text.mainScreenShort : text.mainScreen}
+                    supportingText={!isDesktop && isMainMonitorWide ? text.fullscreenWideDisabled : undefined}
                     accessibleLabel={isMainMonitorWide ? `${appText.fullscreenMain} · ${text.fullscreenWideDisabled}` : appText.fullscreenMain}
                     tooltip={isMainMonitorWide ? text.fullscreenWideDisabled : fullscreenDisabled ? fullscreenDisabledReason : appText.fullscreenMain}
                     disabled={mainFullscreenDisabled}
@@ -61,7 +82,7 @@ export const FuncButtonGroup = ({
                 <ControlButton
                     tile
                     icon={<FullscreenIcon />}
-                    label={text.auxiliaryScreen}
+                    label={isDesktop ? text.auxiliaryScreenShort : text.auxiliaryScreen}
                     accessibleLabel={appText.fullscreenSec}
                     tooltip={fullscreenDisabled ? fullscreenDisabledReason : appText.fullscreenSec}
                     disabled={fullscreenDisabled}

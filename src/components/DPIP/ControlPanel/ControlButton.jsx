@@ -38,6 +38,7 @@ export const ControlButton = ({
                     <span className="control-button__icon" aria-hidden="true">{icon}</span>
                     {label && <span className="control-button__label">{label}</span>}
                     {supportingText && <span className="control-button__supporting-text">{supportingText}</span>}
+                    {shortcutLabel && <kbd className="control-button__shortcut" aria-hidden="true">{shortcutLabel}</kbd>}
                     {pressed !== undefined && <span className="control-button__indicator" aria-hidden="true" />}
                 </button>
             </span>

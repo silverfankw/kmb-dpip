@@ -13,7 +13,7 @@ export const FullStopProgress = memo(function FullStopProgress({ stop, stopIndex
     return (
         <div className={`stop-progress${isWide ? " stop-progress--wide" : ""}`} role="listitem" aria-current={isCurrentStop ? "step" : undefined}>
             <div
-                className={`stop-progress__line${isPastStop ? " stop-progress__line--past" : ""}${isCurrentStop && stopIndex > 0 ? " stop-progress__line--current" : ""}`}
+                className={`stop-progress__line${isPastStop ? " stop-progress__line--past" : ""}`}
                 aria-hidden="true"
             />
             {!showContinuationDot && stopIndex === 0 && (
@@ -34,7 +34,17 @@ export const FullStopProgress = memo(function FullStopProgress({ stop, stopIndex
                     viewBox="0 0 100 100"
                     aria-hidden="true"
                 >
-                    <circle cx="50" cy="50" r={isCurrentStop ? 46 : 50} />
+                    <circle cx="50" cy="50" r="50" />
+                    {isCurrentStop && (
+                        <>
+                            <circle className="stop-progress__marker-border" cx="50" cy="50" r="44" />
+                            <circle className="stop-progress__marker-center" cx="50" cy="50" r="34" />
+                            <path
+                                className="stop-progress__marker-shade"
+                                d="M82.84 41.2 A34 34 0 0 1 41.2 82.84 C63 78 78 63 82.84 41.2Z"
+                            />
+                        </>
+                    )}
                 </svg>
                 <span
                     lang={showContinuationDot ? undefined : language === 'en' ? 'en' : 'zh-Hant'}

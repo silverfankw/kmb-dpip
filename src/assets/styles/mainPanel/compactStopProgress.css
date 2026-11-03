@@ -137,11 +137,16 @@
 }
 
 .compact-stop-progress__ring-red {
-    fill: #e30613;
+    fill: #e60012;
 }
 
 .compact-stop-progress__centre {
     fill: #ffff00;
+}
+
+.compact-stop-progress__shade {
+    fill: #878787;
+    opacity: 0.45;
 }
 
 .compact-stop-progress__stop:last-child .compact-stop-progress__line {

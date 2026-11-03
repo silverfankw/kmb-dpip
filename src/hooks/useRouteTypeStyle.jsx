@@ -7,7 +7,7 @@ const routeTypeColors = {
     xhtEhc: { backgroundColor: "#CF0001" },
     marathon: { backgroundColor: "#CF0001" },
     whc: { backgroundColor: "#027233" },
-    airport: { backgroundColor: "#0A2163", color: "#E3D026" },
+    airport: { backgroundColor: "#0A2163", color: "#FFFF00" },
     external: { backgroundColor: "#ff5000" },
     overnight: { backgroundColor: "#000000" },
     airportOvernight: { backgroundColor: "#000000", color: "#DED702" },

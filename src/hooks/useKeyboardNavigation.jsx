@@ -42,7 +42,12 @@ export const useKeyboardNavigation = ({
 
     useEffect(() => {
         if (!isUserSelectedRoute) return
-        const handleKeyDown = (e) => handleKeyboardControl(e.key)
+        const handleKeyDown = (e) => {
+            if (e.target instanceof Element && e.target.closest(
+                'input, textarea, select, [contenteditable]:not([contenteditable="false"]), [role="combobox"]'
+            )) return
+            handleKeyboardControl(e.key)
+        }
         window.addEventListener("keydown", handleKeyDown)
 
         return () => {

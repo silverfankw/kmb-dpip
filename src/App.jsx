@@ -67,11 +67,11 @@ const styles = {
 	queryStatusCurrent: "query-section__current",
 	queryStatusStopName: "query-section__value query-section__stop-name",
 	queryStatusEmpty: "query-section__empty",
-	controlPanelOrderSection: "order-2 max-sm:order-3 w-full",
+	controlPanelOrderSection: "order-4 w-full",
 
 	screenPanelSection: [
 		"app-monitors",
-		"order-3 max-sm:order-2",
+		"order-2",
 		"flex flex-wrap items-center justify-center",
 		"gap-8 py-3 max-xl:gap-8 max-sm:gap-3 max-sm:py-1"
 	].join(" "),
@@ -245,16 +245,6 @@ const App = () => {
 						)}
 					</section>
 
-					{/* Control Panel with buttons and switches to control DPIP */}
-					<section className={styles.controlPanelOrderSection}>
-						<ControlPanel
-							uiMode={uiMode}
-							mainScreenTarget={mainScreenTarget}
-							secScreenTarget={secScreenTarget}
-							isMainMonitorWide={isMainMonitorWide}
-							onToggleMainMonitorStyle={() => setIsMainMonitorWide(isWide => !isWide)} />
-					</section>
-
 					{/* DPIP main screen with full details */}
 					<section className={styles.screenPanelSection}>
 						{routeLoadError || loadingError ?
@@ -270,6 +260,16 @@ const App = () => {
 									<AuxiliaryDisplayPanel monitorStyle={styles.monitorStyle} screenTarget={secScreenTarget} />
 								</div>
 							</>)}
+					</section>
+
+					{/* Control Panel with buttons and switches to control DPIP */}
+					<section className={styles.controlPanelOrderSection}>
+						<ControlPanel
+							uiMode={uiMode}
+							mainScreenTarget={mainScreenTarget}
+							secScreenTarget={secScreenTarget}
+							isMainMonitorWide={isMainMonitorWide}
+							onToggleMainMonitorStyle={() => setIsMainMonitorWide(isWide => !isWide)} />
 					</section>
 				</div >
 

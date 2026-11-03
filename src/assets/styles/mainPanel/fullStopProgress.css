@@ -43,11 +43,11 @@
     background: #878787;
 }
 
-.stop-progress__line--current::before {
+.stop-progress:has(+ .stop-progress[aria-current="step"]) .stop-progress__line::after {
     content: "";
     position: absolute;
-    inset: 0 50% 0 0;
-    background: #878787;
+    inset: 0 0 0 50%;
+    background: #e60012;
 }
 
 .stop-progress__marker-position {
@@ -79,10 +79,20 @@
 }
 
 .stop-progress__marker--current {
-    fill: #ffff00;
-    stroke: #e60012;
-    stroke-width: 14;
     animation: stop-progress-pulse 1.25s step-start infinite;
+}
+
+.stop-progress__marker-border {
+    fill: #e60012;
+}
+
+.stop-progress__marker-center {
+    fill: #ffff00;
+}
+
+.stop-progress__marker-shade {
+    fill: #878787;
+    opacity: 0.45;
 }
 
 .stop-progress__terminal {
