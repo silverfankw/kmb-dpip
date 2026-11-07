@@ -22,6 +22,7 @@ export const routeStoreConfig = {
     },
     routeDefaults: {
         routes: [],
+        ctbRoutes: [],
         routesByKey: {},
         isLoading: false,
         error: null,

@@ -20,6 +20,7 @@
 }
 
 .compact-stop-progress--wide .compact-stop-progress__row {
+    --temp-line-position: 75%;
     grid-template-columns: repeat(5, minmax(0, 1fr));
 }
 
@@ -67,25 +68,24 @@
 
 .compact-stop-progress__zh {
     font-family: "Noto Sans TC", "Noto Sans HK", "Microsoft JhengHei", sans-serif;
-    font-size: 3.75cqw;
-    font-weight: 450;
+    font-size: 3.5cqw;
+    font-weight: 400;
 }
 
 .compact-stop-progress__en {
     margin-top: 0.8cqw;
     font-stretch: condensed;
     font-size: 2.4cqw;
-    font-weight: 450;
+    font-weight: 400;
 }
 
 .compact-stop-progress__stop--current .compact-stop-progress__zh {
-    font-size: 4.75cqw;
-    font-weight: 450;
+    font-size: 4.25cqw;
+    font-weight: 400;
 }
 
 .compact-stop-progress__stop--current .compact-stop-progress__en {
     font-size: 2.85cqw;
-    /* font-weight: 450; */
 }
 
 .compact-stop-progress__line {
@@ -137,11 +137,16 @@
 }
 
 .compact-stop-progress__ring-red {
-    fill: #e30613;
+    fill: #e60012;
 }
 
 .compact-stop-progress__centre {
     fill: #ffff00;
+}
+
+.compact-stop-progress__shade {
+    fill: #878787;
+    opacity: 0.45;
 }
 
 .compact-stop-progress__stop:last-child .compact-stop-progress__line {

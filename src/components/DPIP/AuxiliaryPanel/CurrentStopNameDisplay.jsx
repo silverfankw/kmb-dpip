@@ -1,47 +1,13 @@
 import { memo, useLayoutEffect, useMemo, useRef, useState } from "react"
-import { getCurrentEnglishStopMeasurementStyle, getStopNameStyle } from './auxiliaryPanelConfig'
-
-const styles = {
-    container: [
-        "@container flex flex-col gap-1 max-sm:gap-0.5",
-        "relative left-[1.25%]",
-        "w-[95%]",
-        "h-full",
-        "tracking-[-0.0625rem]"
-    ].join(" "),
-
-    zhStopName: [
-        "font-[450]",
-        "h-[12cqw]",
-        "relative top-[3cqw]",
-        "flex items-center",
-        "tracking-wide"
-    ].join(" "),
-
-    enStopNameWrapper: [
-        "relative top-[17.5%]",
-        "flex",
-        "items-center",
-        "h-[33%]",
-        "w-full",
-        "leading-tight"
-    ].join(" "),
-
-    enStopName: [
-        "font-[450]",
-        "text-[5.5cqw]",
-        "leading-[1.2]",
-        "tracking-[0.00075rem]",
-        "w-full"
-    ].join(" "),
-}
+import { getStopNameStyle } from './auxiliaryPanelConfig'
+import '@styles/auxiliaryPanel/currentStopName.css'
 
 export const CurrentStopNameDisplay = memo(function CurrentStopNameDisplay({ stopZh = "", stopEn = "" }) {
     const enWrapperRef = useRef(null)
     const enMeasureRef = useRef(null)
     const [willWrap, setWillWrap] = useState(false)
     const zhStyle = useMemo(() => getStopNameStyle(stopZh, "zh"), [stopZh])
-    const enBaseStyle = useMemo(() => getCurrentEnglishStopMeasurementStyle(stopEn), [stopEn])
+    const enMeasurementStyle = useMemo(() => getStopNameStyle(stopEn, "en"), [stopEn])
     const enStyle = useMemo(() => getStopNameStyle(stopEn, "en", willWrap), [stopEn, willWrap])
 
     useLayoutEffect(() => {
@@ -63,24 +29,25 @@ export const CurrentStopNameDisplay = memo(function CurrentStopNameDisplay({ sto
     }, [stopEn])
 
     return (
-        <div className={styles.container}>
+        <div className="aux-current-stop">
             <div
-                className={styles.zhStopName}
+                className="aux-current-stop__chinese"
+                lang="zh-HK"
                 style={zhStyle}
             >
                 {stopZh}
             </div>
-            <div ref={enWrapperRef} className={styles.enStopNameWrapper}>
+            <div ref={enWrapperRef} className="aux-current-stop__english-wrapper" lang="en">
                 <span
                     ref={enMeasureRef}
                     aria-hidden="true"
-                    className={`${styles.enStopName} absolute invisible pointer-events-none whitespace-nowrap`}
-                    style={{ ...enBaseStyle, width: 'max-content' }}
+                    className="aux-current-stop__english aux-current-stop__measurement"
+                    style={enMeasurementStyle}
                 >
                     {stopEn}
                 </span>
                 <span
-                    className={styles.enStopName}
+                    className={`aux-current-stop__english${willWrap ? ' aux-current-stop__english--wrapped' : ''}`}
                     style={enStyle}
                 >
                     {stopEn}

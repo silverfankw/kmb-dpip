@@ -1,22 +1,26 @@
 import {
 	AppToolbar, Background, Footer, RouteQueryInput, ErrorMessage,
-	ControlPanel, MainDisplayPanel, AuxiliaryDisplayPanel
+	ControlPanel, MainDisplayPanel, AuxiliaryDisplayPanel, LoadingSpinner
 } from '@components'
 
-import { useRef, useCallback, useEffect, useState } from 'react'
-import { useSelector, useDispatch } from 'react-redux'
+import { lazy, Suspense, useRef, useCallback, useEffect, useMemo, useState } from 'react'
+import { shallowEqual, useSelector, useDispatch } from 'react-redux'
 import { useKeyboardNavigation, useLocalStorageState} from "@hooks"
 import PlaceOutlinedIcon from '@mui/icons-material/PlaceOutlined'
+import { FeatureErrorBoundary } from '@components/FeatureErrorBoundary'
+import ResizableMonitorShell from '@components/ResizableMonitorShell'
 import '@styles/routeSearch/routeQuerySection.css'
 
 import { getAppTextConfig } from '@components/sharedComponentConfig'
 import { getRoutesThunk } from "@store/routeSlice"
-import { getRouteOperator } from '@store/storeConfig'
+import { buildRouteSelectionKey, getRouteOperator, routeStoreConfig } from '@store/storeConfig'
 import {
 	changeBoundThunk, selectRouteThunk,
 	setCurrentStopIndex, toPrevStop, toNextStop,
 	selectIsBoundSwitchable,
 } from '@store/routeSelectionSlice'
+
+const BusDisplay = lazy(() => import('@components/DPIP/CTB/BusDisplay'))
 
 const buildStoredSelection = (routeDetail, currentStopIndex, includeTimestamp = false) => {
 	if (!routeDetail || Object.keys(routeDetail).length === 0) {
@@ -67,11 +71,11 @@ const styles = {
 	queryStatusCurrent: "query-section__current",
 	queryStatusStopName: "query-section__value query-section__stop-name",
 	queryStatusEmpty: "query-section__empty",
-	controlPanelOrderSection: "order-2 max-sm:order-3 w-full",
+	controlPanelOrderSection: "order-4 w-full",
 
 	screenPanelSection: [
 		"app-monitors",
-		"order-3 max-sm:order-2",
+		"order-2",
 		"flex flex-wrap items-center justify-center",
 		"gap-8 py-3 max-xl:gap-8 max-sm:gap-3 max-sm:py-1"
 	].join(" "),
@@ -99,7 +103,7 @@ const styles = {
 	].join(" "),
 	mainMonitorWideStyle: [
 		"app-monitor app-monitor--wide",
-		"w-[1600px] aspect-[80/21]",
+		"w-[1600px] aspect-[40/9]",
 		"max-w-[calc(100vw-10rem)]",
 		"max-xl:max-w-[calc(100vw-7rem)] max-sm:max-w-[calc(100vw-2.5rem)]",
 		"shadow-[0_20px_36px_rgba(2,6,23,0.42),0_10px_22px_rgba(15,23,42,0.38)]",
@@ -113,19 +117,74 @@ const styles = {
 const App = () => {
 
 	const dispatch = useDispatch()
+	const [company, setCompany] = useState('kmb')
+	const [ctbRoute, setCtbRoute] = useState(null)
+	const [ctbStopIndex, setCtbStopIndex] = useState(0)
+	const isKmb = company === 'kmb'
 	const [isMainMonitorWide, setIsMainMonitorWide] = useState(false)
 	const { hasStoredData, storedData, saveToLocalStorage, saveToLocalStorageNow } = useLocalStorageState()
 	const hasRestoredSelectionRef = useRef(false)
-	const { isUserSelectedRoute, loadingError, routeDetail, currentStopIndex } = useSelector(state => state.routeSelection)
-	const { routes, error: routeLoadError } = useSelector(state => state.route)
-	const { uiMode, language } = useSelector(state => state.userPreference)
+	const { isUserSelectedRoute, loadingError, routeDetail, currentStopIndex } = useSelector(state => ({
+		isUserSelectedRoute: state.routeSelection.isUserSelectedRoute,
+		loadingError: state.routeSelection.loadingError,
+		routeDetail: state.routeSelection.routeDetail,
+		currentStopIndex: state.routeSelection.currentStopIndex,
+	}), shallowEqual)
+	const { routes, ctbRoutes, routeLoadError } = useSelector(state => ({
+		routes: state.route.routes,
+		ctbRoutes: state.route.ctbRoutes,
+		routeLoadError: state.route.error,
+	}), shallowEqual)
+	const { uiMode, language } = useSelector(state => ({
+		uiMode: state.userPreference.uiMode,
+		language: state.userPreference.language,
+	}), shallowEqual)
+	const driverInfo = useSelector(state => isKmb ? null : state.userPreference.driverInfo)
 	const isBoundSwitchable = useSelector(selectIsBoundSwitchable)
 	const appText = getAppTextConfig(language)
-	const totalStops = routeDetail?.stops?.length ?? 0
-	const currentStop = routeDetail?.stops?.[currentStopIndex]
+	const queryRoute = isKmb ? routeDetail : ctbRoute
+	const queryStopIndex = isKmb ? currentStopIndex : ctbStopIndex
+	const hasQueryRoute = isKmb ? isUserSelectedRoute : Boolean(ctbRoute)
+	const totalStops = queryRoute?.stops?.length ?? 0
+	const currentStop = queryRoute?.stops?.[queryStopIndex]
 	const currentStopSummary = totalStops > 0
-		? `${currentStopIndex + 1} / ${totalStops}` : '-'
+		? `${queryStopIndex + 1} / ${totalStops}` : '-'
 	const mainMonitorStyle = isMainMonitorWide ? styles.mainMonitorWideStyle : styles.monitorStyle
+	const ctbStops = useMemo(() => ctbRoute?.stops.map((stop, index) => ({
+		seq: index + 1, stopId: stop.id, nameZh: stop.zh, nameEn: stop.en, etaMin: null,
+	})), [ctbRoute])
+	const ctbDisplayData = useMemo(() => ctbRoute && !isKmb ? {
+		route: ctbRoute.route,
+		directionLabelZh: `往 ${ctbRoute.dest_tc}`,
+		directionLabelEn: `to ${ctbRoute.dest_en}`,
+		captain: {
+			surnameZh: driverInfo.nameZh === routeStoreConfig.userPreferenceDefaults.driverInfo.nameZh ? '城' : driverInfo.nameZh,
+			nameEn: driverInfo.nameEn === routeStoreConfig.userPreferenceDefaults.driverInfo.nameEn ? 'Shing' : driverInfo.nameEn,
+			staffNo: String(driverInfo.staffNo),
+		},
+		currentSeq: ctbStopIndex + 1,
+		stops: ctbStops,
+	} : undefined, [ctbRoute, ctbStops, ctbStopIndex, driverInfo, isKmb])
+	const selectCtbRoute = useCallback(route => {
+		setCtbRoute(route)
+		setCtbStopIndex(0)
+	}, [])
+	const oppositeCtbRoute = useMemo(() => {
+		if (!ctbRoute || !['I', 'O'].includes(ctbRoute.bound)) return null
+		const key = buildRouteSelectionKey({ ...ctbRoute, bound: ctbRoute.bound === 'I' ? 'O' : 'I' })
+		return ctbRoutes.find(route => buildRouteSelectionKey(route) === key) ?? null
+	}, [ctbRoute, ctbRoutes])
+	const ctbNavigation = useMemo(() => ({
+		canPrev: ctbStopIndex > 0,
+		canNext: ctbStopIndex < (ctbRoute?.stops.length ?? 0) - 1,
+		canReset: ctbStopIndex > 0,
+		canSwitchDirection: Boolean(oppositeCtbRoute),
+		onPrev: () => setCtbStopIndex(index => Math.max(0, index - 1)),
+		onNext: () => setCtbStopIndex(index => Math.max(0, Math.min((ctbRoute?.stops.length ?? 0) - 1, index + 1))),
+		onReset: () => setCtbStopIndex(0),
+		onSwitchDirection: () => { if (oppositeCtbRoute) selectCtbRoute(oppositeCtbRoute) },
+	}), [ctbStopIndex, ctbRoute, oppositeCtbRoute, selectCtbRoute])
+	const toggleMainMonitorStyle = useCallback(() => setIsMainMonitorWide(isWide => !isWide), [])
 
 	// Load route data into Redux once on startup
 	useEffect(() => {
@@ -190,11 +249,14 @@ const App = () => {
 
 	// Hook to register keyboard event
 	useKeyboardNavigation({
-		onPrev: () => dispatch(toPrevStop()),
-		onNext: () => dispatch(toNextStop()),
-		onHome: () => dispatch(setCurrentStopIndex(0)),
-		onEnd: isBoundSwitchable ? () => dispatch(changeBoundThunk()) : undefined,
-		isUserSelectedRoute,
+		onPrev: isKmb ? () => dispatch(toPrevStop())
+			: ctbNavigation.onPrev,
+		onNext: isKmb ? () => dispatch(toNextStop())
+			: ctbNavigation.onNext,
+		onHome: isKmb ? () => dispatch(setCurrentStopIndex(0)) : ctbNavigation.onReset,
+		onEnd: isKmb ? (isBoundSwitchable ? () => dispatch(changeBoundThunk()) : undefined)
+			: (ctbNavigation.canSwitchDirection ? ctbNavigation.onSwitchDirection : undefined),
+		isUserSelectedRoute: isKmb ? isUserSelectedRoute : Boolean(ctbRoute?.stops.length),
 		debounceMs: 100,
 		isDisabled: false,
 	})
@@ -204,18 +266,32 @@ const App = () => {
 			<Background uiMode={uiMode} />
 
 			{/* rootContainer to footer to stick at bottom */}
-			<div className={styles.rootContainer}>
+			<div className={styles.rootContainer} data-company={company}>
 				<div className={styles.contentContainer} tabIndex={1}>
-					<AppToolbar />
+					<AppToolbar company={company} onCompanyChange={setCompany} />
 
+					<div
+						id={`company-panel-${company}`}
+						role="tabpanel"
+						aria-labelledby={`company-tab-${company}`}
+						tabIndex={0}
+						className="app-company-panel"
+					>
 					{/* Query section for route input and selection */}
 					<section className={styles.querySection} data-theme={uiMode} aria-label={appText.routeQuerySectionLabel}>
 						<div className={styles.queryStatusRouteValue}>
 							<div className={styles.queryStatusRouteInputWrapper}>
-								<RouteQueryInput label={appText.routeLabel} labelClassName={styles.queryStatusLabel} />
+								<RouteQueryInput
+									key={company}
+									operator={company}
+									selectedRoute={isKmb ? undefined : ctbRoute}
+									onRouteSelect={isKmb ? undefined : selectCtbRoute}
+									label={appText.routeLabel}
+									labelClassName={styles.queryStatusLabel}
+								/>
 							</div>
 						</div>
-						{isUserSelectedRoute && currentStop ? (
+						{hasQueryRoute && currentStop ? (
 							<div className={styles.queryStatusSummary} aria-live="polite" aria-atomic="true">
 								<div className={styles.queryStatusProgress}>
 									<span className={styles.queryStatusLabel}>{appText.stopCountLabel}</span>
@@ -227,7 +303,7 @@ const App = () => {
 										<progress
 											className={styles.queryStatusProgressBar}
 											max={totalStops}
-											value={currentStopIndex + 1}
+											value={queryStopIndex + 1}
 											aria-label={appText.routeProgressLabel}
 										/>
 									</div>
@@ -245,32 +321,57 @@ const App = () => {
 						)}
 					</section>
 
-					{/* Control Panel with buttons and switches to control DPIP */}
-					<section className={styles.controlPanelOrderSection}>
-						<ControlPanel
-							uiMode={uiMode}
-							mainScreenTarget={mainScreenTarget}
-							secScreenTarget={secScreenTarget}
-							isMainMonitorWide={isMainMonitorWide}
-							onToggleMainMonitorStyle={() => setIsMainMonitorWide(isWide => !isWide)} />
-					</section>
-
 					{/* DPIP main screen with full details */}
 					<section className={styles.screenPanelSection}>
-						{routeLoadError || loadingError ?
+						{!isKmb ? (
+							<>
+								{routeLoadError && <ErrorMessage error={routeLoadError} />}
+								<ResizableMonitorShell key="ctb-main" className={`${styles.monitorShell} monitor-resize--ctb`}
+									monitorId="ctb-main" aspectRatio={16 / 9} startAtMaximum
+									label={language === 'en' ? 'Resize main monitor' : '調整主螢幕大小'}>
+									<div ref={mainScreenTarget} className={`${styles.monitorStyle} app-monitor--ctb`}>
+										<FeatureErrorBoundary feature="CTB monitor">
+											<Suspense fallback={<LoadingSpinner />}>
+												<BusDisplay data={ctbDisplayData} />
+											</Suspense>
+										</FeatureErrorBoundary>
+									</div>
+								</ResizableMonitorShell>
+								<div className={styles.monitorShell}>
+									<div className={`${styles.monitorStyle} app-monitor--blank`} role="img" aria-label={appText.ctbAuxMonitor} />
+								</div>
+							</>
+						) : routeLoadError || loadingError ?
 							(<ErrorMessage error={routeLoadError || loadingError} />) :
 							(<>
-								<div className={styles.monitorShell}>
+								<ResizableMonitorShell className={styles.monitorShell} monitorId="main"
+									label={language === 'en' ? 'Resize main monitor' : '調整主螢幕大小'} enabled={!isMainMonitorWide}>
 									<MainDisplayPanel
 										monitorStyle={mainMonitorStyle}
 										screenTarget={mainScreenTarget}
 										isWide={isMainMonitorWide} />
-								</div>
-								<div className={styles.monitorShell}>
+								</ResizableMonitorShell>
+								<ResizableMonitorShell className={styles.monitorShell} monitorId="auxiliary"
+									label={language === 'en' ? 'Resize auxiliary monitor' : '調整副螢幕大小'}>
 									<AuxiliaryDisplayPanel monitorStyle={styles.monitorStyle} screenTarget={secScreenTarget} />
-								</div>
+								</ResizableMonitorShell>
 							</>)}
 					</section>
+
+					{/* Control Panel with buttons and switches to control DPIP */}
+					<section className={styles.controlPanelOrderSection}>
+						<ControlPanel
+							key={company}
+							operator={company}
+							navigation={isKmb ? undefined : ctbNavigation}
+							routeSelected={isKmb ? isUserSelectedRoute : Boolean(ctbRoute?.stops.length)}
+							uiMode={uiMode}
+							mainScreenTarget={mainScreenTarget}
+							secScreenTarget={secScreenTarget}
+							isMainMonitorWide={isKmb && isMainMonitorWide}
+							onToggleMainMonitorStyle={toggleMainMonitorStyle} />
+					</section>
+					</div>
 				</div >
 
 				{/* Footer section */}

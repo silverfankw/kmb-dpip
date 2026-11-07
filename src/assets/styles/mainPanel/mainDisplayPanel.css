@@ -160,7 +160,7 @@
 /* Wide mode retains the latest layout proportions and progress scaling. */
 .main-display-panel--wide {
     grid-template-columns: 20% 80%;
-    grid-template-rows: minmax(0, 0.7fr) minmax(0, 2.3fr) minmax(0, 0.4fr);
+    grid-template-rows: minmax(0, 0.7fr) minmax(0, 2.41fr) minmax(0, 0.33fr);
 }
 
 .main-display-panel--wide > div {

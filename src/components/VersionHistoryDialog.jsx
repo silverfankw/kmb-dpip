@@ -3,9 +3,10 @@ import StarIcon from '@mui/icons-material/Star'
 import { useSelector } from 'react-redux'
 
 import { getVersionHistoryDialogConfig } from './sharedComponentConfig'
+import { versionHistory as defaultVersionHistory } from '@utils/versionHistory'
 
-export const VersionHistoryDialog = ({ open, onConfirm, versionHistory = [] }) => {
-    const { language } = useSelector(state => state.userPreference)
+export const VersionHistoryDialog = ({ open, onConfirm, versionHistory = defaultVersionHistory }) => {
+    const language = useSelector(state => state.userPreference.language)
     const config = getVersionHistoryDialogConfig(language)
 
     return (
@@ -47,6 +48,7 @@ export const VersionHistoryDialog = ({ open, onConfirm, versionHistory = [] }) =
                                                     </span>
                                                 )
                                             }
+
                                             return primaryText
                                         })()}
                                         primaryTypographyProps={{ sx: { color: 'inherit', fontWeight: 600 } }}
@@ -72,3 +74,5 @@ export const VersionHistoryDialog = ({ open, onConfirm, versionHistory = [] }) =
         </Dialog>
     )
 }
+
+export default VersionHistoryDialog

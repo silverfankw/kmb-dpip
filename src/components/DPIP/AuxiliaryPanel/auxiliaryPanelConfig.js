@@ -1,21 +1,11 @@
 import stringWidth from "string-width"
 
 const CURRENT_STOP_FONT_CONFIG = {
-    en: {
-        min: 5.5, base: 8.75, scale: 0.09, fallback: 6, max: 10, wrapped: 5,
-        shrinkStart: 16, shrinkEnd: 24, minScale: 0.85,
-    },
-    zh: { min: 7, base: 20, scale: 0.6, fallback: 7, max: 13 },
+    en: { singleLine: 7.2, mediumLength: 6, wrapped: 5 },
+    zh: { min: 7, base: 20.2, scale: 0.6, fallback: 7, max: 14.5 },
 }
 
 const clamp = (value, min, max) => Math.min(Math.max(value, min), max)
-
-const getUpcomingEnglishScaleX = (textLength) => {
-    if (textLength <= 30) return 1
-    if (textLength >= 38) return 0.8
-
-    return 0.95 - (textLength - 35) * (0.05 / 3)
-}
 
 const getCurrentStopFontSize = (visualLength, config) => {
     const preferredSize = clamp(
@@ -27,48 +17,11 @@ const getCurrentStopFontSize = (visualLength, config) => {
     return `clamp(${config.min}cqw, ${preferredSize}cqw, ${config.max}cqw)`
 }
 
-const getCurrentEnglishStopStyle = (willWrap, config) => {
-    if (willWrap) {
-        return {
-            display: 'flex',
-            width: '95%',
-            lineHeight: '1.12',
-            marginTop: '0.25cqh',
-            padding: '0 0.125rem',
-            fontSize: `${config.wrapped}cqw`,
-        }
-    }
-
-    return {
-        display: 'block',
-        width: '100%',
-        lineHeight: '1.2',
-    }
-}
-
 const getUpcomingChineseStopStyle = (visualLength) => ({
     fontSize: `clamp(7.5cqw, ${Math.max(18 - visualLength * 0.5, 7.25)}cqw, 9cqw)`,
     paddingTop: visualLength > 26 ? '0.75cqw' : visualLength > 20 ? '0.5cqw' : '0',
     ...(visualLength > 20 && { letterSpacing: '-0.15cqw' }),
 })
-
-const getUpcomingEnglishStopStyle = (textLength) => {
-    if (textLength < 30) return {}
-
-    return {
-        alignItems: 'start',
-        transform: `scale(${getUpcomingEnglishScaleX(textLength)}, 1)`,
-        transformOrigin: '0 0',
-    }
-}
-
-export const getCurrentEnglishStopMeasurementStyle = (stopName = "") => {
-    if (!stopName) return {}
-
-    return {
-        fontSize: getCurrentStopFontSize(stringWidth(stopName), CURRENT_STOP_FONT_CONFIG.en),
-    }
-}
 
 export const getStopNameStyle = (stopName = "", lang = "en", willWrap = false) => {
     if (!stopName) return {}
@@ -77,26 +30,15 @@ export const getStopNameStyle = (stopName = "", lang = "en", willWrap = false) =
     const config = CURRENT_STOP_FONT_CONFIG[lang]
     if (!config) return {}
 
-    const style = {
-        fontSize: getCurrentStopFontSize(visualLength, config),
+    if (lang === 'en') {
+        const characterCount = Array.from(stopName).length
+        const singleLineSize = characterCount >= 20 && characterCount <= 27
+            ? config.mediumLength
+            : config.singleLine
+        return { fontSize: `${willWrap ? config.wrapped : singleLineSize}cqw` }
     }
 
-    if (lang === 'zh') {
-        style.marginTop = `${visualLength * 0.0125}cqh`
-    } else {
-        Object.assign(style, getCurrentEnglishStopStyle(willWrap, config))
-        if (!willWrap) {
-            const shrinkProgress = clamp(
-                (visualLength - config.shrinkStart) / (config.shrinkEnd - config.shrinkStart),
-                0,
-                1
-            )
-            const fontScale = 1 - shrinkProgress * (1 - config.minScale)
-            style.fontSize = `calc(${style.fontSize} * ${fontScale})`
-        }
-    }
-
-    return style
+    return { fontSize: getCurrentStopFontSize(visualLength, config) }
 }
 
 export const getUpcomingStopNameStyle = (text, lang) => {
@@ -106,5 +48,5 @@ export const getUpcomingStopNameStyle = (text, lang) => {
         return getUpcomingChineseStopStyle(stringWidth(text))
     }
 
-    return lang === 'en' ? getUpcomingEnglishStopStyle(text.length) : {}
+    return {}
 }

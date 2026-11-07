@@ -40,14 +40,14 @@
 }
 
 .stop-progress__line--past {
-    background: #878787;
+    background: #a3a3a3;
 }
 
-.stop-progress__line--current::before {
+.stop-progress:has(+ .stop-progress[aria-current="step"]) .stop-progress__line::after {
     content: "";
     position: absolute;
-    inset: 0 50% 0 0;
-    background: #878787;
+    inset: 0 0 0 50%;
+    background: #e60012;
 }
 
 .stop-progress__marker-position {
@@ -67,6 +67,44 @@
     stroke: none;
 }
 
+.stop-progress .stop-name {
+    position: absolute;
+    left: 50%;
+    color: #000000;
+    white-space: nowrap;
+    font-size: 1.75cqw;
+    font-weight: 450;
+}
+
+.stop-progress .stop-name--past {
+    color: #a3a3a3;
+}
+
+.stop-progress .stop-name--current {
+    font-weight: 500;
+}
+
+.stop-name--continuation {
+    top: -4cqw;
+    translate: -50% 0;
+}
+
+.stop-name--english {
+    rotate: -65deg;
+    transform-origin: left;
+    /* font-size: 1.2cqw; */
+}
+
+@media (width < 768px) {
+    .stop-progress .stop-name {
+        font-size: 1.75cqw;
+    }
+
+    .stop-name--continuation {
+        top: -4.5cqw;
+    }
+}
+
 .stop-progress__name {
     bottom: calc(100% + 0.7cqw);
     transform: rotate(-65deg);
@@ -79,10 +117,20 @@
 }
 
 .stop-progress__marker--current {
-    fill: #ffff00;
-    stroke: #e60012;
-    stroke-width: 14;
     animation: stop-progress-pulse 1.25s step-start infinite;
+}
+
+.stop-progress__marker-border {
+    fill: #e60012;
+}
+
+.stop-progress__marker-center {
+    fill: #ffff00;
+}
+
+.stop-progress__marker-shade {
+    fill: #878787;
+    opacity: 0.45;
 }
 
 .stop-progress__terminal {
@@ -115,7 +163,7 @@
 .stop-progress__terminal--end span {
     box-sizing: border-box;
     width: calc(var(--stop-line-size) * 0.2);
-    height: calc(var(--stop-line-size) * 2.5);
+    height: calc(var(--stop-line-size) * 2);
 }
 
 .stop-progress__terminal--start span {
@@ -124,14 +172,17 @@
 
 .stop-progress__terminal--end {
     right: calc(2px - var(--stop-start-width));
+    gap: round(nearest, calc(var(--stop-line-size) * 0.15), 1px);
 }
 
 .stop-progress__terminal--end span {
+    width: max(1px, round(nearest, calc(var(--stop-line-size) * 0.2), 1px));
     background: #e60012;
 }
 
 .main-display-panel--wide .stop-progress-row {
     --stop-line-size: 1.08cqw;
+    --stop-line-position: 88%;
 }
 
 .stop-progress--wide .stop-name {
@@ -160,8 +211,9 @@
 
 .stop-progress .stop-name[lang="en"] {
     top: -2cqw;
-    font-size: calc(1.4cqw * var(--stop-name-en-scale));
-    line-height: 1.15;
+    font-size: calc(1.5cqw * var(--stop-name-en-scale));
+    line-height: 1.2;
+    transform: scaleX(var(--stop-name-en-scale-x));
 }
 
 .stop-progress__english-wrapped {
@@ -175,13 +227,13 @@
 }
 
 .stop-progress--wide .stop-name[lang="en"] {
-    top: -1.2cqw;
-    font-size: calc(0.91cqw * var(--stop-name-en-scale));
+    top: -1.3cqw;
+    font-size: calc(1.2cqw * var(--stop-name-en-scale));
     transform: scaleX(var(--stop-name-en-scale-x));
 }
 
 .stop-progress--wide .stop-name[lang="en"]:has(.stop-progress__english-wrapped) {
-    top: -1.8cqw;
+    top: -2.3cqw;
 }
 
 @media (prefers-reduced-motion: reduce) {

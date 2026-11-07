@@ -1,0 +1,47 @@
+.aux-current-stop {
+    container-type: inline-size;
+    position: relative;
+    left: 1.25%;
+    width: 97.5%;
+    height: 100%;
+    font-weight: 400;
+}
+
+.aux-current-stop__chinese {
+    display: flex;
+    align-items: center;
+    height: 60%;
+    line-height: 1.15;
+    white-space: nowrap;
+}
+
+.aux-current-stop__english-wrapper {
+    position: absolute;
+    top: 56%;
+    bottom: 6%;
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+.aux-current-stop__english {
+    display: block;
+    width: 100%;
+    font-weight: 450;
+    font-size: 7.2cqw;
+    line-height: 1.12;
+    letter-spacing: -0.0125em;
+    overflow-wrap: anywhere;
+}
+
+.aux-current-stop__english--wrapped {
+    width: 78%;
+}
+
+.aux-current-stop__measurement {
+    position: absolute;
+    visibility: hidden;
+    pointer-events: none;
+    width: max-content;
+    white-space: nowrap;
+}

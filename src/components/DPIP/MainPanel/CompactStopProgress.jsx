@@ -76,9 +76,13 @@ export const CompactStopProgress = memo(function CompactStopProgress({ stops, cu
                     <svg className="compact-stop-progress__marker" viewBox="0 0 100 100" aria-hidden="true">
                         {index === 0 ? (
                             <>
-                                <circle className="compact-stop-progress__ring-white" cx="50" cy="50" r="49" />
-                                <circle className="compact-stop-progress__ring-red" cx="50" cy="50" r="42" />
-                                <circle className="compact-stop-progress__centre" cx="50" cy="50" r="33" />
+                                <circle className="compact-stop-progress__ring-white" cx="50" cy="50" r="50" />
+                                <circle className="compact-stop-progress__ring-red" cx="50" cy="50" r="44" />
+                                <circle className="compact-stop-progress__centre" cx="50" cy="50" r="34" />
+                                <path
+                                    className="compact-stop-progress__shade"
+                                    d="M82.84 41.2 A34 34 0 0 1 41.2 82.84 C63 78 78 63 82.84 41.2Z"
+                                />
                             </>
                         ) : <circle cx="50" cy="50" r="49" />}
                     </svg>

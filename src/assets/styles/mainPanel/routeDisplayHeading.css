@@ -1,7 +1,9 @@
 .route-heading-board {
+    --stage-zero-destination-max-width: 49.6%;
     container-type: size;
     display: grid;
-    grid-template-columns: 13% 20% 16% 49.6%;
+    grid-template-columns: 13% 20% 16% var(--stage-zero-destination-width, var(--stage-zero-destination-max-width));
+    justify-content: var(--stage-zero-justify, start);
     align-items: center;
     width: 100%;
     height: 100%;
@@ -159,12 +161,12 @@
 }
 
 .route-heading-inline__destination {
-    font-size: 5.5cqw;
+    font-size: 5.2cqw;
     white-space: nowrap;
 }
 
 .route-heading-inline--first-stop .route-heading-inline__destination {
-    font-size: 5cqw;
+    font-size: 4.75cqw;
 }
 
 .route-heading-inline--english .route-heading-inline__label {
@@ -206,11 +208,11 @@
     }
 
     .route-heading-inline__destination {
-        font-size: 5.25cqw;
+        font-size: 5cqw;
     }
 
     .route-heading-inline--first-stop .route-heading-inline__destination {
-        font-size: 4.8cqw;
+        font-size: 4.55cqw;
     }
 
     .route-heading-inline--english .route-heading-inline__label {
@@ -278,8 +280,8 @@
 }
 
 .route-heading-board--wide .route-heading-board__destination-en {
-    font-size: 50cqh;
-    transform: scaleY(1.2);
+    font-size: 64cqh;
+    /* transform: scaleY(1.2); */
     line-height: 1;
 }
 
@@ -310,11 +312,14 @@
 }
 
 .route-heading-inline--wide .route-heading-inline__arrows {
-    width: 85cqh;
+    width: calc(70cqh * 164 / 80);
+    height: 58cqh;
 }
 
-.route-heading-inline--wide:not(.route-heading-inline--first-stop) .route-heading-inline__arrows {
-    width: 110cqh;
+.route-heading-inline--wide .route-heading-inline__arrows svg {
+    width: 100%;
+    height: 100%;
+    max-width: none;
 }
 
 .route-heading-inline--wide .route-heading-inline__destination {
@@ -323,6 +328,6 @@
 }
 
 .route-heading-inline--wide.route-heading-inline--english .route-heading-inline__destination {
-    font-size: 55cqh;
-    transform: scaleY(1.2);
+    font-size: 54cqh;
+    /* transform: scaleY(1.2); */
 }

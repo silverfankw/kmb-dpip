@@ -17,10 +17,10 @@ const selectedBadgeStyle = {
     borderRadius: '4px',
 }
 
-export const RouteNumber = ({ route, isSpecial, componentType, isMobile: isMobileProp, getRouteStyle: getRouteStyleProp }) => {
-    const { language } = useSelector(state => state.userPreference)
+export const RouteNumber = ({ route, isSpecial, componentType, operator = 'kmb', isMobile: isMobileProp, getRouteStyle: getRouteStyleProp }) => {
+    const language = useSelector(state => state.userPreference.language)
     const { isMobile: responsiveIsMobile } = useWindowSize()
-    const responsiveRouteStyle = useRouteTypeStyle()
+    const responsiveRouteStyle = useRouteTypeStyle(operator)
     const isMobile = isMobileProp ?? responsiveIsMobile
     const getRouteStyle = getRouteStyleProp ?? responsiveRouteStyle
     const appText = getAppTextConfig(language)

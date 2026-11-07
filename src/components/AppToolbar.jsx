@@ -1,4 +1,4 @@
-import { useId, useRef, useState } from 'react'
+import { useEffect, useId, useRef, useState } from 'react'
 import { shallowEqual, useDispatch, useSelector } from 'react-redux'
 import DarkModeIcon from '@mui/icons-material/DarkMode'
 import LightModeIcon from '@mui/icons-material/LightMode'
@@ -8,7 +8,9 @@ import { setLanguage, setUiMode } from '@store/userPreferenceSlice'
 import { getAppTextConfig, getFooterConfig } from './sharedComponentConfig'
 import '@styles/layout/appChrome.css'
 
-export const AppToolbar = () => {
+const companies = ['kmb', 'ctb']
+
+export const AppToolbar = ({ company, onCompanyChange }) => {
     const dispatch = useDispatch()
     const [preferencesOpen, setPreferencesOpen] = useState(false)
     const preferencesId = useId()
@@ -21,10 +23,16 @@ export const AppToolbar = () => {
     const footerText = getFooterConfig(language)
     const isLight = uiMode === 'light'
 
+    useEffect(() => {
+        const favicon = document.querySelector('link[rel="icon"]')
+        favicon.href = `${import.meta.env.BASE_URL}${company === 'ctb' ? 'favicon-ctb.svg' : 'favicon.svg'}`
+    }, [company])
+
     return (
         <header
             className="app-toolbar"
             data-theme={uiMode}
+            data-company={company}
             onKeyDown={event => {
                 if (event.key === 'Escape' && preferencesOpen) {
                     setPreferencesOpen(false)
@@ -41,8 +49,39 @@ export const AppToolbar = () => {
                     </svg>
                 </span>
                 <div className="app-toolbar__brand-copy">
-                    <h1 className="app-toolbar__title">KMB <span>DPIP</span></h1>
+                    <h1 className="app-toolbar__title">{company.toUpperCase()} <span>DPIP</span></h1>
                     <p className="app-toolbar__subtitle">{text.appSubtitle}</p>
+                </div>
+                <div
+                    className="app-toolbar__company-tabs"
+                    role="tablist"
+                    aria-label={text.companyTabs}
+                    onKeyDown={event => {
+                        if (!['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(event.key)) return
+                        event.preventDefault()
+                        event.stopPropagation()
+                        const nextCompany = event.key === 'Home' ? companies[0]
+                            : event.key === 'End' ? companies.at(-1)
+                            : companies[(companies.indexOf(company) + 1) % companies.length]
+                        onCompanyChange(nextCompany)
+                        event.currentTarget.querySelector(`#company-tab-${nextCompany}`)?.focus()
+                    }}
+                >
+                    {companies.map(operator => (
+                        <button
+                            key={operator}
+                            id={`company-tab-${operator}`}
+                            type="button"
+                            role="tab"
+                            className="app-toolbar__company-tab"
+                            aria-selected={company === operator}
+                            aria-controls={`company-panel-${operator}`}
+                            tabIndex={company === operator ? 0 : -1}
+                            onClick={() => onCompanyChange(operator)}
+                        >
+                            {text.companyNames[operator]}
+                        </button>
+                    ))}
                 </div>
             </div>
             <button

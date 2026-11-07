@@ -1,6 +1,6 @@
 import '@styles/layout/App.css'
 import { memo, useMemo } from 'react'
-import { useSelector } from 'react-redux'
+import { shallowEqual, useSelector } from 'react-redux'
 
 import {
     HoldHandrailNotice,
@@ -24,8 +24,14 @@ const styles = {
 }
 
 export const AuxiliaryDisplayPanel = memo(function AuxiliaryDisplayPanel({ monitorStyle, screenTarget }) {
-    const { routeDetail, currentStopIndex } = useSelector(state => state.routeSelection)
-    const { showMindDoorNotice, showHandrailNotice } = useSelector(state => state.userPreference)
+    const { routeDetail, currentStopIndex } = useSelector(state => ({
+        routeDetail: state.routeSelection.routeDetail,
+        currentStopIndex: state.routeSelection.currentStopIndex,
+    }), shallowEqual)
+    const { showMindDoorNotice, showHandrailNotice } = useSelector(state => ({
+        showMindDoorNotice: state.userPreference.showMindDoorNotice,
+        showHandrailNotice: state.userPreference.showHandrailNotice,
+    }), shallowEqual)
 
     const stops = routeDetail?.stops
 

@@ -2,8 +2,8 @@ import stringWidth from "string-width"
 
 export const DISPLAY_STAGE_INTERVAL = 10000
 export const HEADING_STAGE_INTERVAL = 4500
-export const STOP_PROGRESS_WINDOW_SIZE = 32
-export const WIDE_STOP_PROGRESS_WINDOW_SIZE = 52
+export const STOP_PROGRESS_WINDOW_SIZE = 35
+export const WIDE_STOP_PROGRESS_WINDOW_SIZE = 30
 export const FIRST_STOP_WELCOME_ZH = "歡迎乘搭九龍巴士"
 export const FIRST_STOP_WELCOME_EN = "WELCOME ABOARD"
 export const STOP_NAME_ZH_SAFE_WIDTH_RATIO = 0.985
@@ -20,18 +20,16 @@ const FIRST_STOP_INLINE_STAGES = {
 export const getInlineStageConfig = (stage, isFirstStop) =>
     (isFirstStop && FIRST_STOP_INLINE_STAGES[stage]) || DEFAULT_INLINE_STAGE
 
-export const getStageZeroDestEnMaxScaleX = (text) => {
-    const visualLength = stringWidth(text || "")
-    return Math.min(1.35, 1.05 + Math.max(visualLength - 12, 0) * 0.02)
-}
-
 export const getStopNameZhBaseFontSize = (text) => {
     const visualLength = stringWidth(text || "")
     return Math.max(10.25, Math.min(10.5, 13.5 - Math.max(visualLength - 6, 0) * 0.3))
 }
 
 export const getWideStopNameEnScaleX = (lineLength) =>
-    lineLength > 25 ? 0.9 : 1
+    Math.min(1, 18 / Math.max(1, lineLength))
+
+export const getWideEnglishLines = (name = "") =>
+    /\s/.test(name.trim()) ? getEnglishLines(name, 30) : [name]
 
 export const getEnglishLines = (name, threshold = 36) => {
     if (!name || name.length <= threshold) return [name]
