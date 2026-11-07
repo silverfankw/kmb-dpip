@@ -200,6 +200,48 @@
     color: var(--control-primary-text);
 }
 
+@media (prefers-reduced-motion: no-preference) {
+    .control-button[data-emphasis="next"]:not(:disabled)::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        border-radius: inherit;
+        box-shadow: inset 0 0 0 3px var(--control-primary-text);
+        opacity: 0;
+        pointer-events: none;
+        animation: next-stop-glow 2.8s ease-in-out infinite;
+    }
+
+    .control-button[data-emphasis="next"]:not(:disabled) .control-button__icon {
+        animation: next-stop-nudge 2.8s ease-in-out infinite;
+    }
+
+    .control-button[data-emphasis="next"]:is(:hover, :focus-visible, :active)::after,
+    .control-button[data-emphasis="next"]:is(:hover, :focus-visible, :active) .control-button__icon {
+        animation: none;
+    }
+}
+
+@keyframes next-stop-glow {
+    0%, 55%, 100% {
+        opacity: 0;
+    }
+
+    20% {
+        opacity: 0.8;
+    }
+}
+
+@keyframes next-stop-nudge {
+    0%, 20%, 40%, 100% {
+        transform: translateX(0);
+    }
+
+    10%, 30% {
+        transform: translateX(4px);
+    }
+}
+
 .control-button--secondary {
     border-color: var(--control-secondary-border);
     background: var(--control-secondary);
@@ -416,8 +458,20 @@
 }
 
 @media (width >= 1280px) {
-    .app-layout {
+    .app-layout:is([data-company="kmb"], [data-company="ctb"]) {
         padding-bottom: calc(var(--desktop-controls-height, 240px) + 24px);
+    }
+
+    .control-panel[data-company="ctb"] .control-panel__settings {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .control-panel[data-company="ctb"] .control-panel__tools {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .control-panel[data-company="ctb"] .control-panel__mobile-tabs {
+        grid-template-columns: minmax(0, 1fr);
     }
 
     .control-panel {
@@ -809,7 +863,7 @@
         }
 
         .app-monitors .app-monitor--wide {
-            aspect-ratio: 80 / 21;
+            aspect-ratio: 40 / 9;
         }
 
         .app-monitors .app-monitor:fullscreen {

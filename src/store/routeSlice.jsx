@@ -10,13 +10,14 @@ const initialState = routeStoreConfig.routeDefaults
 
 const normalizeRoutes = rawData => {
     const routes = normalizeRouteData(rawData).sort(compareRouteNumbers)
+    const ctbRoutes = normalizeRouteData(rawData, 'ctb').sort(compareRouteNumbers)
     const routesByKey = Object.create(null)
 
     routes.forEach(route => {
         routesByKey[buildRouteKey(route)] = route
     })
 
-    return { routes, routesByKey }
+    return { routes, ctbRoutes, routesByKey }
 }
 
 const selectRouteState = state => state.route
@@ -83,6 +84,7 @@ const routeSlice = createSlice({
     reducers: {
         setRoutes: (state, action) => {
             state.routes = action.payload.routes
+            state.ctbRoutes = action.payload.ctbRoutes
             state.routesByKey = action.payload.routesByKey
             state.isLoaded = true
         },

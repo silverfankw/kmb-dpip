@@ -1,4 +1,4 @@
-import { useEffect, useId, useLayoutEffect, useRef, useState } from 'react'
+import { memo, useEffect, useId, useLayoutEffect, useRef, useState } from 'react'
 import { shallowEqual, useSelector } from 'react-redux'
 import AspectRatioIcon from '@mui/icons-material/AspectRatio'
 import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone'
@@ -16,13 +16,17 @@ import {
 } from './desktopControlPreferences'
 import '@styles/controlPanel/controlPanel.css'
 
-export const ControlPanel = ({
+export const ControlPanel = memo(function ControlPanel({
     mainScreenTarget,
     secScreenTarget,
     isMainMonitorWide,
     onToggleMainMonitorStyle,
     uiMode = 'night',
-}) => {
+    operator = 'kmb',
+    navigation,
+    routeSelected,
+}) {
+    const isKmb = operator === 'kmb'
     const { customizeDriverInfoToggle, language, stopPressed, showHandrailNotice, showMindDoorNotice } = useSelector(state => ({
         customizeDriverInfoToggle: state.userPreference.customizeDriverInfoToggle,
         language: state.userPreference.language,
@@ -42,8 +46,8 @@ export const ControlPanel = ({
     const settingsToggleRef = useRef(null)
     const mobileTabsRef = useRef(null)
     const panelRef = useRef(null)
-    const hasActiveAlerts = stopPressed || showHandrailNotice || showMindDoorNotice
-    const activeNotice = showHandrailNotice ? text.handrailActive : showMindDoorNotice ? text.doorActive : ''
+    const hasActiveAlerts = isKmb && (stopPressed || showHandrailNotice || showMindDoorNotice)
+    const activeNotice = !isKmb ? '' : showHandrailNotice ? text.handrailActive : showMindDoorNotice ? text.doorActive : ''
 
     useEffect(() => {
         saveDesktopControlPreferences(desktopPreferences)
@@ -94,6 +98,7 @@ export const ControlPanel = ({
         <div
             ref={panelRef}
             className="control-panel"
+            data-company={operator}
             data-theme={uiMode}
             data-mobile-section={mobileSection || ''}
             data-desktop-collapsed={desktopCollapsed}
@@ -104,7 +109,7 @@ export const ControlPanel = ({
             <div className="control-panel__desktop-header">
                 <h2 className="control-panel__heading">{text.quickControls}</h2>
                 <div className="control-panel__active-alerts" role="status" aria-atomic="true">
-                    {stopPressed && <span className="control-panel__alert-badge control-panel__alert-badge--bell">{text.bellActive}</span>}
+                    {isKmb && stopPressed && <span className="control-panel__alert-badge control-panel__alert-badge--bell">{text.bellActive}</span>}
                     {activeNotice && <span className="control-panel__alert-badge">{activeNotice}</span>}
                 </div>
                 <div ref={desktopToggleRef}>
@@ -120,7 +125,7 @@ export const ControlPanel = ({
             <div id={controlsId} className="control-panel__body">
                 <section className="control-panel__section control-panel__section--navigation" aria-labelledby="control-navigation-title">
                     <h2 id="control-navigation-title" className="control-panel__heading">{text.navigation}</h2>
-                    <NavButtonGroup />
+                    <NavButtonGroup navigation={navigation} />
                 </section>
 
                 <div id={settingsId} className="control-panel__settings">
@@ -131,7 +136,9 @@ export const ControlPanel = ({
                             secScreenTarget={secScreenTarget}
                             isMainMonitorWide={isMainMonitorWide}
                             onToggleMainMonitorStyle={onToggleMainMonitorStyle}
-                            includeMode={!isDesktop}
+                            includeMode={isKmb && !isDesktop}
+                            includeAuxiliary={isKmb}
+                            routeSelected={routeSelected}
                 />
                         {customizeDriverInfoToggle && (
                         <section id="control-driver-details" className="control-panel__driver-editor" aria-labelledby="control-driver-title">
@@ -143,10 +150,10 @@ export const ControlPanel = ({
                 )}
                     </section>
 
-                    <section id="control-alerts-section" className="control-panel__section control-panel__section--alerts" aria-labelledby="control-alerts-title">
+                    {isKmb && <section id="control-alerts-section" className="control-panel__section control-panel__section--alerts" aria-labelledby="control-alerts-title">
                         <h2 id="control-alerts-title" className="control-panel__heading">{text.alerts}</h2>
                         <ToggleButtonGroup includeBell={!isDesktop} />
-                    </section>
+                    </section>}
 
                     <div className="control-panel__position-settings" role="group" aria-label={text.panelPosition}>
                         <span className="control-panel__heading">{text.panelPosition}</span>
@@ -165,13 +172,13 @@ export const ControlPanel = ({
                 </div>
 
                 <div className="control-panel__desktop-actions">
-                    {isDesktop && (
+                    {isKmb && isDesktop && (
                         <MonitorModeButton
                             isMainMonitorWide={isMainMonitorWide}
                             onToggleMainMonitorStyle={onToggleMainMonitorStyle}
                         />
                     )}
-                    <StopBellButton />
+                    {isKmb && <StopBellButton />}
                     <div ref={settingsToggleRef}>
                         <ControlButton
                             icon={<SettingsOutlinedIcon />}
@@ -194,16 +201,16 @@ export const ControlPanel = ({
                         aria-controls="control-display-section"
                         onClick={() => toggleSection('display')}
                 />
-                    <ControlButton
+                    {isKmb && <ControlButton
                         icon={<NotificationsNoneIcon />}
                         label={hasActiveAlerts ? text.alertsActive : text.alerts}
                         active={mobileSection === 'alerts'}
                         aria-expanded={mobileSection === 'alerts'}
                         aria-controls="control-alerts-section"
                         onClick={() => toggleSection('alerts')}
-                />
+                />}
                 </div>
             </div>
         </div>
     )
-}
+})

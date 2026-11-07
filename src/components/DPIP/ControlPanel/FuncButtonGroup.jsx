@@ -34,6 +34,7 @@ export const MonitorModeButton = ({ isMainMonitorWide, onToggleMainMonitorStyle 
 export const FuncButtonGroup = ({
     mainScreenTarget, secScreenTarget, isMainMonitorWide, onToggleMainMonitorStyle,
     includeMode = true,
+    includeAuxiliary = true, routeSelected,
 }) => {
     const { isDesktop } = useWindowSize()
     const isUserSelectedRoute = useSelector(state => state.routeSelection.isUserSelectedRoute)
@@ -46,7 +47,7 @@ export const FuncButtonGroup = ({
     const dispatch = useDispatch()
     const [fullscreenFailed, setFullscreenFailed] = useState(false)
     const supportsFullscreen = typeof document !== 'undefined' && Boolean(document.fullscreenEnabled)
-    const fullscreenDisabled = !isUserSelectedRoute || !supportsFullscreen
+    const fullscreenDisabled = !(routeSelected ?? isUserSelectedRoute) || !supportsFullscreen
     const fullscreenDisabledReason = !supportsFullscreen ? text.fullscreenUnsupported : appText.fullscreenTooltip
     const mainFullscreenDisabled = fullscreenDisabled || isMainMonitorWide
 
@@ -79,7 +80,7 @@ export const FuncButtonGroup = ({
                     disabled={mainFullscreenDisabled}
                     onClick={() => openFullscreen(mainScreenTarget)}
                 />
-                <ControlButton
+                {includeAuxiliary && <ControlButton
                     tile
                     icon={<FullscreenIcon />}
                     label={isDesktop ? text.auxiliaryScreenShort : text.auxiliaryScreen}
@@ -87,7 +88,7 @@ export const FuncButtonGroup = ({
                     tooltip={fullscreenDisabled ? fullscreenDisabledReason : appText.fullscreenSec}
                     disabled={fullscreenDisabled}
                     onClick={() => openFullscreen(secScreenTarget)}
-                />
+                />}
                 <ControlButton
                     tile
                     icon={<BadgeOutlinedIcon />}

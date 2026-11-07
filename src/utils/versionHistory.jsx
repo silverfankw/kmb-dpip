@@ -1,6 +1,11 @@
 export const versionHistory = [
     {
-        version: "2.1 (Current)",
+        version: "3.0 (Current)",
+        date: "2026/11/08",
+        notes: "Added wide mode for KMB main monitor, resizeable monitor. Added Numpad query for mobile layout. Added CTB Display (Beta)."
+    },
+    {
+        version: "2.1",
         date: "2026/07/25",
         notes: "Added light mode / dark mode toggle. Refine layout."
     },

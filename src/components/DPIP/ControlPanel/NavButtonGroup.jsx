@@ -17,7 +17,7 @@ import RestartAltIcon from '@mui/icons-material/RestartAlt'
 import { ControlButton } from './ControlButton'
 import { getControlPanelText } from './controlPanelConfig'
 
-export const NavButtonGroup = () => {
+export const NavButtonGroup = ({ navigation }) => {
     const dispatch = useDispatch()
     const { currentStopIndex, isUserSelectedRoute } = useSelector(selectNavigationState)
     const isPrevStopAvailable = useSelector(selectIsPrevStopAvailable)
@@ -35,38 +35,39 @@ export const NavButtonGroup = () => {
                 label={text.previous}
                 accessibleLabel={appText.prevStop}
                 tone="secondary"
-                disabled={!isPrevStopAvailable}
+                disabled={navigation ? !navigation.canPrev : !isPrevStopAvailable}
                 shortcut="ArrowLeft"
                 shortcutLabel="←"
-                onClick={() => dispatch(toPrevStop())}
+                onClick={navigation?.onPrev ?? (() => dispatch(toPrevStop()))}
             />
             <ControlButton
                 icon={<ArrowForwardIcon />}
                 label={text.next}
                 accessibleLabel={appText.nextStop}
                 tone="primary"
-                disabled={!isNextStopAvailable}
+                data-emphasis="next"
+                disabled={navigation ? !navigation.canNext : !isNextStopAvailable}
                 shortcut="ArrowRight"
                 shortcutLabel="→"
-                onClick={() => dispatch(toNextStop())}
+                onClick={navigation?.onNext ?? (() => dispatch(toNextStop()))}
             />
             </div>
             <div className="control-panel__route-actions" role="group" aria-label={text.routeActions}>
             <ControlButton
                 icon={<SwapHorizIcon />}
                 accessibleLabel={appText.switchDirection}
-                disabled={!isBoundSwitchable}
+                disabled={navigation ? !navigation.canSwitchDirection : !isBoundSwitchable}
                 shortcut="End"
                 shortcutLabel="End"
-                onClick={() => dispatch(changeBoundThunk())}
+                onClick={navigation?.onSwitchDirection ?? (() => dispatch(changeBoundThunk()))}
             />
             <ControlButton
                 icon={<RestartAltIcon />}
                 accessibleLabel={appText.resetToFirstStop}
-                disabled={!isUserSelectedRoute || currentStopIndex === 0}
+                disabled={navigation ? !navigation.canReset : !isUserSelectedRoute || currentStopIndex === 0}
                 shortcut="Home"
                 shortcutLabel="Home"
-                onClick={() => dispatch(resetToFirstStop())}
+                onClick={navigation?.onReset ?? (() => dispatch(resetToFirstStop()))}
             />
             </div>
         </div>

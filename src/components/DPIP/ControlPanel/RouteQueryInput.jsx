@@ -2,18 +2,16 @@ import "@styles/routeSearch/asyncSelect.css"
 import SearchIcon from '@mui/icons-material/Search'
 import CloseIcon from '@mui/icons-material/Close'
 
-import { useCallback, useId, useMemo, useRef, useState, useEffect } from "react"
+import { memo, useCallback, useId, useMemo, useRef, useState, useEffect } from "react"
 import AsyncSelect from 'react-select/async'
 import { components } from 'react-select'
 
-import { useSelector, useDispatch } from 'react-redux'
+import { shallowEqual, useSelector, useDispatch } from 'react-redux'
 import { selectRouteThunk } from "@store/routeSelectionSlice"
 import { useWindowSize, useRouteTypeStyle } from "@hooks"
 import { RouteNumber, RouteDetails, RouteSearchKeypad } from '@components'
-import { createRouteOption } from "@utils"
+import { createRouteOption, buildRouteSearchIndex, getRouteSearchResult } from "@utils"
 import { getAppTextConfig } from '@components/sharedComponentConfig'
-
-const MAX_SEARCH_RESULTS = 50
 
 const SELECT_THEME = {
     light: {
@@ -41,26 +39,6 @@ const getOptionContentStyle = (isMobile) => ({
     minWidth: 0,
 })
 
-const buildSearchIndex = (routeOptions) => {
-    const index = new Map([['', routeOptions.slice(0, MAX_SEARCH_RESULTS)]])
-
-    routeOptions.forEach((option) => {
-        const routeNumber = option.detail.route.toUpperCase()
-
-        for (let i = 1; i <= routeNumber.length; i += 1) {
-            const prefix = routeNumber.slice(0, i)
-            const results = index.get(prefix) ?? []
-
-            if (results.length < MAX_SEARCH_RESULTS) {
-                results.push(option)
-                index.set(prefix, results)
-            }
-        }
-    })
-
-    return index
-}
-
 const RouteOptionContent = ({ componentType, data, compact = false, isMobile, getRouteStyle, ...props }) => {
     const {
         routeLabel,
@@ -79,6 +57,7 @@ const RouteOptionContent = ({ componentType, data, compact = false, isMobile, ge
             <div style={style}>
                 <RouteNumber
                     route={routeLabel}
+                    operator={data.detail.operator}
                     isSpecial={isSpecial}
                     componentType={componentType}
                     isMobile={isMobile}
@@ -96,16 +75,23 @@ const RouteOptionContent = ({ componentType, data, compact = false, isMobile, ge
     )
 }
 
-export const RouteQueryInput = ({ compact = false, label = '', labelClassName = '' }) => {
+export const RouteQueryInput = memo(function RouteQueryInput({
+    compact = false, label = '', labelClassName = '', operator = 'kmb', selectedRoute, onRouteSelect,
+}) {
     const { isMobile } = useWindowSize()
-    const getRouteStyle = useRouteTypeStyle()
+    const getRouteStyle = useRouteTypeStyle(operator)
     const dispatch = useDispatch()
     const selectRef = useRef(null)
     const inputId = useId()
     const hintId = `${inputId}-hint`
-    const { routes, isLoading: isRoutesLoading } = useSelector(state => state.route)
-    const { routeDetail } = useSelector(state => state.routeSelection)
-    const { uiMode, language } = useSelector(state => state.userPreference)
+    const routes = useSelector(state => operator === 'ctb' ? state.route.ctbRoutes : state.route.routes)
+    const isRoutesLoading = useSelector(state => state.route.isLoading)
+    const storedRouteDetail = useSelector(state => operator === 'kmb' ? state.routeSelection.routeDetail : null)
+    const routeDetail = operator === 'kmb' ? storedRouteDetail : selectedRoute
+    const { uiMode, language } = useSelector(state => ({
+        uiMode: state.userPreference.uiMode,
+        language: state.userPreference.language,
+    }), shallowEqual)
     const appText = getAppTextConfig(language)
     const isLightMode = uiMode === "light"
     const selectTheme = isLightMode ? SELECT_THEME.light : SELECT_THEME.night
@@ -116,6 +102,8 @@ export const RouteQueryInput = ({ compact = false, label = '', labelClassName = 
     useEffect(() => {
         if (routeDetail && Object.keys(routeDetail).length > 0) {
             setSelectedOption(createRouteOption(routeDetail))
+        } else {
+            setSelectedOption(null)
         }
     }, [routeDetail])
 
@@ -128,13 +116,11 @@ export const RouteQueryInput = ({ compact = false, label = '', labelClassName = 
         [routes]
     )
 
-    const searchIndex = useMemo(() => buildSearchIndex(routeOptions), [routeOptions])
+    const searchIndex = useMemo(() => buildRouteSearchIndex(routeOptions), [routeOptions])
 
     const defaultOptions = useMemo(() => {
         const selectedRouteKey = selectedOption?.detail?.route?.toUpperCase() ?? ''
-        const preferredOptions = selectedRouteKey
-            ? (searchIndex.get(selectedRouteKey) ?? [])
-            : (searchIndex.get('') ?? [])
+        const preferredOptions = getRouteSearchResult(searchIndex, selectedRouteKey).matches
 
         if (!selectedOption) {
             return preferredOptions
@@ -146,7 +132,7 @@ export const RouteQueryInput = ({ compact = false, label = '', labelClassName = 
 
     const handleSearch = useCallback((inputValue, callback) => {
         const normalizedInput = inputValue.trim().toUpperCase()
-        const results = searchIndex.get(normalizedInput) ?? []
+        const results = getRouteSearchResult(searchIndex, normalizedInput).matches
 
         if (!normalizedInput) {
             callback(defaultOptions)
@@ -161,9 +147,13 @@ export const RouteQueryInput = ({ compact = false, label = '', labelClassName = 
             setSelectedOption(null)
             return
         }
-        dispatch(selectRouteThunk({ routeDetail: option.detail, routes }))
+        if (onRouteSelect) {
+            onRouteSelect(option.detail)
+        } else {
+            dispatch(selectRouteThunk({ routeDetail: option.detail, routes }))
+        }
         setSelectedOption(option)
-    }, [dispatch, routes])
+    }, [dispatch, routes, onRouteSelect])
 
     const Control = useCallback((props) => (
         <components.Control {...props}>
@@ -419,6 +409,7 @@ export const RouteQueryInput = ({ compact = false, label = '', labelClassName = 
                         {selectedOption ? (
                             <>
                                 <RouteNumber
+                                    operator={operator}
                                     route={selectedOption.routeLabel}
                                     isSpecial={selectedOption.isSpecial}
                                     componentType="SingleValue"
@@ -439,7 +430,7 @@ export const RouteQueryInput = ({ compact = false, label = '', labelClassName = 
                     </button>
                     {isKeypadOpen && (
                         <RouteSearchKeypad
-                            options={routeOptions}
+                            searchIndex={searchIndex}
                             language={language}
                             uiMode={uiMode}
                             onClose={() => setIsKeypadOpen(false)}
@@ -475,4 +466,4 @@ export const RouteQueryInput = ({ compact = false, label = '', labelClassName = 
             />}
         </div>
     )
-}
+})

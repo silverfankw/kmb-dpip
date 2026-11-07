@@ -1,5 +1,5 @@
 import '@styles/mainPanel/mainDisplayPanel.css'
-import { useEffect, useMemo, useRef, useState } from "react"
+import { memo, useEffect, useMemo, useRef, useState } from "react"
 import { shallowEqual, useSelector } from "react-redux"
 
 import { LoadingSpinner } from '@components'
@@ -19,7 +19,7 @@ import {
 
 const EMPTY_STOPS = []
 
-export const MainDisplayPanel = ({ monitorStyle, screenTarget, isWide = false }) => {
+export const MainDisplayPanel = memo(function MainDisplayPanel({ monitorStyle, screenTarget, isWide = false }) {
     const { routeDetail, currentStopIndex, isLoading } = useSelector(state => ({
         routeDetail: state.routeSelection.routeDetail,
         currentStopIndex: state.routeSelection.currentStopIndex,
@@ -149,9 +149,9 @@ export const MainDisplayPanel = ({ monitorStyle, screenTarget, isWide = false })
                     {driverInfo?.nameEn}&nbsp;
                 </span>
                 <span>
-                    is serving you &nbsp;&nbsp;員工編號 &nbsp;Staff No.: {driverInfo?.staffNo}
+                    is serving you &nbsp;&nbsp;員工編號 &nbsp;Emp. No.: {driverInfo?.staffNo}
                 </span>
             </div>
         </div>
     )
-}
+})

@@ -37,6 +37,7 @@ export const normalizeRouteData = (data, operator = routeStoreConfig.defaultOper
 
     const fields = operatorFields[operator]
     const seenKeys = new Set()
+    const normalizedStops = new Map()
     const normalizedRoutes = []
 
     sourceRoutes.forEach((source, index) => {
@@ -73,16 +74,20 @@ export const normalizeRouteData = (data, operator = routeStoreConfig.defaultOper
             if (typeof stopId !== 'string' || !stopId.trim()) {
                 throw new Error(`Invalid route data: ${context} stop IDs must be non-empty strings.`)
             }
+            if (normalizedStops.has(stopId)) return normalizedStops.get(stopId)
+
             const stop = Object.hasOwn(stopLookup, stopId) ? stopLookup[stopId] : null
             if (!isRecord(stop)) {
                 throw new Error(`Invalid route data: ${context} references missing stop ${operator}/${stopId}.`)
             }
 
-            return {
+            const normalizedStop = {
                 id: stopId,
                 zh: requireText(stop.stop_name_zh ?? stop.name_tc, `stops.${operator}.${stopId}.stop_name_zh`),
                 en: requireText(stop.stop_name_en ?? stop.name_en, `stops.${operator}.${stopId}.stop_name_en`),
             }
+            normalizedStops.set(stopId, normalizedStop)
+            return normalizedStop
         })
 
         const key = buildRouteKey(route)

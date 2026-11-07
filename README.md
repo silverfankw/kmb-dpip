@@ -10,7 +10,17 @@
 This project is developed by React + Vite, Redux, tailwindCSS v4 & Material UI.
 
 ## Versions
-<ins>**Version 2</ins>🆕✨**
+
+<ins>**Version 3</ins>🆕✨**
+- Added features:
+  1. Added KMB Wide mode and resizable monitors.
+  2. Added mobile route-search keypad and CTB display.
+  3. Added saved sessions, bilingual heading cycles and theme switching.
+  4. Refined stop-name sizing, spacing, truncation and rail indicators.
+- Improved rendering, search, data loading and lazy loading.
+<img width="676" height="627" alt="image" src="https://github.com/user-attachments/assets/c4fd67c3-9a0f-42b7-b95d-9643e38550e9" />
+
+<ins>**Version 2</ins>**
 - Added features:
   1. A comprehensive, detailed bus stop progress bar, displaying more stop information in main panel
   2. Traditional compact bus stop progress bar & the new detailed bus stop progress bar will take turn switching display in preset interval

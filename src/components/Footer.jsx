@@ -1,12 +1,15 @@
-import { useState } from 'react'
+import { lazy, memo, Suspense, useState } from 'react'
 import { useSelector } from 'react-redux'
-import { VersionHistoryDialog } from '@components/VersionHistoryDialog'
-import { versionHistory } from '@utils/versionHistory'
+import { FeatureErrorBoundary } from './FeatureErrorBoundary'
+import { LoadingSpinner } from './LoadingSpinner'
 import { getFooterConfig } from './sharedComponentConfig'
 import '@styles/layout/appChrome.css'
 
-export const Footer = ({ uiMode = 'night' }) => {
+const VersionHistoryDialog = lazy(() => import('./VersionHistoryDialog'))
+
+export const Footer = memo(function Footer({ uiMode = 'night' }) {
     const [versionHistoryOpen, setVersionHistoryOpen] = useState(false)
+    const [hasOpenedHistory, setHasOpenedHistory] = useState(false)
     const language = useSelector(state => state.userPreference.language)
     const text = getFooterConfig(language)
 
@@ -14,7 +17,10 @@ export const Footer = ({ uiMode = 'night' }) => {
         <footer className="app-footer" data-theme={uiMode}>
             <div className="app-footer__links">
                 <a target="_blank" rel="noreferrer" href={text.repoUrl}>{text.repoLabel}</a>
-                <button type="button" className="app-chrome-button" onClick={() => setVersionHistoryOpen(true)}>
+                <button type="button" className="app-chrome-button" onClick={() => {
+                    setHasOpenedHistory(true)
+                    setVersionHistoryOpen(true)
+                }}>
                     {text.versionHistoryLabel}
                 </button>
             </div>
@@ -34,11 +40,16 @@ export const Footer = ({ uiMode = 'night' }) => {
                     <p>{text.legal}</p>
                 </div>
             </details>
-            <VersionHistoryDialog
-                open={versionHistoryOpen}
-                onConfirm={() => setVersionHistoryOpen(false)}
-                versionHistory={versionHistory}
-            />
+            {hasOpenedHistory && (
+                <FeatureErrorBoundary feature="version history">
+                    <Suspense fallback={<LoadingSpinner />}>
+                        <VersionHistoryDialog
+                            open={versionHistoryOpen}
+                            onConfirm={() => setVersionHistoryOpen(false)}
+                        />
+                    </Suspense>
+                </FeatureErrorBoundary>
+            )}
         </footer>
     )
-}
+})

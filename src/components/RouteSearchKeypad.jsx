@@ -1,7 +1,8 @@
-import { useEffect, useId, useMemo, useRef, useState } from 'react'
+import { useEffect, useId, useRef, useState } from 'react'
 import BackspaceOutlinedIcon from '@mui/icons-material/BackspaceOutlined'
 import { RouteNumber, RouteDetails } from './DPIP/ControlPanel/RouteOption'
 import { getAppTextConfig } from './sharedComponentConfig'
+import { getRouteSearchResult } from '@utils'
 import '@styles/routeSearch/routeSearchKeypad.css'
 
 const digits = ['1', '2', '3', '4', '5', '6', '7', '8', '9']
@@ -17,7 +18,7 @@ const keypadText = {
     },
 }
 
-export const RouteSearchKeypad = ({ options, language, uiMode, onSelect, onClose }) => {
+export const RouteSearchKeypad = ({ searchIndex, language, uiMode, onSelect, onClose }) => {
     const dialogRef = useRef(null)
     const queryRef = useRef(null)
     const hasSelectedRouteRef = useRef(false)
@@ -25,19 +26,7 @@ export const RouteSearchKeypad = ({ options, language, uiMode, onSelect, onClose
     const [query, setQuery] = useState('')
     const text = keypadText[language === 'en' ? 'en' : 'zh']
     const appText = getAppTextConfig(language)
-    const { matches, letters, nextCharacters } = useMemo(() => {
-        const matchingOptions = options.filter(option => option.detail.route.toUpperCase().startsWith(query))
-        const nextCharacters = new Set()
-        matchingOptions.forEach(option => {
-            const next = option.detail.route.toUpperCase()[query.length]
-            if (next) nextCharacters.add(next)
-        })
-        return {
-            matches: matchingOptions.slice(0, 50),
-            letters: [...nextCharacters].filter(character => /^[A-Z]$/.test(character)).sort(),
-            nextCharacters,
-        }
-    }, [options, query])
+    const { matches, letters, nextCharacters } = getRouteSearchResult(searchIndex, query)
 
     const updateQuery = value => {
         setQuery(value)
@@ -105,7 +94,7 @@ export const RouteSearchKeypad = ({ options, language, uiMode, onSelect, onClose
                             onSelect(option)
                         }}
                     >
-                        <RouteNumber route={option.routeLabel} isSpecial={option.isSpecial} componentType="Option" isMobile />
+                        <RouteNumber route={option.routeLabel} operator={option.detail.operator} isSpecial={option.isSpecial} componentType="Option" isMobile />
                         <RouteDetails origin={option.originLabel} destination={option.destinationLabel} remark={option.specialRemarkLabel} />
                     </button>
                 ))}

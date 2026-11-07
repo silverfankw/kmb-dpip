@@ -1,4 +1,4 @@
-import { useSelector, useDispatch } from "react-redux"
+import { shallowEqual, useSelector, useDispatch } from "react-redux"
 import { getAppTextConfig } from '@components/sharedComponentConfig'
 import { setDriverInfo } from "@store/userPreferenceSlice"
 
@@ -6,7 +6,10 @@ import { Input } from "@components"
 
 export const DriverInfoInputGroup = () => {
 
-	const { driverInfo, language } = useSelector(state => state.userPreference)
+	const { driverInfo, language } = useSelector(state => ({
+		driverInfo: state.userPreference.driverInfo,
+		language: state.userPreference.language,
+	}), shallowEqual)
 	const appText = getAppTextConfig(language)
 	const dispatch = useDispatch()
 

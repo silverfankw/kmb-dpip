@@ -5,7 +5,6 @@ import { buildRouteSelectionKey } from '@store/storeConfig'
 import "@styles/mainPanel/routeDisplayHeading.css"
 import {
     HEADING_STAGE_INTERVAL,
-    getStageZeroDestEnMaxScaleX,
     getInlineStageConfig,
 } from './mainPanelConfig'
 
@@ -62,36 +61,49 @@ export const RouteDisplayHeading = memo(function RouteDisplayHeading({ onStageCh
         if (!element || !container) return
         const measurementContext = stage === 0 && isWide
             ? document.createElement('canvas').getContext('2d') : null
+        const destination = stage === 0 && !isWide
+            ? element.querySelector('.route-heading-board__destination') : null
 
         const fit = () => {
             if (!container.clientWidth) return
 
             if (stage === 0) {
-                for (const ref of [routeNumberRef, destZhTextRef, destEnTextRef]) {
+                // Layout widths ignore transforms, so measuring does not require
+                // resetting styles and forcing layout between individual texts.
+                const measurements = [routeNumberRef, destZhTextRef, destEnTextRef].map(ref => {
                     const text = ref.current
                     const cell = text?.parentElement
-                    let availableWidth = cell?.clientWidth
-                    if (!availableWidth) continue
-
-                    // Wide columns include their gutters, which are not text space.
-                    if (isWide) {
-                        const { paddingLeft, paddingRight } = window.getComputedStyle(cell)
-                        availableWidth = Math.max(0, availableWidth - parseFloat(paddingLeft) - parseFloat(paddingRight))
+                    if (!text || !cell) return null
+                    const { paddingLeft, paddingRight } = window.getComputedStyle(cell)
+                    return {
+                        text,
+                        textWidth: Math.max(text.scrollWidth, text.offsetWidth),
+                        availableWidth: Math.max(0, cell.clientWidth - (isWide
+                            ? parseFloat(paddingLeft) + parseFloat(paddingRight) : 0)),
+                        isDestination: ref !== routeNumberRef,
+                        isEnglish: ref === destEnTextRef,
                     }
-
-                    text.style.transform = ""
-                    const textWidth = Math.max(text.scrollWidth, text.getBoundingClientRect().width)
-                    if (!textWidth) continue
-
-                    const isEnglish = ref === destEnTextRef
-                    const fitScale = availableWidth / textWidth
-                    const fontScale = isEnglish && fitScale < STAGE_ZERO_DEST_EN_MIN_FONT_SCALE
-                        ? STAGE_ZERO_DEST_EN_MIN_FONT_SCALE
-                        : 1
-                    const maxScaleX = isEnglish && !isWide ? getStageZeroDestEnMaxScaleX(en) : 1
-                    text.style.transform = `scale(${fontScale}) scaleX(${Math.min(fitScale, maxScaleX) / fontScale})`
+                }).filter(Boolean)
+                let destinationWidth
+                let justify
+                if (destination) {
+                    const { paddingLeft, paddingRight } = window.getComputedStyle(destination)
+                    const padding = parseFloat(paddingLeft) + parseFloat(paddingRight)
+                    const maxWidth = container.clientWidth * parseFloat(
+                        window.getComputedStyle(element).getPropertyValue('--stage-zero-destination-max-width')
+                    ) / 100
+                    const textWidth = Math.max(0,
+                        ...measurements.filter(item => item.isDestination).map(item => item.textWidth)
+                    )
+                    const width = Math.min(maxWidth, textWidth + padding)
+                    destinationWidth = `${width}px`
+                    justify = width < maxWidth ? 'center' : 'start'
+                    for (const item of measurements) {
+                        if (item.isDestination) item.availableWidth = Math.max(0, width - padding)
+                    }
                 }
 
+                let chineseOffset
                 if (isWide) {
                     const arrow = element.querySelector('.route-heading-board__arrows svg')
                     const chinese = destZhTextRef.current
@@ -104,9 +116,26 @@ export const RouteDisplayHeading = memo(function RouteDisplayHeading({ onStageCh
                         const { actualBoundingBoxAscent } = measurementContext.measureText(zh || '')
                         const glyphTop = baseline.getBoundingClientRect().top - actualBoundingBoxAscent
                         const previousOffset = parseFloat(element.style.getPropertyValue('--wide-destination-zh-offset')) || 0
-                        const offset = arrow.getBoundingClientRect().top - glyphTop + previousOffset
-                        element.style.setProperty('--wide-destination-zh-offset', `${offset}px`)
+                        chineseOffset = `${arrow.getBoundingClientRect().top - glyphTop + previousOffset}px`
                     }
+                }
+
+                if (destinationWidth && element.style.getPropertyValue('--stage-zero-destination-width') !== destinationWidth) {
+                    element.style.setProperty('--stage-zero-destination-width', destinationWidth)
+                }
+                if (justify && element.style.getPropertyValue('--stage-zero-justify') !== justify) {
+                    element.style.setProperty('--stage-zero-justify', justify)
+                }
+                for (const { text, textWidth, availableWidth, isEnglish } of measurements) {
+                    if (!textWidth || !availableWidth) continue
+                    const fitScale = availableWidth / textWidth
+                    const fontScale = isEnglish && fitScale < STAGE_ZERO_DEST_EN_MIN_FONT_SCALE
+                        ? STAGE_ZERO_DEST_EN_MIN_FONT_SCALE : 1
+                    const transform = `scale(${fontScale}) scaleX(${Math.min(fitScale, 1) / fontScale})`
+                    if (text.style.transform !== transform) text.style.transform = transform
+                }
+                if (chineseOffset && element.style.getPropertyValue('--wide-destination-zh-offset') !== chineseOffset) {
+                    element.style.setProperty('--wide-destination-zh-offset', chineseOffset)
                 }
                 return
             }
@@ -132,23 +161,30 @@ export const RouteDisplayHeading = memo(function RouteDisplayHeading({ onStageCh
             if (element.style.transform !== transform) element.style.transform = transform
         }
 
+        let disposed = false
+        let pendingFrame = null
+        const scheduleFit = () => {
+            if (disposed || pendingFrame !== null) return
+            pendingFrame = requestAnimationFrame(() => {
+                pendingFrame = null
+                if (!disposed) fit()
+            })
+        }
         fit()
-        const observer = new ResizeObserver(fit)
+        const observer = new ResizeObserver(scheduleFit)
         observer.observe(container)
         if (stage === 0 && isWide && destZhTextRef.current) {
             observer.observe(destZhTextRef.current)
         }
 
         // Loaded web fonts can have different ink bounds from fallback fonts.
-        let disposed = false
-        if (stage === 0 && isWide) {
-            document.fonts.ready.then(() => {
-                if (!disposed) fit()
-            })
+        if (stage === 0) {
+            document.fonts.ready.then(scheduleFit)
         }
         return () => {
             disposed = true
             observer.disconnect()
+            if (pendingFrame !== null) cancelAnimationFrame(pendingFrame)
         }
     }, [stage, isFirstStop, zh, en, route, isWide])
 
@@ -202,7 +238,11 @@ export const RouteDisplayHeading = memo(function RouteDisplayHeading({ onStageCh
                                 <>
                                     <div className="route-heading-inline__label">路線</div>
                                     <div className="route-heading-inline__number">{route}</div>
-                                    <div className="route-heading-inline__arrows"><TripleArrow /></div>
+                                    <div className="route-heading-inline__arrows">
+                                        <TripleArrow
+                                            viewBox={isWide ? "12 10 164 80" : "0 0 180 100"}
+                                        />
+                                    </div>
                                     <div className="route-heading-inline__destination">{zh}</div>
                                 </>
                             )}
@@ -211,7 +251,11 @@ export const RouteDisplayHeading = memo(function RouteDisplayHeading({ onStageCh
                                 <>
                                     <div className="route-heading-inline__label">Route</div>
                                     <div className="route-heading-inline__number">{route}</div>
-                                    <div className="route-heading-inline__arrows"><TripleArrow /></div>
+                                    <div className="route-heading-inline__arrows">
+                                        <TripleArrow
+                                            viewBox={isWide ? "12 10 164 80" : "0 0 180 100"}
+                                        />
+                                    </div>
                                     <div className="route-heading-inline__destination">{en}</div>
                                 </>
                             )}

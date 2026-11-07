@@ -5,6 +5,33 @@ export const itemSeparator = routeUtilityConfig.label.itemSeparator
 export const toSeparator = routeUtilityConfig.label.directionSeparator
 export const specialTripKey = routeUtilityConfig.label.specialTripKey
 
+const MAX_SEARCH_RESULTS = 50
+const EMPTY_SEARCH_RESULT = { matches: [], letters: [], nextCharacters: new Set() }
+
+export const buildRouteSearchIndex = routeOptions => {
+    const index = new Map([['', { matches: [], letters: [], nextCharacters: new Set() }]])
+
+    routeOptions.forEach(option => {
+        const number = option.detail.route.toUpperCase()
+        for (let length = 0; length <= number.length; length += 1) {
+            const prefix = number.slice(0, length)
+            let result = index.get(prefix)
+            if (!result) {
+                result = { matches: [], letters: [], nextCharacters: new Set() }
+                index.set(prefix, result)
+            }
+            if (result.matches.length < MAX_SEARCH_RESULTS) result.matches.push(option)
+            if (number[length]) result.nextCharacters.add(number[length])
+        }
+    })
+    index.forEach(result => {
+        result.letters = [...result.nextCharacters].filter(character => /^[A-Z]$/.test(character)).sort()
+    })
+    return index
+}
+
+export const getRouteSearchResult = (index, query) => index.get(query) ?? EMPTY_SEARCH_RESULT
+
 export const formatRouteLabel = (route) => ({
     routeNumber: route.route,
     origin: route.orig_tc,
