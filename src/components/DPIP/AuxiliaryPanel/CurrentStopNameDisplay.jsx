@@ -1,5 +1,5 @@
 import { memo, useLayoutEffect, useMemo, useRef, useState } from "react"
-import { getStopNameStyle } from './auxiliaryPanelConfig'
+import { getCurrentStopEnglishMeasurementStyle, getStopNameStyle } from './auxiliaryPanelConfig'
 import '@styles/auxiliaryPanel/currentStopName.css'
 
 export const CurrentStopNameDisplay = memo(function CurrentStopNameDisplay({ stopZh = "", stopEn = "" }) {
@@ -7,7 +7,7 @@ export const CurrentStopNameDisplay = memo(function CurrentStopNameDisplay({ sto
     const enMeasureRef = useRef(null)
     const [willWrap, setWillWrap] = useState(false)
     const zhStyle = useMemo(() => getStopNameStyle(stopZh, "zh"), [stopZh])
-    const enMeasurementStyle = useMemo(() => getStopNameStyle(stopEn, "en"), [stopEn])
+    const enMeasurementStyle = useMemo(() => getCurrentStopEnglishMeasurementStyle(stopEn), [stopEn])
     const enStyle = useMemo(() => getStopNameStyle(stopEn, "en", willWrap), [stopEn, willWrap])
 
     useLayoutEffect(() => {

@@ -9,6 +9,10 @@
 
 This project is developed by React + Vite, Redux, tailwindCSS v4 & Material UI.
 
+## Main monitor English stop names
+
+Stop data can optionally supply `stop_name_wrap_en` for the main monitor's current-stop name. Use `|` for an explicit line break and `>` to separate display stages, which alternate every 4 seconds while English is visible. For example, `FIRST LINE|SECOND LINE>ALTERNATE NAME` displays two lines first, then `ALTERNATE NAME`. Changing stops or returning to English restarts the first stage. Stops without this value keep their existing English display behavior; auxiliary and progress displays are unaffected.
+
 ## Versions
 
 <ins>**Version 3</ins>🆕✨**
@@ -20,7 +24,7 @@ This project is developed by React + Vite, Redux, tailwindCSS v4 & Material UI.
 - Improved rendering, search, data loading and lazy loading.
 <img width="676" height="627" alt="image" src="https://github.com/user-attachments/assets/c4fd67c3-9a0f-42b7-b95d-9643e38550e9" />
 
-<ins>**Version 2</ins>**
+<ins>**Version 2</ins>🆕✨**
 - Added features:
   1. A comprehensive, detailed bus stop progress bar, displaying more stop information in main panel
   2. Traditional compact bus stop progress bar & the new detailed bus stop progress bar will take turn switching display in preset interval

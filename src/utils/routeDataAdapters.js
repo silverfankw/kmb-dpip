@@ -85,6 +85,9 @@ export const normalizeRouteData = (data, operator = routeStoreConfig.defaultOper
                 id: stopId,
                 zh: requireText(stop.stop_name_zh ?? stop.name_tc, `stops.${operator}.${stopId}.stop_name_zh`),
                 en: requireText(stop.stop_name_en ?? stop.name_en, `stops.${operator}.${stopId}.stop_name_en`),
+                ...(stop.stop_name_wrap_en != null && stop.stop_name_wrap_en !== '' && {
+                    stop_name_wrap_en: requireText(stop.stop_name_wrap_en, `stops.${operator}.${stopId}.stop_name_wrap_en`),
+                }),
             }
             normalizedStops.set(stopId, normalizedStop)
             return normalizedStop

@@ -65,6 +65,7 @@ export const MainDisplayPanel = memo(function MainDisplayPanel({ monitorStyle, s
         () => stops.slice(windowStart, windowEnd),
         [stops, windowStart, windowEnd]
     )
+    const isDenseFullStopPage = visibleStops.length > 36
 
     const panelClassName = [
         "main-display-panel",
@@ -102,7 +103,7 @@ export const MainDisplayPanel = memo(function MainDisplayPanel({ monitorStyle, s
                                 isWide={isWide}
                             />
                         ) : (
-                            <div className="stop-progress-display">
+                            <div className={`stop-progress-display${isDenseFullStopPage ? " stop-progress-display--dense" : ""}`}>
                                 <div className="stop-progress-row" role="list" aria-label="Route stops">
                                     {Array.from({ length: leadingCount }, (_, index) => (
                                         <FullStopProgress key={`previous-${index}`} continuation="previous" isWide={isWide} />

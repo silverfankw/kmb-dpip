@@ -2,12 +2,16 @@ import stringWidth from "string-width"
 
 export const DISPLAY_STAGE_INTERVAL = 10000
 export const HEADING_STAGE_INTERVAL = 4500
-export const STOP_PROGRESS_WINDOW_SIZE = 35
+export const STOP_NAME_EN_STAGE_INTERVAL = 4000
+export const STOP_PROGRESS_WINDOW_SIZE = 40
 export const WIDE_STOP_PROGRESS_WINDOW_SIZE = 30
 export const FIRST_STOP_WELCOME_ZH = "歡迎乘搭九龍巴士"
 export const FIRST_STOP_WELCOME_EN = "WELCOME ABOARD"
 export const STOP_NAME_ZH_SAFE_WIDTH_RATIO = 0.985
 export const STOP_NAME_EN_SAFE_SIZE_RATIO = 0.985
+
+export const getStopNameEnglishStages = (text) =>
+    text.split('>').map(stage => stage.split('|').map(line => line.trim()).join('\n'))
 
 const DEFAULT_INLINE_STAGE = {
     safeWidthRatio: 1, maxScaleX: 1, minScaleY: 1, maxScaleY: 1,

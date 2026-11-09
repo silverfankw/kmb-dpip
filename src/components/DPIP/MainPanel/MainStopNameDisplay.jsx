@@ -1,10 +1,12 @@
-import { memo, useCallback, useEffect, useLayoutEffect, useRef } from "react"
+import { memo, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react"
 import { HoldHandrailNotice, MindDoorNotice } from '@components/DPIP'
 import {
     FIRST_STOP_WELCOME_ZH,
     FIRST_STOP_WELCOME_EN,
     STOP_NAME_ZH_SAFE_WIDTH_RATIO,
     STOP_NAME_EN_SAFE_SIZE_RATIO,
+    STOP_NAME_EN_STAGE_INTERVAL,
+    getStopNameEnglishStages,
     getStopNameZhBaseFontSize,
 } from './mainPanelConfig'
 
@@ -16,10 +18,29 @@ export const MainStopNameDisplay = memo(function MainStopNameDisplay({
     const zhRef = useRef(null)
     const enRef = useRef(null)
     const zh = isFirstStop ? FIRST_STOP_WELCOME_ZH : stop?.zh
-    const en = isFirstStop ? FIRST_STOP_WELCOME_EN : stop?.en
+    const formattedEn = !isFirstStop ? stop?.stop_name_wrap_en : undefined
+    const enSource = isFirstStop ? FIRST_STOP_WELCOME_EN : formattedEn || stop?.en || ''
+    const enStages = useMemo(
+        () => formattedEn ? getStopNameEnglishStages(enSource) : [enSource],
+        [formattedEn, enSource]
+    )
+    const [enStage, setEnStage] = useState({ stop, source: enSource, index: 0 })
+    const en = enStages[enStage.stop === stop && enStage.source === enSource ? enStage.index : 0]
     const Notice = isFirstStop ? null
         : showHandrailNotice ? HoldHandrailNotice
             : showMindDoorNotice ? MindDoorNotice : null
+
+    useEffect(() => {
+        setEnStage({ stop, source: enSource, index: 0 })
+        if (language !== 'en' || Notice || enStages.length < 2) return
+
+        let index = 0
+        const timer = setInterval(() => {
+            index = (index + 1) % enStages.length
+            setEnStage({ stop, source: enSource, index })
+        }, STOP_NAME_EN_STAGE_INTERVAL)
+        return () => clearInterval(timer)
+    }, [stop, enSource, enStages, language, Notice])
 
     const fitChineseName = useCallback(() => {
         const container = containerRef.current
@@ -98,7 +119,10 @@ export const MainStopNameDisplay = memo(function MainStopNameDisplay({
                         ref={enRef}
                         className="main-display-panel__stop-name-en"
                         lang="en"
-                        style={{ display: language === 'en' ? 'block' : 'none' }}
+                        style={{
+                            display: language === 'en' ? 'block' : 'none',
+                            whiteSpace: formattedEn ? 'pre' : undefined,
+                        }}
                     >
                         {en}
                     </span>

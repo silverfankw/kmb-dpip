@@ -13,6 +13,7 @@
     height: 60%;
     line-height: 1.15;
     white-space: nowrap;
+    font-weight: 400;
 }
 
 .aux-current-stop__english-wrapper {

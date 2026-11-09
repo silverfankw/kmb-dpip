@@ -67,12 +67,29 @@
     stroke: none;
 }
 
+.stop-progress__marker--current {
+    animation: stop-progress-pulse 1.25s step-start infinite;
+}
+
+.stop-progress__marker-border {
+    fill: #e60012;
+}
+
+.stop-progress__marker-center {
+    fill: #ffff00;
+}
+
+.stop-progress__marker-shade {
+    fill: #878787;
+    opacity: 0.45;
+}
+
 .stop-progress .stop-name {
     position: absolute;
     left: 50%;
     color: #000000;
     white-space: nowrap;
-    font-size: 1.75cqw;
+    font-size: 1.625cqw;
     font-weight: 450;
 }
 
@@ -92,17 +109,6 @@
 .stop-name--english {
     rotate: -65deg;
     transform-origin: left;
-    /* font-size: 1.2cqw; */
-}
-
-@media (width < 768px) {
-    .stop-progress .stop-name {
-        font-size: 1.75cqw;
-    }
-
-    .stop-name--continuation {
-        top: -4.5cqw;
-    }
 }
 
 .stop-progress__name {
@@ -112,25 +118,29 @@
     line-height: 1.15;
 }
 
-.stop-progress--wide .stop-progress__name {
-    bottom: calc(100% + 0.42cqw);
+.stop-progress .stop-name[lang="en"] {
+    top: -2cqw;
+    font-size: calc(1.5cqw * var(--stop-name-en-scale));
+    line-height: 1.2;
+    transform: scaleX(var(--stop-name-en-scale-x));
 }
 
-.stop-progress__marker--current {
-    animation: stop-progress-pulse 1.25s step-start infinite;
+.stop-progress__english-wrapped {
+    display: inline-block;
+    transform: scaleY(0.66);
+    text-align: left;
 }
 
-.stop-progress__marker-border {
-    fill: #e60012;
+.stop-progress:not(.stop-progress--wide) .stop-name[lang="en"]:has(.stop-progress__english-wrapped) {
+    top: -2.5cqw;
 }
 
-.stop-progress__marker-center {
-    fill: #ffff00;
+.stop-progress-display--dense .stop-progress .stop-name[lang="zh-Hant"] {
+    font-size: 1.5cqw;
 }
 
-.stop-progress__marker-shade {
-    fill: #878787;
-    opacity: 0.45;
+.stop-progress-display--dense .stop-progress .stop-name[lang="en"] {
+    font-size: calc(1.5cqw * var(--stop-name-en-scale));
 }
 
 .stop-progress__terminal {
@@ -193,37 +203,8 @@
     top: -2.4cqw;
 }
 
-@media (width < 1280px) {
-    .stop-progress--wide .stop-name {
-        font-size: 1.21cqw;
-    }
-
-}
-
-@keyframes stop-progress-pulse {
-    0%, 100% {
-        transform: scale(1.25);
-    }
-    50% {
-        transform: scale(1.55);
-    }
-}
-
-.stop-progress .stop-name[lang="en"] {
-    top: -2cqw;
-    font-size: calc(1.5cqw * var(--stop-name-en-scale));
-    line-height: 1.2;
-    transform: scaleX(var(--stop-name-en-scale-x));
-}
-
-.stop-progress__english-wrapped {
-    display: inline-block;
-    transform: scaleY(0.66);
-    text-align: left;
-}
-
-.stop-progress:not(.stop-progress--wide) .stop-name[lang="en"]:has(.stop-progress__english-wrapped) {
-    top: -2.5cqw;
+.stop-progress--wide .stop-progress__name {
+    bottom: calc(100% + 0.42cqw);
 }
 
 .stop-progress--wide .stop-name[lang="en"] {
@@ -234,6 +215,31 @@
 
 .stop-progress--wide .stop-name[lang="en"]:has(.stop-progress__english-wrapped) {
     top: -2.3cqw;
+}
+
+@media (width < 768px) {
+    .stop-progress .stop-name {
+        font-size: 1.75cqw;
+    }
+
+    .stop-name--continuation {
+        top: -4.5cqw;
+    }
+}
+
+@media (width < 1280px) {
+    .stop-progress--wide .stop-name {
+        font-size: 1.21cqw;
+    }
+}
+
+@keyframes stop-progress-pulse {
+    0%, 100% {
+        transform: scale(1.25);
+    }
+    50% {
+        transform: scale(1.55);
+    }
 }
 
 @media (prefers-reduced-motion: reduce) {
