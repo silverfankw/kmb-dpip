@@ -9,7 +9,7 @@
     --stop-start-width: calc(var(--stop-line-size) * 0.8);
     display: flex;
     height: 100%;
-    width: 94%;
+    width: calc(94% * var(--stop-progress-width-ratio, 1));
     background: #ffffff;
 }
 

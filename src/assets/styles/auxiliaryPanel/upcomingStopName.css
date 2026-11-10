@@ -1,0 +1,81 @@
+.aux-upcoming-stop__divider {
+    grid-column: 1 / 3;
+    background: #000000c5;
+}
+
+.aux-upcoming-stop__divider--second {
+    background: #ffffff;
+}
+
+.aux-upcoming-stop__indicator-container {
+    container-type: inline-size;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: #ee0000;
+}
+
+.aux-upcoming-stop__indicator {
+    display: inline-block;
+    border-radius: 50%;
+    background: #ffffff;
+    width: 55cqw;
+    height: 55cqw;
+}
+
+.aux-upcoming-stop {
+    container-type: inline-size;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    align-self: stretch;
+    background: #ffffff;
+    color: #000000;
+}
+
+.aux-upcoming-stop__content {
+    container-type: inline-size;
+    height: 100%;
+    width: 100%;
+    padding-left: 1.25%;
+    display: flex;
+    flex-direction: column;
+    gap: 0.125rem;
+    justify-content: space-between;
+    white-space: nowrap;
+    line-height: 1.25;
+}
+
+.aux-upcoming-stop__chinese {
+    position: relative;
+    letter-spacing: 0.025em;
+    font-weight: 450;
+}
+
+.aux-upcoming-stop__english {
+    font-size: 4.625cqw;
+    margin-bottom: 0.5cqw;
+    font-weight: 450;
+    letter-spacing: -0.025em;
+}
+
+.aux-upcoming-stop__measurement {
+    position: absolute;
+    visibility: hidden;
+    width: max-content;
+    pointer-events: none;
+}
+
+.aux-upcoming-stop__english--visible {
+    display: block;
+    width: 90%;
+    overflow: hidden;
+}
+
+@media (width < 640px) {
+    .aux-upcoming-stop__content {
+        padding-left: 1.5%;
+    }
+}

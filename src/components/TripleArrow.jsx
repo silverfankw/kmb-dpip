@@ -4,7 +4,13 @@ const chevronPaths = [
     "M118 10H142L176 50L142 90H118L152 50Z",
 ]
 
-export const TripleArrow = ({ className = "", ...props }) => (
+const steepChevronPaths = [
+    "M12 10H36L66 50L36 90H12L42 50Z",
+    "M65 10H89L119 50L89 90H65L95 50Z",
+    "M118 10H142L172 50L142 90H118L148 50Z",
+]
+
+export const TripleArrow = ({ className = "", steep = false, ...props }) => (
     <svg
         width="100%"
         height="100%"
@@ -16,7 +22,7 @@ export const TripleArrow = ({ className = "", ...props }) => (
         {...props}
     >
         <g fill="#fff">
-            {chevronPaths.map((path) => (
+            {(steep ? steepChevronPaths : chevronPaths).map((path) => (
                 <path key={path} d={path} />
             ))}
         </g>

@@ -9,10 +9,6 @@
 
 This project is developed by React + Vite, Redux, tailwindCSS v4 & Material UI.
 
-## Main monitor English stop names
-
-Stop data can optionally supply `stop_name_wrap_en` for the main monitor's current-stop name. Use `|` for an explicit line break and `>` to separate display stages, which alternate every 4 seconds while English is visible. For example, `FIRST LINE|SECOND LINE>ALTERNATE NAME` displays two lines first, then `ALTERNATE NAME`. Changing stops or returning to English restarts the first stage. Stops without this value keep their existing English display behavior; auxiliary and progress displays are unaffected.
-
 ## Versions
 
 <ins>**Version 3</ins>🆕✨**

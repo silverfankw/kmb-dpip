@@ -105,6 +105,12 @@
     font-size: 5.5cqw;
 }
 
+.main-display-panel__stop-name-en--wrapped {
+    flex-shrink: 0;
+    max-width: 100%;
+    line-height: 1.25;
+}
+
 .main-display-panel__driver-info {
     container-type: inline-size;
     grid-column: 1 / -1;

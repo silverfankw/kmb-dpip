@@ -4,7 +4,7 @@
     left: 1.25%;
     width: 97.5%;
     height: 100%;
-    font-weight: 400;
+    font-weight: 450;
 }
 
 .aux-current-stop__chinese {
@@ -13,7 +13,6 @@
     height: 60%;
     line-height: 1.15;
     white-space: nowrap;
-    font-weight: 400;
 }
 
 .aux-current-stop__english-wrapper {
@@ -28,7 +27,6 @@
 .aux-current-stop__english {
     display: block;
     width: 100%;
-    font-weight: 450;
     font-size: 7.2cqw;
     line-height: 1.12;
     letter-spacing: -0.0125em;
@@ -45,4 +43,10 @@
     pointer-events: none;
     width: max-content;
     white-space: nowrap;
+}
+
+@media (width < 640px) {
+    .aux-current-stop {
+        left: 1.5%;
+    }
 }

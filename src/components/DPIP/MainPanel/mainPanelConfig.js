@@ -49,7 +49,8 @@ export const getEnglishLines = (name, threshold = 36) => {
     return [name.slice(0, splitIndex).trimEnd(), name.slice(splitIndex).trimStart()]
 }
 
-export const getStopProgressPage = (stopCount, currentStopIndex, windowSize) => {
+export const getStopProgressPages = (stopCount, windowSize) => {
+    const pages = []
     let start = 0
 
     do {
@@ -58,10 +59,12 @@ export const getStopProgressPage = (stopCount, currentStopIndex, windowSize) => 
         const trailingCount = stopCount - start > available ? 3 : 0
         const end = Math.min(stopCount, start + available - trailingCount)
 
-        if (currentStopIndex < end || end === stopCount) {
-            return { start, end, leadingCount, trailingCount }
-        }
-
+        pages.push({ start, end, leadingCount, trailingCount })
         start = end
     } while (start < stopCount)
+
+    return pages
 }
+
+export const getStopProgressPage = (stopCount, currentStopIndex, windowSize) =>
+    getStopProgressPages(stopCount, windowSize).find(page => currentStopIndex < page.end || page.end === stopCount)

@@ -2,7 +2,7 @@
     --stage-zero-destination-max-width: 49.6%;
     container-type: size;
     display: grid;
-    grid-template-columns: 13% 20% 16% var(--stage-zero-destination-width, var(--stage-zero-destination-max-width));
+    grid-template-columns: 13% max-content 16% var(--stage-zero-destination-width, var(--stage-zero-destination-max-width));
     justify-content: var(--stage-zero-justify, start);
     align-items: center;
     width: 100%;
@@ -16,6 +16,35 @@
 
 .route-heading-board > div {
     transform: translateY(6cqh);
+}
+
+.route-heading-board:not(.route-heading-board--wide) {
+    box-sizing: border-box;
+    grid-template-columns: max-content max-content max-content minmax(0, max-content);
+    column-gap: 1cqw;
+    padding-inline: 2cqw;
+    justify-content: center;
+}
+
+.route-heading-board:not(.route-heading-board--wide) .route-heading-board__arrows {
+    font-size: 78cqh;
+    width: calc(1cap * 1.9);
+    padding-right: 0;
+}
+
+.route-heading-board:not(.route-heading-board--wide) .route-heading-board__number--short {
+    padding-inline: max(12px, 1cqw);
+}
+
+.route-heading-board:not(.route-heading-board--wide) .route-heading-board__destination-zh {
+    font-size: 44cqh;
+    line-height: 0.9;
+    letter-spacing: 0.025em;
+}
+
+.route-heading-board:not(.route-heading-board--wide) .route-heading-board__destination-en {
+    font-size: 28cqh;
+    line-height: 1.5;
 }
 
 .route-heading-board__label {
@@ -39,9 +68,12 @@
     align-items: center;
     justify-content: center;
     height: 100%;
+    width: max-content;
     min-width: 0;
+    padding-left: 4px;
     text-align: center;
-    font-size: 60cqh;
+    font-size: 62cqh;
+    font-weight: 500;
     letter-spacing: -0.025em;
     scale: 1 1.1;
 }
@@ -136,6 +168,8 @@
     flex-shrink: 0;
     align-self: center;
     margin-inline: 0.25rem;
+    width: max-content;
+    /* padding-inline: 2px; */
     font-size: 6cqw;
     text-align: center;
     scale: 1 1.2;
@@ -185,6 +219,12 @@
 }
 
 @media (width < 48rem) {
+    .route-heading-inline:not(.route-heading-inline--wide) .route-heading-inline__destination {
+        flex-shrink: 0;
+        line-height: 1.1;
+        transform-origin: center;
+    }
+
     .route-heading-inline__label {
         font-size: 4.25cqw;
     }
@@ -195,6 +235,10 @@
 
     .route-heading-inline--english .route-heading-inline__label {
         font-size: 4cqw;
+    }
+
+    .route-heading-board:not(.route-heading-board--wide) .route-heading-board__number--short {
+        padding-inline: max(8px, 0.75cqw);
     }
 }
 
@@ -226,6 +270,10 @@
     .route-heading-inline--english .route-heading-inline__destination {
         font-size: 3.75cqw;
     }
+
+    .route-heading-board:not(.route-heading-board--wide) .route-heading-board__number--short {
+        padding-inline: max(6px, 0.5cqw);
+    }
 }
 
 /* Wide headings use height-based units so the increased monitor width
@@ -251,8 +299,8 @@
     justify-content: center;
 }
 
-.route-heading-board--wide .route-heading-board__number--short {
-    min-width: 8cqw;
+.route-heading-board--wide .route-heading-board__number {
+    padding-inline: 2px;
 }
 
 .route-heading-board--wide .route-heading-board__arrows {
@@ -307,7 +355,7 @@
 }
 
 .route-heading-inline--wide .route-heading-inline__number {
-    min-width: 8cqw;
+    min-width: 0;
     font-size: 60cqh;
 }
 

@@ -14,7 +14,7 @@ import {
     DISPLAY_STAGE_INTERVAL,
     STOP_PROGRESS_WINDOW_SIZE,
     WIDE_STOP_PROGRESS_WINDOW_SIZE,
-    getStopProgressPage,
+    getStopProgressPages,
 } from './mainPanelConfig'
 
 const EMPTY_STOPS = []
@@ -37,7 +37,13 @@ export const MainDisplayPanel = memo(function MainDisplayPanel({ monitorStyle, s
     const isFirstStop = stopCount > 0 && currentStopIndex === 0
     const routeKey = buildRouteSelectionKey(routeDetail)
     const [routeHeadingStage, setRouteHeadingStage] = useState(0)
-    const [displayStage, setDisplayStage] = useState(0)
+    const [{ stage: displayStage, pageOffset }, setDisplayCycle] = useState({ stage: 0, pageOffset: 0 })
+    const progressPages = useMemo(
+        () => getStopProgressPages(stopCount, isWide ? WIDE_STOP_PROGRESS_WINDOW_SIZE : STOP_PROGRESS_WINDOW_SIZE),
+        [stopCount, isWide]
+    )
+    const currentPageIndex = progressPages.findIndex(page => currentStopIndex < page.end || page.end === stopCount)
+    const remainingPageCount = progressPages.length - currentPageIndex
     const firstStopRef = useRef(isFirstStop)
     const activeDisplayStage = isFirstStop && displayStage === 2 ? 0 : displayStage
     const displayLanguage = activeDisplayStage === 1 ? 'en' : 'zh'
@@ -45,27 +51,38 @@ export const MainDisplayPanel = memo(function MainDisplayPanel({ monitorStyle, s
 
     useEffect(() => {
         firstStopRef.current = isFirstStop
-        if (isFirstStop) setDisplayStage(stage => stage === 2 ? 0 : stage)
+        if (isFirstStop) setDisplayCycle(cycle => cycle.stage === 2 ? { ...cycle, stage: 0 } : cycle)
     }, [isFirstStop])
 
     useEffect(() => {
-        setDisplayStage(0)
+        setDisplayCycle({ stage: 0, pageOffset: 0 })
         if (isLoading || !stopCount) return
 
         const timer = setInterval(() => {
-            setDisplayStage(stage => (stage + 1) % (firstStopRef.current ? 2 : 3))
-        }, DISPLAY_STAGE_INTERVAL)
+            setDisplayCycle(cycle => {
+                const pageOffset = (cycle.pageOffset + 1) % remainingPageCount
+                return {
+                    stage: pageOffset === 0
+                        ? (cycle.stage + 1) % (firstStopRef.current ? 2 : 3)
+                        : cycle.stage,
+                    pageOffset,
+                }
+            })
+        }, DISPLAY_STAGE_INTERVAL / remainingPageCount)
         return () => clearInterval(timer)
-    }, [routeKey, isLoading, stopCount])
+    }, [routeKey, isLoading, stopCount, currentPageIndex, progressPages, remainingPageCount])
 
-    const { start: windowStart, end: windowEnd, leadingCount, trailingCount } = getStopProgressPage(
-        stopCount, currentStopIndex, isWide ? WIDE_STOP_PROGRESS_WINDOW_SIZE : STOP_PROGRESS_WINDOW_SIZE
-    )
+    const { start: windowStart, end: windowEnd, leadingCount, trailingCount } =
+        progressPages[currentPageIndex + pageOffset % remainingPageCount]
     const visibleStops = useMemo(
         () => stops.slice(windowStart, windowEnd),
         [stops, windowStart, windowEnd]
     )
     const isDenseFullStopPage = visibleStops.length > 36
+    const progressRowWidthRatio = windowStart > 0
+        ? (visibleStops.length + leadingCount + trailingCount) /
+            (isWide ? WIDE_STOP_PROGRESS_WINDOW_SIZE : STOP_PROGRESS_WINDOW_SIZE)
+        : 1
 
     const panelClassName = [
         "main-display-panel",
@@ -104,9 +121,20 @@ export const MainDisplayPanel = memo(function MainDisplayPanel({ monitorStyle, s
                             />
                         ) : (
                             <div className={`stop-progress-display${isDenseFullStopPage ? " stop-progress-display--dense" : ""}`}>
-                                <div className="stop-progress-row" role="list" aria-label="Route stops">
+                                <div
+                                    className="stop-progress-row"
+                                    style={{ '--stop-progress-width-ratio': progressRowWidthRatio }}
+                                    role="list"
+                                    aria-label="Route stops"
+                                >
                                     {Array.from({ length: leadingCount }, (_, index) => (
-                                        <FullStopProgress key={`previous-${index}`} continuation="previous" isWide={isWide} />
+                                        <FullStopProgress
+                                            key={`previous-${index}`}
+                                            continuation="previous"
+                                            stopIndex={windowStart - 1}
+                                            currentStopIndex={currentStopIndex}
+                                            isWide={isWide}
+                                        />
                                     ))}
                                     {visibleStops.map((stop, index) => (
                                         <FullStopProgress
@@ -120,7 +148,13 @@ export const MainDisplayPanel = memo(function MainDisplayPanel({ monitorStyle, s
                                         />
                                     ))}
                                     {Array.from({ length: trailingCount }, (_, index) => (
-                                        <FullStopProgress key={`next-${index}`} continuation="next" isWide={isWide} />
+                                        <FullStopProgress
+                                            key={`next-${index}`}
+                                            continuation="next"
+                                            stopIndex={windowEnd}
+                                            currentStopIndex={currentStopIndex}
+                                            isWide={isWide}
+                                        />
                                     ))}
                                 </div>
                             </div>

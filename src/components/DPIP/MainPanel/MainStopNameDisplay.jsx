@@ -63,13 +63,36 @@ export const MainStopNameDisplay = memo(function MainStopNameDisplay({
 
         // Measure at the CSS size first, preserving wrapping for long names.
         text.style.fontSize = ""
+        text.style.maxWidth = ""
+        text.classList.remove('main-display-panel__stop-name-en--wrapped')
         const { paddingLeft, paddingRight, paddingTop, paddingBottom } = window.getComputedStyle(container)
         const textStyle = window.getComputedStyle(text)
         const availableWidth = (container.clientWidth - parseFloat(paddingLeft) - parseFloat(paddingRight)) * STOP_NAME_EN_SAFE_SIZE_RATIO
         const availableHeight = (container.clientHeight - parseFloat(paddingTop) - parseFloat(paddingBottom)) * STOP_NAME_EN_SAFE_SIZE_RATIO
         const width = text.scrollWidth
         const height = text.getBoundingClientRect().height
-        if (!width || !height || height > parseFloat(textStyle.lineHeight) + 1) return
+        if (!width || !height || availableWidth <= 0 || availableHeight <= 0) return
+        if (height > parseFloat(textStyle.lineHeight) + 1) {
+            const lineCount = Math.round(height / parseFloat(textStyle.lineHeight))
+            text.classList.add('main-display-panel__stop-name-en--wrapped')
+            text.style.maxWidth = `${Math.floor(availableWidth)}px`
+            let minSize = 0
+            let maxSize = availableHeight / lineCount
+            for (let iteration = 0; iteration < 16; iteration++) {
+                const size = (minSize + maxSize) / 2
+                text.style.fontSize = `${size}px`
+                const bounds = text.getBoundingClientRect()
+                const lineHeight = parseFloat(window.getComputedStyle(text).lineHeight)
+                if (text.scrollWidth <= availableWidth && bounds.height <= availableHeight &&
+                    bounds.height <= lineHeight * lineCount + 1) {
+                    minSize = size
+                } else {
+                    maxSize = size
+                }
+            }
+            text.style.fontSize = `${Math.floor(minSize * 0.9 * 10) / 10}px`
+            return
+        }
 
         const scale = Math.min(availableWidth / width, availableHeight / height)
         if (scale > 1) text.style.fontSize = `${parseFloat(textStyle.fontSize) * scale}px`
