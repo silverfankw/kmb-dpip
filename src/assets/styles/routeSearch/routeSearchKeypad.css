@@ -13,8 +13,8 @@ html:has(.route-search-keypad[open]) {
     flex-direction: column;
     width: 100vw;
     max-width: 100vw;
-    height: min(860px, 94dvh);
-    max-height: 94dvh;
+    height: min(860px, 98dvh);
+    max-height: 98dvh;
     margin: 0;
     padding: 0 0 env(safe-area-inset-bottom);
     border: 0;
@@ -113,8 +113,16 @@ html:has(.route-search-keypad[open]) {
     align-items: center;
     gap: 4px;
     width: 100%;
-    margin-bottom: 6px;
+    margin-bottom: 8px;
     text-align: left;
+}
+
+.route-search-keypad__result .route-option__origin {
+    font-size: 16px;
+}
+
+.route-search-keypad__result .route-option__destination {
+    font-size: 16px;
 }
 
 .route-search-keypad__keys {
@@ -133,7 +141,7 @@ html:has(.route-search-keypad[open]) {
 
 .route-search-keypad__numbers button,
 .route-search-keypad__letters button {
-    height: 56px;
+    height: 64px;
     padding: 4px;
     font-size: 22px;
     font-weight: 650;

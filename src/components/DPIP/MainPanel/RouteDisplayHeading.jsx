@@ -9,6 +9,8 @@ import {
 } from './mainPanelConfig'
 
 const STAGE_ZERO_DEST_EN_MIN_FONT_SCALE = 0.95
+const MOBILE_DESTINATION_ZH_FONT_SCALE = 0.66
+const MOBILE_DESTINATION_EN_FONT_SCALE = 1
 
 export const RouteDisplayHeading = memo(function RouteDisplayHeading({ onStageChange, isWide = false }) {
 
@@ -52,7 +54,7 @@ export const RouteDisplayHeading = memo(function RouteDisplayHeading({ onStageCh
     const en = routeDetail?.stops?.[lastStopIndex]?.en
     const route = routeDetail.route
     const routeLength = String(route ?? "").length
-    const isShortRouteNumber = routeLength > 0 && routeLength <= 2
+    const isShortRouteNumber = routeLength > 0 && routeLength <= 3
 
     useLayoutEffect(() => {
         const element = stageRef.current
@@ -63,6 +65,9 @@ export const RouteDisplayHeading = memo(function RouteDisplayHeading({ onStageCh
             ? document.createElement('canvas').getContext('2d') : null
         const destination = stage === 0 && !isWide
             ? element.querySelector('.route-heading-board__destination') : null
+        const mobileLayout = window.matchMedia('(width < 48rem)')
+        const inlineDestination = stage !== 0
+            ? element.querySelector('.route-heading-inline__destination') : null
 
         const fit = () => {
             if (!container.clientWidth) return
@@ -140,6 +145,48 @@ export const RouteDisplayHeading = memo(function RouteDisplayHeading({ onStageCh
                 return
             }
 
+            if (inlineDestination) {
+                inlineDestination.style.fontSize = ''
+                inlineDestination.style.transform = ''
+            }
+
+            if (!isWide && mobileLayout.matches && inlineDestination?.textContent) {
+                element.style.transform = 'none'
+                wrapper.style.width = ''
+                const containerStyle = window.getComputedStyle(container)
+                const availableWidth = Math.max(0, container.clientWidth -
+                    parseFloat(containerStyle.paddingLeft) - parseFloat(containerStyle.paddingRight)) * 0.985
+                const availableHeight = Math.max(0, container.clientHeight -
+                    parseFloat(containerStyle.paddingTop) - parseFloat(containerStyle.paddingBottom)) * 0.985
+                if (!availableWidth || !availableHeight) return
+                const fixedWidth = element.getBoundingClientRect().width - inlineDestination.getBoundingClientRect().width
+                const scale = Math.min(1, availableWidth / (fixedWidth + 1))
+                const destinationWidth = Math.max(0, availableWidth / scale - fixedWidth)
+                const destinationHeight = availableHeight / scale
+                let minSize = 0
+                let maxSize = destinationHeight
+                for (let iteration = 0; iteration < 16; iteration++) {
+                    const size = (minSize + maxSize) / 2
+                    inlineDestination.style.fontSize = `${size}px`
+                    const bounds = inlineDestination.getBoundingClientRect()
+                    if (bounds.width <= destinationWidth && bounds.height <= destinationHeight) {
+                        minSize = size
+                    } else {
+                        maxSize = size
+                    }
+                }
+                const fontScale = stage === 1
+                    ? MOBILE_DESTINATION_ZH_FONT_SCALE : MOBILE_DESTINATION_EN_FONT_SCALE
+                inlineDestination.style.fontSize = `${Math.floor(minSize * fontScale * 10) / 10}px`
+                const textHeight = inlineDestination.getBoundingClientRect().height
+                const scaleY = textHeight > 0
+                    ? Math.min(1.12, destinationHeight * fontScale / textHeight) : 1
+                inlineDestination.style.transform = `scaleY(${scaleY})`
+                wrapper.style.width = `${element.getBoundingClientRect().width * scale}px`
+                element.style.transform = `scale(${scale})`
+                return
+            }
+
             const contentWidth = Math.max(element.scrollWidth, element.offsetWidth)
             if (!contentWidth) return
 
@@ -173,17 +220,17 @@ export const RouteDisplayHeading = memo(function RouteDisplayHeading({ onStageCh
         fit()
         const observer = new ResizeObserver(scheduleFit)
         observer.observe(container)
+        mobileLayout.addEventListener('change', scheduleFit)
         if (stage === 0 && isWide && destZhTextRef.current) {
             observer.observe(destZhTextRef.current)
         }
 
         // Loaded web fonts can have different ink bounds from fallback fonts.
-        if (stage === 0) {
-            document.fonts.ready.then(scheduleFit)
-        }
+        document.fonts.ready.then(scheduleFit)
         return () => {
             disposed = true
             observer.disconnect()
+            mobileLayout.removeEventListener('change', scheduleFit)
             if (pendingFrame !== null) cancelAnimationFrame(pendingFrame)
         }
     }, [stage, isFirstStop, zh, en, route, isWide])
@@ -201,6 +248,7 @@ export const RouteDisplayHeading = memo(function RouteDisplayHeading({ onStageCh
                     </div>
                     <div className="route-heading-board__arrows">
                         <TripleArrow
+                            steep
                             viewBox="0 10 180 80"
                             preserveAspectRatio="none"
                         />

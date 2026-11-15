@@ -9,7 +9,7 @@
     --stop-start-width: calc(var(--stop-line-size) * 0.8);
     display: flex;
     height: 100%;
-    width: 94%;
+    width: calc(94% * var(--stop-progress-width-ratio, 1));
     background: #ffffff;
 }
 
@@ -92,17 +92,6 @@
 .stop-name--english {
     rotate: -65deg;
     transform-origin: left;
-    /* font-size: 1.2cqw; */
-}
-
-@media (width < 768px) {
-    .stop-progress .stop-name {
-        font-size: 1.75cqw;
-    }
-
-    .stop-name--continuation {
-        top: -4.5cqw;
-    }
 }
 
 .stop-progress__name {
@@ -112,8 +101,37 @@
     line-height: 1.15;
 }
 
-.stop-progress--wide .stop-progress__name {
-    bottom: calc(100% + 0.42cqw);
+.stop-progress .stop-name[lang="en"] {
+    top: -2cqw;
+    font-size: calc(1.5cqw * var(--stop-name-en-scale));
+    line-height: 1.2;
+    transform: scaleX(var(--stop-name-en-scale-x));
+}
+
+.stop-progress__english-wrapped {
+    display: inline-block;
+    transform: scaleY(0.66);
+    text-align: left;
+}
+
+.stop-progress:not(.stop-progress--wide) .stop-name[lang="en"]:has(.stop-progress__english-wrapped) {
+    top: -2.5cqw;
+}
+
+.stop-progress-display--dense .stop-progress .stop-name[lang="zh-Hant"] {
+    font-size: 1.5cqw;
+}
+
+.stop-progress-display--dense .stop-progress .stop-name[lang="en"] {
+    font-size: calc(1.5cqw * var(--stop-name-en-scale));
+}
+
+.stop-progress-display--dense .stop-progress--wide .stop-name[lang="zh-Hant"] {
+    font-size: 1.25cqw;
+}
+
+.stop-progress-display--dense .stop-progress--wide .stop-name[lang="en"] {
+    font-size: calc(1.25cqw * var(--stop-name-en-scale));
 }
 
 .stop-progress__marker--current {
@@ -193,6 +211,30 @@
     top: -2.4cqw;
 }
 
+.stop-progress--wide .stop-progress__name {
+    bottom: calc(100% + 0.42cqw);
+}
+
+.stop-progress--wide .stop-name[lang="en"] {
+    top: -1.3cqw;
+    font-size: calc(1.2cqw * var(--stop-name-en-scale));
+    transform: scaleX(var(--stop-name-en-scale-x));
+}
+
+.stop-progress--wide .stop-name[lang="en"]:has(.stop-progress__english-wrapped) {
+    top: -2.3cqw;
+}
+
+@media (width < 768px) {
+    .stop-progress .stop-name {
+        font-size: 1.75cqw;
+    }
+
+    .stop-name--continuation {
+        top: -4.5cqw;
+    }
+}
+
 @media (width < 1280px) {
     .stop-progress--wide .stop-name {
         font-size: 1.21cqw;
@@ -207,33 +249,6 @@
     50% {
         transform: scale(1.55);
     }
-}
-
-.stop-progress .stop-name[lang="en"] {
-    top: -2cqw;
-    font-size: calc(1.5cqw * var(--stop-name-en-scale));
-    line-height: 1.2;
-    transform: scaleX(var(--stop-name-en-scale-x));
-}
-
-.stop-progress__english-wrapped {
-    display: inline-block;
-    transform: scaleY(0.66);
-    text-align: left;
-}
-
-.stop-progress:not(.stop-progress--wide) .stop-name[lang="en"]:has(.stop-progress__english-wrapped) {
-    top: -2.5cqw;
-}
-
-.stop-progress--wide .stop-name[lang="en"] {
-    top: -1.3cqw;
-    font-size: calc(1.2cqw * var(--stop-name-en-scale));
-    transform: scaleX(var(--stop-name-en-scale-x));
-}
-
-.stop-progress--wide .stop-name[lang="en"]:has(.stop-progress__english-wrapped) {
-    top: -2.3cqw;
 }
 
 @media (prefers-reduced-motion: reduce) {

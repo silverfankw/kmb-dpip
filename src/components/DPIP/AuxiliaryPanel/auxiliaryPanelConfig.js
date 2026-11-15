@@ -1,7 +1,7 @@
 import stringWidth from "string-width"
 
 const CURRENT_STOP_FONT_CONFIG = {
-    en: { singleLine: 7.2, mediumLength: 6, wrapped: 5 },
+    en: { singleLine: 7.2, mediumLength: 6, wrapped: 5.25 },
     zh: { min: 7, base: 20.2, scale: 0.6, fallback: 7, max: 14.5 },
 }
 
@@ -18,10 +18,19 @@ const getCurrentStopFontSize = (visualLength, config) => {
 }
 
 const getUpcomingChineseStopStyle = (visualLength) => ({
-    fontSize: `clamp(7.5cqw, ${Math.max(18 - visualLength * 0.5, 7.25)}cqw, 9cqw)`,
+    fontSize: `clamp(7.5cqw, ${Math.max(18 - visualLength * 0.5, 7.25)}cqw, 8.75cqw)`,
     paddingTop: visualLength > 26 ? '0.75cqw' : visualLength > 20 ? '0.5cqw' : '0',
     ...(visualLength > 20 && { letterSpacing: '-0.15cqw' }),
 })
+
+export const getCurrentStopEnglishMeasurementStyle = (stopName = "") => {
+    if (!stopName) return {}
+
+    const characterCount = Array.from(stopName).length
+    // Keep the original wrap thresholds independent of single-line font adjustments.
+    const fontSize = characterCount >= 20 && characterCount <= 27 ? 6 : 7.2
+    return { fontSize: `${fontSize}cqw` }
+}
 
 export const getStopNameStyle = (stopName = "", lang = "en", willWrap = false) => {
     if (!stopName) return {}

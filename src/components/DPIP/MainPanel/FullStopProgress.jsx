@@ -5,7 +5,7 @@ import { getEnglishLines, getWideEnglishLines, getWideStopNameEnScaleX } from '.
 export const FullStopProgress = memo(function FullStopProgress({ stop, stopIndex, currentStopIndex, stopCount, continuation, isWide = false, language = 'zh' }) {
     const showContinuationDot = Boolean(continuation)
     const isCurrentStop = !showContinuationDot && stopIndex === currentStopIndex
-    const isPastStop = continuation === "previous" || (!showContinuationDot && stopIndex < currentStopIndex)
+    const isPastStop = stopIndex < currentStopIndex
     const isLastStop = !showContinuationDot && stopIndex === stopCount - 1
     const englishLines = !showContinuationDot && language === 'en'
         ? isWide ? getWideEnglishLines(stop.en) : getEnglishLines(stop.en, 38)
@@ -76,8 +76,7 @@ export const FullStopProgress = memo(function FullStopProgress({ stop, stopIndex
     previous.continuation === next.continuation &&
     previous.isWide === next.isWide &&
     previous.language === next.language &&
-    (Boolean(next.continuation) || (
-        (previous.stopIndex === previous.currentStopIndex) === (next.stopIndex === next.currentStopIndex) &&
-        (previous.stopIndex < previous.currentStopIndex) === (next.stopIndex < next.currentStopIndex)
-    ))
+    (Boolean(next.continuation) ||
+        (previous.stopIndex === previous.currentStopIndex) === (next.stopIndex === next.currentStopIndex)) &&
+    (previous.stopIndex < previous.currentStopIndex) === (next.stopIndex < next.currentStopIndex)
 )

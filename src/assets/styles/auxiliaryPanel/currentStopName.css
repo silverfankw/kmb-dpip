@@ -29,7 +29,7 @@
     width: 100%;
     font-weight: 450;
     font-size: 7.2cqw;
-    line-height: 1.12;
+    line-height: 1.2;
     letter-spacing: -0.0125em;
     overflow-wrap: anywhere;
 }
@@ -44,4 +44,10 @@
     pointer-events: none;
     width: max-content;
     white-space: nowrap;
+}
+
+@media (width < 640px) {
+    .aux-current-stop {
+        left: 1.5%;
+    }
 }

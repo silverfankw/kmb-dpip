@@ -1,61 +1,6 @@
 import { memo, useLayoutEffect, useRef, useState } from 'react'
 import { getUpcomingStopNameStyle } from './auxiliaryPanelConfig'
-
-const styles = {
-    divider: [
-        "col-start-1",
-        "col-end-3",
-        "bg-[#000000c5]"
-    ].join(" "),
-
-    secondDivider: [
-        "col-start-1",
-        "col-end-3",
-        "bg-[#FFFFFF]"
-    ].join(" "),
-
-    stopIndicatorContainer: [
-        "@container",
-        "flex flex-col justify-center items-center",
-        "bg-[#EE0000]"
-    ].join(" "),
-
-    stopIndicator: [
-        "inline-block",
-        "rounded-[50%]",
-        "bg-white",
-        "w-[55cqw] h-[55cqw]"
-    ].join(" "),
-
-    stopNameContainer: [
-        "@container",
-        "relative",
-        "flex flex-col",
-        "h-full self-stretch",
-        "bg-white",
-        "text-black",
-    ].join(" "),
-
-    stopNameContent: [
-        "@container",
-        "h-full w-full pl-[1.25%]",
-        "flex flex-col gap-0.5 justify-between",
-        "whitespace-nowrap",
-        "leading-tight"
-    ].join(" "),
-
-    zhStopName: [
-        "relative",
-        "tracking-[0.0125rem]",
-        "tracking-wide",
-        "font-[450]"
-    ].join(" "),
-
-    enStopName: [
-        "text-[4.625cqw] mb-[0.5cqw]",
-        "font-[450]",
-    ].join(" ")
-}
+import '@styles/auxiliaryPanel/upcomingStopName.css'
 
 export const UpcomingStopNameDisplay = memo(function UpcomingStopNameDisplay({ stopZh = "", stopEn = "", isSecondUpcomingStop = false }) {
     const englishRef = useRef(null)
@@ -96,16 +41,16 @@ export const UpcomingStopNameDisplay = memo(function UpcomingStopNameDisplay({ s
     }, [stopEn])
     return (
         <>
-            <div className={isSecondUpcomingStop ? styles.secondDivider : styles.divider}></div>
+            <div className={`aux-upcoming-stop__divider${isSecondUpcomingStop ? ' aux-upcoming-stop__divider--second' : ''}`}></div>
 
-            <div className={styles.stopIndicatorContainer}>
-                <div className={styles.stopIndicator}></div>
+            <div className="aux-upcoming-stop__indicator-container">
+                <div className="aux-upcoming-stop__indicator"></div>
             </div>
 
-            <div className={styles.stopNameContainer}>
-                <div className={styles.stopNameContent}>
+            <div className="aux-upcoming-stop">
+                <div className="aux-upcoming-stop__content">
                     <div
-                        className={styles.zhStopName}
+                        className="aux-upcoming-stop__chinese"
                         style={getUpcomingStopNameStyle(stopZh, "zh")}
                     >
                         {stopZh}
@@ -113,13 +58,13 @@ export const UpcomingStopNameDisplay = memo(function UpcomingStopNameDisplay({ s
                     <span
                         ref={measurementRef}
                         aria-hidden="true"
-                        className={`${styles.enStopName} absolute invisible w-max pointer-events-none`}
+                        className="aux-upcoming-stop__english aux-upcoming-stop__measurement"
                     >
                         {stopEn}
                     </span>
                     <span
                         ref={englishRef}
-                        className={`${styles.enStopName} block w-[90%] overflow-hidden`}
+                        className="aux-upcoming-stop__english aux-upcoming-stop__english--visible"
                         title={stopEn}
                         aria-label={stopEn}
                     >

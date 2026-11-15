@@ -112,6 +112,20 @@ export const ControlPanel = memo(function ControlPanel({
                     {isKmb && stopPressed && <span className="control-panel__alert-badge control-panel__alert-badge--bell">{text.bellActive}</span>}
                     {activeNotice && <span className="control-panel__alert-badge">{activeNotice}</span>}
                 </div>
+                <div className="control-panel__position-settings" role="group" aria-label={text.panelPosition}>
+                    <span className="control-panel__heading">{text.panelPosition}</span>
+                    {desktopControlPositions.map(position => (
+                        <button
+                            key={position}
+                            type="button"
+                            className="control-panel__position-button"
+                            aria-pressed={desktopPreferences.position === position}
+                            onClick={() => setDesktopPreferences(current => ({ ...current, position }))}
+                        >
+                            {text.positions[position]}
+                        </button>
+                    ))}
+                </div>
                 <div ref={desktopToggleRef}>
                     <ControlButton
                         icon={desktopCollapsed ? <ExpandLessIcon /> : <ExpandMoreIcon />}
@@ -155,20 +169,6 @@ export const ControlPanel = memo(function ControlPanel({
                         <ToggleButtonGroup includeBell={!isDesktop} />
                     </section>}
 
-                    <div className="control-panel__position-settings" role="group" aria-label={text.panelPosition}>
-                        <span className="control-panel__heading">{text.panelPosition}</span>
-                        {desktopControlPositions.map(position => (
-                            <button
-                                key={position}
-                                type="button"
-                                className="control-panel__position-button"
-                                aria-pressed={desktopPreferences.position === position}
-                                onClick={() => setDesktopPreferences(current => ({ ...current, position }))}
-                    >
-                                {text.positions[position]}
-                            </button>
-                ))}
-                    </div>
                 </div>
 
                 <div className="control-panel__desktop-actions">

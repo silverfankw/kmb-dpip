@@ -1,6 +1,10 @@
 export const routeStoreConfig = {
     routeKeySeparator: '-',
     routeDataUrl: 'https://raw.githubusercontent.com/silverfankw/hk-bus-route-stop/refs/heads/main/route_stop.json',
+    routeDataSources: [
+        'https://silverfankw.github.io/hk-bus-route-stop/route_stop.json',
+        'https://raw.githubusercontent.com/silverfankw/hk-bus-route-stop/refs/heads/main/route_stop.json',
+    ],
     defaultOperator: 'kmb',
     routeSelectionDefaults: {
         routeDetail: {},
@@ -27,6 +31,7 @@ export const routeStoreConfig = {
         isLoading: false,
         error: null,
         isLoaded: false,
+        dataStatus: null,
     },
     boundValues: ['I', 'O'],
     uiModes: {

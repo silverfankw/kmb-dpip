@@ -2,12 +2,16 @@ import stringWidth from "string-width"
 
 export const DISPLAY_STAGE_INTERVAL = 10000
 export const HEADING_STAGE_INTERVAL = 4500
+export const STOP_NAME_EN_STAGE_INTERVAL = 4000
 export const STOP_PROGRESS_WINDOW_SIZE = 35
-export const WIDE_STOP_PROGRESS_WINDOW_SIZE = 30
+export const WIDE_STOP_PROGRESS_WINDOW_SIZE = 37
 export const FIRST_STOP_WELCOME_ZH = "歡迎乘搭九龍巴士"
 export const FIRST_STOP_WELCOME_EN = "WELCOME ABOARD"
 export const STOP_NAME_ZH_SAFE_WIDTH_RATIO = 0.985
 export const STOP_NAME_EN_SAFE_SIZE_RATIO = 0.985
+
+export const getStopNameEnglishStages = (text) =>
+    text.split('>').map(stage => stage.split('|').map(line => line.trim()).join('\n'))
 
 const DEFAULT_INLINE_STAGE = {
     safeWidthRatio: 1, maxScaleX: 1, minScaleY: 1, maxScaleY: 1,
@@ -45,7 +49,8 @@ export const getEnglishLines = (name, threshold = 36) => {
     return [name.slice(0, splitIndex).trimEnd(), name.slice(splitIndex).trimStart()]
 }
 
-export const getStopProgressPage = (stopCount, currentStopIndex, windowSize) => {
+export const getStopProgressPages = (stopCount, windowSize) => {
+    const pages = []
     let start = 0
 
     do {
@@ -54,10 +59,12 @@ export const getStopProgressPage = (stopCount, currentStopIndex, windowSize) => 
         const trailingCount = stopCount - start > available ? 3 : 0
         const end = Math.min(stopCount, start + available - trailingCount)
 
-        if (currentStopIndex < end || end === stopCount) {
-            return { start, end, leadingCount, trailingCount }
-        }
-
+        pages.push({ start, end, leadingCount, trailingCount })
         start = end
     } while (start < stopCount)
+
+    return pages
 }
+
+export const getStopProgressPage = (stopCount, currentStopIndex, windowSize) =>
+    getStopProgressPages(stopCount, windowSize).find(page => currentStopIndex < page.end || page.end === stopCount)
