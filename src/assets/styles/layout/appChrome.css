@@ -307,8 +307,7 @@
     line-height: 1.4;
 }
 
-.app-toolbar__preferences,
-.app-footer__links {
+.app-toolbar__preferences {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
@@ -356,20 +355,9 @@
     color: var(--chrome-muted);
 }
 
-.app-footer__links {
-    grid-column: 1;
-}
-
-.app-footer__links > a {
-    display: inline-flex;
-    align-items: center;
-    min-height: 44px;
-    text-underline-offset: 3px;
-}
-
 .app-footer__help {
-    grid-column: 3;
-    justify-self: end;
+    grid-column: 1;
+    justify-self: start;
     min-width: 0;
     max-width: 640px;
 }
