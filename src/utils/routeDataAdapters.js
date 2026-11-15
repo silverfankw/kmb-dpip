@@ -19,6 +19,53 @@ const requireText = (value, field) => {
     return normalizeValue(value)
 }
 
+const normalizeRouteFields = (source, context, operator) => {
+    const fields = operatorFields[operator]
+
+    return {
+        operator,
+        route: requireText(source.route, `${context}.route`),
+        bound: requireText(source.bound, `${context}.bound`),
+        service_type: fields.hasServiceType
+            ? requireText(source.service_type, `${context}.service_type`) : '',
+        orig_tc: requireText(source[fields.originZh], `${context}.${fields.originZh}`),
+        orig_en: requireText(
+            source.orig_en === undefined && operator === 'kmb' ? source.ORIG_EN : source.orig_en,
+            `${context}.orig_en`
+        ),
+        dest_tc: requireText(source[fields.destinationZh], `${context}.${fields.destinationZh}`),
+        dest_en: requireText(source.dest_en, `${context}.dest_en`),
+        specialRemark: normalizeValue(source.special_remark_tc ?? source.special_remark_en ?? source.specialRemark ?? ''),
+    }
+}
+
+const createStopNormalizer = (stopLookup, operator) => {
+    const normalizedStops = new Map()
+
+    return (stopId, context) => {
+        if (typeof stopId !== 'string' || !stopId.trim()) {
+            throw new Error(`Invalid route data: ${context} stop IDs must be non-empty strings.`)
+        }
+        if (normalizedStops.has(stopId)) return normalizedStops.get(stopId)
+
+        const stop = Object.hasOwn(stopLookup, stopId) ? stopLookup[stopId] : null
+        if (!isRecord(stop)) {
+            throw new Error(`Invalid route data: ${context} references missing stop ${operator}/${stopId}.`)
+        }
+
+        const normalizedStop = {
+            id: stopId,
+            zh: requireText(stop.stop_name_zh ?? stop.name_tc, `stops.${operator}.${stopId}.stop_name_zh`),
+            en: requireText(stop.stop_name_en ?? stop.name_en, `stops.${operator}.${stopId}.stop_name_en`),
+            ...(stop.stop_name_wrap_en != null && stop.stop_name_wrap_en !== '' && {
+                stop_name_wrap_en: requireText(stop.stop_name_wrap_en, `stops.${operator}.${stopId}.stop_name_wrap_en`),
+            }),
+        }
+        normalizedStops.set(stopId, normalizedStop)
+        return normalizedStop
+    }
+}
+
 export const normalizeRouteData = (data, operator = routeStoreConfig.defaultOperator) => {
     if (!Object.hasOwn(operatorFields, operator)) {
         throw new Error(`Unsupported route operator: ${operator}`)
@@ -37,7 +84,7 @@ export const normalizeRouteData = (data, operator = routeStoreConfig.defaultOper
 
     const fields = operatorFields[operator]
     const seenKeys = new Set()
-    const normalizedStops = new Map()
+    const normalizeStop = createStopNormalizer(stopLookup, operator)
     const normalizedRoutes = []
 
     sourceRoutes.forEach((source, index) => {
@@ -46,21 +93,7 @@ export const normalizeRouteData = (data, operator = routeStoreConfig.defaultOper
             throw new Error(`Invalid route data: ${context} must be an object.`)
         }
 
-        const route = {
-            operator,
-            route: requireText(source.route, `${context}.route`),
-            bound: requireText(source.bound, `${context}.bound`),
-            service_type: fields.hasServiceType
-                ? requireText(source.service_type, `${context}.service_type`) : '',
-            orig_tc: requireText(source[fields.originZh], `${context}.${fields.originZh}`),
-            orig_en: requireText(
-                source.orig_en === undefined && operator === 'kmb' ? source.ORIG_EN : source.orig_en,
-                `${context}.orig_en`
-            ),
-            dest_tc: requireText(source[fields.destinationZh], `${context}.${fields.destinationZh}`),
-            dest_en: requireText(source.dest_en, `${context}.dest_en`),
-            specialRemark: normalizeValue(source.special_remark_tc ?? source.special_remark_en ?? source.specialRemark ?? ''),
-        }
+        const route = normalizeRouteFields(source, context, operator)
 
         const stopIds = source.stops
         if (!routeStoreConfig.boundValues.includes(route.bound) || !Array.isArray(stopIds)) {
@@ -70,28 +103,7 @@ export const normalizeRouteData = (data, operator = routeStoreConfig.defaultOper
             throw new Error(`Invalid route data: ${context} has no stops.`)
         }
 
-        route.stops = stopIds.map(stopId => {
-            if (typeof stopId !== 'string' || !stopId.trim()) {
-                throw new Error(`Invalid route data: ${context} stop IDs must be non-empty strings.`)
-            }
-            if (normalizedStops.has(stopId)) return normalizedStops.get(stopId)
-
-            const stop = Object.hasOwn(stopLookup, stopId) ? stopLookup[stopId] : null
-            if (!isRecord(stop)) {
-                throw new Error(`Invalid route data: ${context} references missing stop ${operator}/${stopId}.`)
-            }
-
-            const normalizedStop = {
-                id: stopId,
-                zh: requireText(stop.stop_name_zh ?? stop.name_tc, `stops.${operator}.${stopId}.stop_name_zh`),
-                en: requireText(stop.stop_name_en ?? stop.name_en, `stops.${operator}.${stopId}.stop_name_en`),
-                ...(stop.stop_name_wrap_en != null && stop.stop_name_wrap_en !== '' && {
-                    stop_name_wrap_en: requireText(stop.stop_name_wrap_en, `stops.${operator}.${stopId}.stop_name_wrap_en`),
-                }),
-            }
-            normalizedStops.set(stopId, normalizedStop)
-            return normalizedStop
-        })
+        route.stops = stopIds.map(stopId => normalizeStop(stopId, context))
 
         const key = buildRouteKey(route)
         if (!seenKeys.has(key)) {

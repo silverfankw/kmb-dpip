@@ -5,11 +5,13 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
+    "test": "node --test",
+    "update-route-snapshot": "node scripts/update-route-snapshot.mjs",
     "dev": "vite",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d dist",
     "build": "vite build",
-    "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
+    "lint": "eslint . --ext js,jsx,mjs --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
     "host": "vite --host"
   },

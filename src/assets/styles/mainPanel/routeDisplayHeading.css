@@ -169,15 +169,14 @@
     align-self: center;
     margin-inline: 0.25rem;
     width: max-content;
-    /* padding-inline: 2px; */
-    font-size: 6cqw;
+    font-size: 6.5cqw;
     text-align: center;
     scale: 1 1.2;
 }
 
 .route-heading-inline--first-stop .route-heading-inline__number {
-    font-size: 5cqw;
-    scale: 1 1.1;
+    font-size: 5.5cqw;
+    scale: 1 1.2;
 }
 
 .route-heading-inline__arrows {
@@ -185,12 +184,15 @@
     flex-shrink: 0;
     align-items: center;
     justify-content: center;
-    width: 8cqw;
-    margin-left: 0.25rem;
+    width: 10cqw;
+}
+
+.route-heading-inline:not(.route-heading-inline--wide) .route-heading-inline__arrows svg {
+    transform: scaleY(1.15);
 }
 
 .route-heading-inline--first-stop .route-heading-inline__arrows {
-    width: 9cqw;
+    width: 10cqw;
     margin-left: 0;
 }
 
@@ -209,7 +211,7 @@
 }
 
 .route-heading-inline--english .route-heading-inline__arrows {
-    width: 9cqw;
+    width: 10cqw;
     margin-left: 0;
 }
 
@@ -248,11 +250,11 @@
     }
 
     .route-heading-inline--first-stop .route-heading-inline__arrows {
-        width: 8cqw;
+        width: 9cqw;
     }
 
     .route-heading-inline__destination {
-        font-size: 5cqw;
+        font-size: 4cqw;
     }
 
     .route-heading-inline--first-stop .route-heading-inline__destination {
@@ -264,7 +266,7 @@
     }
 
     .route-heading-inline--english .route-heading-inline__arrows {
-        width: 9cqw;
+        width: 10cqw;
     }
 
     .route-heading-inline--english .route-heading-inline__destination {
@@ -360,8 +362,8 @@
 }
 
 .route-heading-inline--wide .route-heading-inline__arrows {
-    width: calc(70cqh * 164 / 80);
-    height: 58cqh;
+    width: calc(75cqh * 164 / 80);
+    height: 66cqh;
 }
 
 .route-heading-inline--wide .route-heading-inline__arrows svg {

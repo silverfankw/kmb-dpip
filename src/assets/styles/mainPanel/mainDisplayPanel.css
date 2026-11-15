@@ -117,14 +117,14 @@
     grid-row: 5;
     display: flex;
     justify-content: center;
-    padding: 0.125rem;
+    padding-bottom: 0.125rem;
     background: #000000;
     color: #ffffff;
-    letter-spacing: -0.025em;
+    letter-spacing: -0.0125em;
 }
 
 .main-display-panel__driver-info > span {
-    font-size: 2cqw;
+    font-size: 1.9cqw;
 }
 
 .main-display-panel__driver-name-en {
@@ -197,13 +197,12 @@
 .main-display-panel--wide .main-display-panel__driver-info {
     grid-row: 3;
     align-items: center;
-    padding: 0;
     white-space: nowrap;
     line-height: 1;
 }
 
 .main-display-panel--wide .main-display-panel__driver-info > span {
-    font-size: 1.5cqw;
+    font-size: 1.35cqw;
 }
 
 /* The monitor is twice as wide, not twice as tall. Keep the compact

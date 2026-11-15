@@ -13,7 +13,8 @@ import '@styles/routeSearch/routeQuerySection.css'
 
 import { getAppTextConfig } from '@components/sharedComponentConfig'
 import { getRoutesThunk } from "@store/routeSlice"
-import { buildRouteSelectionKey, getRouteOperator, routeStoreConfig } from '@store/storeConfig'
+import { buildRouteSelectionKey } from '@store/storeConfig'
+import { buildStoredSelection, buildCtbStops, buildCtbDisplayData } from './utils/appData.js'
 import {
 	changeBoundThunk, selectRouteThunk,
 	setCurrentStopIndex, toPrevStop, toNextStop,
@@ -21,31 +22,6 @@ import {
 } from '@store/routeSelectionSlice'
 
 const BusDisplay = lazy(() => import('@components/DPIP/CTB/BusDisplay'))
-
-const buildStoredSelection = (routeDetail, currentStopIndex, includeTimestamp = false) => {
-	if (!routeDetail || Object.keys(routeDetail).length === 0) {
-		return null
-	}
-
-	const data = {
-		operator: getRouteOperator(routeDetail),
-		route: routeDetail.route,
-		bound: routeDetail.bound,
-		service_type: routeDetail.service_type,
-		orig_tc: routeDetail.orig_tc,
-		orig_en: routeDetail.orig_en,
-		dest_tc: routeDetail.dest_tc,
-		dest_en: routeDetail.dest_en,
-		specialRemark: routeDetail.specialRemark,
-		currentStopIndex,
-	}
-
-	if (includeTimestamp) {
-		data.timestamp = Date.now()
-	}
-
-	return data
-}
 
 // Layout classes; query section styles are defined in routeQuerySection.css.
 const styles = {
@@ -150,21 +126,11 @@ const App = () => {
 	const currentStopSummary = totalStops > 0
 		? `${queryStopIndex + 1} / ${totalStops}` : '-'
 	const mainMonitorStyle = isMainMonitorWide ? styles.mainMonitorWideStyle : styles.monitorStyle
-	const ctbStops = useMemo(() => ctbRoute?.stops.map((stop, index) => ({
-		seq: index + 1, stopId: stop.id, nameZh: stop.zh, nameEn: stop.en, etaMin: null,
-	})), [ctbRoute])
-	const ctbDisplayData = useMemo(() => ctbRoute && !isKmb ? {
-		route: ctbRoute.route,
-		directionLabelZh: `往 ${ctbRoute.dest_tc}`,
-		directionLabelEn: `to ${ctbRoute.dest_en}`,
-		captain: {
-			surnameZh: driverInfo.nameZh === routeStoreConfig.userPreferenceDefaults.driverInfo.nameZh ? '城' : driverInfo.nameZh,
-			nameEn: driverInfo.nameEn === routeStoreConfig.userPreferenceDefaults.driverInfo.nameEn ? 'Shing' : driverInfo.nameEn,
-			staffNo: String(driverInfo.staffNo),
-		},
-		currentSeq: ctbStopIndex + 1,
-		stops: ctbStops,
-	} : undefined, [ctbRoute, ctbStops, ctbStopIndex, driverInfo, isKmb])
+	const ctbStops = useMemo(() => buildCtbStops(ctbRoute), [ctbRoute])
+	const ctbDisplayData = useMemo(
+		() => buildCtbDisplayData(ctbRoute, ctbStops, ctbStopIndex, driverInfo, isKmb),
+		[ctbRoute, ctbStops, ctbStopIndex, driverInfo, isKmb]
+	)
 	const selectCtbRoute = useCallback(route => {
 		setCtbRoute(route)
 		setCtbStopIndex(0)

@@ -55,10 +55,10 @@
 }
 
 .aux-upcoming-stop__english {
-    font-size: 4.625cqw;
+    font-size: 4.75cqw;
     margin-bottom: 0.5cqw;
     font-weight: 450;
-    letter-spacing: -0.025em;
+    letter-spacing: -0.0125em;
 }
 
 .aux-upcoming-stop__measurement {

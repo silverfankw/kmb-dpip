@@ -144,6 +144,7 @@
 
 .monitor-resize {
     position: relative;
+    --monitor-resize-handle-inset: 16px;
     --monitor-min-width: 800px;
     --monitor-max-width: max(var(--monitor-min-width), min(1200px, calc(var(--ctb-monitor-width) * 0.9375)));
 }
@@ -167,8 +168,8 @@
 
 .monitor-resize__handle {
     position: absolute;
-    right: 0;
-    bottom: 0;
+    right: var(--monitor-resize-handle-inset);
+    bottom: var(--monitor-resize-handle-inset);
     z-index: 2;
     width: 28px;
     height: 28px;
@@ -210,7 +211,10 @@
 }
 
 @media (width < 640px) {
-    .monitor-resize { --monitor-min-width: 400px; }
+    .monitor-resize {
+        --monitor-min-width: 400px;
+        --monitor-resize-handle-inset: 8px;
+    }
 }
 
 @media (width < 640px) and (prefers-reduced-motion: reduce) {
@@ -343,14 +347,17 @@
 }
 
 .app-footer {
-    display: flex;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 2fr) minmax(0, 1fr);
     align-items: flex-start;
-    justify-content: space-between;
     gap: 12px 24px;
     width: 100%;
     padding: 12px 64px 24px;
     color: var(--chrome-muted);
+}
+
+.app-footer__links {
+    grid-column: 1;
 }
 
 .app-footer__links > a {
@@ -361,6 +368,9 @@
 }
 
 .app-footer__help {
+    grid-column: 3;
+    justify-self: end;
+    min-width: 0;
     max-width: 640px;
 }
 
@@ -426,39 +436,55 @@
 
 @media (width < 640px) {
     .app-toolbar {
-        padding: 6px;
+        padding: 2px 4px;
     }
 
     .app-toolbar__brand {
-        gap: 8px;
+        gap: 6px;
     }
 
     .app-toolbar__brand-mark {
-        width: 34px;
-        height: 34px;
-        border-radius: 10px 10px 10px 3px;
+        width: 30px;
+        height: 30px;
+        border-radius: 9px 9px 9px 3px;
     }
 
     .app-toolbar__brand-mark svg {
-        width: 19px;
-        height: 22px;
+        width: 17px;
+        height: 20px;
     }
 
     .app-toolbar__brand-mark .app-toolbar__stop-sign {
-        width: 8px;
+        width: 7px;
     }
 
     .app-toolbar__title {
-        gap: 6px;
-        font-size: 18px;
+        gap: 5px;
+        font-size: 17px;
     }
 
     .app-toolbar__title span {
-        padding-left: 7px;
+        padding-left: 6px;
     }
 
     .app-toolbar__subtitle {
         display: none;
+    }
+
+    .app-toolbar__company-tabs {
+        padding: 2px;
+    }
+
+    .app-toolbar__company-tabs::before {
+        inset-block: 2px;
+        left: 2px;
+        width: calc((100% - 4px) / 2);
+    }
+
+    .app-toolbar__company-tab {
+        min-width: 52px;
+        min-height: 36px;
+        padding: 6px 10px;
     }
 
     .app-toolbar__preferences {
@@ -474,16 +500,12 @@
 
     .app-toolbar__settings {
         display: inline-flex;
+        min-height: 38px;
+        padding: 6px 10px;
     }
 
     .app-footer {
-        flex-direction: column;
-        gap: 4px;
-        padding: 12px;
-    }
-
-    .app-footer__help {
-        width: 100%;
+        display: none;
     }
 
     .app-layout:is([data-company="kmb"], [data-company="ctb"]) {

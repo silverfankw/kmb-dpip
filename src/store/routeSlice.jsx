@@ -1,6 +1,7 @@
 import { createSelector, createSlice } from '@reduxjs/toolkit'
 import { compareRouteNumbers } from '@utils'
 import { normalizeRouteData } from '../utils/routeDataAdapters.js'
+import { loadRouteDataset } from '../utils/routeDataLoader.js'
 
 import { routeStoreConfig, buildRouteKey } from './storeConfig'
 
@@ -37,32 +38,28 @@ export const selectRouteByKey = routeKey => createSelector(
     routesByKey => routesByKey[routeKey] ?? null
 )
 
-export const getRoutesThunk = () => async (dispatch, getState) => {
-    if (getState().route.isLoaded) {
-        return
-    }
-
+export const getRoutesThunk = ({ force = false } = {}) => async (dispatch, getState) => {
     if (routesLoadPromise) {
         return routesLoadPromise
     }
+    if (getState().route.isLoaded && !force) return
 
     dispatch(setLoading(true))
     dispatch(setError(null))
 
     routesLoadPromise = (async () => {
         try {
-            const res = await fetch(routeStoreConfig.routeDataUrl)
-
-            if (!res.ok) {
-                throw new Error(`HTTP error! status: ${res.status} ${res.statusText}`)
-            }
-
-            const rawText = await res.text()
-            const parsedData = JSON.parse(rawText.replace(/:\s*NaN\b/g, ': null'))
-            const normalizedRoutes = normalizeRoutes(parsedData)
-
-            dispatch(setRoutes(normalizedRoutes))
-            return normalizedRoutes
+            return await loadRouteDataset({
+                sources: routeStoreConfig.routeDataSources,
+                snapshotUrl: `${import.meta.env.BASE_URL}data/route-stop-snapshot.json`,
+                normalize: normalizeRoutes,
+                force,
+                publish: (routes, status) => {
+                    dispatch(setRoutes(routes))
+                    dispatch(setDataStatus(status))
+                    dispatch(setLoading(false))
+                },
+            })
         }
         catch (error) {
             console.error('Error fetching centralized route data:', error)
@@ -107,9 +104,12 @@ const routeSlice = createSlice({
         },
         setError: (state, action) => {
             state.error = action.payload
-        }
+        },
+        setDataStatus: (state, action) => {
+            state.dataStatus = action.payload
+        },
     }
 })
 
-export const { setRoutes, setRouteSpecialRemark, setLoading, setError } = routeSlice.actions
+export const { setRoutes, setRouteSpecialRemark, setLoading, setError, setDataStatus } = routeSlice.actions
 export default routeSlice.reducer

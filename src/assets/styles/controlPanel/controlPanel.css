@@ -614,11 +614,12 @@
     }
 
     .control-panel__position-settings {
-        grid-column: 1 / -1;
         display: flex;
+        flex-shrink: 0;
         align-items: center;
         justify-content: flex-end;
         gap: 6px;
+        white-space: nowrap;
     }
 
     .control-panel__position-settings .control-panel__heading {

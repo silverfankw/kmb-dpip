@@ -143,6 +143,14 @@
     font-size: calc(1.5cqw * var(--stop-name-en-scale));
 }
 
+.stop-progress-display--dense .stop-progress--wide .stop-name[lang="zh-Hant"] {
+    font-size: 1.25cqw;
+}
+
+.stop-progress-display--dense .stop-progress--wide .stop-name[lang="en"] {
+    font-size: calc(1.25cqw * var(--stop-name-en-scale));
+}
+
 .stop-progress__terminal {
     position: absolute;
     top: var(--stop-line-position);
@@ -231,6 +239,7 @@
     .stop-progress--wide .stop-name {
         font-size: 1.21cqw;
     }
+
 }
 
 @keyframes stop-progress-pulse {

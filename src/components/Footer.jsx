@@ -2,6 +2,7 @@ import { lazy, memo, Suspense, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { FeatureErrorBoundary } from './FeatureErrorBoundary'
 import { LoadingSpinner } from './LoadingSpinner'
+import { RouteDataStatus } from './RouteDataStatus'
 import { getFooterConfig } from './sharedComponentConfig'
 import '@styles/layout/appChrome.css'
 
@@ -24,6 +25,7 @@ export const Footer = memo(function Footer({ uiMode = 'night' }) {
                     {text.versionHistoryLabel}
                 </button>
             </div>
+            <RouteDataStatus />
             <details className="app-footer__help">
                 <summary>{text.helpLabel}</summary>
                 <div className="app-footer__help-content">

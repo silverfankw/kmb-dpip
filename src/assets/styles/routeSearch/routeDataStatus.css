@@ -1,0 +1,27 @@
+.route-data-status {
+    grid-column: 2;
+    min-width: 0;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-size: 13px;
+    text-align: center;
+}
+
+.route-data-status button {
+    min-height: 44px;
+    padding: 6px 12px;
+    border: 1px solid currentColor;
+    border-radius: 8px;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    cursor: pointer;
+}
+
+.route-data-status button:disabled {
+    opacity: 0.5;
+    cursor: wait;
+}

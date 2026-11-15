@@ -1,7 +1,7 @@
 import stringWidth from "string-width"
 
 const CURRENT_STOP_FONT_CONFIG = {
-    en: { singleLine: 7, minSingleLine: 4.6, shrinkAt: 12, shrinkStep: 0.225, wrapped: 5 },
+    en: { singleLine: 7, minSingleLine: 4.6, shrinkAt: 12, shrinkStep: 0.225, wrapped: 5.25 },
     zh: { min: 7, max: 13, shrinkThreshold: 10, scale: 0.6 },
 }
 
@@ -18,7 +18,7 @@ const getCurrentStopFontSize = (visualLength, config) => {
 }
 
 const getUpcomingChineseStopStyle = (visualLength) => ({
-    fontSize: `clamp(7.5cqw, ${Math.max(18 - visualLength * 0.5, 7.25)}cqw, 9cqw)`,
+    fontSize: `clamp(7.5cqw, ${Math.max(18 - visualLength * 0.5, 7.25)}cqw, 8.75cqw)`,
     paddingTop: visualLength > 26 ? '0.75cqw' : visualLength > 20 ? '0.5cqw' : '0',
     ...(visualLength > 20 && { letterSpacing: '-0.15cqw' }),
 })
