@@ -94,7 +94,7 @@ export const RouteSearchKeypad = ({ searchIndex, language, uiMode, onSelect, onC
                             onSelect(option)
                         }}
                     >
-                        <RouteNumber route={option.routeLabel} operator={option.detail.operator} isSpecial={option.isSpecial} componentType="Option" isMobile />
+                        <RouteNumber route={option.routeLabel} operator={option.detail.operator} isSpecial={option.isSpecial} isCancelled={option.isCancelled} componentType="Option" isMobile />
                         <RouteDetails origin={option.originLabel} destination={option.destinationLabel} remark={option.specialRemarkLabel} />
                     </button>
                 ))}

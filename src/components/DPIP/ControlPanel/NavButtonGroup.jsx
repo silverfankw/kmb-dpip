@@ -17,7 +17,7 @@ import RestartAltIcon from '@mui/icons-material/RestartAlt'
 import { ControlButton } from './ControlButton'
 import { getControlPanelText } from './controlPanelConfig'
 
-export const NavButtonGroup = ({ navigation }) => {
+export const NavButtonGroup = ({ navigation, compact = false }) => {
     const dispatch = useDispatch()
     const { currentStopIndex, isUserSelectedRoute } = useSelector(selectNavigationState)
     const isPrevStopAvailable = useSelector(selectIsPrevStopAvailable)
@@ -28,7 +28,7 @@ export const NavButtonGroup = ({ navigation }) => {
     const text = getControlPanelText(language)
 
     return (
-        <div className="control-panel__navigation">
+        <div className={`control-panel__navigation${compact ? ' control-panel__navigation--compact' : ''}`}>
             <div className="control-panel__step-actions">
             <ControlButton
                 icon={<ArrowBackIcon />}
@@ -52,7 +52,7 @@ export const NavButtonGroup = ({ navigation }) => {
                 onClick={navigation?.onNext ?? (() => dispatch(toNextStop()))}
             />
             </div>
-            <div className="control-panel__route-actions" role="group" aria-label={text.routeActions}>
+            <div className="control-panel__route-actions" role="group" aria-label={compact ? appText.switchDirection : text.routeActions}>
             <ControlButton
                 icon={<SwapHorizIcon />}
                 accessibleLabel={appText.switchDirection}
@@ -61,14 +61,14 @@ export const NavButtonGroup = ({ navigation }) => {
                 shortcutLabel="End"
                 onClick={navigation?.onSwitchDirection ?? (() => dispatch(changeBoundThunk()))}
             />
-            <ControlButton
+            {!compact && <ControlButton
                 icon={<RestartAltIcon />}
                 accessibleLabel={appText.resetToFirstStop}
                 disabled={navigation ? !navigation.canReset : !isUserSelectedRoute || currentStopIndex === 0}
                 shortcut="Home"
                 shortcutLabel="Home"
                 onClick={navigation?.onReset ?? (() => dispatch(resetToFirstStop()))}
-            />
+            />}
             </div>
         </div>
     )

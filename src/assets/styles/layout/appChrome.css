@@ -21,87 +21,74 @@
 
 .app-toolbar {
     order: 0;
-    display: flex;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: max-content minmax(0, 1fr);
     align-items: center;
     justify-content: space-between;
-    gap: 8px;
+    gap: 16px;
     width: 100%;
 }
 
 .app-toolbar__brand {
+    min-width: 0;
+    margin: 0;
+}
+
+.app-toolbar__company-trigger {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 10px;
     min-width: 0;
-}
-
-.app-toolbar__company-tabs {
-    position: relative;
-    isolation: isolate;
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    flex-shrink: 0;
-    margin-right: auto;
-    padding: 3px;
-    border: 1px solid var(--chrome-border);
-    border-radius: 999px;
-    background: var(--chrome-hover);
-}
-
-.app-toolbar__company-tabs::before {
-    content: "";
-    position: absolute;
-    z-index: -1;
-    top: 3px;
-    bottom: 3px;
-    left: 3px;
-    width: calc((100% - 6px) / 2);
-    border-radius: inherit;
-    background: #e11d48;
-    box-shadow: 0 2px 6px rgb(0 0 0 / 18%);
-}
-
-.app-toolbar[data-company="ctb"] .app-toolbar__company-tabs::before {
-    transform: translateX(100%);
-    background: #ffe14a;
-}
-
-.app-toolbar__company-tab {
-    min-width: 58px;
-    min-height: 40px;
-    padding: 8px 12px;
+    min-height: 44px;
+    padding: 4px;
     border: 0;
-    border-radius: 999px;
+    border-radius: 12px;
     background: transparent;
-    color: var(--chrome-muted);
-    font: inherit;
-    font-weight: 650;
-    letter-spacing: 0.035em;
+    color: inherit;
+    text-align: left;
     cursor: pointer;
     touch-action: manipulation;
 }
 
-.app-toolbar__company-tab[aria-selected="true"] {
-    color: #ffffff;
+.app-toolbar__company-trigger:hover {
+    background: var(--chrome-hover);
 }
 
-.app-toolbar[data-company="ctb"] .app-toolbar__company-tab[aria-selected="true"] {
-    color: #102b50;
+.app-toolbar__company-chevron {
+    width: 18px;
+    height: 18px;
+    color: var(--chrome-muted);
 }
 
-.app-toolbar__company-tab:not([aria-selected="true"]):hover {
-    color: var(--chrome-text);
+.app-toolbar__search {
+    min-width: 0;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-    .app-toolbar__company-tabs::before {
-        transition: transform 220ms cubic-bezier(0.2, 0.8, 0.2, 1), background-color 220ms ease;
-    }
+.app-toolbar--with-status {
+    grid-template-columns: max-content minmax(0, 1.4fr) minmax(0, 1fr);
+}
 
-    .app-toolbar__company-tab {
-        transition: color 160ms ease;
-    }
+.app-toolbar__status {
+    min-width: 0;
+}
+
+.app-toolbar__status .query-section {
+    padding: 0 0 0 24px;
+    border: 0;
+    border-left: 1px solid var(--chrome-border);
+    border-radius: 0;
+    background: transparent;
+}
+
+.app-toolbar__search .route-query__header {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
 }
 
 .app-company-panel {
@@ -301,17 +288,11 @@
 }
 
 .app-toolbar__subtitle {
+    display: block;
     margin: 3px 0 0;
     color: var(--chrome-muted);
     font-size: 12px;
     line-height: 1.4;
-}
-
-.app-toolbar__preferences {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 8px;
 }
 
 .app-chrome-button {
@@ -333,10 +314,6 @@
 .app-chrome-button svg {
     width: 18px;
     height: 18px;
-}
-
-.app-toolbar__settings {
-    display: none;
 }
 
 .app-toolbar button:focus-visible,
@@ -422,12 +399,34 @@
     }
 }
 
+@media (width < 1024px) {
+    .app-toolbar {
+        grid-template-columns: minmax(0, 1fr) max-content;
+        gap: 12px;
+    }
+
+    .app-toolbar__search {
+        grid-column: 1 / -1;
+        grid-row: 2;
+    }
+
+    .app-toolbar__search .route-query__header {
+        position: static;
+        width: auto;
+        height: auto;
+        margin: 0 0 8px;
+        overflow: visible;
+        clip-path: none;
+        white-space: normal;
+    }
+}
+
 @media (width < 640px) {
     .app-toolbar {
         padding: 2px 4px;
     }
 
-    .app-toolbar__brand {
+    .app-toolbar__company-trigger {
         gap: 6px;
     }
 
@@ -457,39 +456,6 @@
 
     .app-toolbar__subtitle {
         display: none;
-    }
-
-    .app-toolbar__company-tabs {
-        padding: 2px;
-    }
-
-    .app-toolbar__company-tabs::before {
-        inset-block: 2px;
-        left: 2px;
-        width: calc((100% - 4px) / 2);
-    }
-
-    .app-toolbar__company-tab {
-        min-width: 52px;
-        min-height: 36px;
-        padding: 6px 10px;
-    }
-
-    .app-toolbar__preferences {
-        display: none;
-        flex-basis: 100%;
-        justify-content: flex-end;
-        gap: 6px;
-    }
-
-    .app-toolbar__preferences[data-open="true"] {
-        display: flex;
-    }
-
-    .app-toolbar__settings {
-        display: inline-flex;
-        min-height: 38px;
-        padding: 6px 10px;
     }
 
     .app-footer {

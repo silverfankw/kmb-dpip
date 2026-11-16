@@ -104,6 +104,8 @@ export const selectRouteThunk = createAsyncThunk(
                 route,
                 bound,
                 stops: selectedRoute.stops,
+                firstStopWelcome: selectedRoute.firstStopWelcome,
+                route_cancelled: selectedRoute.route_cancelled,
                 orig_tc,
                 orig_en,
                 dest_tc,

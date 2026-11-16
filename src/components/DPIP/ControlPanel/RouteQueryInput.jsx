@@ -29,7 +29,8 @@ const RouteOptionContent = ({ componentType, data, compact = false, isMobile, ge
         originLabel,
         destinationLabel,
         specialRemarkLabel = '',
-        isSpecial
+        isSpecial,
+        isCancelled,
     } = data
 
     const WrappedComponent = componentType === 'Option' ? components.Option : components.SingleValue
@@ -43,6 +44,7 @@ const RouteOptionContent = ({ componentType, data, compact = false, isMobile, ge
                     route={routeLabel}
                     operator={data.detail.operator}
                     isSpecial={isSpecial}
+                    isCancelled={isCancelled}
                     componentType={componentType}
                     isMobile={isMobile}
                     getRouteStyle={getRouteStyle}
@@ -251,6 +253,7 @@ export const RouteQueryInput = memo(function RouteQueryInput({
                                     operator={operator}
                                     route={selectedOption.routeLabel}
                                     isSpecial={selectedOption.isSpecial}
+                                    isCancelled={selectedOption.isCancelled}
                                     componentType="SingleValue"
                                     isMobile
                                     getRouteStyle={getRouteStyle}

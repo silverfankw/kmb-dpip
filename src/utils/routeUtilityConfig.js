@@ -3,6 +3,7 @@ export const routeUtilityConfig = {
         itemSeparator: '｜',
         directionSeparator: '往',
         specialTripKey: '特別班',
+        cancelledKey: '已取消',
     },
     routeNumberPattern: /^([A-Z]*)(\d+)([A-Z0-9]*)$/,
     stopIdPattern: /\([A-Z]{2}\d{3}[A-Za-z]?\)$/,

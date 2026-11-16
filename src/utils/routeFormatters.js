@@ -37,17 +37,19 @@ export const formatRouteLabel = (route) => ({
     origin: route.orig_tc,
     destination: route.dest_tc,
     isSpecial: getRouteOperator(route) === 'kmb' && route.service_type !== '1',
+    isCancelled: route.route_cancelled === true,
     remark: route.specialRemark,
 })
 
 export const createRouteOption = (route) => {
-    const { routeNumber, origin, destination, isSpecial, remark } = formatRouteLabel(route)
+    const { routeNumber, origin, destination, isSpecial, isCancelled, remark } = formatRouteLabel(route)
 
     return {
         label: [
             routeNumber,
             `${origin} ${toSeparator} ${destination}`,
             isSpecial ? specialTripKey : '',
+            isCancelled ? routeUtilityConfig.label.cancelledKey : '',
             remark || '',
         ].join(itemSeparator),
         value: buildRouteKey(route),
@@ -56,6 +58,7 @@ export const createRouteOption = (route) => {
         originLabel: origin,
         destinationLabel: destination,
         isSpecial,
+        isCancelled,
         specialRemarkLabel: remark || '',
     }
 }

@@ -34,7 +34,7 @@ const routeTypeConfig = {
         shuttle: { regex: /^S(?!P)/, style: { backgroundColor: "#EB5136", color: "#0E2775" }, preserveLightText: true },
 
         // Premier routes: only P960 & P968
-        premier: { regex: /^P96[08]$/, style: { backgroundColor: "#E5B034" } },
+        premier: { regex: /^P96[08]$/, style: { backgroundColor: "#DFA642" } },
 
         // Disneyland recreational route: only R33 & R42
         disneyRecreational: { regex: /^R(33|42)$/i, style: { backgroundColor: "#146FD1" } },
@@ -49,6 +49,9 @@ const routeTypeConfig = {
         // AsiaWorld-Expo event route with route prefix 'X'
         // Only X33, X36, X40, X43, X47
         awe: { regex: /^X(33|36|40|43|47)$/i, style: { backgroundColor: "#6F2F9F" } },
+    
+        // KMB Tour HK Route
+        HK: { regex: /^HK/i, style: { backgroundColor: "#FFFFFF", color: "#00AEEE" } }
     },
     ctb: {
         // Routes that is matched with following rule, but to filter out as regular route

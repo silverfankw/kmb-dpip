@@ -167,7 +167,7 @@ export const MainDisplayPanel = memo(function MainDisplayPanel({ monitorStyle, s
                 <>
                     <div className="main-display-panel__divider" />
                     <MainStopNameDisplay
-                        stop={stops[currentStopIndex]}
+                        stop={isFirstStop ? routeDetail.firstStopWelcome : stops[currentStopIndex]}
                         isFirstStop={isFirstStop}
                         language={displayLanguage}
                         showHandrailNotice={showHandrailNotice}

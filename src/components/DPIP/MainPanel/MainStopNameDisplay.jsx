@@ -1,8 +1,6 @@
 import { memo, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react"
 import { HoldHandrailNotice, MindDoorNotice } from '@components/DPIP'
 import {
-    FIRST_STOP_WELCOME_ZH,
-    FIRST_STOP_WELCOME_EN,
     STOP_NAME_ZH_SAFE_WIDTH_RATIO,
     STOP_NAME_EN_SAFE_SIZE_RATIO,
     STOP_NAME_EN_STAGE_INTERVAL,
@@ -17,9 +15,9 @@ export const MainStopNameDisplay = memo(function MainStopNameDisplay({
     const containerRef = useRef(null)
     const zhRef = useRef(null)
     const enRef = useRef(null)
-    const zh = isFirstStop ? FIRST_STOP_WELCOME_ZH : stop?.zh
-    const formattedEn = !isFirstStop ? stop?.stop_name_wrap_en : undefined
-    const enSource = isFirstStop ? FIRST_STOP_WELCOME_EN : formattedEn || stop?.en || ''
+    const zh = stop?.zh
+    const formattedEn = stop?.stop_name_wrap_en
+    const enSource = formattedEn || stop?.en || ''
     const enStages = useMemo(
         () => formattedEn ? getStopNameEnglishStages(enSource) : [enSource],
         [formattedEn, enSource]

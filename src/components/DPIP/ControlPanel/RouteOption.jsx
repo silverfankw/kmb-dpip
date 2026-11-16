@@ -13,11 +13,11 @@ const selectedBadgeStyle = {
     alignItems: 'center',
     justifyContent: 'center',
     height: '26px',
-    width: '48px',
+    width: '50px',
     borderRadius: '4px',
 }
 
-export const RouteNumber = ({ route, isSpecial, componentType, operator = 'kmb', isMobile: isMobileProp, getRouteStyle: getRouteStyleProp }) => {
+export const RouteNumber = ({ route, isSpecial, isCancelled, componentType, operator = 'kmb', isMobile: isMobileProp, getRouteStyle: getRouteStyleProp }) => {
     const language = useSelector(state => state.userPreference.language)
     const { isMobile: responsiveIsMobile } = useWindowSize()
     const responsiveRouteStyle = useRouteTypeStyle(operator)
@@ -40,6 +40,9 @@ export const RouteNumber = ({ route, isSpecial, componentType, operator = 'kmb',
             <span style={routeBadgeStyle}>{route}</span>
             {isSpecial && (
                 <span className="route-option__special-trip">{appText.specialTrip}</span>
+            )}
+            {isCancelled && (
+                <span className="route-option__cancelled">{appText.cancelledRoute}</span>
             )}
         </div>
     )

@@ -5,6 +5,15 @@ const operatorFields = {
     ctb: { originZh: 'orig_zh', destinationZh: 'dest_zh', hasServiceType: false },
 }
 
+const lwbWelcomeRoutes = new Set(['R8', 'R33', 'R42', 'X1', 'X33', 'X36', 'X40', 'X43', 'X47', 'S1'])
+const welcomeStopIds = ['NOTESTARTKMB01', 'NOTESTARTKMBHK2', 'NOTESTARTLWB01']
+
+const getWelcomeStopId = route => {
+    if (route === 'HK2') return 'NOTESTARTKMBHK2'
+    return /^(A|E|NA|S64)/.test(route) || lwbWelcomeRoutes.has(route)
+        ? 'NOTESTARTLWB01' : 'NOTESTARTKMB01'
+}
+
 const isRecord = value => value !== null && typeof value === 'object' && !Array.isArray(value)
 
 const requireText = (value, field) => {
@@ -36,6 +45,7 @@ const normalizeRouteFields = (source, context, operator) => {
         dest_tc: requireText(source[fields.destinationZh], `${context}.${fields.destinationZh}`),
         dest_en: requireText(source.dest_en, `${context}.dest_en`),
         specialRemark: normalizeValue(source.special_remark_tc ?? source.special_remark_en ?? source.specialRemark ?? ''),
+        route_cancelled: source.route_cancelled === true,
     }
 }
 
@@ -86,6 +96,9 @@ export const normalizeRouteData = (data, operator = routeStoreConfig.defaultOper
     const seenKeys = new Set()
     const normalizeStop = createStopNormalizer(stopLookup, operator)
     const normalizedRoutes = []
+    if (operator === 'kmb') {
+        welcomeStopIds.forEach(stopId => normalizeStop(stopId, 'welcome messages'))
+    }
 
     sourceRoutes.forEach((source, index) => {
         const context = `routes.${operator}[${index}]`
@@ -104,6 +117,9 @@ export const normalizeRouteData = (data, operator = routeStoreConfig.defaultOper
         }
 
         route.stops = stopIds.map(stopId => normalizeStop(stopId, context))
+        if (operator === 'kmb') {
+            route.firstStopWelcome = normalizeStop(getWelcomeStopId(route.route), context)
+        }
 
         const key = buildRouteKey(route)
         if (!seenKeys.has(key)) {

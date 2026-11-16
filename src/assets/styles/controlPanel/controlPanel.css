@@ -130,6 +130,13 @@
     grid-column: 1 / -1;
 }
 
+.control-panel__preferences {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 6px;
+    margin-top: 10px;
+}
+
 .control-button-wrap {
     display: flex;
     min-width: 0;
@@ -499,6 +506,7 @@
 
     .control-panel__desktop-header .control-panel__heading {
         margin: 0;
+        flex-shrink: 0;
     }
 
     .control-panel__active-alerts {
@@ -662,7 +670,7 @@
     }
 
     .control-panel[data-desktop-collapsed="true"] {
-        width: auto;
+        width: max-content;
         max-width: calc(100vw - 48px);
     }
 
@@ -688,6 +696,31 @@
 
     .control-panel__navigation .control-button--icon-only .control-button__icon {
         grid-column: 1 / -1;
+    }
+
+    .control-panel__collapsed-navigation {
+        flex-shrink: 0;
+    }
+
+    .control-panel__navigation--compact {
+        gap: 8px;
+    }
+
+    .control-panel__navigation--compact .control-panel__step-actions {
+        grid-template-columns: repeat(2, auto);
+    }
+
+    .control-panel__navigation--compact .control-panel__route-actions {
+        grid-template-columns: 44px;
+        padding-left: 8px;
+    }
+
+    .control-panel__navigation--compact .control-button {
+        min-height: 40px;
+    }
+
+    .control-panel__navigation--compact .control-button__shortcut {
+        display: none;
     }
 
     .control-button__shortcut {

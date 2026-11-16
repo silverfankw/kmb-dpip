@@ -5,7 +5,7 @@ import {
 
 import { lazy, Suspense, useRef, useCallback, useEffect, useMemo, useState } from 'react'
 import { shallowEqual, useSelector, useDispatch } from 'react-redux'
-import { useKeyboardNavigation, useLocalStorageState} from "@hooks"
+import { useKeyboardNavigation, useLocalStorageState, useWindowSize } from "@hooks"
 import PlaceOutlinedIcon from '@mui/icons-material/PlaceOutlined'
 import { FeatureErrorBoundary } from '@components/FeatureErrorBoundary'
 import ResizableMonitorShell from '@components/ResizableMonitorShell'
@@ -30,16 +30,14 @@ const styles = {
 	contentContainer: [
 		"w-full min-w-0",
 		"select-none focus:outline-hidden",
-		"px-16 py-[2rem] max-xl:px-10 max-sm:p-1.5",
-		"flex flex-1 flex-col gap-3 ",
+		"px-16 py-[3rem] max-xl:px-10 max-sm:p-1.5",
+		"flex flex-1 flex-col gap-5",
 		"max-sm:gap-1"
 	].join(" "),
 
 	querySection: "query-section",
 	queryStatusLabel: "query-section__label",
 	queryStatusValue: "query-section__value",
-	queryStatusRouteValue: "query-section__route",
-	queryStatusRouteInputWrapper: "query-section__route-input",
 	queryStatusSummary: "query-section__summary",
 	queryStatusProgress: "query-section__progress",
 	queryStatusProgressMetric: "query-section__progress-metric",
@@ -93,6 +91,8 @@ const styles = {
 const App = () => {
 
 	const dispatch = useDispatch()
+	const { width } = useWindowSize()
+	const showStatusInHeader = width > 1080
 	const [company, setCompany] = useState('kmb')
 	const [ctbRoute, setCtbRoute] = useState(null)
 	const [ctbStopIndex, setCtbStopIndex] = useState(0)
@@ -227,6 +227,39 @@ const App = () => {
 		isDisabled: false,
 	})
 
+	const routeStatus = (
+		<section className={styles.querySection} data-theme={uiMode} aria-label={appText.routeProgressLabel}>
+			{hasQueryRoute && currentStop ? (
+				<div className={styles.queryStatusSummary} aria-live="polite" aria-atomic="true">
+					<div className={styles.queryStatusProgress}>
+						<span className={styles.queryStatusLabel}>{appText.stopCountLabel}</span>
+						<div className={styles.queryStatusProgressMetric}>
+							<span
+								className={styles.queryStatusValue}
+								style={{ minWidth: `${String(totalStops).length * 2 + 3}ch` }}
+							>{currentStopSummary}</span>
+							<progress
+								className={styles.queryStatusProgressBar}
+								max={totalStops}
+								value={queryStopIndex + 1}
+								aria-label={appText.routeProgressLabel}
+							/>
+						</div>
+					</div>
+					<div className={styles.queryStatusCurrent}>
+						<span className={styles.queryStatusLabel}><PlaceOutlinedIcon />{appText.currentStopLabel}</span>
+						<span className={styles.queryStatusStopName}>{currentStop[language === 'en' ? 'en' : 'zh']}</span>
+					</div>
+				</div>
+			) : (
+				<div className={styles.queryStatusEmpty}>
+					<PlaceOutlinedIcon />
+					<p>{appText.routeSearchEmpty}</p>
+				</div>
+			)}
+		</section>
+	)
+
 	return (
 		<>
 			<Background uiMode={uiMode} />
@@ -234,58 +267,25 @@ const App = () => {
 			{/* rootContainer to footer to stick at bottom */}
 			<div className={styles.rootContainer} data-company={company}>
 				<div className={styles.contentContainer} tabIndex={1}>
-					<AppToolbar company={company} onCompanyChange={setCompany} />
+					<AppToolbar company={company} onCompanyChange={setCompany}
+						routeStatus={showStatusInHeader ? routeStatus : null}>
+						<RouteQueryInput
+							key={company}
+							operator={company}
+							selectedRoute={isKmb ? undefined : ctbRoute}
+							onRouteSelect={isKmb ? undefined : selectCtbRoute}
+							label={appText.routeLabel}
+						/>
+					</AppToolbar>
 
 					<div
 						id={`company-panel-${company}`}
-						role="tabpanel"
-						aria-labelledby={`company-tab-${company}`}
+						role="region"
+						aria-label={appText.companyNames[company]}
 						tabIndex={0}
 						className="app-company-panel"
 					>
-					{/* Query section for route input and selection */}
-					<section className={styles.querySection} data-theme={uiMode} aria-label={appText.routeQuerySectionLabel}>
-						<div className={styles.queryStatusRouteValue}>
-							<div className={styles.queryStatusRouteInputWrapper}>
-								<RouteQueryInput
-									key={company}
-									operator={company}
-									selectedRoute={isKmb ? undefined : ctbRoute}
-									onRouteSelect={isKmb ? undefined : selectCtbRoute}
-									label={appText.routeLabel}
-									labelClassName={styles.queryStatusLabel}
-								/>
-							</div>
-						</div>
-						{hasQueryRoute && currentStop ? (
-							<div className={styles.queryStatusSummary} aria-live="polite" aria-atomic="true">
-								<div className={styles.queryStatusProgress}>
-									<span className={styles.queryStatusLabel}>{appText.stopCountLabel}</span>
-									<div className={styles.queryStatusProgressMetric}>
-										<span
-											className={styles.queryStatusValue}
-											style={{ minWidth: `${String(totalStops).length * 2 + 3}ch` }}
-										>{currentStopSummary}</span>
-										<progress
-											className={styles.queryStatusProgressBar}
-											max={totalStops}
-											value={queryStopIndex + 1}
-											aria-label={appText.routeProgressLabel}
-										/>
-									</div>
-								</div>
-								<div className={styles.queryStatusCurrent}>
-									<span className={styles.queryStatusLabel}><PlaceOutlinedIcon />{appText.currentStopLabel}</span>
-									<span className={styles.queryStatusStopName}>{currentStop[language === 'en' ? 'en' : 'zh']}</span>
-								</div>
-							</div>
-						) : (
-							<div className={styles.queryStatusEmpty}>
-								<PlaceOutlinedIcon />
-								<p>{appText.routeSearchEmpty}</p>
-							</div>
-						)}
-					</section>
+					{!showStatusInHeader && routeStatus}
 
 					{/* DPIP main screen with full details */}
 					<section className={styles.screenPanelSection}>

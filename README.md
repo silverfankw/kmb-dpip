@@ -9,12 +9,6 @@
 
 This project is developed by React + Vite, Redux, tailwindCSS v4 & Material UI.
 
-## Route data
-
-Route data uses GitHub Pages first, with GitHub Raw as a fallback. Validated data is cached in IndexedDB for six hours; stale cached data or the bundled snapshot remains usable while refreshing. Temporary network errors are retried. The desktop footer reports fallback data and cache/refresh failures, with a manual refresh button.
-
-Run `npm run update-route-snapshot` to refresh the bundled route snapshot before deploying.
-
 ## Versions
 
 <ins>**Version 3</ins>🆕✨**

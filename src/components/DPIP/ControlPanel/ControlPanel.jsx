@@ -1,10 +1,15 @@
 import { memo, useEffect, useId, useLayoutEffect, useRef, useState } from 'react'
-import { shallowEqual, useSelector } from 'react-redux'
+import { shallowEqual, useDispatch, useSelector } from 'react-redux'
 import AspectRatioIcon from '@mui/icons-material/AspectRatio'
 import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone'
 import ExpandLessIcon from '@mui/icons-material/ExpandLess'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined'
+import TranslateIcon from '@mui/icons-material/Translate'
+import DarkModeIcon from '@mui/icons-material/DarkMode'
+import LightModeIcon from '@mui/icons-material/LightMode'
+import { setLanguage, setUiMode } from '@store/userPreferenceSlice'
+import { getAppTextConfig, getFooterConfig } from '@components/sharedComponentConfig'
 import { NavButtonGroup, ToggleButtonGroup, FuncButtonGroup, DriverInfoInputGroup } from '@components'
 import { ControlButton } from './ControlButton'
 import { getControlPanelText } from './controlPanelConfig'
@@ -26,6 +31,7 @@ export const ControlPanel = memo(function ControlPanel({
     navigation,
     routeSelected,
 }) {
+    const dispatch = useDispatch()
     const isKmb = operator === 'kmb'
     const { customizeDriverInfoToggle, language, stopPressed, showHandrailNotice, showMindDoorNotice } = useSelector(state => ({
         customizeDriverInfoToggle: state.userPreference.customizeDriverInfoToggle,
@@ -35,6 +41,9 @@ export const ControlPanel = memo(function ControlPanel({
         showMindDoorNotice: state.userPreference.showMindDoorNotice,
     }), shallowEqual)
     const text = getControlPanelText(language)
+    const appText = getAppTextConfig(language)
+    const footerText = getFooterConfig(language)
+    const isLight = uiMode === 'light'
     const { isDesktop } = useWindowSize()
     const [mobileSection, setMobileSection] = useState(null)
     const [desktopPreferences, setDesktopPreferences] = useState(readDesktopControlPreferences)
@@ -108,6 +117,11 @@ export const ControlPanel = memo(function ControlPanel({
         >
             <div className="control-panel__desktop-header">
                 <h2 className="control-panel__heading">{text.quickControls}</h2>
+                {isDesktop && desktopCollapsed && (
+                    <div className="control-panel__collapsed-navigation">
+                        <NavButtonGroup navigation={navigation} compact />
+                    </div>
+                )}
                 <div className="control-panel__active-alerts" role="status" aria-atomic="true">
                     {isKmb && stopPressed && <span className="control-panel__alert-badge control-panel__alert-badge--bell">{text.bellActive}</span>}
                     {activeNotice && <span className="control-panel__alert-badge">{activeNotice}</span>}
@@ -154,6 +168,22 @@ export const ControlPanel = memo(function ControlPanel({
                             includeAuxiliary={isKmb}
                             routeSelected={routeSelected}
                 />
+                        <div className="control-panel__preferences" role="group" aria-label={appText.preferences}>
+                            <ControlButton
+                                tile
+                                icon={<TranslateIcon />}
+                                label={language === 'en' ? '繁中' : 'English'}
+                                accessibleLabel={language === 'en' ? 'Switch to Traditional Chinese' : '切換為英文'}
+                                onClick={() => dispatch(setLanguage(language === 'en' ? 'zh' : 'en'))}
+                            />
+                            <ControlButton
+                                tile
+                                icon={isLight ? <DarkModeIcon /> : <LightModeIcon />}
+                                label={isLight ? appText.nightMode : appText.dayMode}
+                                accessibleLabel={footerText.modeToggle[uiMode]}
+                                onClick={() => dispatch(setUiMode(isLight ? 'night' : 'light'))}
+                            />
+                        </div>
                         {customizeDriverInfoToggle && (
                         <section id="control-driver-details" className="control-panel__driver-editor" aria-labelledby="control-driver-title">
                             <h2 id="control-driver-title" className="control-panel__heading">{text.driverDetails}</h2>
