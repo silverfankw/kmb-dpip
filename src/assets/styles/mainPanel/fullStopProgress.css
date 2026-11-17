@@ -90,7 +90,7 @@
 }
 
 .stop-name--english {
-    rotate: -65deg;
+    rotate: -70deg;
     transform-origin: left;
 }
 
@@ -105,7 +105,7 @@
     top: -2cqw;
     font-size: calc(1.5cqw * var(--stop-name-en-scale));
     line-height: 1.2;
-    transform: scaleX(var(--stop-name-en-scale-x));
+    transform: scale(var(--stop-name-en-fit, 1)) scaleX(var(--stop-name-en-scale-x));
 }
 
 .stop-progress__english-wrapped {
@@ -218,7 +218,7 @@
 .stop-progress--wide .stop-name[lang="en"] {
     top: -1.3cqw;
     font-size: calc(1.2cqw * var(--stop-name-en-scale));
-    transform: scaleX(var(--stop-name-en-scale-x));
+    transform: scale(var(--stop-name-en-fit, 1)) scaleX(var(--stop-name-en-scale-x));
 }
 
 .stop-progress--wide .stop-name[lang="en"]:has(.stop-progress__english-wrapped) {

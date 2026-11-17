@@ -75,7 +75,8 @@ export const MainStopNameDisplay = memo(function MainStopNameDisplay({
             text.classList.add('main-display-panel__stop-name-en--wrapped')
             text.style.maxWidth = `${Math.floor(availableWidth)}px`
             let minSize = 0
-            let maxSize = availableHeight / lineCount
+            // Keep the 1.5em font-size budget independent of the visible line spacing.
+            let maxSize = availableHeight / (lineCount * 1.5)
             for (let iteration = 0; iteration < 16; iteration++) {
                 const size = (minSize + maxSize) / 2
                 text.style.fontSize = `${size}px`
@@ -88,7 +89,7 @@ export const MainStopNameDisplay = memo(function MainStopNameDisplay({
                     maxSize = size
                 }
             }
-            text.style.fontSize = `${Math.floor(minSize * 0.9 * 10) / 10}px`
+            text.style.fontSize = `${Math.floor(minSize * 0.99 * 10) / 10}px`
             return
         }
 

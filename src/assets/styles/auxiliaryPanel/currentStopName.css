@@ -10,6 +10,7 @@
 .aux-current-stop__chinese {
     display: flex;
     align-items: center;
+    font-weight: 450;
     height: 60%;
     line-height: 1.15;
     white-space: nowrap;

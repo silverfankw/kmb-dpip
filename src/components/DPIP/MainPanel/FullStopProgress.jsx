@@ -1,8 +1,9 @@
-import { memo } from "react"
+import { memo, useLayoutEffect, useRef } from "react"
 import "@styles/mainPanel/fullStopProgress.css"
 import { getEnglishLines, getWideEnglishLines, getWideStopNameEnScaleX } from './mainPanelConfig'
 
 export const FullStopProgress = memo(function FullStopProgress({ stop, stopIndex, currentStopIndex, stopCount, continuation, isWide = false, language = 'zh' }) {
+    const nameRef = useRef(null)
     const showContinuationDot = Boolean(continuation)
     const isCurrentStop = !showContinuationDot && stopIndex === currentStopIndex
     const isPastStop = stopIndex < currentStopIndex
@@ -11,6 +12,37 @@ export const FullStopProgress = memo(function FullStopProgress({ stop, stopIndex
         ? isWide ? getWideEnglishLines(stop.en) : getEnglishLines(stop.en, 38)
         : []
     const englishLineLength = Math.max(1, ...englishLines.map(line => line.length))
+
+    useLayoutEffect(() => {
+        const text = nameRef.current
+        const display = text?.closest('.stop-progress-display')
+        if (showContinuationDot || language !== 'en' || !display) return
+
+        const fitName = () => {
+            text.style.setProperty('--stop-name-en-fit', '1')
+            const bounds = display.getBoundingClientRect()
+            if (!bounds.width || !bounds.height) return
+
+            const marker = text.parentElement.getBoundingClientRect()
+            const [originX, originY] = window.getComputedStyle(text).transformOrigin.split(' ').map(parseFloat)
+            const x = marker.left + text.offsetLeft + originX
+            const y = marker.top + text.offsetTop + originY
+            const name = text.getBoundingClientRect()
+            // Fit the rotated bounds, which character-count scaling alone cannot predict.
+            const scale = Math.max(0, Math.min(
+                1,
+                name.top < bounds.top + 2 ? (y - bounds.top - 2) / (y - name.top) : 1,
+                name.right > bounds.right - 2 ? (bounds.right - x - 2) / (name.right - x) : 1
+            ))
+            text.style.setProperty('--stop-name-en-fit', String(scale))
+        }
+
+        fitName()
+        const observer = new ResizeObserver(fitName)
+        observer.observe(display)
+        observer.observe(text)
+        return () => observer.disconnect()
+    }, [stop, isCurrentStop, isWide, language, showContinuationDot])
 
     return (
         <div className={`stop-progress${isWide ? " stop-progress--wide" : ""}`} role="listitem" aria-current={isCurrentStop ? "step" : undefined}>
@@ -49,6 +81,7 @@ export const FullStopProgress = memo(function FullStopProgress({ stop, stopIndex
                     )}
                 </svg>
                 <span
+                    ref={nameRef}
                     lang={showContinuationDot ? undefined : language === 'en' ? 'en' : 'zh-Hant'}
                     style={!showContinuationDot && language === 'en' ? {
                         '--stop-name-en-scale': isWide ? 1 : Math.min(1, 32 / englishLineLength),

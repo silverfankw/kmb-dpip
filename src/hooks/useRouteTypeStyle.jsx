@@ -51,7 +51,7 @@ const routeTypeConfig = {
         awe: { regex: /^X(33|36|40|43|47)$/i, style: { backgroundColor: "#6F2F9F" } },
     
         // KMB Tour HK Route
-        HK: { regex: /^HK/i, style: { backgroundColor: "#FFFFFF", color: "#00AEEE" } }
+        HK: { regex: /^HK/i, style: { backgroundColor: "#FFFFFF", color: "#00AEEE" }, preserveLightText: true }
     },
     ctb: {
         // Routes that is matched with following rule, but to filter out as regular route

@@ -7,6 +7,10 @@
     color: #000000;
 }
 
+.compact-stop-progress:has(.compact-stop-progress__stop:not(.compact-stop-progress__stop--current)) {
+    background-color: #f9f9f9;
+}
+
 .compact-stop-progress__row {
     --temp-line-size: 1.8cqw;
     --temp-marker-size: 1.8cqw;
@@ -28,6 +32,14 @@
     position: relative;
     min-width: 0;
     --temp-marker-left: 50%;
+}
+
+.compact-stop-progress__stop:not(.compact-stop-progress__stop--current) {
+    background-color: #f9f9f9;
+}
+
+.compact-stop-progress__stop--current {
+    background-color: #ffffff;
 }
 
 .compact-stop-progress__stop:first-child {
@@ -81,7 +93,7 @@
 
 .compact-stop-progress__stop--current .compact-stop-progress__zh {
     font-size: 4.25cqw;
-    font-weight: 400;
+    font-weight: 450;
 }
 
 .compact-stop-progress__stop--current .compact-stop-progress__en {

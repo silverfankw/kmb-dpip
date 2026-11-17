@@ -47,9 +47,9 @@
 }
 
 .route-option__cancelled {
-    border-color: #fca5a5;
-    background-color: #fee2e2;
-    color: #991b1b;
+    border-color: #ff656999;
+    background-color: color-mix(in srgb, #ff4352 60%, #0f172a);
+    color: #FFFFFF;
 }
 
 .route-option__label[data-mobile="true"] :is(.route-option__special-trip, .route-option__cancelled) {

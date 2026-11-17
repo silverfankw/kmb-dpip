@@ -2,6 +2,7 @@
     --route-query-muted: #94a3b8;
     --route-query-accent: #7dd3fc;
     --route-query-hover: rgba(148, 163, 184, 0.12);
+    --route-query-shimmer: #38bdf8;
     min-width: 0;
 }
 
@@ -9,6 +10,78 @@
     --route-query-muted: #64748b;
     --route-query-accent: #0369a1;
     --route-query-hover: #e2e8f0;
+    --route-query-shimmer: #0284c7;
+}
+
+.route-query :is(.routeInputSelect__control, .route-query__mobile-trigger) {
+    position: relative;
+    transition: border-color 0.2s ease, box-shadow 0.25s ease;
+}
+
+.route-query :is(.routeInputSelect__control, .route-query__mobile-trigger)::after {
+    content: "";
+    position: absolute;
+    inset: -1px;
+    z-index: 1;
+    padding: 2px;
+    border-radius: inherit;
+    background: linear-gradient(
+        110deg,
+        transparent 42%,
+        var(--route-query-shimmer) 48%,
+        #ffffff 50%,
+        var(--route-query-shimmer) 52%,
+        transparent 58%
+    ) 100% 0 / 300% 100% no-repeat;
+    mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    mask-composite: exclude;
+    opacity: 0;
+    pointer-events: none;
+    animation: route-query-border-shimmer 6s linear infinite paused;
+    transition: opacity 0.2s ease;
+}
+
+.route-query :is(.routeInputSelect__control:not(.routeInputSelect__control--is-disabled), .route-query__mobile-trigger:enabled):focus-within {
+    box-shadow:
+        0 0 0 1px var(--route-query-shimmer),
+        0 0 14px color-mix(in srgb, var(--route-query-shimmer) 45%, transparent),
+        0 0 28px color-mix(in srgb, var(--route-query-shimmer) 22%, transparent);
+}
+
+.route-query :is(.routeInputSelect__control:not(.routeInputSelect__control--is-disabled), .route-query__mobile-trigger:enabled):focus-within::after {
+    opacity: 1;
+    animation-play-state: running;
+}
+
+@media (hover: hover) {
+    .route-query :is(.routeInputSelect__control:not(.routeInputSelect__control--is-disabled), .route-query__mobile-trigger:enabled):hover {
+        box-shadow:
+            0 0 0 1px var(--route-query-shimmer),
+            0 0 14px color-mix(in srgb, var(--route-query-shimmer) 45%, transparent),
+            0 0 28px color-mix(in srgb, var(--route-query-shimmer) 22%, transparent);
+    }
+
+    .route-query :is(.routeInputSelect__control:not(.routeInputSelect__control--is-disabled), .route-query__mobile-trigger:enabled):hover::after {
+        opacity: 1;
+        animation-play-state: running;
+    }
+}
+
+@keyframes route-query-border-shimmer {
+    from { background-position: 100% 0; }
+    to { background-position: 0% 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .route-query :is(.routeInputSelect__control, .route-query__mobile-trigger) {
+        transition: none;
+    }
+
+    .route-query :is(.routeInputSelect__control, .route-query__mobile-trigger)::after {
+        animation: none;
+        background-position: 50% 0;
+        transition: none;
+    }
 }
 
 .route-query__header {
